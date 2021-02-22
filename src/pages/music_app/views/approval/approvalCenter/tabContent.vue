@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 00:10:22
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-12 19:16:04
+ * @LastEditTime: 2021-01-01 14:57:44
  -->
 <template>
   <div class="container">
@@ -27,9 +27,9 @@
         <el-tab-pane label="已撤销" name="forth">
           <ApprovalRevocation @result="res" :activeName="activeName" />
         </el-tab-pane>
-        <el-tab-pane label="财务拒绝" name="fifth">
+        <!-- <el-tab-pane label="财务拒绝" name="fifth">
           <account-rejected ref="accountRejected"></account-rejected>
-        </el-tab-pane>
+        </el-tab-pane> -->
       </el-tabs>
     </div>
   </div>
@@ -41,14 +41,14 @@ import ApprovalCompleted from './components/approvalCompleted'
 import ApprovalRevocation from './components/approvalRevocation'
 
 import permission from './components/permission'
-import accountRejected from './components/accountRejected'
+// import accountRejected from './components/accountRejected'
 export default {
   components: {
     permission,
     ApprovalPending,
     ApprovalRevocation,
-    ApprovalCompleted,
-    accountRejected
+    ApprovalCompleted
+    // accountRejected
   },
   created() {
     this.getNoticeLinkParams()
@@ -126,7 +126,7 @@ export default {
 .container {
   margin: 10px;
   padding-bottom: 50px;
-  height: calc(100vh - 120px);
+  height: calc(100vh - 100px);
   overflow: auto;
   background-color: #fff;
 }

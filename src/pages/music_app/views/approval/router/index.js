@@ -3,25 +3,27 @@
  * @version:
  * @Author: Lukun
  * @Date: 2020-04-26 19:11:56
- * @LastEditors: Lukun
- * @LastEditTime: 2020-05-20 13:42:24
+ * @LastEditors: liukun
+ * @LastEditTime: 2021-02-02 18:10:03
  */
 
-const routes = [{
+
+// 工具类路由
+const routes = [
+  {
     path: '/approval',
     name: 'approval',
-    alias: '/approvalCenter',
     meta: {
       title: '审批中心',
       keepAlive: false
     },
-    component: () => import('../approvalCenter/index.vue'),
+    component: () => import('../approvalCenter/index.vue')
   },
   {
     path: '/moneyBack',
     name: 'moneyBack',
     meta: {
-      title: '退款审批',
+      title: '退款',
       keepAlive: false
     },
     component: () => import('../approvalCenter/components/moneyBack.vue')
@@ -30,16 +32,16 @@ const routes = [{
     path: '/repair',
     name: 'repair',
     meta: {
-      title: '补发货审批',
+      title: '补发货',
       keepAlive: false
     },
     component: () => import('../approvalCenter/components/repair.vue')
   },
   {
-    path: '/adjust',
+    path: '/approval/adjust',
     name: 'adjust',
     meta: {
-      title: '审批中心'
+      title: '系统课调整'
     },
     component: () =>
       import(
@@ -48,10 +50,19 @@ const routes = [{
       )
   },
   {
-    path: '/mergeboxes',
+    path: '/approvalGift',
+    name: 'approvalGift',
+    meta: {
+      title: '赠品',
+      keepAlive: false
+    },
+    component: () => import('../approvalCenter/components/approvalGift.vue')
+  },
+  {
+    path: '/approval/mergeboxes',
     name: 'mergeboxes',
     meta: {
-      title: '审批中心'
+      title: '随材打包'
     },
     component: () =>
       import(
@@ -59,7 +70,7 @@ const routes = [{
         '../approvalCenter/views/mergeBoxes.vue'
       )
   }
-
 ]
+
 
 export default routes

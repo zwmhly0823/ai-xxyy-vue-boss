@@ -15,11 +15,7 @@
           <div class="step-container-status">
             <el-steps :active="stepStatus">
               <el-step title="设置基本信息" icon="el-icon-edit"></el-step>
-              <el-step
-                v-if="courseType == '0'"
-                title="设置分配线索规则"
-                icon="el-icon-s-tools"
-              ></el-step>
+              <el-step v-if="courseType == '0'" title="设置分配线索规则" icon="el-icon-s-tools"></el-step>
               <el-step title="选择带班销售" icon="el-icon-s-flag"></el-step>
               <el-step title="设置招生容量" icon="el-icon-s-check"></el-step>
               <!-- <el-step title="完成" icon="el-icon-success"></el-step> -->
@@ -52,20 +48,13 @@
             @listenStepStatus="fSstepStatus"
           ></third-step>
           <!-- 第四步 -->
-          <div
-            class="step-container step-four-container"
-            v-show="isShowLastStep"
-          >
+          <div class="step-container step-four-container" v-show="isShowLastStep">
             <div class="complete-container">
               <i class="el-icon-success"></i>
               <p>保存成功</p>
               <div class="succ-operate">
-                <el-button size="small" type="info" @click="containerEdit"
-                  >继续修改</el-button
-                >
-                <el-button size="small" type="success" @click="backList"
-                  >返回列表</el-button
-                >
+                <el-button size="small" type="info" @click="containerEdit">继续修改</el-button>
+                <el-button size="small" type="success" @click="backList">返回列表</el-button>
               </div>
             </div>
           </div>
@@ -97,6 +86,11 @@ export default {
     ThirdStep,
     SetLeads
   },
+  watch: {
+    stepStatus(val) {
+      this.setStatus(val)
+    }
+  },
   computed: {
     isShowSecondStep() {
       return (
@@ -121,8 +115,22 @@ export default {
     const { courseType = '0' } = this.$route.params
     this.courseType = courseType
     this.courseName = courseType === '0' ? '体验课' : '系统课'
+    let staff = JSON.parse(localStorage.getItem('staff'))
+    if (staff.stepStatus) {
+      this.stepStatus = staff.stepStatus
+    }
+    let _this = this
+    
+  },
+  destroyed() {
+    
   },
   methods: {
+    setStatus(val = 1) {
+      var staff = JSON.parse(localStorage.getItem('staff'))
+      staff.stepStatus = val
+      localStorage.setItem('staff', JSON.stringify(staff))
+    },
     // 第一步 点击下一步 监听
     oneStepNext(val) {
       if (val) this.stepStatus++

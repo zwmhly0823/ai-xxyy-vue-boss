@@ -84,5 +84,25 @@ export default {
     return axios.get(`/api/toss/v1/toss-api/label/getMarketingLabelInfo`, {
       type: 1
     })
-  }
+  },
+  // 校验退款的时候是否有审核中的关单赠品数据审批信息：
+  // orderId
+  findOrderGiftApprovalStatus(query) {
+    return axios.post(`/api/b/v1/backend/refund/system/findOrderGiftApprovalStatus?orderId=${query}`)
+  },
+  // 查询赠品相关的信息（金额、产品列表等信息）
+  // orderId
+  findOrderGiftInfo(query) {
+    return axios.post(`/api/b/v1/backend/refund/system/findOrderGiftInfo?orderId=${query}`)
+  },
+  findSystemByOrderNo(orderNo) {
+    return axios.get(
+      `/api/ts/v1/teaching/student/system/findSystemByOrderNo?orderNo=${orderNo}`
+    )
+  },
+  findTrailByOrderNo(orderNo) {
+    return axios.get(
+      `/api/ts/v1/teaching/student/trial/findTrailByOrderNo?orderNo=${orderNo}`
+    )
+  },
 }

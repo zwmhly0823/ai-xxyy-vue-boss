@@ -8,9 +8,22 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
+const staff = JSON.parse(localStorage.getItem('staff'))
+var systemAccount = []
 
-const routes = [
-  {
+if (staff.roleId == 7 || staff.roleId == 1) {
+  systemAccount = [{
+    path: '/systemAccount',
+    name: 'systemAccount',
+    meta: {
+      title: '系统账号',
+      keepAlive: false
+    },
+    component: () => import('../views/systemAccount/index.vue')
+  }]
+}
+
+const routes = [{
     path: '/',
     name: 'teacher',
     meta: {
@@ -60,15 +73,7 @@ const routes = [
     component: () =>
       import('../views/teacherManagement/components/newTeacher.vue')
   },
-  {
-    path: '/systemAccount',
-    name: 'systemAccount',
-    meta: {
-      title: '系统账号',
-      keepAlive: false
-    },
-    component: () => import('../views/systemAccount/index.vue')
-  },
+
   {
     path: '/workHandover/partTimeTeacher',
     name: 'partTimeTeacher',
@@ -87,7 +92,17 @@ const routes = [
       keepAlive: false
     },
     component: () => import('../views/loginRecord/index.vue')
-  }
+  },
+  {
+    path: '/wechatWaterArmy',
+    name: 'wechatWaterArmy',
+    meta: {
+      title: '水军微信',
+      keepAlive: false
+    },
+    component: () => import('../views/wechatWaterArmy/index.vue')
+  },
+  ...systemAccount
 ]
 
 const router = new VueRouter({

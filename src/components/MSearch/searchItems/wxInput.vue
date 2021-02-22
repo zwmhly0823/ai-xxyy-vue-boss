@@ -60,7 +60,7 @@
         :value="item.id"
       >
       </el-option>
-    </el-select> -->
+    </el-select>-->
     <!-- 是否关联老师 -->
     <el-select
       v-model="concatTeacherData"
@@ -71,13 +71,7 @@
       placeholder="是否已关联老师"
       @change="onWxConcatTeacher"
     >
-      <el-option
-        v-for="item in concatTeacher"
-        :key="item.id"
-        :label="item.name"
-        :value="item.id"
-      >
-      </el-option>
+      <el-option v-for="item in concatTeacher" :key="item.id" :label="item.name" :value="item.id"></el-option>
     </el-select>
     <!-- wxid搜索 -->
     <el-autocomplete
@@ -101,7 +95,7 @@
       </template>
     </el-autocomplete>
     <!-- 艾客wxid搜索 -->
-    <el-autocomplete
+    <!-- <el-autocomplete
       v-model="wechatRecordId"
       size="mini"
       clearable
@@ -119,13 +113,29 @@
           <div class="name">{{ item.wechat_record_id || '-' }}</div>
         </div>
       </template>
-    </el-autocomplete>
+    </el-autocomplete>-->
+    <!-- 微信状态搜索 -->
+    <el-select
+      v-model="wechatStatus"
+      size="mini"
+      clearable
+      filterable
+      reserve-keyword
+      placeholder="微信状态"
+      @change="onWeixinStatus"
+    >
+      <el-option v-for="item in wxStatusList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+    </el-select>
   </div>
 </template>
 
 <script>
 export default {
   props: {
+    weixinStatus: {
+      type: String,
+      default: ''
+    },
     // 微信搜索状态
     wxSerch: {
       type: String,
@@ -176,7 +186,12 @@ export default {
       mobileInp: '',
       weixinInp: '',
       wechatId: '',
+      wechatStatus: '',
       wechatRecordId: '',
+      wxStatusList: [
+        { name: '登录', id: 1 },
+        { name: '下线', id: 0 }
+      ],
       status: [
         { name: '启用', id: '0' },
         {
@@ -202,6 +217,11 @@ export default {
     }
   },
   watch: {
+    weixinstatus(val, old) {
+      if (val !== old && !val) {
+        this.$emit('getWeixinStatus', '')
+      }
+    },
     // 监听微信号输入
     weixinInp(val, old) {
       if (val !== old && !val) {
@@ -228,6 +248,13 @@ export default {
     }
   },
   methods: {
+    onWeixinStatus(data) {
+      console.log(data)
+      this.$emit(
+        'getWeixinStatus',
+        (data == 1)||(data == 0) ? { [this.weixinStatus]: this.wechatStatus } : ''
+      )
+    },
     // 输入微信号
     async weixinSearch(queryString, cb) {
       console.log(this.onlyWeixin)

@@ -7,7 +7,7 @@
         wxTeacherPhone="teacher_id"
         wxStatus="is_effective"
         wxId="wechat_id"
-        wxRecordId="wechat_record_id"
+        weixinStatus="wechat_status"
         wxConcatTeacher="wechatJud"
       >
         <el-button
@@ -78,7 +78,7 @@
             <span>{{ scope.row.wechat_id || '-' }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="left" label="艾客微信ID" min-width="100">
+        <!-- <el-table-column align="left" label="艾客微信ID" min-width="100">
           <template slot-scope="scope">
             <span>{{
               scope.row.wechat_record_id && scope.row.wechat_record_id > 0
@@ -86,10 +86,15 @@
                 : '-'
             }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column align="left" label="使用状态" min-width="100">
           <template slot-scope="scope">
             <span>{{ openTeacher[scope.row.id] | filterStatus }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="left" label="微信状态" min-width="100">
+          <template slot-scope="scope">
+            <span>{{ scope.row.wechat_status=='1'?'登录':'下线' }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="关联老师" min-width="150">
@@ -246,11 +251,15 @@ export default {
       }
     },
     searchHandler(res) {
+      
       this.currentPage = 1
       if (res.length > 0) {
         const wildcard = {}
         res.forEach((item) => {
           item.wildcard && Object.assign(wildcard, item.wildcard)
+          if(item.wechat_status){
+            Object.assign(wildcard, item.wechat_status)
+          }
           item.term &&
             !Object.keys(item.term).includes('wechatJud') &&
             Object.assign(wildcard, item.term)
@@ -283,6 +292,7 @@ export default {
       if (!params) {
         params = ''
       }
+      
       this.$http.Weixin.getWeChatTeacherPage(params, this.currentPage)
         .catch((err) => console.log(err))
         .then((res) => {

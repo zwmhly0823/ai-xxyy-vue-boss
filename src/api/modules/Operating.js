@@ -592,5 +592,11 @@ export default {
     return axios.post(
       `/api/t/v1/wechat/teacher/saveTeacherChangeWeixinRecord?teacherId=${params.teacherId}&oldWeixinNo=${params.oldWeixinNo}&oldWeixinId=${params.oldWeixinId}&weixinId=${params.weixinId}&weixinNo=${params.weixinNo}&courseType=${params.courseType}&period=${params.period}`
     )
+  },
+  // 删除定向分配销售
+  async removeChannelSales(params){
+    return axios.post(
+      '/api/t/v1/teacherChannel/delRecord?id='+params
+    )
   }
 }

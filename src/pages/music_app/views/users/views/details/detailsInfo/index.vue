@@ -9,11 +9,12 @@
 <template>
   <div class="details" v-loading="loading">
     <el-radio-group v-model="changeSubject" size="mini">
-      <el-radio-button :label="0">美术</el-radio-button>
-      <el-radio-button :label="1">写字</el-radio-button>
+      <!-- <el-radio-button :label="0">美术</el-radio-button>
+      <el-radio-button :label="1">写字</el-radio-button> -->
+      <el-radio-button :label="3">音乐</el-radio-button>
     </el-radio-group>
     <!-- 写字0元体验课 -->
-    <div v-if="Object.keys(experience_lk0).length">
+    <!-- <div v-if="Object.keys(experience_lk0).length">
       <section class="setou123">
         <strong></strong>
         <span>0元体验课信息</span>
@@ -166,15 +167,14 @@
               <span v-else>参课/放课</span>
               <span
                 >{{
-                  typeof experience_lk0.all_join_course_count == 'number' &&
-                    ('' + experience_lk0.all_join_course_count || '-')
+                    '0'
                 }}次</span
               ><span style="color:#00000000">g</span
               ><span style="color:#f56c6c">{{
-                experience_lk0.join_course_count || '-'
+                experience_lk0.join_course_count || '0'
               }}</span
               >/
-              <span>{{ experience_lk0.start_course_count || '-' }}节</span>
+              <span>{{ experience_lk0.start_course_count || '0' }}节</span>
             </div></el-col
           >
           <el-col :span="5"
@@ -183,24 +183,22 @@
               <span v-else>完课/放课</span>
               <span
                 >{{
-                  typeof experience_lk0.all_complete_course_count ===
-                    'number' &&
-                    ('' + experience_lk0.all_complete_course_count || '-')
+                    ( experience_lk0.all_complete_course_count || '0')
                 }}次</span
               >
               <span style="color:#00000000">g</span
               ><span style="color:#f56c6c">{{
-                experience_lk0.complete_course_count || '-'
+                experience_lk0.complete_course_count || '0'
               }}</span
               >/
-              <span>{{ experience_lk0.start_course_count || '-' }}节</span>
+              <span>{{ experience_lk0.start_course_count || '0' }}节</span>
             </div></el-col
           >
           <el-col :span="5"
             ><div class="item1">
               <span>作品</span
               ><span style="color:#f56c6c">{{
-                '' + experience_lk0.task_count || '-'
+                '' + experience_lk0.task_count || '0'
               }}</span
               >张
             </div></el-col
@@ -209,14 +207,14 @@
             ><div class="item1">
               <span>听点评/点评</span
               ><span style="color:#f56c6c">{{
-                '' + experience_lk0.listen_comment_count || '-'
+                experience_lk0.listen_comment_count || '0'
               }}</span
-              >/<span>{{ '' + experience_lk0.comment_count || '-' }}</span>
+              >/<span>{{ experience_lk0.comment_count || '0' }}</span>
             </div></el-col
           >
         </el-row>
       </section>
-    </div>
+    </div> -->
     <!-- 体验课 -->
     <div v-if="Object.keys(experience_lk).length">
       <section class="setou123">
@@ -268,10 +266,10 @@
             ><div class="item1">
               <span>购买时间</span
               ><span v-if="!changeSubject">{{
-                experience_lk.sup && (SUP_LEVEL_UPPER[experience_lk.sup] || '-')
+                SUP_LEVEL_ALL[experience_lk.sup] && (SUP_LEVEL_ALL[experience_lk.sup] || '-')
               }}</span>
               <span v-else>{{
-                experience_lk.sup && (experience_lk.sup || '-')
+                SUP_LEVEL_ALL[experience_lk.sup] && (SUP_LEVEL_ALL[experience_lk.sup] || '-')
               }}</span
               ><span>{{
                 experience_lk.orderInfo &&
@@ -305,8 +303,8 @@
                   type="primary"
                   >{{
                     experience_lk.teamInfo &&
-                      experience_lk.teamInfo.team_name &&
-                      (experience_lk.teamInfo.team_name || '-')
+                      courseLevelReplace(experience_lk.teamInfo.team_name) &&
+                      (courseLevelReplace(experience_lk.teamInfo.team_name) || '-')
                   }}</el-link
                 ></span
               >
@@ -338,12 +336,12 @@
             ><div class="item1">
               <span>课程进度</span
               ><span v-if="!changeSubject">{{
-                experience_lk.current_lesson &&
-                  (formatTeamNameSup(experience_lk.current_lesson) || '-')
+                courseLevelReplace(experience_lk.current_lesson) &&
+                  (courseLevelReplace(experience_lk.current_lesson) || '-')
               }}</span>
               <span v-else>{{
-                experience_lk.current_lesson &&
-                  (experience_lk.current_lesson || '-')
+                courseLevelReplace(experience_lk.current_lesson) &&
+                  (courseLevelReplace(experience_lk.current_lesson) || '-')
               }}</span>
             </div></el-col
           >
@@ -371,12 +369,11 @@
               <span v-else>参课/放课</span>
               <span
                 >{{
-                  typeof experience_lk.all_join_course_count == 'number' &&
-                    ('' + experience_lk.all_join_course_count || '-')
+                    (experience_lk.all_join_course_count || '0')
                 }}次</span
               ><span style="color:#00000000">g</span>
               <span style="color:#f56c6c">{{
-                experience_lk.join_course_count || '-'
+                experience_lk.join_course_count || '0'
               }}</span
               >/
               <span
@@ -394,12 +391,12 @@
               <span v-else>完课/放课</span>
               <span
                 >{{
-                  typeof experience_lk.all_complete_course_count === 'number' &&
-                    ('' + experience_lk.all_complete_course_count || '-')
+                 
+                    (experience_lk.all_complete_course_count || '0')
                 }}次</span
               ><span style="color:#00000000">g</span
               ><span style="color:#f56c6c">{{
-                experience_lk.complete_course_count || '-'
+                experience_lk.complete_course_count || '0'
               }}</span
               >/
               <span
@@ -424,9 +421,9 @@
             ><div class="item1">
               <span>听点评/点评</span
               ><span style="color:#f56c6c">{{
-                '' + experience_lk.listen_comment_count || '-'
+                experience_lk.listen_comment_count || '0'
               }}</span
-              >/<span>{{ '' + experience_lk.comment_count || '-' }}</span>
+              >/<span>{{ experience_lk.comment_count || '0' }}</span>
             </div></el-col
           >
         </el-row>
@@ -474,11 +471,11 @@
             ><div class="item1">
               <span>购买时间</span>
               <span v-if="!changeSubject">{{
-                systerm_lk.currentsuper &&
+                SUP_LEVEL_UPPER[systerm_lk.currentsuper] &&
                   (SUP_LEVEL_UPPER[systerm_lk.currentsuper] || '-')
               }}</span>
               <span v-else>{{
-                systerm_lk.currentsuper && (systerm_lk.currentsuper || '-')
+                courseLevelReplace(systerm_lk.currentsuper) && (courseLevelReplace(systerm_lk.currentsuper) || '-')
               }}</span
               ><span>{{
                 systerm_lk.orderInfo &&
@@ -518,7 +515,7 @@
                   :href="userLink(systerm_lk.teamid, 'class', 2)"
                   target="_blank"
                   type="primary"
-                  >{{ systerm_lk.teamname || '-' }}</el-link
+                  >{{ courseLevelReplace(systerm_lk.teamname) || '-' }}</el-link
                 ></span
               >
             </div></el-col
@@ -540,8 +537,8 @@
             ><div class="item1">
               <span>课程进度</span
               ><span>{{
-                systerm_lk.currentsuper &&
-                  (formatTeamNameSup(systerm_lk.currentsuper) || '-')
+                courseLevelReplace(systerm_lk.currentsuper) &&
+                  (courseLevelReplace(systerm_lk.currentsuper) || '-')
               }}</span>
               <span>{{
                 systerm_lk.currentlevel && (systerm_lk.currentlevel || '-')
@@ -591,13 +588,12 @@
               <span v-else>参课/放课</span>
               <span
                 >{{
-                  typeof systerm_lk.all_noactivecount === 'number' &&
-                    ('' + systerm_lk.all_noactivecount || '-')
+                    (systerm_lk.all_noactivecount || '0')
                 }}次</span
               >
               <span style="color:#00000000">g</span
               ><span style="color:#f56c6c">{{
-                systerm_lk.activecount || '-'
+                systerm_lk.activecount || '0'
               }}</span
               >/
               <span
@@ -615,12 +611,11 @@
               <span v-else>完课/放课</span>
               <span
                 >{{
-                  typeof systerm_lk.all_activecount === 'number' &&
-                    ('' + systerm_lk.all_activecount || '-')
+                    ( systerm_lk.all_activecount || '0')
                 }}次</span
               ><span style="color:#00000000">g</span
               ><span style="color:#f56c6c">{{
-                systerm_lk.activecount || '-'
+                systerm_lk.activecount || '0'
               }}</span
               >/
               <span
@@ -645,9 +640,9 @@
             ><div class="item1">
               <span>听点评/点评</span
               ><span style="color:#f56c6c">{{
-                '' + systerm_lk.flagcount || '-'
+                 systerm_lk.flagcount || '0'
               }}</span
-              >/<span>{{ '' + systerm_lk.flag_total_count || '-' }}</span>
+              >/<span>{{  systerm_lk.flag_total_count || '0' }}</span>
             </div></el-col
           >
         </el-row>
@@ -657,13 +652,14 @@
 </template>
 <script>
 import { formatDate } from '@/utils/mini_tool_lk'
-import { SUP_LEVEL_UPPER, formatTeamNameSup } from '@/utils/supList'
+import { SUP_LEVEL_UPPER,SUP_LEVEL_ALL, formatTeamNameSup,courseLevelReplace } from '@/utils/supList'
 
 export default {
   created() {
     this.tiyan0()
     this.tiyan()
     this.xitong()
+    
   },
   data() {
     return {
@@ -673,8 +669,9 @@ export default {
       loading: false,
       userId: this.$route.params.id,
       changeSubject: this.$store.state.subjects.subjectCode,
-      SUP_LEVEL_UPPER,
-      formatTeamNameSup
+      SUP_LEVEL_UPPER,SUP_LEVEL_ALL,
+      formatTeamNameSup,
+      courseLevelReplace
     }
   },
   computed: {
@@ -683,14 +680,16 @@ export default {
         let url = ''
         const origin = window.location.origin
         if (origin.includes('dev')) {
-          url = 'ai-app-vue-toss-dev/'
+          url = 'ai-xxyy-dev-boss-h5/'
         } else if (origin.includes('test')) {
-          url = 'ai-app-vue-toss-test/'
+          url = 'ai-xxyy-test-boss-h5/'
+        }else{
+          url='ai-xxyy-default-boss-h5'
         }
         return type === 'user'
           ? `${origin}/${url}music_app/#/details/${id}`
           : `${origin}/${url}${
-              this.changeSubject ? 'write_app' : 'student-team'
+              'music_app'
             }/#/teamDetail/${id}/${classl}`
       }
     }
@@ -701,7 +700,7 @@ export default {
       deep: true,
       handler(newValue, oldValue) {
         console.info('详情信息-手动切换科目')
-        this.tiyan0()
+        // this.tiyan0()
         this.tiyan()
         this.xitong()
       }
@@ -721,6 +720,7 @@ export default {
         console.error(err)
         this.$message.error('该学员0元体验课信息获取失败')
       })
+    
       if (StudentTrialV2Statistics) {
         StudentTrialV2Statistics.buytime = formatDate(
           +StudentTrialV2Statistics.buytime
@@ -740,6 +740,7 @@ export default {
         }[String(StudentTrialV2Statistics.express_status)]
         console.info('0000000', StudentTrialV2Statistics)
         this.experience_lk0 = StudentTrialV2Statistics
+        
       } else {
         this.experience_lk0 = {}
       }

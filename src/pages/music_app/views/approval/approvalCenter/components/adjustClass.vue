@@ -429,7 +429,7 @@ export default {
   methods: {
     // 后退
     back() {
-      this.$router.push('/approvalCenter')
+      this.$router.push('/approval')
     },
     // searchPhone的返回值
     getSearchPhoneData(data) {
@@ -970,7 +970,7 @@ export default {
       this.adjustLoading = false
       if (result === 'success') {
         this.$router.push({
-          name: 'approval',
+          path: '/approval',
           params: { activeApprove: 'second' }
         })
       }

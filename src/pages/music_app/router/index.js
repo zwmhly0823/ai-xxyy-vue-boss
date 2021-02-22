@@ -28,8 +28,11 @@ import trad from '../views/trading/router'
 import users from '../views/users/router'
 // 财务
 import finance from '../views/finance/router'
-
-
+// 投诉中心
+import complaint from '../views/complaint/router'
+// 呼叫中心
+import outbound from '../views/outbound/router'
+import express from '../views/express/router'
 const staff = JSON.parse(localStorage.getItem('staff'))
 
 let superOperatingRouter = []
@@ -52,15 +55,7 @@ if (staff.roleId === '1') {
 }
 Vue.use(VueRouter)
 
-const routes = [{
-    path: '/express',
-    name: 'express',
-    meta: {
-      title: '物流管理',
-      icon: 'iconwuliuguanli'
-    },
-    component: () => import('../views/express/views/expressCenter/index.vue')
-  },
+const routes = [
   {
     path: '/Active',
     name: 'Active',
@@ -78,7 +73,10 @@ const routes = [{
   ...studentTeam,
   ...trad,
   ...users,
-  ...finance
+  ...finance,
+  ...complaint,
+  ...outbound,
+  ...express
 ]
 const router = new VueRouter({
   base: process.env.BASE_URL,

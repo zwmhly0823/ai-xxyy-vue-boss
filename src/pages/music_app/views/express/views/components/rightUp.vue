@@ -5,6 +5,7 @@
         ref="msearch"
         @search="handleSearch"
         class="clearBorder"
+        :addSupS="addSupS"
         :phone="showItem.phone"
         :schedule="showItem.schedule"
         :sup="showItem.sup"
@@ -121,6 +122,10 @@ import MSearch from '@/components/MSearch/index.vue'
 let switchTabSearchIn = {}
 export default {
   props: {
+    addSupS:{
+      type:Boolean,
+      default:false
+    },
     tab: {
       type: String,
       default: '0'

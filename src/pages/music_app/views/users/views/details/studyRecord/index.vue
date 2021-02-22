@@ -10,14 +10,15 @@
   <div>
     <div class="course-sty">
       <el-radio-group v-model="changeSubject" size="mini">
-        <el-radio-button :label="0">美术</el-radio-button>
-        <el-radio-button :label="1">写字</el-radio-button>
+        <!-- <el-radio-button :label="0">美术</el-radio-button>
+        <el-radio-button :label="1">写字</el-radio-button> -->
+        <el-radio-button :label="3">音乐</el-radio-button>
       </el-radio-group>
       <el-tabs v-model="courseData" @tab-click="courseBtn">
         <el-tab-pane
           v-for="(item, key) of teams_lk_filter"
           :key="key"
-          :label="`${item.team_type_formatting || '体验课'}:${item.team_name}`"
+          :label="`${item.team_type_formatting || '体验课'}:${courseLevelReplace(item.team_name)}`"
           :courseIds="item.course_ids"
           :teamId="item.id"
           :lessonType="item.team_type > 0 ? [1, 12] : [0, 12]"
@@ -156,6 +157,7 @@
 
 <script>
 import { formatData } from '@/utils/index'
+import { courseLevelReplace } from '@/utils/supList'
 export default {
   name: 'studyRecord',
   mounted() {
@@ -195,7 +197,8 @@ export default {
 
       // 分页组件
       allDigit: 1, // 总量
-      changeSubject: this.$store.state.subjects.subjectCode
+      changeSubject: this.$store.state.subjects.subjectCode,
+      courseLevelReplace
     }
   },
   computed: {

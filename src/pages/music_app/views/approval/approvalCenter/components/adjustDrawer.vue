@@ -12,7 +12,12 @@
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(0, 0, 0, 0.8)"
   >
-    <el-form :model="adjustDrawerData" class="adjust-drawer-form" v-if="reload">
+    <el-form
+      :model="adjustDrawerData"
+      class="adjust-drawer-form"
+      v-if="reload"
+      :key="now"
+    >
       <el-form-item
         v-for="(dItem, dKey) in adjustDrawerData.content"
         :key="dKey"
@@ -50,14 +55,14 @@
           <el-link
             v-if="!is3d"
             type="primary"
-            :href="'/music_app/#/details/' + dItem.valueId"
+            :href="'/users/#/details/' + dItem.valueId"
             target="_blank"
             >{{ dItem.value }}</el-link
           >
           <el-link
             v-else
             type="primary"
-            :href="'/music_app/#/details/' + dItem.valueId"
+            :href="'/users/#/details/' + dItem.valueId"
             target="_blank"
             >{{ dItem.value }}</el-link
           >
@@ -72,7 +77,23 @@
               商品{{ childIndex + 1 }}： {{ childItem.name }}
             </div>
             <div class="array-info-item">
-              版 本： {{ childItem.proVersion }}
+              版 本：
+              <el-select
+                v-if="childItem.versionOption"
+                class="package-select"
+                v-model="childItem.proVersion"
+                placeholder=""
+                size="mini"
+                @change="packageVersionChange($event, childItem, childIndex)"
+              >
+                <el-option
+                  v-for="item in childItem.versionOption"
+                  :key="item.centerProductCode"
+                  :label="item.proVersion"
+                  :value="item.proVersion"
+                >
+                </el-option>
+              </el-select>
             </div>
             <div class="array-info-item">
               商品码： {{ childItem.centerProductCode }}
@@ -130,12 +151,14 @@ export default {
   data() {
     return {
       adjustDrawerShow: false,
-      reload: true
+      reload: true,
+      now: new Date().getTime(),
+      originGoodsInfo: []
     }
   },
   methods: {
     adjustDrawerPass(data) {
-      this.$emit('result', data)
+      this.$emit('result', data, this.originGoodsInfo)
     },
     handleDrawerOpen() {
       this.adjustDrawerShow = true
@@ -151,6 +174,60 @@ export default {
     },
     rejectedDrawerPass(data) {
       this.$emit('drawButtonEmit', data)
+    },
+    async initVersionList(list) {
+      const versionData = await this.getVersionList(list[0].sup)
+      if (!versionData) {
+        return
+      }
+      for (
+        let i = 0, len = this.adjustDrawerData.content.length;
+        i < len;
+        i++
+      ) {
+        const item = this.adjustDrawerData.content[i]
+        if (item.label !== '商品信息') {
+          continue
+        }
+        item.value.forEach((child) => {
+          // 找每个商品有那些版本列表
+          Object.keys(versionData).forEach((vKey) => {
+            if (child.level.slice(1) === vKey.slice(5)) {
+              child.versionOption = versionData[vKey]
+              this.now = new Date().getTime()
+            }
+          })
+          // 保存一份商品的原始数据，之后修改版本号的时候要用
+          this.originGoodsInfo.push({
+            oldCenterProductCode: child.centerProductCode,
+            oldProVersion: child.proVersion
+          })
+        })
+      }
+      this.now = new Date().getTime()
+    },
+    getVersionList(sup) {
+      return this.$http.Approval.getPackagesCourseMaterials(sup)
+        .then((res) => {
+          if (res.status !== 'OK') {
+            return false
+          }
+          return res.payload
+        })
+        .catch(() => {
+          return false
+        })
+    },
+    packageVersionChange(val, item, index) {
+      const selectItem = item.versionOption.find((child) => {
+        return child.proVersion === val
+      })
+      item.proVersion = val
+      item.centerProductCode = selectItem.centerProductCode
+      this.originGoodsInfo[index].newProVersion = val
+      this.originGoodsInfo[index].newCenterProductCode =
+        selectItem.centerProductCode
+      this.now = new Date().getTime()
     }
   }
 }
@@ -178,6 +255,13 @@ export default {
       margin-bottom: 20px;
       .array-info-item {
         height: 20px;
+        .package-select {
+          width: 100px;
+          /deep/ input {
+            height: 21px;
+            line-height: 21px;
+          }
+        }
       }
     }
   }

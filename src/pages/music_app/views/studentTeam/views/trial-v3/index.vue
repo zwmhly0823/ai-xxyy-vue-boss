@@ -12,7 +12,7 @@
         <el-tab-pane label="待开课" name="0"></el-tab-pane>
         <el-tab-pane label="开课中" name="1"></el-tab-pane>
         <el-tab-pane label="已结课" name="2"></el-tab-pane>
-        <el-tab-pane label="全部" name="全部"></el-tab-pane>
+        <el-tab-pane label="全部" name="0,1,2"></el-tab-pane>
       </el-tabs>
       <component-content
         ref="componentContent"
@@ -25,6 +25,7 @@
 <script>
 import componentSearch from './components/classManage/search'
 import componentContent from './components/classManage/content'
+
 export default {
   name: 'classManageIndex',
   components: {
@@ -34,7 +35,7 @@ export default {
   data() {
     return {
       loading: false,
-      classStatus: '0'
+      classStatus: '0',
     }
   },
   methods: {

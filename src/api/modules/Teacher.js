@@ -9,6 +9,7 @@
 import axios from '../axiosConfig'
 
 export default {
+  
   /**
    * 组织机构列表
    * */
@@ -44,6 +45,7 @@ export default {
           content {
             id
             realname
+            weixin_ids
           }
         }
       }`
@@ -361,5 +363,36 @@ export default {
         }
       }`
     })
+  },
+  /**
+   * 水军微信
+   * http://ai-app-dev.meixiu.mobi/api/t/jsondoc-ui.html?url=/api/t/jsondoc#
+   */
+  // 创建/编辑水军微信号
+  saveWaterArmy(params = {}) {
+    return axios.post('/api/t/v1/navy/saveNavy', params)
+  },
+
+  // 水军微信 列表（查询）@weixinNo；@wechat_status body: departmentIds []
+  getWaterArmyPage(
+    { weixinNo = '', wechat_status = '', departmentIds = [] } = {},
+    pageNum = 1,
+    pageSize = 20
+  ) {
+    let url = `/api/t/v1/navy/getNavyPage?pageSize=${pageSize}&pageNum=${pageNum}`
+    if (weixinNo) {
+      url += `&weixinNo=${weixinNo}`
+    }
+    if (wechat_status || wechat_status === 0) {
+      url += `&wechat_status=${wechat_status}`
+    }
+    return axios.post(
+      url,
+      departmentIds && departmentIds.length > 0 ? departmentIds : null
+    )
   }
+
+  /**
+   * 水军微信 END
+   */
 }

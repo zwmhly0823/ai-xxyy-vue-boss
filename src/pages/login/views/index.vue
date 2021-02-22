@@ -354,7 +354,6 @@ export default {
     // 通过密码登录
     async loginByPwd() {
       const pwdLoginIn = await this.$http.Login.pwdLoginIn(this.pwdLoginForm)
-
       if (pwdLoginIn && pwdLoginIn.payload) {
         return pwdLoginIn.payload
       }
@@ -401,6 +400,7 @@ export default {
           : (getToken = await this.loginBycode().catch((err) =>
               console.log(err)
             ))
+            
         if (getToken && getToken.token) {
           setToken(getToken.token)
           if (getToken.teacher) {
@@ -425,8 +425,10 @@ export default {
           }
           if (getToken.staff) {
             // 前端设置权限管理
-            getToken.staff.roleId = '7';
-            getToken.staff.mobile = '15801332536'
+
+            // getToken.staff.roleId = '7';
+            // getToken.staff.mobile = '15801332536'
+            console.log('ss')
             localStorage.setItem(
               'staff',
               JSON.stringify(getToken.staff || '{}')

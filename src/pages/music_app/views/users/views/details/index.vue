@@ -254,9 +254,7 @@
                   v-for="item of babels_lk"
                   :key="item.id"
                   >{{
-                    item.subject === 'ART_APP'
-                      ? formatTeamNameSup(item.name)
-                      : item.name
+                    courseLevelReplace(item.name)||'无信息'
                   }}</el-tag
                 >
               </span>
@@ -337,7 +335,7 @@ import recommend from './recommendComponents/recommend.vue'
 import showAddress from './addressComponents/showAddress.vue'
 import trackFlow from './trackFlow/index'
 import { GetAgeByBrithday, formatData } from '@/utils/index'
-import { formatTeamNameSup } from '@/utils/supList'
+import { courseLevelReplace } from '@/utils/supList'
 import modifyAddress from './addressComponents/modifyAddress.vue'
 
 export default {
@@ -385,13 +383,17 @@ export default {
       // paneltab name
       tabData: 'detailsInfo',
       defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png',
-      formatTeamNameSup
+      courseLevelReplace
     }
   },
   computed: {
     studyCount() {
       return this.stuInfor.bought_subject.map((item) => {
+        
         switch (item) {
+          case 'MUSIC_APP':
+            item = '小熊音乐'
+            break
           case 'ART_APP':
             item = '小熊美术'
             break
@@ -432,7 +434,9 @@ export default {
         this.$message.error('标签获取失败')
         console.error(err)
       })
+      
       if (!code && payload && payload.length) {
+        console.log(payload)
         this.babels_lk = payload
       }
     },

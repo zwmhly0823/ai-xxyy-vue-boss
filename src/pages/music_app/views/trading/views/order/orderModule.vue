@@ -7,7 +7,7 @@
  * @LastEditTime: 2020-09-25 11:37:01
  -->
 <template>
-  <el-row type="flex" class="app-main height">
+  <el-row type="flex" class="orderModule app-main height">
     <div class="order-container">
       <div class="order-container-content">
         <el-scrollbar wrap-class="order-wrapper" id="order-scroll">
@@ -137,6 +137,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .order-container {
   display: flex;
   flex-direction: column;
@@ -200,9 +201,11 @@ export default {
     font-size: 12px;
   }
 }
-
+.orderModule{
+  
 .el-popper {
   z-index: 2000 !important;
+}
 }
 
 .top-style1 {
