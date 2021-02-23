@@ -475,7 +475,7 @@ export default {
             this.$http.Approval.applyGiftAdd(obj).then((res) => {
               if (res.code === 0) {
                 this.$router.push({
-                  name: 'approvalCenter',
+                  path: '/approval',
                   params: {
                     activeApprove: 'second'
                   }

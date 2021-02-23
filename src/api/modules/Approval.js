@@ -112,4 +112,9 @@ export default {
       { userId, orderId }
     )
   },
+  // 新建关单赠品申请
+  applyGiftAdd(data = {}) {
+    const params = Object.assign(data, { role: 1 })
+    return axios.post(`/api/b/v1/backend/promotions/detail/add`, params)
+  }
 }
