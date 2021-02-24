@@ -318,9 +318,9 @@ export default {
       this.orderList = []
       if (val && val !== '') {
         this.userId = val.uid
-        this.$http.Order.getOrderByRegtypesAndStatus(this.userId)
+        this.$http.Order.getOrdersByUid(this.userId)
           .then((res) => {
-            if (res.payload && res.payload.length) {
+            if (res.payload && res.payload.content.length) {
               console.log(res, 'new-getOrderByRegtypesAndStatus')
               if (this.paramOrderId) {
                 this.orderDisable = true
@@ -328,7 +328,7 @@ export default {
                 this.orderDisable = false
               }
 
-              res.payload.forEach((item) => {
+              res.payload.content.forEach((item) => {
                 // 筛选年系统课
                 // if (item.courseCategory === 2) {
                 if (item.packagesCourseWeek >= 24) {
@@ -475,7 +475,7 @@ export default {
             this.$http.Approval.applyGiftAdd(obj).then((res) => {
               if (res.code === 0) {
                 this.$router.push({
-                  name: 'approvalCenter',
+                  path: '/approval',
                   params: {
                     activeApprove: 'second'
                   }
