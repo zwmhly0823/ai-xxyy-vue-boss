@@ -1276,6 +1276,7 @@ export default {
     // 置空表单
     onCancel(formName) {
       this.$refs[formName].resetFields()
+      this.$router.push({path:'/approval'})
     },
     // 上传附件
     upload(file) {

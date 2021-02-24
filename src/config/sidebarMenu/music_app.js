@@ -615,35 +615,35 @@ if (staff.roleId === '19') {
         module
       }
     },
-    {
-      path: '/outbound',
-      name: 'outbound',
-      meta: {
-        title: '呼叫中心',
-        icon: 'icondianhua',
-        // module: 'outbound'
-        module
-      },
-      children: [{
-          path: '/CallRecord',
-          name: 'CallRecord',
-          meta: {
-            title: '通话记录',
-            // module: 'outbound',
-            module,
-          }
-        },
-        {
-          path: '/CallCenter',
-          name: 'CallCenter',
-          meta: {
-            title: '席位配置',
-            // module: 'outbound',
-            module,
-          }
-        }
-      ]
-    },
+    // {
+    //   path: '/outbound',
+    //   name: 'outbound',
+    //   meta: {
+    //     title: '呼叫中心',
+    //     icon: 'icondianhua',
+    //     // module: 'outbound'
+    //     module
+    //   },
+    //   children: [{
+    //       path: '/CallRecord',
+    //       name: 'CallRecord',
+    //       meta: {
+    //         title: '通话记录',
+    //         // module: 'outbound',
+    //         module,
+    //       }
+    //     },
+    //     {
+    //       path: '/CallCenter',
+    //       name: 'CallCenter',
+    //       meta: {
+    //         title: '席位配置',
+    //         // module: 'outbound',
+    //         module,
+    //       }
+    //     }
+    //   ]
+    // },
     // 数据中心
     // {
     //   path: '/statistics',
