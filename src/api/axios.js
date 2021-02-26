@@ -33,6 +33,7 @@ axios.interceptors.request.use(
     const {
       url
     } = config
+    console.log(config)
     if (url.includes('/api/') && !url.includes('graphql')) {
       if (url.indexOf('subject=') === -1) {
         config.url += !url.includes('?') ?
