@@ -73,8 +73,9 @@ export default {
    *
    */
   getTeacherConfigList(params) {
+    Object.assign(params,{subject:"MUSIC_APP"})
     return axios.post(
-      `/api/t/v1/teacher/course/enroll/teacher/config?courseType=${params.courseType}&period=${params.period}&courseDifficulty=${params.courseDifficulty}&departmentIds=${params.departmentIds}&teacherWechatIds=${params.teacherWechatIds}&levels=${params.levels}&subject=MUSIC_APP`,
+      `/api/t/v1/teacher/course/enroll/teacher/config?courseType=${params.courseType}&period=${params.period}&courseDifficulty=${params.courseDifficulty}&departmentIds=${params.departmentIds}&teacherWechatIds=${params.teacherWechatIds}&levels=${params.levels}`,
       params.ids
     )
   },
@@ -82,8 +83,9 @@ export default {
    * 保存 招生排期 设置
    */
   saveScheduleConfig(params) {
+    Object.assign(params,{subject:"MUSIC_APP"})
     return axios.post(
-      `/api/t/v1/teacher/course/enroll/teacher/config/save?courseType=${params.courseType}&period=${params.period}&subject=MUSIC_APP`,
+      `/api/t/v1/teacher/course/enroll/teacher/config/save?courseType=${params.courseType}&period=${params.period}`,
       params.body
     )
   },

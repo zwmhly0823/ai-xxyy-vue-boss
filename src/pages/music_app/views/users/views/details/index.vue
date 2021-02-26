@@ -254,7 +254,7 @@
                   v-for="item of babels_lk"
                   :key="item.id"
                   >{{
-                    courseLevelReplace(item.name)||'无信息'
+                    courseLevelReplace(item.name)
                   }}</el-tag
                 >
               </span>
@@ -436,7 +436,7 @@ export default {
       })
       
       if (!code && payload && payload.length) {
-        console.log(payload)
+        
         this.babels_lk = payload
       }
     },
