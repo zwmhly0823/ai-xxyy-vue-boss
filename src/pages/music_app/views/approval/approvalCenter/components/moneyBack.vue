@@ -1065,7 +1065,7 @@ export default {
     refundAmountComputed() {
       if (this.refundForm.refundType === 1) {
         // 乐器费用
-        let instrument = this.jsonDate3.instrument === 0 ? 1800 : 0
+        let instrument = this.jsonDate3.instrument === 0 ? 0.01 : 0
         // 课程退款
         if (this.jsonDate3.deductMonth === 1 && this.onePrice > 0) {
           // 保留次月
@@ -1077,7 +1077,7 @@ export default {
           // 不保留次月
           return (
             this.refundForm.refundAmount -
-            ((this.jsonDate3.deductMaterial === 1 ? 100 : 0) +
+            ((this.jsonDate3.deductMaterial === 1 ? 0.01 : 0) +
               this.fontPrice +
               instrument)
           )

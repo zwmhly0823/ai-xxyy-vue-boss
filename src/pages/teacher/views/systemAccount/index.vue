@@ -198,6 +198,7 @@ export default {
     },
     // 员工身份搜索
     handleSearchEmployees(data) {
+      console.log(data)
       if (data.length > 0) {
         const term = {}
         data.forEach((res) => {
