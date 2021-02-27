@@ -1456,8 +1456,8 @@ export default {
       this.$prompt('请输入原因', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        inputPattern: /\S/,
-        inputErrorMessage: '内容不能为空'
+        inputPattern: /\S[\u4E00-\uFA29]|[\uE7C7-\uE7F3]|[a-zA-Z0-9_，。-]/,
+        inputErrorMessage: '内容不能为空,且只能输入中文、英文、数字、"，""。"'
       })
         .then(({ value }) => {
           const params = {
@@ -1506,9 +1506,9 @@ export default {
       this.$prompt('请输入原因', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        inputPattern: /\S/,
+        inputPattern: /^([\u4E00-\uFA29]|[\，\。\,\.]|[\uE7C7-\uE7F3]|[a-zA-Z0-9_-]){1,225}$/,
         inputValue: '同意',
-        inputErrorMessage: '内容不能为空'
+        inputErrorMessage: "仅支持长度小于225的中文/英文/数字/'-'/'_'/','/'.'/'，'/'。'"
       })
         .then(({ value }) => {
           const params = {
