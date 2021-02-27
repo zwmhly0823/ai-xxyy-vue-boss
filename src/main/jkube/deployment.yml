@@ -24,8 +24,11 @@ spec:
               mountPath: /var/log/containers
           imagePullPolicy: Always
           resources:
-            limits:
+            requests:
               cpu: "500m"
+              memory: "1024Mi"
+            limits:
+              cpu: "3000m"
               memory: "1024Mi"
           livenessProbe:
             httpGet:
