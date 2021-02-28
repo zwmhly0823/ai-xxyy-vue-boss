@@ -483,11 +483,11 @@ export default {
         document.title.startsWith('学员中心') &&
           (document.title = `${this.stuInfor_add.username +
             '·' +
-            this.stuInfor_add.user_num}-美术宝BOSS`)
+            this.stuInfor_add.user_num}-小熊音乐BOSS`)
         document.title.indexOf('写字') !== -1 &&
           (document.title = `${this.stuInfor_add.username +
             '·' +
-            this.stuInfor_add.user_num}-美术宝BOSS`)
+            this.stuInfor_add.user_num}-小熊音乐BOSS`)
       })
     },
 

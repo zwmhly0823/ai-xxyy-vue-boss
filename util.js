@@ -53,7 +53,7 @@ const getEntry = function() {
       // 多科目项目只显示科目名称+BOSS，小熊显示模块名及小熊美术BOSS
       title: subjects.includes(fileNameStr)
         ? `${getMenuText(fileNameStr)}BOSS`
-        : `${getMenuText(fileNameStr)} - 美术宝BOSS`,
+        : `${getMenuText(fileNameStr)} - 小熊音乐BOSS`,
       chunks: ['chunk-vendors', 'chunk-common', fileNameStr]
     }
   })
