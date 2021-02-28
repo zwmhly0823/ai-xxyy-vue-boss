@@ -50,7 +50,7 @@ if (env === 'dev') {
   targetApiEnv = 'http://ai-xxyy-live-boss.yinyuebao.cloud'
 }
 
-editOperation('构建')
+// editOperation('构建')
 console.log(NODE_ENV)
 
 module.exports = {
@@ -111,16 +111,16 @@ module.exports = {
       }
     }
     if (NODE_ENV === 'production') {
-      config.plugin('webpack-alioss-plugin').use(WebpackAliOss, [
-        {
-          ossBaseDir: 'xiaoxiong',
-          project:  ossDist(),
-          auth: ossConfig,
-          removeMode: false,
-          existCheck: false,
-          exclude: /.*\.mainfest$/
-        }
-      ])
+      // config.plugin('webpack-alioss-plugin').use(WebpackAliOss, [
+      //   {
+      //     ossBaseDir: 'xiaoxiong',
+      //     project:  ossDist(),
+      //     auth: ossConfig,
+      //     removeMode: false,
+      //     existCheck: false,
+      //     exclude: /.*\.mainfest$/
+      //   }
+      // ])
     }
   },
   devServer: {
