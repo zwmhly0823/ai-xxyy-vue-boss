@@ -774,6 +774,14 @@ if (staff.roleId === '19') {
             module: 'boss-auth'
           }
         },
+        {
+          path: '/roleSetting',
+          name: 'roleSetting',
+          meta: {
+            title: '角色设置',
+            module: 'boss-auth'
+          }
+        },
       ],
     },
     {

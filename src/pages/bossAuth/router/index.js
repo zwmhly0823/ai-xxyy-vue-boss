@@ -23,6 +23,14 @@ const routes = [
       keepAlive: false
     },
     component: () => import('../views/systemAccount/index.vue')
+  },{
+    path: '/roleSetting',
+    name: 'roleSetting',
+    meta: {
+      title: '角色分配',
+      keepAlive: false
+    },
+    component: () => import('../views/roleSetting/index.vue')
   }
 ]
 
