@@ -16,7 +16,7 @@ const routes = [
     path: '/',
     name: 'marketing',
     meta: {
-      title: '营销中心',
+      title: '码库',
       icon: 'el-icon-s-custom',
       keepAlive: true
     },
