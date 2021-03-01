@@ -42,7 +42,7 @@
             type="primary"
             :href="
               devATestChange(
-                '/users/#/details/' + drawerApprovalDeatail.userId,
+                '/music_app/#/details/' + drawerApprovalDeatail.userId,
                 'toss'
               )
             "

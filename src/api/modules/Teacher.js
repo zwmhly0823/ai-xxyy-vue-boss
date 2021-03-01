@@ -20,6 +20,7 @@ export default {
    * 新增、编辑组织结构
    * */
   createDepartment(params) {
+    Object.assign(params,{subject:"MUSIC_APP"})
     return axios.post(`/api/t/v1/department/createDepartment`, params)
   },
   /**

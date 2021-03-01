@@ -254,7 +254,7 @@
                   v-for="item of babels_lk"
                   :key="item.id"
                   >{{
-                    courseLevelReplace(item.name)||'无信息'
+                    courseLevelReplace(item.name)
                   }}</el-tag
                 >
               </span>
@@ -436,7 +436,7 @@ export default {
       })
       
       if (!code && payload && payload.length) {
-        console.log(payload)
+        
         this.babels_lk = payload
       }
     },
@@ -483,11 +483,11 @@ export default {
         document.title.startsWith('学员中心') &&
           (document.title = `${this.stuInfor_add.username +
             '·' +
-            this.stuInfor_add.user_num}-美术宝BOSS`)
+            this.stuInfor_add.user_num}-小熊音乐BOSS`)
         document.title.indexOf('写字') !== -1 &&
           (document.title = `${this.stuInfor_add.username +
             '·' +
-            this.stuInfor_add.user_num}-美术宝BOSS`)
+            this.stuInfor_add.user_num}-小熊音乐BOSS`)
       })
     },
 

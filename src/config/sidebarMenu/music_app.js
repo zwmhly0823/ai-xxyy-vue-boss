@@ -97,14 +97,15 @@ if (staff.roleId === '19') {
         }
       }
     ]
-    superTeacherRouter = [{
-        path: '/teacherManagement',
-        name: 'teacherManagement',
-        meta: {
-          title: '员工帐号',
-          module: 'teacher'
-        }
-      },
+    superTeacherRouter = [
+      // {
+      //   path: '/teacherManagement',
+      //   name: 'teacherManagement',
+      //   meta: {
+      //     title: '员工帐号',
+      //     module: 'teacher'
+      //   }
+      // },
       {
         path: '/weixinManagement',
         name: 'weixinManagement',
@@ -113,14 +114,14 @@ if (staff.roleId === '19') {
           module: 'teacher'
         }
       },
-      {
-        path: '/systemAccount',
-        name: 'systemAccount',
-        meta: {
-          title: '系统帐号',
-          module: 'teacher'
-        }
-      },
+      // {
+      //   path: '/systemAccount',
+      //   name: 'systemAccount',
+      //   meta: {
+      //     title: '系统帐号',
+      //     module: 'teacher'
+      //   }
+      // },
     ]
   }
   // 管理员权限
@@ -756,6 +757,46 @@ if (staff.roleId === '19') {
       ]
     },
     {
+      path: '/bossAuth',
+      name: 'active',
+      // hidden: true,
+      meta: {
+        title: 'boss权限',
+        icon: 'iconiconset',
+        module: 'bossAuth',
+      },
+      children: [
+        {
+          path: '/systemAccount',
+          name: 'systemAccount',
+          meta: {
+            title: '系统帐号',
+            module: 'boss-auth'
+          }
+        },
+      ],
+    },
+    {
+      path: '/tossAuth',
+      name: 'active',
+      // hidden: true,
+      meta: {
+        title: 'toss权限',
+        icon: 'iconiconset',
+        module: 'tossAuth',
+      },
+      children: [
+        {
+          path: '/teacherManagement',
+          name: 'teacherManagement',
+          meta: {
+            title: '员工帐号',
+            module: 'toss-auth'
+          }
+        },
+      ],
+    },
+    {
       path: '/active',
       name: 'active',
       // hidden: true,
@@ -764,7 +805,7 @@ if (staff.roleId === '19') {
         icon: 'iconiconset',
         module: module,
       },
-    }
+    },
   ]
 }
 

@@ -10,7 +10,7 @@ const {
 } = require('./util')
 const { NODE_ENV } = process.env
 const projectName = process.argv[3] || 'dashboard'
-const name = defaultSettings.title || '美术宝BOSS'
+const name = defaultSettings.title || '小熊音乐BOSS'
 const version = defaultSettings.version;
 const { BASE_URL } = process.env
 const env = BASE_URL || 'default' // default, dev, test, prod, live
@@ -50,7 +50,7 @@ if (env === 'dev') {
   targetApiEnv = 'http://ai-xxyy-live-boss.yinyuebao.cloud'
 }
 
-editOperation('构建')
+// editOperation('构建')
 console.log(NODE_ENV)
 
 module.exports = {

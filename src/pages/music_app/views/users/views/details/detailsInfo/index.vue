@@ -679,18 +679,9 @@ export default {
       return function(id, type = 'user', classl) {
         let url = ''
         const origin = window.location.origin
-        if (origin.includes('dev')) {
-          url = 'ai-xxyy-dev-boss-h5/'
-        } else if (origin.includes('test')) {
-          url = 'ai-xxyy-test-boss-h5/'
-        }else{
-          url='ai-xxyy-default-boss-h5'
-        }
         return type === 'user'
-          ? `${origin}/${url}music_app/#/details/${id}`
-          : `${origin}/${url}${
-              'music_app'
-            }/#/teamDetail/${id}/${classl}`
+          ? `${origin}/music_app/#/details/${id}`
+          : `${origin}/music_app/#/teamDetail/${id}/${classl}`
       }
     }
   },
