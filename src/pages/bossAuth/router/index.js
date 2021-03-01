@@ -1,4 +1,3 @@
-
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
@@ -23,7 +22,8 @@ const routes = [
       keepAlive: false
     },
     component: () => import('../views/systemAccount/index.vue')
-  },{
+  },
+  {
     path: '/roleSetting',
     name: 'roleSetting',
     meta: {
@@ -31,6 +31,15 @@ const routes = [
       keepAlive: false
     },
     component: () => import('../views/roleSetting/index.vue')
+  },
+  {
+    path: '/menuSetting',
+    name: 'menuSetting',
+    meta: {
+      title: '菜单分配',
+      keepAlive: false
+    },
+    component: () => import('../views/menuSetting/index.vue')
   }
 ]
 
