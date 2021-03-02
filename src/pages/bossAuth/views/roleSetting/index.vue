@@ -219,10 +219,7 @@
 </template>
 
 <script>
-// import { listRole, getRole, delRole, addRole, updateRole, exportRole, dataScope, changeRoleStatus } from "@/api/system/role";
-// import { treeselect as menuTreeselect, roleMenuTreeselect } from "@/api/system/menu";
-// import { treeselect as deptTreeselect, roleDeptTreeselect } from "@/api/system/dept";
-
+import { Message } from 'element-ui'
 export default {
   name: 'Role',
   data() {
@@ -838,7 +835,7 @@ export default {
           return changeRoleStatus(row.roleId, row.status)
         })
         .then(() => {
-          this.msgSuccess(text + '成功')
+          Message(text + '成功')
         })
         .catch(function () {
           row.status = row.status === '0' ? '1' : '0'
@@ -985,14 +982,14 @@ export default {
           if (this.form.roleId != undefined) {
             this.form.menuIds = this.getMenuAllCheckedKeys()
             updateRole(this.form).then((response) => {
-              this.msgSuccess('修改成功')
+              Message('修改成功')
               this.open = false
               this.getList()
             })
           } else {
             this.form.menuIds = this.getMenuAllCheckedKeys()
             addRole(this.form).then((response) => {
-              this.msgSuccess('新增成功')
+              Message('新增成功')
               this.open = false
               this.getList()
             })
@@ -1018,7 +1015,7 @@ export default {
         })
         .then(() => {
           this.getList()
-          this.msgSuccess('删除成功')
+          Message('删除成功')
         })
     },
   },

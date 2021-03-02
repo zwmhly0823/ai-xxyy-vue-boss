@@ -46,71 +46,104 @@ import TeamV2 from './modules/TeamV2'
 import Active from './modules/Active'
 import TeamV3 from './modules/studentTeam/TeamV3' // 班级接口
 import Complaint from './modules/complaint/complaint.js' // 投诉中心
+import SystemMenu from './modules/SystemMenu.js' // c菜单资源
 
-export default Object.assign({},
+export default Object.assign(
+  {},
   // { writeApp },
   { Complaint },
+  { SystemMenu },
   {
     Base
-  }, {
-    Login
-  }, {
-    Order
-  }, {
-    User
-  }, {
-    Team
-  }, {
-    StudentTerm
-  }, {
-    Express
-  }, {
-    Permission
-  }, {
-    Department
-  }, {
-    Product
-  }, {
-    Teacher
-  }, {
-    Weixin
-  }, {
-    Operating
-  }, {
-    Statistics
-  }, {
-    RiviewCourse
-  }, {
-    DownloadExcel
-  }, {
-    Backend
-  }, {
-    RefundApproval
-  }, {
-    Approval
-  }, {
-    Finance
-  }, {
-    WorkerHandover
-  }, {
-    Staff
-  }, {
-    NoticeCenter
-  }, {
-    Community
-  }, {
-    Outbound
-  }, {
-    Marketing
-  }, {
-    LearnRecord
-  }, {
-    Setting
-  }, {
-    TeamV2
-  }, {
-    Active
-  }, {
-    TeamV3
   },
+  {
+    Login
+  },
+  {
+    Order
+  },
+  {
+    User
+  },
+  {
+    Team
+  },
+  {
+    StudentTerm
+  },
+  {
+    Express
+  },
+  {
+    Permission
+  },
+  {
+    Department
+  },
+  {
+    Product
+  },
+  {
+    Teacher
+  },
+  {
+    Weixin
+  },
+  {
+    Operating
+  },
+  {
+    Statistics
+  },
+  {
+    RiviewCourse
+  },
+  {
+    DownloadExcel
+  },
+  {
+    Backend
+  },
+  {
+    RefundApproval
+  },
+  {
+    Approval
+  },
+  {
+    Finance
+  },
+  {
+    WorkerHandover
+  },
+  {
+    Staff
+  },
+  {
+    NoticeCenter
+  },
+  {
+    Community
+  },
+  {
+    Outbound
+  },
+  {
+    Marketing
+  },
+  {
+    LearnRecord
+  },
+  {
+    Setting
+  },
+  {
+    TeamV2
+  },
+  {
+    Active
+  },
+  {
+    TeamV3
+  }
 )
