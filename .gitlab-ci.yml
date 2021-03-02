@@ -120,7 +120,7 @@ deploy_live:
     - npm run build:live
     - export KUBERNETES_NAMESPACE=ai-xxyy-live
     - ./mvnw deploy
-    - "envsubst < target/classes/META-INF/jkube/kubernetes.yml | sed 's/replicas: 1/replicas: 2/g' | ${KUBECTL_CLI_OPTS_LIVE} apply -f - -n ${KUBERNETES_NAMESPACE}"
+    - "envsubst < target/classes/META-INF/jkube/kubernetes.yml | sed 's/replicas: 1/replicas: 2/g' | sed 's/cpu: 100m/cpu: 200m/g' | ${KUBECTL_CLI_OPTS_LIVE} apply -f - -n ${KUBERNETES_NAMESPACE}"
   only:
     - /^master-.*$/
   tags:
