@@ -30,7 +30,7 @@ export default {
     cans.textBaseline = 'Middle'
     cans.zIndex = '9999'
     // 文字换行
-    cans.fillText('小熊美术', 0, 50)
+    cans.fillText('小熊音乐', 0, 50)
     cans.fillText(msg, 0, 70)
     cans.save()
     const imgSrc = ctx.toDataURL()
