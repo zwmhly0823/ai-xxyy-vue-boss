@@ -27,6 +27,15 @@ const routes = [
         /* webpackChunkName: "teacherManagement" */
         '../views/teacherManagement/teacherManage.vue'
       )
+  },  {
+    path: '/newTeacher',
+    name: 'newTeacher',
+    meta: {
+      title: '新增员工账号',
+      keepAlive: false
+    },
+    component: () =>
+      import('../views/teacherManagement/components/newTeacher.vue')
   },
 ]
 
