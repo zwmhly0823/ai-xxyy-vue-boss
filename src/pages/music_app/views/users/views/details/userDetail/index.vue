@@ -187,7 +187,7 @@
                     >
                       {{
                       item.subject === 'ART_APP'
-                      ? formatTeamNameSup(item.name)
+                      ? courseLevelReplace(item.name)
                       : item.name
                       }}
                     </el-tag>
@@ -206,13 +206,13 @@
                       <!-- 系统课 -->
                       <span v-if="team.currentsuper">
                         {{
-                        formatTeamNameSup(team.currentsuper) || '-'
+                        courseLevelReplace(team.currentsuper) || '-'
                         }}
                       </span>
                       <!-- 体验课 -->
                       <span v-else>
                         {{
-                        formatTeamNameSup(team.sup) || '-'
+                        courseLevelReplace(team.sup) || '-'
                         }}
                       </span>
                       {{ team.orderInfo && team.orderInfo.packages_name }}
@@ -348,7 +348,7 @@
                     <div>
                       <span>{{ team.current_lesson }}</span>
                       <!-- <span>{{
-                      formatTeamNameSup(team.currentsuper) ||
+                      courseLevelReplace(team.currentsuper) ||
                         team.current_lesson
                       }}</span>-->
                     </div>
@@ -512,7 +512,7 @@
 <script>
 import { openBrowserTab, calcBrowerClienHeight } from '@/utils/index'
 
-import { formatTeamNameSup } from '@/utils/supList'
+import { courseLevelReplace } from '@/utils/supList'
 import trackFlow from '../trackFlow/index'
 // import showAddress from '../addressComponents/showAddress.vue'
 import harvestAddress from '../addressComponents/harvestAddress.vue'
@@ -565,7 +565,7 @@ export default {
       recommendDetailsCount: '--', // 转介绍信息-体验课推荐人数
       detailHeight: 'auto',
       changeSubject: this.$store.state.subjects.subjectCode,
-      formatTeamNameSup,
+      courseLevelReplace,
       defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png',
       // 学员标签(非艾克的全部4项)
       studentLabels: [],

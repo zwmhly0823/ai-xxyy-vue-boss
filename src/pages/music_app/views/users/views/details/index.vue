@@ -256,7 +256,7 @@ import {
 } from '@/utils/index'
 
 import CouponPopover from '@/pages/music_app/views/studentTeam/components/TabPane/components/couponPopover'
-import { formatTeamNameSup } from '@/utils/supList'
+import { courseLevelReplace } from '@/utils/supList'
 
 export default {
   components: {
@@ -277,7 +277,7 @@ export default {
     return {
       allSysRemainingWeeks: 0,
       USER_FLLOW_UP,
-      formatTeamNameSup,
+      courseLevelReplace,
       changeSubject: this.$store.state.subjects.subjectCode,
       // <修改地址>组件弹窗显示隐藏
       dialogTableVisible: false,
@@ -698,7 +698,7 @@ export default {
           accountUserStoneCollect = []
           // lesson_sl: LS
         } = UserExtends
-        // UserExtends.lesson_sl = LS.map((l) => formatTeamNameSup(l))
+        // UserExtends.lesson_sl = LS.map((l) => courseLevelReplace(l))
         this.stuInfor_add = UserExtends ? this.modifyData(UserExtends) : {}
         // 用户资产
         // this.bearCoin = accountUserCollect

@@ -505,7 +505,7 @@
 import EleTable from '@/components/Table/EleTable'
 import TaskDetailDialog from './TaskDetailDialog'
 import JoinCompStatistics from './JoinCompStatistics'
-import { formatTeamNameSup } from '@/utils/supList'
+import { courseLevelReplace } from '@/utils/supList'
 import { formatDateByType } from '@/utils/mini_tool_lk'
 export default {
   name: 'studyRecordArt',
@@ -846,7 +846,7 @@ export default {
 
         this.sendCourseLogPage = Object.assign({}, this.sendCourseLogPage, {
           period: first.stageInfo && first.stageInfo.period_name,
-          sup: first.sup_text && formatTeamNameSup(first.sup_text),
+          sup: first.sup_text && courseLevelReplace(first.sup_text),
           buytime: formatDateByType(first.buytime, '-', 'Y'),
           isSystemPoriod: first.isSystemPoriod
         })
@@ -874,7 +874,7 @@ export default {
           item.indexOf('T6S') !== 0
         ) {
           lessonList.push({
-            label: formatTeamNameSup(item),
+            label: courseLevelReplace(item),
             value: item
           })
         }
@@ -1012,7 +1012,7 @@ export default {
           }
         }
 
-        lesson = formatTeamNameSup(lesson)
+        lesson = courseLevelReplace(lesson)
         ctime = formatDateByType(ctime, '-', 'M')
         lastJoinTime = formatDateByType(lastJoinTime, '-', 'MS')
         firstJoinTime = formatDateByType(firstJoinTime, '-', 'MS')

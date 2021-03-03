@@ -65,7 +65,7 @@
           <el-row>
             <el-col :span="3">课程进度:</el-col>
             <el-col :span="20" :offset="1">
-              {{ formatTeamNameSup(drawerApprovalDeatail.currentLesson) }}
+              {{ courseLevelReplace(drawerApprovalDeatail.currentLesson) }}
             </el-col>
           </el-row>
           <el-row>
@@ -90,7 +90,7 @@
                     ? '体验课'
                     : '系统课'
                 }}
-                {{ formatTeamNameSup(drawerApprovalDeatail.sup) }}
+                {{ courseLevelReplace(drawerApprovalDeatail.sup) }}
                 {{ drawerApprovalDeatail.level }}
                 】
               </span>
@@ -524,7 +524,7 @@
 <script>
 import { formatData } from '@/utils/index'
 import { getStaffInfo } from '../../common'
-import { formatTeamNameSup, SUP_LEVEL_UPPER } from '@/utils/supList'
+import { courseLevelReplace, SUP_LEVEL_UPPER } from '@/utils/supList'
 // import VersionBox from '@/components/MSearch/searchItems/moreVersionBox'
 export default {
   name: 'drawerRight',
@@ -550,7 +550,7 @@ export default {
         SINGLE_PIGMENT_LEAKAGE: '颜料撒漏'
       },
       SUP_LEVEL_UPPER,
-      formatTeamNameSup,
+      courseLevelReplace,
       currentType: '',
       drawer: false,
       diologRefundTag: '', // 退款审批抽屉专用的tag类型
