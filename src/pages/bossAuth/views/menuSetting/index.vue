@@ -17,7 +17,7 @@
           plain
           icon="el-icon-delete"
           size="mini"
-          @click="handleAdd"
+          @click="del"
           disabled="multipleSelection.length>0"
           >删除</el-button
         >
@@ -83,37 +83,40 @@
     </el-table>
 
     <!-- 添加或修改菜单对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body :before-close="cancel">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
-          <el-col :span="24">
-            <el-form-item label="上级菜单">
+          <el-col :span="24" v-if="step!=1">
+            <el-form-item label="上级菜单" >
               <el-tree
                 :data="menuList"
                 :props="{ label: 'name' }"
                 show-checkbox
                 @node-click="handleNodeClick"
                 @check-change="handleCheckChange"
+                node-key="id"
+                :default-checked-keys="form.parentIdArr" 
+                 :default-expanded-keys="expandedArr"
               ></el-tree>
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="菜单类型" prop="menuType">
-              <el-radio-group v-model="form.menuType">
+            <el-form-item label="菜单类型" prop="type" v-if="step!=1">
+              <el-radio-group v-model="form.type">
                 <el-radio label="M">目录</el-radio>
                 <el-radio label="C">菜单</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="菜单名称" prop="menuName">
-              <el-input v-model="form.menuName" placeholder="请输入菜单名称" />
+            <el-form-item label="菜单名称" prop="name">
+              <el-input v-model="form.name" placeholder="请输入菜单名称" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="显示排序" prop="sort">
               <el-input-number
-                v-model="form.orderNum"
+                v-model="form.sort"
                 controls-position="right"
                 :min="0"
               />
@@ -128,7 +131,7 @@
           <el-col :span="12">
             <el-form-item label="权限标识">
               <el-input
-                v-model="form.perms"
+                v-model="form.permission"
                 placeholder="请权限标识"
                 maxlength="50"
               />
@@ -146,6 +149,7 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="reset">重置</el-button>
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
@@ -171,10 +175,23 @@ export default {
       // 是否显示弹出层
       open: false,
       // 表单参数
-      form: {},
+      expandedArr:[],
+      form: {
+        menuType: 'boss',
+        icon: '',
+        keepAlive: false,
+        menuType: '',
+        name: '',
+        parentId: 0,
+        path: '',
+        permission: '',
+        sort: 0,
+        type: '',
+        parentIdArr:[],
+      },
       // 表单校验
       rules: {
-        menuName: [
+        name: [
           { required: true, message: '菜单名称不能为空', trigger: 'blur' },
         ],
         orderNum: [
@@ -185,6 +202,7 @@ export default {
         ],
       },
       multipleSelection: [],
+      step:1,
     }
   },
   created() {
@@ -198,65 +216,87 @@ export default {
       console.log(data)
     },
 
-    // 取消按钮
-    cancel() {
-      this.open = false
-      this.reset()
-    },
     // 表单重置
     reset() {
       this.form = {
-        menuId: undefined,
+        icon: '',
+        keepAlive: false,
+        menuType: '',
+        name: '',
         parentId: 0,
-        menuName: undefined,
-        icon: undefined,
-        menuType: 'M',
-        orderNum: undefined,
-        isFrame: '1',
-        isCache: '0',
-        visible: '0',
-        status: '0',
+        path: '',
+        permission: '',
+        sort: 0,
+        type: '',
+        parentIdArr:[]
       }
-      // console.log(this.$refs)
-      // this.$refs[].resetFields()
+      this.expandedArr=[];
+      console.log(this.expandedArr)
+      //TODO:
+      console.log(this)
+      // this.$refs['form'].resetFields()
     },
     /** 新增按钮操作 */
     handleAdd(row) {
+      console.log('rowrowrow',row)
       this.reset()
       this.getTreeList()
-      if (row != null && row.menuId) {
-        this.form.parentId = row.menuId
+    
+      if (row != null && row.id) {
+        this.step=2;
+        this.expandedArr.push(row.id)
+        // let arr =[];
+        // arr.push(row.id)
+        // this.form.parentIdArr=arr;
+        // console.log(this.form)
+        this.form.parentId = row.id
       } else {
+        this.step=1;
         this.form.parentId = 0
       }
       this.open = true
-      this.title = '添加菜单'
+      this.title = '添加'
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
+      console.log(row)
       this.reset()
-      this.getTreeselect()
+      this.getTreeList()
       getMenu(row.menuId).then((response) => {
         this.form = response.data
         this.open = true
-        this.title = '修改菜单'
+        this.title = '修改'
       })
     },
     /** 提交按钮 */
     submitForm: function () {
+      console.log(this.form)
+      console.log(this.$refs['form'])
       this.$refs['form'].validate((valid) => {
+        console.log(valid)
+
         if (valid) {
+          let params = {
+            ...this.form,
+            icon: '',
+          }
+
           if (this.form.menuId != undefined) {
-            updateMenu(this.form).then((response) => {
-              Message('修改成功')
-              this.open = false
-              this.getList()
-            })
+            // updateMenu(this.form).then((response) => {
+            //   Message('修改成功')
+            //   this.open = false
+            //   this.getList()
+            // })
           } else {
-            addMenu(this.form).then((response) => {
-              Message('新增成功')
-              this.open = false
-              this.getList()
+            console.log(params)
+            params.type = "0";
+            console.log(params)
+            this.$http.SystemMenu.add(params).then((response) => {
+              if (response.code == 0) {
+                Message('新增成功')
+                this.open = false
+                this.getList()
+              }
             })
           }
         }
@@ -264,6 +304,14 @@ export default {
     },
 
     // TODO:完毕
+
+    // 取消按钮
+   
+
+    cancel() {
+      this.open = false
+      this.reset()
+    },
     del(ids) {
       console.log(ids)
 
