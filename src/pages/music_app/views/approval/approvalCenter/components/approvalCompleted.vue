@@ -916,7 +916,7 @@ export default {
     status_resultChange(val) {
       this.params.page = 1
       this.currentPage = 1
-      Object.assign(this.params, { status: val })
+      Object.assign(this.params, { status: val==''?'COMPLETED':val })
       this.checkPending(this.params)
     },
     //  活动名称搜索
