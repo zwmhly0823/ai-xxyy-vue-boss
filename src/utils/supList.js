@@ -65,6 +65,10 @@ export const SUP_LEVEL_TRIAL = {
   S4:'M4'
 }
 export const SUP_LEVEL_SYSTEM = {
+  S1:'M1',
+  S2:'M2',
+  S3:'M3',
+  S4:'M4',
   S8:'MA',
   S9:'MB',
 }

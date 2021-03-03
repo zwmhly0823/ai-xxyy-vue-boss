@@ -503,3 +503,10 @@ export function getZero(num) {
   }
   return num
 }
+export async function calcBrowerClienHeight(_this, ref, minus = 0) {
+  await _this.$nextTick()
+  // Element.getBoundingClientRect() 方法返回元素的大小及其相对于视口的位置。
+  const DomTop = _this.$refs[ref].getBoundingClientRect().y
+  //  document.body.clientHeight 返回body元素内容的高度
+  return document.body.clientHeight - DomTop - minus + 'px'
+}

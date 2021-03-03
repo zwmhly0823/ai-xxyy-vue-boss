@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-10-14 20:16:44
+ * @LastEditTime: 2020-12-29 14:38:51
 -->
 <template>
   <div class="coupon-content">
@@ -17,6 +17,13 @@
         <span class="coupon-nums-label">{{ cItem.label }} :</span>
         <span class="coupon-nums-val">{{ cItem.value }}</span>
       </div>
+      <el-button
+        class="send-coupon-button"
+        type="primary"
+        size="small"
+        @click="$refs.couponPopover.issueCoupons = true"
+        >发券</el-button
+      >
     </div>
 
     <el-table :data="faProps" style="width: 100%">
@@ -68,13 +75,23 @@
       >
       </el-pagination>
     </div>
+    <!-- 优惠券弹窗 -->
+    <coupon-popover
+      ref="couponPopover"
+      :selectUserId="[$route.params.id]"
+      :subjectType="changeSubject"
+    />
   </div>
 </template>
 
 <script>
+import CouponPopover from '@/pages/music_app/views/studentTeam/components/TabPane/components/couponPopover'
 import { formatData } from '@/utils/index'
 export default {
   name: 'couponComponent',
+  components: {
+    CouponPopover
+  },
   props: {
     changeSubject: {
       type: Number,
@@ -187,6 +204,7 @@ export default {
             this.couponNumList[3].value++ // 已使用
           }
         })
+        this.$emit('colorCoupon', this.couponNumList[1].value) // colorCoupon
       }
     }
   }

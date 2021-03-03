@@ -240,12 +240,20 @@ export default {
       ],
       levelListB: [
         {
-          text: 'MA',
-          id: 'S8'
+          text: 'M1',
+          id: 'S1'
         },
         {
-          text: 'MB',
-          id: 'S9'
+          text: 'M2',
+          id: 'S2'
+        },
+        {
+          text: 'M3',
+          id: 'S3'
+        },
+        {
+          text: 'M4',
+          id: 'S4'
         }
       ],
       levelObj: {
@@ -255,8 +263,10 @@ export default {
         S4: 'M4'
       },
       levelObjB: {
-        S8: 'MA',
-        S9: 'MB'
+        S1: 'M1',
+        S2: 'M2',
+        S3: 'M3',
+        S4: 'M4'
       },
       tableData: [],
       isValidate: true,

@@ -3,17 +3,18 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-05-25 15:34:04
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-19 10:54:02
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-11-11 20:17:53
 -->
 <template>
   <div class="user-list">
     <el-tabs v-model="life_cycle">
-      <el-tab-pane label="全部学员" name="0,1,2,91"></el-tab-pane>
+      <el-tab-pane label="全部学员" name="0,1,2,91,92"></el-tab-pane>
       <el-tab-pane label="开课中" name="1"></el-tab-pane>
       <el-tab-pane label="待开课" name="0"></el-tab-pane>
       <el-tab-pane label="已结课" name="2"></el-tab-pane>
       <el-tab-pane label="已退费" name="91"></el-tab-pane>
+      <el-tab-pane label="已转出" name="92"></el-tab-pane>
     </el-tabs>
     <search-system
       @search="getSearchQuery"
@@ -64,7 +65,6 @@
       :height="tableHeight"
       empty-text=" "
     >
-      <!-- <el-table-column type="selection" width="55"> </el-table-column> -->
       <el-table-column label="用户信息" min-width="180" fixed>
         <template slot-scope="scope">
           <base-user-info
@@ -78,6 +78,25 @@
             style="position:absolute;top:22px;left:160px;cursor:pointer;z-index:9999;"
             class="el-icon-document-copy"
           ></span>
+        </template>
+      </el-table-column>
+      <el-table-column label="微信信息" min-width="200">
+        <template slot-scope="scope">
+          <div v-if="scope.row.userExtends && scope.row.userExtends.wechat_id">
+            <div class="sys-v2-head-father">
+              <img
+                class="sys-v2-head"
+                :src="
+                  scope.row.userExtends && scope.row.userExtends.wechat_avatar
+                "
+                alt=""
+              />
+              <div class="sys-v2-head-father-right">
+                <div>{{ scope.row.userExtends.wechat_nick_name }}</div>
+              </div>
+            </div>
+          </div>
+          <div v-else>未绑定</div>
         </template>
       </el-table-column>
       <el-table-column label="系统课包类型" min-width="100">
@@ -232,7 +251,6 @@
           </p>
         </template>
       </el-table-column>
-
       <el-table-column label="完课" min-width="130">
         <template #header>
           <el-dropdown
@@ -392,9 +410,9 @@
           <p v-if="scope.row.life_cycle === 1">上课中</p>
           <p v-if="scope.row.life_cycle === 2">已结课</p>
           <p v-if="scope.row.life_cycle === 91">已退费</p>
+          <p v-if="scope.row.life_cycle === 92">已转出</p>
         </template>
       </el-table-column>
-
       <el-table-column label="加微" min-width="60">
         <template slot-scope="scope">
           <!-- <handle-item-status
@@ -512,9 +530,7 @@
         </template>
       </el-table-column>
     </el-table>
-
     <div class="empty-text" v-if="dataList.length === 0">暂无数据</div>
-
     <m-pagination
       :current-page="currentPage"
       :page-count="totalPages"
@@ -524,7 +540,6 @@
       open="calc(100vw - 170px - 25px)"
       close="calc(100vw - 50px - 25px)"
     ></m-pagination>
-
     <!-- 无地址页面修改地址弹框 -->
     <el-dialog
       :close-on-click-modal="false"
@@ -552,13 +567,10 @@
     />
   </div>
 </template>
-
 <script>
 import SearchSystem from '../../components/SearchSystem-v2.vue'
 import MPagination from '@/components/MPagination/index.vue'
 import BaseUserInfo from '../../components/BaseUserInfo.vue'
-// import ItemStatus from '../../components/ItemStatus.vue'
-// import HandleItemStatus from '../../components/HandleItemStatus.vue'
 import labelCheckbox from '../../components/labelCheckboxSystem'
 import ModifyAddress from '../../components/ModifyAddress.vue'
 import enums from '../../components/searchData'
@@ -577,13 +589,6 @@ export default {
     labelCheckbox
     // CouponPopover
   },
-  // props: {
-  //   // 查询条件
-  //   search: {
-  //     type: Object,
-  //     default: () => ({})
-  //   }
-  // },
   computed: {
     searchParams() {
       return {
@@ -594,7 +599,7 @@ export default {
   },
   data() {
     return {
-      life_cycle: '0,1,2,91', // 0 待开始；1 上课中；2 已结课; 91 已退费
+      life_cycle: '0,1,2,91,92', // 0 待开始；1 上课中；2 已结课; 91 已退费; 92 已转出
       currentPage: 1,
       totalElements: 0,
       totalPages: 1,
@@ -647,14 +652,12 @@ export default {
   },
   created() {
     this.init()
-    // dashboard_lk
     if (Object.keys(this.$route.query).length > 0) {
       // 修改2处ui(可能造成额外两次请求)
       this.life_cycle = '0'
       const key = Object.keys(this.$route.query)[0]
       this.$root.$emit(key + '_lk', this.$route.query[key])
     }
-    // this.getCouponList()
   },
   methods: {
     handLeCopy(index, row) {
@@ -713,7 +716,6 @@ export default {
     // TOSS, 老师权限
     // getTeachersById() {
     //   if (!this.teacherId) return
-
     //   this.$http.Permission.getAllTeacherByRole({
     //     teacherId: this.teacherId
     //   }).then((res) => {
@@ -737,7 +739,6 @@ export default {
       // }
       const query = Object.assign({}, this.searchParams)
       console.log(query)
-
       const page = this.currentPage
       const sort = {}
       if (this.sortActive) {
@@ -812,7 +813,6 @@ export default {
       this.currentPage = page
       this.getData()
     },
-
     // changeStatus(res) {
     //   console.log(res)
     //   setTimeout(() => {
@@ -865,7 +865,6 @@ export default {
         }
       })
     },
-
     // 填写地址
     modifyAddress(row) {
       console.log(row)
@@ -882,19 +881,16 @@ export default {
       this.modifyFormData = params
       this.showModifyAddress = true
     },
-
     handleModifyAddress(res) {
       this.showModifyAddress = false
       if (res === 1) {
         this.getData()
       }
     },
-
     // 多选
     handleSelectionChange(data) {
       console.log(data)
     },
-
     // 点击用户信息回调事件
     userHandle(user) {
       const { username, studentid, mobile } = user
@@ -919,11 +915,9 @@ export default {
       }
       return '最后一次' + FOLLOW_EXPRESS_STATUS[status]
     },
-
     refundStatus(status) {
       return status ? ISREFUND[status] : '-'
     },
-
     wechatStatus(row) {
       const {
         teamtype = 1,
@@ -942,13 +936,12 @@ export default {
         team_id: teamid
       }
     },
-
     // 点击班级名称，打开班级详情
     openTeam(row) {
       const { teamid, teamname, teamtype = '1' } = row
       teamid &&
         openBrowserTab(
-          `/music_app/#/teamDetail/${teamid}/${teamtype}`,
+          `/student-team/#/teamDetail/${teamid}/${teamtype}`,
           `${teamname}`
         )
     },
@@ -1002,7 +995,6 @@ export default {
   }
 }
 </script>
-
 <style lang="scss" scoped>
 @import '../../styles/list.scss';
 ::v-deep {
@@ -1039,5 +1031,18 @@ export default {
       top: -6px;
     }
   }
+}
+.sys-v2-head {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+.sys-v2-head-father {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.sys-v2-head-father-right {
+  margin-left: 5px;
 }
 </style>
