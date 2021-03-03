@@ -814,9 +814,7 @@
         <div
           v-if="
             currentType === 'UNCREDITED' &&
-              (resetParams.staffId === '455930731630301184' ||
-                resetParams.staffId === '455930591481827328' ||
-                resetParams.staffId === '462345658762924032')
+              (roleIdList.indexOf(resetParams.staffId)>=0)
           "
         >
           <el-row class="BOTTOM">
@@ -1074,6 +1072,7 @@ export default {
       }
     }
     return {
+      roleIdList:[],
       tableHeight: 0,
       forSonDataApprovalPersonId: '',
       forSonDataApprovalId: '',
@@ -1158,6 +1157,7 @@ export default {
   created() {
     // 身份类型，4是财务，具体见wiki
     this.roleId = JSON.parse(localStorage.getItem('staff')).roleId
+    this.getRoleIdList()
   },
   mounted() {
     const staff = getStaffInfo()
@@ -1195,6 +1195,11 @@ export default {
   },
 
   methods: {
+    getRoleIdList(){
+      this.$http.Backend.getStaffIds().then(res=>{
+        this.roleIdList = res.payload.approvalIdSet;
+      })
+    },
     getSearchData1(val) {
       console.info('选择部门获取值:', val)
       this.params.page = 1
