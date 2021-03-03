@@ -863,6 +863,11 @@
           ? '审批同意'
           : ''
       "
+      @close="
+            adjustDrawerData.checkSuggestion = ''
+            adjustResultDialogShow = false
+            adjustDialogErrShow = false
+          "
       :visible.sync="adjustResultDialogShow"
     >
       <p class="adjust-dialog-p">
