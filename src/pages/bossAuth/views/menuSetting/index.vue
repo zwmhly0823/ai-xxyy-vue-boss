@@ -83,25 +83,47 @@
     </el-table>
 
     <!-- 添加或修改菜单对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body :before-close="cancel">
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      width="600px"
+      append-to-body
+      :before-close="cancel"
+    >
+      <el-tree
+        :data="menuList"
+        :props="{ label: 'name' }"
+        ref="tree"
+        show-checkbox
+        @node-click="handleNodeClick"
+        @check-change="handleCheckChange"
+        highlight-current
+        auto-expand-parent
+        accordion
+        node-key="id"
+        :default-checked-keys="form.parentIdArr"
+      ></el-tree>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
-          <el-col :span="24" v-if="step!=1">
-            <el-form-item label="上级菜单" >
-              <el-tree
+          <el-col :span="24" v-if="step != 1">
+            <el-form-item label="上级菜单">
+              <!-- <el-tree
                 :data="menuList"
                 :props="{ label: 'name' }"
                 show-checkbox
                 @node-click="handleNodeClick"
                 @check-change="handleCheckChange"
+                highlight-current
+                auto-expand-parent
+                accordion
                 node-key="id"
-                :default-checked-keys="form.parentIdArr" 
-                 :default-expanded-keys="expandedArr"
-              ></el-tree>
+                :default-checked-keys="form.parentIdArr"
+              ></el-tree> -->
+              <!-- :default-expanded-keys="expandedArr" -->
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="菜单类型" prop="type" v-if="step!=1">
+            <el-form-item label="菜单类型" prop="type" v-if="step != 1">
               <el-radio-group v-model="form.type">
                 <el-radio label="M">目录</el-radio>
                 <el-radio label="C">菜单</el-radio>
@@ -175,7 +197,7 @@ export default {
       // 是否显示弹出层
       open: false,
       // 表单参数
-      expandedArr:[],
+      expandedArr: [],
       form: {
         menuType: 'boss',
         icon: '',
@@ -187,7 +209,7 @@ export default {
         permission: '',
         sort: 0,
         type: '',
-        parentIdArr:[],
+        parentIdArr: [],
       },
       // 表单校验
       rules: {
@@ -202,8 +224,14 @@ export default {
         ],
       },
       multipleSelection: [],
-      step:1,
+      step: 1,
     }
+  },
+  watch: {
+    'form.parentIdArr': (a,b) => {
+      console.log(a)
+      console.log(b)
+    },
   },
   created() {
     this.getList()
@@ -218,6 +246,7 @@ export default {
 
     // 表单重置
     reset() {
+      this.expandedArr = []
       this.form = {
         icon: '',
         keepAlive: false,
@@ -228,33 +257,34 @@ export default {
         permission: '',
         sort: 0,
         type: '',
-        parentIdArr:[]
+        parentIdArr: [],
       }
-      this.expandedArr=[];
-      console.log(this.expandedArr)
+       this.$refs.tree.setCheckedKeys([]);
       //TODO:
       console.log(this)
-      // this.$refs['form'].resetFields()
+      this.$refs['form'].resetFields()
     },
     /** 新增按钮操作 */
     handleAdd(row) {
-      console.log('rowrowrow',row)
-      this.reset()
+      console.log('rowrowrow', row)
+      this.expandedArr = []
+  
       this.getTreeList()
-    
+
       if (row != null && row.id) {
-        this.step=2;
+        this.step = 2
         this.expandedArr.push(row.id)
-        // let arr =[];
-        // arr.push(row.id)
-        // this.form.parentIdArr=arr;
+        let arr = []
+        arr.push(row.id)
+        this.form.parentIdArr = arr
         // console.log(this.form)
         this.form.parentId = row.id
       } else {
-        this.step=1;
+        this.step = 1
         this.form.parentId = 0
       }
       this.open = true
+      // this.reset()
       this.title = '添加'
     },
     /** 修改按钮操作 */
@@ -289,7 +319,7 @@ export default {
             // })
           } else {
             console.log(params)
-            params.type = "0";
+            params.type = '0'
             console.log(params)
             this.$http.SystemMenu.add(params).then((response) => {
               if (response.code == 0) {
@@ -306,7 +336,6 @@ export default {
     // TODO:完毕
 
     // 取消按钮
-   
 
     cancel() {
       this.open = false
