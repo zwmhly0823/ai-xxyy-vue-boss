@@ -133,7 +133,7 @@ import { formatData, timestamp } from '@/utils/index'
 import drawerRight from './approval/drawerRight'
 import MPagination from '@/components/MPagination/index.vue'
 import adjustDrawer from './approval/adjustDrawer'
-import { formatTeamNameSup, SUP_LEVEL_UPPER } from '@/utils/supList'
+import { courseLevelReplace, SUP_LEVEL_UPPER } from '@/utils/supList'
 import ApprovalGiftDetail from './approval/approvalGiftDetail'
 export default {
   name: 'approvalRecord',
@@ -343,7 +343,7 @@ export default {
                 [
                   {
                     label: '已上课周期',
-                    value: formatTeamNameSup(payData.currentPeriod) || '-'
+                    value: courseLevelReplace(payData.currentPeriod) || '-'
                   },
                   {
                     label: '调级级别',

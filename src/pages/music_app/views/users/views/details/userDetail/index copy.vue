@@ -195,7 +195,7 @@
                       :key="item.id"
                       >{{
                         item.subject === 'ART_APP'
-                          ? formatTeamNameSup(item.name)
+                          ? courseLevelReplace(item.name)
                           : item.name
                       }}</el-tag
                     >
@@ -213,11 +213,11 @@
                     <div class="name">
                       <!-- 系统课 -->
                       <span v-if="team.currentsuper">{{
-                        formatTeamNameSup(team.currentsuper) || '-'
+                        courseLevelReplace(team.currentsuper) || '-'
                       }}</span>
                       <!-- 体验课 -->
                       <span v-else>{{
-                        formatTeamNameSup(team.sup) || '-'
+                        courseLevelReplace(team.sup) || '-'
                       }}</span>
 
                       {{ team.orderInfo && team.orderInfo.packages_name }}
@@ -338,7 +338,7 @@
                     <div>
                       <span>{{ team.current_lesson }}</span>
                       <!-- <span>{{
-                      formatTeamNameSup(team.currentsuper) ||
+                      courseLevelReplace(team.currentsuper) ||
                         team.current_lesson
                     }}</span> -->
                     </div>
@@ -475,7 +475,7 @@
 <script>
 import { openBrowserTab, calcBrowerClienHeight } from '@/utils/index'
 
-import { SUP_LEVEL_UPPER, formatTeamNameSup } from '@/utils/supList'
+import { SUP_LEVEL_UPPER, courseLevelReplace } from '@/utils/supList'
 import trackFlow from '../trackFlow/index'
 import showAddress from '../addressComponents/showAddress.vue'
 import modifyAddress from '../addressComponents/modifyAddress.vue'
@@ -527,7 +527,7 @@ export default {
       detailHeight: 'auto',
       changeSubject: this.$store.state.subjects.subjectCode,
       SUP_LEVEL_UPPER,
-      formatTeamNameSup,
+      courseLevelReplace,
       defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png',
       // 学员标签(非艾克的全部4项)
       studentLabels: [],

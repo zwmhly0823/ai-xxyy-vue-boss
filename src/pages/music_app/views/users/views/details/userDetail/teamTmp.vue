@@ -489,7 +489,7 @@
             <span class="val special-blue" @click="openTeam('t')">{{
               sys_student_details_son.trialOfStudentDetails &&
                 sys_student_details_son.trialOfStudentDetails.teamInfo &&
-                sys_student_details_son.trialOfStudentDetails.teamInfo.team_name
+                courseLevelReplace(sys_student_details_son.trialOfStudentDetails.teamInfo.team_name)
             }}</span>
           </div>
           <div class="_item">

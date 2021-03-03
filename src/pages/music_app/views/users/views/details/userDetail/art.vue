@@ -189,7 +189,7 @@
                       :key="item.id"
                       >{{
                         item.subject === 'ART_APP'
-                          ? formatTeamNameSup(item.name)
+                          ? courseLevelReplace(item.name)
                           : item.name
                       }}</el-tag
                     >
@@ -305,7 +305,7 @@
 </template>
 <script>
 import { openBrowserTab, calcBrowerClienHeight } from '@/utils/index'
-import { SUP_LEVEL_UPPER, formatTeamNameSup } from '@/utils/supList'
+import { SUP_LEVEL_UPPER, courseLevelReplace } from '@/utils/supList'
 import trackFlow from '../trackFlow/index'
 import showAddress from '../addressComponents/showAddress.vue'
 import modifyAddress from '../addressComponents/modifyAddress.vue'
@@ -359,7 +359,7 @@ export default {
       detailHeight: 'auto',
       changeSubject: this.$store.state.subjects.subjectCode,
       SUP_LEVEL_UPPER,
-      formatTeamNameSup,
+      courseLevelReplace,
       defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png',
       // 学员标签(非艾克的全部4项)
       studentLabels: [],
