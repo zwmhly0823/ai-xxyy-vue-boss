@@ -90,22 +90,9 @@
       append-to-body
       :before-close="cancel"
     >
-      <el-tree
-        :data="menuList"
-        :props="{ label: 'name' }"
-        ref="tree"
-        show-checkbox
-        @node-click="handleNodeClick"
-        @check-change="handleCheckChange"
-        highlight-current
-        auto-expand-parent
-        accordion
-        node-key="id"
-        :default-checked-keys="form.parentIdArr"
-      ></el-tree>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
-          <el-col :span="24" v-if="step != 1">
+          <el-col :span="24">
             <el-form-item label="上级菜单">
               <!-- <el-tree
                 :data="menuList"
@@ -120,6 +107,13 @@
                 :default-checked-keys="form.parentIdArr"
               ></el-tree> -->
               <!-- :default-expanded-keys="expandedArr" -->
+              <el-cascader
+                :props="{ label: 'name', value: 'id', checkStrictly: true }"
+                :options="menuOptions"
+                v-model="form.parentIdArr"
+                @change="handleParentChange"
+              >
+              </el-cascader>
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -227,18 +221,12 @@ export default {
       step: 1,
     }
   },
-  watch: {
-    'form.parentIdArr': (a,b) => {
-      console.log(a)
-      console.log(b)
-    },
-  },
   created() {
     this.getList()
   },
   methods: {
-    handleCheckChange(data, checked, indeterminate) {
-      console.log(data, checked, indeterminate)
+    handleParentChange(value) {
+      this.form.parentIdArr = value;
     },
     handleNodeClick(data) {
       console.log(data)
@@ -268,7 +256,7 @@ export default {
     handleAdd(row) {
       console.log('rowrowrow', row)
       this.expandedArr = []
-  
+
       this.getTreeList()
 
       if (row != null && row.id) {
@@ -370,9 +358,13 @@ export default {
     getTreeList() {
       this.$http.SystemMenu.getMenuTree()
         .then((res) => {
-          console.log(res)
           if (res.payload.length) {
-            this.menuOptions = res.payload
+            this.menuOptions = [
+              {
+                id: '0',
+                name: '主类目',
+              }
+            ].concat(res.payload)
           }
         })
         .finally(() => {
