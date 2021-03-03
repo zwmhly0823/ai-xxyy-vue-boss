@@ -26,7 +26,29 @@ export function tomorrowTimestamp() {
   const tomorrow = cur.getTime()
   return tomorrow
 }
-
+/**
+ * 获取本周开始时间
+ */
+export function getWeekStartTimestamp() {
+  const now = new Date() // 当前日期
+  const nowDayOfWeek = now.getDay() // 今天本周的第几天
+  const nowDay = now.getDate() // 当前日
+  const nowMonth = now.getMonth() // 当前月
+  var day = nowDayOfWeek || 7
+  const res = new Date(now.getFullYear(), nowMonth, nowDay + 1 - day).getTime()
+  return res
+}
+/**
+ * 获取本月开始时间
+ */
+export function getMonthStartTimestamp() {
+  const now = new Date() // 当前日期
+  var nowYear = now.getYear() // 当前年
+  nowYear += nowYear < 2000 ? 1900 : 0
+  const nowMonth = now.getMonth() // 当前月
+  const res = new Date(nowYear, nowMonth, 1).getTime()
+  return res
+}
 /**
  * 动态获取与今天相距N天的时间戳 00：00：00
  * @day: Number, 今天后的是正数，今天前的是负数

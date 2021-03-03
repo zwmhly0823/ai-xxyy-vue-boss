@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-11-05 19:06:44
+ * @LastEditTime: 2021-02-04 16:39:50
 -->
 <template>
   <div>
@@ -18,7 +18,7 @@
         <el-tab-pane
           v-for="(item, key) of teams_lk_filter"
           :key="key"
-          :label="`${item.team_type_formatting || '体验课'}:${courseLevelReplace(item.team_name)}`"
+          :label="`${item.team_type_formatting || '体验课'}:${item.team_name}`"
           :courseIds="item.course_ids"
           :teamId="item.id"
         >
@@ -67,6 +67,7 @@
       :data="porfolioTableData"
       style="width: 100%"
       header-row-class-name="learning-record-sty"
+      class="portfolio-table"
     >
       <el-table-column label="序号" width="70">
         <template slot-scope="scope">
@@ -79,6 +80,7 @@
             <img
               class="work-details"
               :src="scope.row.task_image + '?x-oss-process=image/resize,l_100'"
+              @click="lookCurImg(scope.row.task_image)"
             />
             <!-- 如果有视频，显示播放按钮 -->
             <i class="el-icon-video-play" v-if="scope.row.task_video"></i>
@@ -95,15 +97,47 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="老师姓名" width="70">
+      <el-table-column label="点评老师" width="70">
         <template slot-scope="scope">
-          <div>
+          <!-- 美术科目老师 -->
+          <section v-if="!changeSubject">
             {{
-              scope.row.taskComment[0] &&
+              (scope.row.taskComment[0] &&
                 scope.row.taskComment[0].teacherInfo &&
-                scope.row.taskComment[0].teacherInfo.realname
+                scope.row.taskComment[0].teacherInfo.realname) ||
+                '--'
             }}
-          </div>
+          </section>
+          <!-- 写字科目老师 -->
+          <section v-else>
+            <!-- 有点评 -->
+            <div v-if="scope.row.taskComment.length">
+              {{
+                (scope.row.taskComment[0] &&
+                  scope.row.taskComment[0].teacherInfo &&
+                  scope.row.taskComment[0].teacherInfo.realname) ||
+                  '--'
+              }}
+            </div>
+            <!-- 没点评a  -->
+            <div v-else>
+              <!-- 转给兼职 -->
+              <span v-if="scope.row.taskDispatchLog">
+                {{
+                  (scope.row.taskDispatchLog.teacherInfo &&
+                    scope.row.taskDispatchLog.teacherInfo.realname) ||
+                    '--'
+                }}
+              </span>
+              <!-- 没转给兼职 -->
+              <span v-else>
+                {{
+                  (scope.row.teacherInfo && scope.row.teacherInfo.realname) ||
+                    '--'
+                }}
+              </span>
+            </div>
+          </section>
         </template>
       </el-table-column>
       <el-table-column label="老师点评·点评时间">
@@ -128,7 +162,7 @@
               </div>
               <img class="img-play" :src="scope.row.imgWorks" />
               <div>
-                {{ aItem && aItem.type === 0 ? '人工点评' : '智能点评'
+                {{ aItem && '' + aItem.type && voiceType['' + aItem.type]
                 }}<br />{{ aItem.ctime }}
               </div>
               <div class="listening-status">
@@ -163,6 +197,29 @@
           <el-button type="text" @click="delete_task(scope.row.id)"
             >删除</el-button
           >
+          <el-button
+            type="text"
+            :disabled="scope.row.task_report_image ? false : true"
+            @click="
+              studyRecordImg = true
+              studyRecordImgSrc = scope.row.task_report_image
+            "
+            >{{
+              scope.row.task_report_image ? '学习报告' : '未生成报告'
+            }}</el-button
+          >
+          <!-- studentId，courseId，taskId -->
+          <el-link
+            :type="scope.row.task_report_image ? 'primary' : 'info'"
+            :disabled="scope.row.task_report_image ? false : true"
+            :href="
+              `https://www.xiaoxiongmeishu.com/h5/report?studentId=${scope.row.student_id}&taskId=${scope.row.id}&courseId=${scope.row.sendCourseLog.course_id}&channelId=6`
+            "
+            target="_blank"
+            >{{
+              scope.row.task_report_image ? '报告链接' : '无报告链接'
+            }}</el-link
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -191,14 +248,22 @@
         width="100%"
       ></video>
     </el-dialog>
+    <!-- 学习报告图片 -->
+    <el-dialog :visible.sync="studyRecordImg" top="1vh" width="30%">
+      <el-image :src="studyRecordImgSrc" fit="contain"></el-image>
+    </el-dialog>
+
+    <!-- 查看大图弹框 -->
+    <single-img-preview :url="imgPreview" :showViewer.sync="showViewer" />
   </div>
 </template>
 
 <script>
+import SingleImgPreview from '@/components/SingleImgPreview/index'
 import { formatData } from '@/utils/index'
-import {courseLevelReplace} from "@/utils/supList.js"
 export default {
   name: 'portfolio',
+  components: { SingleImgPreview },
   mounted() {
     this.$root.$on('portfolio', (...argus) => {
       console.info('老爹给作品集的基础数据和写字0元体验', argus[0], argus[1])
@@ -221,6 +286,14 @@ export default {
   },
   data() {
     return {
+      voiceType: {
+        0: '人工点评',
+        1: '智能点评',
+        2: '真人点评',
+        3: '语音库点评'
+      },
+      imgPreview: '',
+      showViewer: false,
       teams_lk_free_write: [], // tab-pane(写字0元体验)
       teams_lk: [], // tab-pane
       courseData: '0', // tab-pane v-model
@@ -240,7 +313,10 @@ export default {
       audioId: '',
       currentVideo: '',
       videoDialog: false,
-      courseLevelReplace
+
+      // 学习报告分享图片
+      studyRecordImg: false,
+      studyRecordImgSrc: ''
     }
   },
   computed: {
@@ -268,6 +344,10 @@ export default {
     }
   },
   methods: {
+    lookCurImg(src) {
+      this.imgPreview = src
+      this.showViewer = true
+    },
     // 删除作品
     delete_task(...args) {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '温馨提示', {
@@ -418,6 +498,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.course-sty {
+  padding: 10px;
+  .portfolio-table {
+    padding: 0 10px;
+  }
+}
 .inner_lk {
   display: flex;
   align-items: center;
@@ -468,6 +554,7 @@ export default {
   // 作品详情img
   .work-details {
     width: 100px;
+    cursor: pointer;
   }
   ::v-deep .el-icon-video-play {
     position: absolute;
@@ -479,7 +566,6 @@ export default {
   }
   .down-btn {
     text-align: center;
-    margin-left: 10px;
     padding: 4px 15px;
   }
 }
@@ -506,5 +592,17 @@ export default {
   .listening-status {
     padding: 0 0 0 20px;
   }
+}
+// 报告链接
+/deep/ .el-link--inner {
+  font-size: 12px;
+}
+/deep/ .el-link.is-underline:hover:after {
+  width: 0px;
+}
+.el-link {
+  position: relative;
+  top: -1px;
+  left: 11px;
 }
 </style>

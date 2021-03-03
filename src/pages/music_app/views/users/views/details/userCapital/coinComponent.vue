@@ -3,13 +3,13 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
- * @LastEditors: liukun
- * @LastEditTime: 2020-10-15 20:12:39
+ * @LastEditors: Shentong
+ * @LastEditTime: 2021-01-18 12:43:27
 -->
 <template>
   <div class="coin-content">
     <div class="coin-num-box">
-      <div class="coin-item" v-for="(cItem, cKey) in coinNumList" :key="cKey">
+      <div class="coin-item" v-for="(cItem, cKey) of coinNumList" :key="cKey">
         <span class="coin-nums-label">{{ cItem.label }} :</span>
         <span class="coin-nums-val">{{ cItem.value }}</span>
       </div>
@@ -18,29 +18,27 @@
       <el-form :inline="true" size="mini">
         <el-form-item label="任务类型:" style="margin-right:30px">
           <el-select
-            v-model="value1"
+            v-model="taskType"
             clearable
-            multiple
             collapse-tags
             placeholder="请选择"
             size="mini"
           >
             <el-option
-              v-for="(value, name) in options"
-              :key="name"
-              :label="value"
-              :value="name"
-              :disabled="name === '0' || name === '7'"
+              v-for="(task, index) in taskTypes"
+              :key="index"
+              :label="task.label"
+              :value="task.value"
             >
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="获取时间:">
           <el-date-picker
-            v-model="value2"
+            v-model="timeRange"
+            unlink-panels
             type="daterange"
             size="mini"
-            unlink-panels
             value-format="timestamp"
             range-separator="至"
             start-placeholder="开始日期"
@@ -51,9 +49,10 @@
       </el-form>
     </div>
     <el-table :data="renderTableData" style="width: 100%">
-      <el-table-column prop="transTypeName" label="类型"></el-table-column>
-      <el-table-column prop="desc" label="操作"></el-table-column>
-      <el-table-column label="金额">
+      <el-table-column prop="taskType" label="任务类型"></el-table-column>
+      <el-table-column prop="taskName" label="任务名称"></el-table-column>
+      <el-table-column prop="desc" label="说明"></el-table-column>
+      <el-table-column label="小熊币">
         <template slot-scope="scope">
           <span v-if="scope.row.coinDown" class="red-text-color">
             - {{ scope.row.amount }}</span
@@ -77,6 +76,7 @@
 </template>
 
 <script>
+// import { formatDateByType } from '@/utils/mini_tool_lk'
 export default {
   name: 'coinComponent',
   props: {
@@ -87,8 +87,19 @@ export default {
   },
   data() {
     return {
-      value1: [], // 任务类型-[]
-      value2: null, // 获取时间-null
+      taskType: [], // 任务类型-[]
+      timeRange: null, // 获取时间-null
+      taskTypes: [
+        {
+          label: '获取',
+          value: [2, 6, 8, 9, 10, 12]
+        },
+        {
+          label: '消耗',
+          value: [5, 11, 13, 14]
+        }
+      ],
+      taskKeyVal: {},
       options: {
         // 前端滤掉0和7
         0: '默认',
@@ -106,6 +117,22 @@ export default {
         12: '小熊币兑吧添加',
         13: '小熊币兑吧扣除',
         14: '运营扣除'
+      },
+      // 获取对应的值
+      acquire: {
+        2: '任务奖励',
+        6: '学习奖励',
+        8: '系统导入',
+        9: '系统导入',
+        10: '抽奖活动',
+        12: '活动收入'
+      },
+      // 消耗对应的值
+      consume: {
+        5: '兑换消耗',
+        11: '抽奖消耗',
+        13: '活动消耗',
+        14: '系统扣除'
       },
       coinNumList: [
         {
@@ -127,9 +154,11 @@ export default {
       allDigit: 0
     }
   },
+  created() {
+    this.taskKeyVal = Object.assign({}, this.acquire, this.consume)
+  },
   mounted() {
     this.$root.$on('bearCoin', (r) => {
-      console.info('老爹给用户资产-小熊币-基础数据', r)
       this.faProps = r || []
       this.top3Show()
     })
@@ -143,7 +172,7 @@ export default {
         this.reqGetUserCoin()
       }
     },
-    value1: {
+    taskType: {
       immediate: false,
       deep: true,
       handler(newValue, oldValue) {
@@ -151,11 +180,10 @@ export default {
         this.reqGetUserCoin()
       }
     },
-    value2: {
+    timeRange: {
       immediate: false,
       deep: true,
       handler(newValue, oldValue) {
-        console.info('捕获时间改变', newValue, oldValue)
         this.reqGetUserCoin()
       }
     }
@@ -164,8 +192,8 @@ export default {
     // 获取时间筛选对象
     ctime() {
       const ctime = {}
-      ctime.gte = this.value2 ? this.value2[0] : 0 // 清空之后2030年↓
-      ctime.lte = this.value2 ? this.value2[1] : 1902591374054
+      ctime.gte = this.timeRange ? this.timeRange[0] : 0 // 清空之后2030年↓
+      ctime.lte = this.timeRange ? this.timeRange[1] : 1902591374054
       return ctime
     }
   },
@@ -176,40 +204,42 @@ export default {
         this.changeSubject,
         this.$route.params.id,
         this.currentPage,
-        Array.isArray(this.value1) && this.value1.length
-          ? this.value1
-          : [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14], // 清空之后全类型
+        Array.isArray(this.taskType) && this.taskType.length
+          ? this.taskType
+          : Object.keys(this.taskKeyVal), // 清空之后全类型
         this.ctime
       )
-        .then((res) => {
-          if (res.data.AccountPage && res.data.AccountPage.content.length) {
-            res.data.AccountPage.content.forEach((nItem) => {
-              // 类型
-              nItem.transTypeName = this.options['' + nItem.trans_type]
-              // 操作时间
-              nItem.update_date = nItem.update_date ? nItem.update_date : '-'
+        .then((res = {}) => {
+          const { content = [] } = res.data?.AccountPage || {}
+          if (content.length) {
+            content.forEach((item = {}) => {
+              const { trans_type: transType } = item
+              // 任务类型
+              if (Object.keys(this.consume).includes(transType)) {
+                item.taskType = '消耗'
+              } else if (Object.keys(this.acquire).includes(transType)) {
+                item.taskType = '获取'
+              } else {
+                item.taskType = '未知'
+              }
+              // 任务名称
+              item.taskName = this.taskKeyVal[transType]
               // 金额颜色
-              nItem.coinDown =
-                +nItem.trans_type === 4 ||
-                +nItem.trans_type === 5 ||
-                +nItem.trans_type === 11
-                  ? 1
-                  : 0
+              item.coinDown = Object.keys(this.consume).includes(transType)
             })
             this.allDigit = Number(res.data.AccountPage.totalElements)
-            this.renderTableData = res.data.AccountPage.content
+            this.renderTableData = content
           } else {
             this.allDigit = 0
             this.renderTableData = []
           }
         })
-        .catch(() => {
+        .catch((res) => {
           this.$message.error('获取用户资产_小熊币_失败')
         })
     },
     // 翻页
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
       this.currentPage = val
       this.reqGetUserCoin()
     },
@@ -217,12 +247,7 @@ export default {
       // 头3数据取自老爹-总获取
       this.coinNumList[0].value = this.faProps.reduce(
         (pre, cur, index, self) => {
-          if (
-            cur.code !== '5' &&
-            cur.code !== '11' &&
-            cur.code !== '13' &&
-            cur.code !== '14'
-          ) {
+          if (Object.keys(this.acquire).includes(cur.code)) {
             return pre + Number(cur.value)
           } else {
             return pre + 0
@@ -233,12 +258,7 @@ export default {
       // 头3数据取自老爹-已消耗
       this.coinNumList[1].value = this.faProps.reduce(
         (pre, cur, index, self) => {
-          if (
-            cur.code === '5' ||
-            cur.code === '11' ||
-            cur.code === '13' ||
-            cur.code === '14'
-          ) {
+          if (Object.keys(this.consume).includes(cur.code)) {
             return pre + Number(cur.value)
           } else {
             return pre + 0
@@ -249,6 +269,8 @@ export default {
       // 头3数据取自老爹-计算剩余
       this.coinNumList[2].value =
         this.coinNumList[0].value - this.coinNumList[1].value
+
+      this.$emit('colorBear', this.coinNumList[2].value)
     }
   }
 }

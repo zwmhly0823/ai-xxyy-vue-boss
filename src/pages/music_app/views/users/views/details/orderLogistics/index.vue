@@ -3,98 +3,31 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
- * @LastEditors: liukun
- * @LastEditTime: 2020-10-13 18:26:16
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-12-19 21:41:12
 -->
 <template>
-  <div>
-    <el-table :data="logisticsTableData" style="width: 100%">
-      <el-table-column label="商品信息">
-        <template slot-scope="scope">
-          <div>
-            {{ scope.row.packages_name ? scope.row.packages_name : '-' }}
-          </div>
-          <div>¥{{ scope.row.amount >= 0 ? scope.row.amount : '-' }}</div>
-        </template>
-      </el-table-column>
-      <el-table-column label="订单状态">
-        <template slot-scope="scope">
-          <div>{{ scope.row.order_status ? scope.row.order_status : '-' }}</div>
-        </template>
-      </el-table-column>
-      <el-table-column label="班级信息">
-        <template slot-scope="scope">
-          <div>
-            <div>{{ scope.row.team ? courseLevelReplace(scope.row.team.team_name) : '-' }}</div>
-            <div>
-              {{
-                scope.row.team && scope.row.team.teacher_info
-                  ? scope.row.team.teacher_info.realname
-                  : '-'
-              }}
-              {{
-                scope.row.team &&
-                scope.row.team.teacher_info &&
-                scope.row.team.teacher_info.departmentInfo
-                  ? scope.row.team.teacher_info.departmentInfo.name
-                  : '-'
-              }}
-            </div>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column label="下单时间·订单号">
-        <template slot-scope="scope">
-          <div>
-            <div>{{ scope.row.ctime }}</div>
-            <div>
-              {{ scope.row.out_trade_no ? scope.row.out_trade_no : '-' }}
-            </div>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="退款状态"
-        align="center"
-        prop="rmbRefundStatusText"
-      >
-      </el-table-column>
-      <el-table-column
-        label="开票状态"
-        prop="invoice_status_text"
-        align="center"
-      >
-      </el-table-column>
-      <el-table-column label="关联物流">
-        <template slot-scope="scope">
-          <div>
-            <div>
-              共
-              <span
-                v-if="scope.row.express && scope.row.express.express_total"
-                class="logistics"
-                @click="
-                  showExpressDetail(
-                    scope.row.id,
-                    scope.row.express.express_total
-                  )
-                "
-                >{{ scope.row.express.express_total }}</span
-              >
-              <span v-else>0</span>
-              条物流记录
-            </div>
-            <div>
-              最后一次已{{
-                scope.row.express && scope.row.express.last_express_status
-                  ? scope.row.express.last_express_status
-                  : '暂无物流记录'
-              }}
-            </div>
-          </div>
-        </template>
-      </el-table-column>
-    </el-table>
+  <div class="logistics">
+    <el-radio-group v-model="changeType" size="mini">
+      <el-radio-button :label="-1">全部</el-radio-button>
+      <el-radio-button :label="0">随材物流</el-radio-button>
+      <el-radio-button :label="1">赠品物流</el-radio-button>
+      <el-radio-button :label="2">兑换物流</el-radio-button>
+      <el-radio-button :label="3">活动物流</el-radio-button>
+      <el-radio-button :label="4">补发物流</el-radio-button>
+    </el-radio-group>
+    <AllLogistics
+      :Tabledata="logisticsTableData"
+      v-show="changeType === -1"
+      @reqgetOrderPage="reqgetOrderPage"
+      @goTrack="goTrack"
+    />
+    <Normal
+      :Tabledata="logisticsTableData"
+      v-show="changeType !== 4 && changeType !== -1"
+      @goTrack="goTrack"
+    />
+    <Reissue :Tabledata="logisticsTableData" v-show="changeType === 4" @goTrack="goTrack" />
     <div class="pagination_lk">
       <el-pagination
         layout="prev,pager,next,total"
@@ -102,22 +35,26 @@
         :total="allDigit"
         :current-page="currentPage"
         @current-change="handleCurrentChange"
-      >
-      </el-pagination>
+      ></el-pagination>
     </div>
     <!--物流记录详情抽屉-->
-    <express-detail :order_id="order_id" ref="order_id" />
+    <express-detail :experId="experId" :order_id="order_id" ref="order_id" />
   </div>
 </template>
 
 <script>
 import { formatData } from '@/utils/index'
-import ExpressDetail from '@/components/art_app/expressDetail'
-import {courseLevelReplace} from "@/utils/supList.js"
+import ExpressDetail from '@/pages/music_app/views/trading/views/components/expressDetail'
+import AllLogistics from './allLogistics'
+import Normal from './normal'
+import Reissue from './Reissue'
 export default {
   name: 'logistics',
   components: {
-    ExpressDetail
+    ExpressDetail,
+    Normal,
+    Reissue,
+    AllLogistics
   },
   mounted() {
     // 初始化拿数据
@@ -128,21 +65,28 @@ export default {
   data() {
     return {
       order_id: '', // 物流详情抽屉
+      experId: '',
       logisticsTableData: [], // table展示数据
       // 数据查询
       currentPage: 1, // 页码
       // 分页组件
       allDigit: 1, // 总量
-      courseLevelReplace
+      changeType: -1,
+      regtype: [1, 2, 3, 4, 5, 7, 8]
     }
   },
   methods: {
     // 点击物流详情
-    showExpressDetail(id, total) {
-      if (total > 0) {
-        this.$refs.order_id.drawer = true
-        this.order_id = id
-      }
+    goTrack(val) {
+      console.log(val)
+      this.$refs.order_id.drawer = true
+      this.order_id = val.order_id
+      this.experId = val.id
+      // if (val.express && val.express.express_total > 0) {
+      //   this.$refs.order_id.drawer = true
+      //   this.order_id = val.order_id
+      // }
+      // return this.$message('暂无物流')
     },
     // 翻页
     handleCurrentChange(val) {
@@ -152,17 +96,33 @@ export default {
     },
     // 数据接口_订单·物流
     reqgetOrderPage() {
-      this.$http.User.getOrderPage(
-        this.$route.params.id, // studentId
+      const query = {
+        regtype: this.regtype,
+        id: this.$route.params.id
+      }
+      this.$http.User.getExpressPage(
+        query, // studentId
         this.currentPage
       ).then((res) => {
-        console.log('订单物流模块接口', res.data.OrderPage.content)
-        const _data = res.data.OrderPage.content
-        _data.forEach((item) => {
-          item.ctime = item.ctime ? formatData(item.ctime, 's') : ''
-        })
-        this.allDigit = +res.data.OrderPage.totalElements
-        this.logisticsTableData = _data // 赋值
+        if (res.data.ExpressPage) {
+          console.log('订单物流模块接口', res.data.ExpressPage.content)
+          const _data = res.data.ExpressPage.content
+          _data.forEach((item) => {
+            item.ctime = item.ctime ? formatData(item.ctime, 's') : '-'
+            item.center_ctime = item.center_ctime
+              ? formatData(item.center_ctime, 's')
+              : '-'
+            item.delivery_collect_time = item.delivery_collect_time
+              ? formatData(item.delivery_collect_time, 's')
+              : '-'
+            item.signing_time = item.signing_time
+              ? formatData(item.signing_time, 's')
+              : '-'
+          })
+          this.allDigit = +res.data.ExpressPage.totalElements
+
+          this.logisticsTableData = _data // 赋值
+        }
       })
     }
   },
@@ -170,15 +130,35 @@ export default {
     hh2() {
       return 2
     }
+  },
+  watch: {
+    changeType: function(val, oldval) {
+      console.log(val, 'oldval')
+      if (val === 0) {
+        this.regtype = [1, 2, 3]
+      } else if (val === -1) {
+        this.regtype = [1, 2, 3, 4, 5, 7, 8]
+      } else if (val === 1) {
+        this.regtype = [4]
+      } else if (val === 2) {
+        this.regtype = [7, 8]
+      } else if (val === 3) {
+        this.regtype = [0]
+      } else {
+        this.regtype = [5]
+      }
+      this.reqgetOrderPage()
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .logistics {
-  color: #5ea0f5;
-  text-decoration: underline;
-  cursor: pointer;
+  padding: 10px;
+  // color: #5ea0f5;
+  // text-decoration: underline;
+  // cursor: pointer;
 }
 .pagination_lk {
   width: 100%;

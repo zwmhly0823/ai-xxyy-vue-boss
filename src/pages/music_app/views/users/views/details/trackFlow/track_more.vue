@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-07-20 16:38:13
- * @LastEditors: liukun
- * @LastEditTime: 2020-10-29 16:39:24
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2021-01-04 18:57:16
 -->
 <template>
   <el-drawer :visible.sync="drawer" size="35%" :destroy-on-close="true">
@@ -20,6 +20,7 @@
           <div>
             <el-tag
               size="small"
+              type="primary"
               v-if="
                 item.createTeacherInfo && item.createTeacherInfo.duty_id === '1'
               "
@@ -27,12 +28,26 @@
             >
             <el-tag
               size="small"
-              type="danger"
+              type="success"
               v-else-if="
                 item.createTeacherInfo && item.createTeacherInfo.duty_id === '2'
               "
               >CT</el-tag
             >
+            <el-tag
+              size="small"
+              type="danger"
+              v-else-if="
+                item.createStaffInfo &&
+                  rolesArr.includes(item.createStaffInfo.role_id)
+              "
+              >{{
+                roles.filter((n) => n.id === item.createStaffInfo.role_id)[0][
+                  'name'
+                ]
+              }}</el-tag
+            >
+            <el-tag size="small" type="info" v-else>系统自动</el-tag>
             <span style="margin-left:10px"
               >{{
                 (item.createTeacherInfo && item.createTeacherInfo.realname) ||
@@ -65,6 +80,15 @@
               v-else-if="item.contact_type === '2'"
               class="el-icon-mobile-phone icon-fail"
             ></i>
+            <!-- 在线客服 -->
+            <svg
+              v-if="item.contact_type === '3'"
+              style="vertical-align: middle"
+              class="el-elment-lk primary-icon"
+              aria-hidden="true"
+            >
+              <use xlink:href="#icondanseshixintubiao-"></use>
+            </svg>
             <span style="vertical-align: middle;padding-left:5px">{{
               item.finish_type === '0'
                 ? '无效沟通'
@@ -113,12 +137,45 @@ export default {
   },
   data() {
     return {
+      roles: [
+        { id: '1', name: '管理员' },
+        { id: '2', name: '运营' },
+        { id: '3', name: '市场' },
+        { id: '4', name: '财务' },
+        { id: '5', name: '供应链' },
+        { id: '6', name: '人事' },
+        { id: '7', name: '超级管理员' },
+        { id: '8', name: 'S1Producer' },
+        { id: '9', name: 'S2Producer' },
+        { id: '10', name: 'S3Producer' },
+        { id: '11', name: 'Administrator' },
+        { id: '12', name: 'S1Operator' },
+        { id: '13', name: 'S2Operator' },
+        { id: '14', name: 'S3Operator' },
+        { id: '15', name: 'Anonymous' },
+        { id: '16', name: 'WriteAdmin' },
+        { id: '18', name: 'ArtAdmin' },
+        { id: '19', name: '教研' },
+        { id: '20', name: 'testAdmin' },
+        { id: '21', name: '客服' }
+      ],
       drawer: false,
       // 分页
       currentPage: 1,
       pageSize: 10, // :page-sizes="[5, 10, 20]" 包含才会有漂亮的文字
       allDigit: 0,
       tableData: []
+    }
+  },
+  computed: {
+    rolesArr() {
+      // const arr1 = []
+      // for (let i = 1; i < 22; i++) {
+      //   arr1.push(i.toString())
+      // }
+      // arr1.splice(16, 1)
+      // return arr1
+      return this.roles.map((item) => item.id)
     }
   },
   methods: {
@@ -160,7 +217,10 @@ export default {
             '3': 'CF08',
             '4': '老生覆盖',
             '5': '日常沟通',
-            '6': '退费挽单'
+            '6': '退费挽单',
+            '7': '运营',
+            '8': '客服',
+            '9': '投诉回访'
           }
           item.point_type = obj[item.point_type]
           item.ctime = formatDate(+item.ctime)

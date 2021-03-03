@@ -370,7 +370,7 @@ export default {
       const { teamid, teamname, teamtype = '1' } = row
       teamid &&
         openBrowserTab(
-          `/music_app/#/teamDetail/${teamid}/${teamtype}`,
+          `/student-team/#/teamDetail/${teamid}/${teamtype}`,
           `${teamname}`
         )
     },
