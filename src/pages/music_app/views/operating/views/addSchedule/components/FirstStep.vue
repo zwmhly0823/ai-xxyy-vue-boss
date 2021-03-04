@@ -309,9 +309,7 @@ export default {
         robinNum: [{ validator: checkNumber, required: true, trigger: 'blur' }]
       },
       pickerBefore: {
-        disabledDate: (time) => {
-          
-        }
+        disabledDate: (time) => {}
       },
       pickerBeginDateBefore: {
         disabledDate: (time) => {
@@ -345,25 +343,23 @@ export default {
       }
     }
   },
-  activated() {
-    
-  },
+  activated() {},
   computed: {},
   watch: {
     ['sellCycleObj.endDate']: (res) => {
-      
       // this.pickerBeginDateBefore.disabledDate()
     }
   },
   async created() {
-    
     const { period = '', courseType = 0 } = this.$route.params
     this.period = period
     this.courseType = courseType
-// 体验课  5,6,0,1
-// 系统课  3,6
-    this.courseType==0 ? (this.passWeek = [5,6,0,1]) : (this.passWeek = [3,6])
-    
+    // 体验课  5,6,0,1
+    // 系统课  3,6
+    this.courseType == 0
+      ? (this.passWeek = [5, 6, 0, 1])
+      : (this.passWeek = [3, 6])
+
     if (+period) {
       // 编辑页面 TODO:
       try {
@@ -472,7 +468,7 @@ export default {
           (sellCycle[i] && sellCycle[i].fakeSales) || '100'
         )
       }
-     
+
       this.sellCycleObj = {
         ...this.sellCycleObj,
         startDate: startDate.length != 0 ? startDate.getTime() : '',
@@ -572,6 +568,13 @@ export default {
             } = _res
 
             this.period = period
+
+            let routerPeriod = this.$route.params.period
+            console.log(routerPeriod)
+            if (!routerPeriod || routerPeriod == '0') {
+              this.$route.params.period = this.period
+            }
+
             this.$store.commit('setSchedulePeriod', period)
             this.$emit('listenStepStatus', sendFrom)
           }

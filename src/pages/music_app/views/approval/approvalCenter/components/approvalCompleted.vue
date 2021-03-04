@@ -245,7 +245,7 @@
           <el-col :span="20" :offset="1"
             ><el-link
               type="primary"
-              :href="'/users/#/details/' + drawerApprovalDeatail.userId"
+              :href="'/music_app/#/details/' + drawerApprovalDeatail.userId"
               target="_blank"
               >{{ drawerApprovalDeatail.userTel }}</el-link
             ></el-col
@@ -405,7 +405,7 @@
           <el-col :span="18" :offset="1"
             ><el-link
               type="primary"
-              :href="'/users/#/details/' + drawerApprovalDeatail.userId"
+              :href="'/music_app/#/details/' + drawerApprovalDeatail.userId"
               target="_blank"
               >{{ drawerApprovalDeatail.customerPhone }}</el-link
             ></el-col
@@ -666,7 +666,7 @@
               ><el-link
                 v-if="Number(drawerApprovalDeatail.sendId)"
                 type="primary"
-                :href="'/users/#/details/' + drawerApprovalDeatail.sendId"
+                :href="'/music_app/#/details/' + drawerApprovalDeatail.sendId"
                 target="_blank"
                 >{{
                   (JSON.parse(drawerApprovalDeatail.sendInfo).mobile || '-') +
@@ -747,7 +747,7 @@ import GroupSell from './groupSell'
 import searchPhone from '@/components/MSearch/searchItems/searchPhone.vue'
 import MPagination from '@/components/MPagination/index.vue'
 import { timestamp } from '@/utils/index'
-import { courseLevelReplace, SUP_LEVEL_UPPER } from '@/utils/supList'
+import { courseLevelReplace, SUP_LEVEL_ALL } from '@/utils/supList'
 import { getStaffInfo } from '../common'
 import courseTeam from './courseTeam'
 import TabTimeSelect from './timeSearch'
@@ -792,7 +792,7 @@ export default {
       forSonDataApprovalId: '',
       checkTypeAssert: '', // 审批类型判断-公用
       tableDataNode: [], // 退款审批抽屉专用_审批流程节点
-      SUP_LEVEL_UPPER,
+      SUP_LEVEL_ALL,
       courseLevelReplace,
       zero_time: '', // 0课时绑定值
       status_result: '', // 审批结果筛选
@@ -916,7 +916,7 @@ export default {
     status_resultChange(val) {
       this.params.page = 1
       this.currentPage = 1
-      Object.assign(this.params, { onlyStatus: val })
+      Object.assign(this.params, { status: val==''?'COMPLETED':val })
       this.checkPending(this.params)
     },
     //  活动名称搜索
@@ -1118,7 +1118,7 @@ export default {
                   },
                   {
                     label: '调级级别',
-                    value: SUP_LEVEL_UPPER[payData.targetSup] || '-'
+                    value: SUP_LEVEL_ALL[payData.targetSup] || '-'
                   }
                 ]
               )
@@ -1255,6 +1255,7 @@ export default {
             // item.applyDepartment = ''
             return item
           })
+          console.log()
         }
       })
     },

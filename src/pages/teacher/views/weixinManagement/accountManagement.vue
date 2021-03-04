@@ -251,19 +251,19 @@ export default {
       }
     },
     searchHandler(res) {
-      
       this.currentPage = 1
       if (res.length > 0) {
         const wildcard = {}
         res.forEach((item) => {
           item.wildcard && Object.assign(wildcard, item.wildcard)
-          if(item.wechat_status){
+          if(item.wechat_status&&item.wechat_status.wechat_status!=''){
             Object.assign(wildcard, item.wechat_status)
           }
           item.term &&
             !Object.keys(item.term).includes('wechatJud') &&
             Object.assign(wildcard, item.term)
         })
+        
         this.searchQuery = wildcard
         // 是否关联老师
         res.forEach((res) => {

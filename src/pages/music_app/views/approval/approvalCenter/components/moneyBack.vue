@@ -85,11 +85,11 @@
         <el-form-item label="剩余金额：" prop="residueFee">
           <el-input v-model="refundForm.residueFee" disabled :class="$style.order100"></el-input>
         </el-form-item>
-        <el-form-item label="退款类型："  prop="refundType">
-          <el-radio-group v-model="refundForm.refundType" >
+        <el-form-item label="退款类型：" prop="refundType">
+          <el-radio-group v-model="refundForm.refundType">
             <el-radio :label="0" v-show="refundForm.businessType === '系统课'">优惠券退款</el-radio>
             <el-radio :label="1">课程退款</el-radio>
-            <el-radio
+            <!-- <el-radio
               :label="2"
               v-show="
                 refundForm.businessType === '系统课' && moneyCountLevelHalf
@@ -106,7 +106,7 @@
               v-show="
                 refundForm.businessType === '系统课' && moneyCountLevelFullPlus
               "
-            >降1年半课包</el-radio>
+            >降1年半课包</el-radio>-->
             <!-- <el-radio :label="3" v-show="refundForm.businessType === '系统课'"
               >补偿</el-radio
             >-->
@@ -123,6 +123,12 @@
             <el-radio-group v-model="jsonDate3.deductMonth" @change="reduceNextMonth">
               <el-radio :label="0">不保留</el-radio>
               <el-radio :label="1">保留</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="是否扣除乐器费用：" prop="instrument">
+            <el-radio-group v-model="jsonDate3.instrument" @change="casket">
+              <el-radio :label="0">扣除1800元</el-radio>
+              <el-radio :label="1">不扣除乐器费用</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="随材盒子：" prop="deductMaterial">
@@ -160,7 +166,7 @@
             </el-table>
             <span v-show="!productData.length">暂无关单赠品</span>
           </el-form-item>
-          <el-form-item label="是否扣除赠品金额" >
+          <el-form-item label="是否扣除赠品金额">
             <el-radio-group
               :disabled="jsonDate3.boxAble"
               v-model="giftsFlag"
@@ -351,9 +357,10 @@ export default {
         this.pureWeekS = '' // 剩周数(给接口)
         this.isThird = 0 // 是否第三方
         this.jsonDate3 = {
-          // 次月课程,随材盒子
+          // 次月课程,随材盒子,乐器费用
           deductMonth: 0,
           deductMaterial: '',
+          instrument: '',
           boxAble: false
         }
         this.onePrice = '' // 3条二轮计算用到的月单价
@@ -641,7 +648,7 @@ export default {
                 } else {
                   // 全年半年二合一
                   const interfaceTy = (this.pureWeekS + this.pureWeekY) / 4
-                  
+
                   const priceTre = this.refundForm.residueFee / interfaceTy // 单价
                   this.onePrice = priceTre
                   this.refundForm.refundAmount = Math.round(
@@ -866,6 +873,13 @@ export default {
         callback(new Error('请选择是否扣除随材费用'))
       }
     }
+    var instrument = (rule, value, callback) => {
+      if (this.jsonDate3.instrument === 1 || this.jsonDate3.instrument === 0) {
+        callback()
+      } else {
+        callback(new Error('请选择是否扣乐器材费用'))
+      }
+    }
     return {
       // 是否扣除赠品
       giftsFlag: 0,
@@ -876,6 +890,9 @@ export default {
         ],
         deductMaterial: [
           { required: true, validator: deductMaterial, trigger: 'change' }
+        ],
+        instrument: [
+          { required: true, validator: instrument, trigger: 'change' }
         ],
         namex: [{ required: true, validator: validateName, trigger: 'blur' }],
         order: [
@@ -955,9 +972,10 @@ export default {
         orderSourceId: '' // 订单来源id+
       },
       jsonDate3: {
-        // 次月课程,随材盒子
+        // 次月课程,随材盒子,乐器费用
         deductMonth: '',
         deductMaterial: '',
+        instrument: '',
         boxAble: false
       },
       productData: [], // 关单赠品table-备选的数据
@@ -1046,18 +1064,22 @@ export default {
     // 计算退款额(基础退费基础上+次月课程+随材盒子+关单赠品)
     refundAmountComputed() {
       if (this.refundForm.refundType === 1) {
+        // 乐器费用
+        let instrument = this.jsonDate3.instrument === 0 ? 0.01 : 0
         // 课程退款
         if (this.jsonDate3.deductMonth === 1 && this.onePrice > 0) {
           // 保留次月
           return (
             this.refundForm.refundAmount -
-            (Math.round(this.onePrice) + this.fontPrice)
+            (Math.round(this.onePrice) + this.fontPrice + instrument)
           )
         } else if (this.jsonDate3.deductMonth === 0) {
           // 不保留次月
           return (
             this.refundForm.refundAmount -
-            ((this.jsonDate3.deductMaterial === 1 ? 100 : 0) + this.fontPrice)
+            ((this.jsonDate3.deductMaterial === 1 ? 0.01 : 0) +
+              this.fontPrice +
+              instrument)
           )
         } else {
           console.warn('注意！这是体验课,无需选择是否保留次月')
@@ -1276,7 +1298,7 @@ export default {
     // 置空表单
     onCancel(formName) {
       this.$refs[formName].resetFields()
-      this.$router.push({path:'/approval'})
+      this.$router.push({ path: '/approval' })
     },
     // 上传附件
     upload(file) {

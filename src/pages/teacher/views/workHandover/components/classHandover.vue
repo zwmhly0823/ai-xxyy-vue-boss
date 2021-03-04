@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import { formatTeamNameSup } from '@/utils/supList'
+import { courseLevelReplace } from '@/utils/supList'
 export default {
   props: {
     tabIndex: {
@@ -155,7 +155,7 @@ export default {
         this.tableList =
           res.content &&
           res.content.map((item) => {
-            item.teamName = formatTeamNameSup(item.teamName) || '-'
+            item.teamName = courseLevelReplace(item.teamName) || '-'
             return item
           })
         this.totalElements = res.totalElements

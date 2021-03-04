@@ -137,7 +137,7 @@
 import dayjs from 'dayjs'
 import axios from '@/api/axiosConfig'
 import { GetAgeByBrithday, formatData, openBrowserTab } from '@/utils/index'
-import { SUP_LEVEL } from '@/utils/supList'
+import { SUP_LEVEL_ALL } from '@/utils/supList'
 
 import MPagination from '@/components/MPagination/index.vue'
 
@@ -263,7 +263,7 @@ export default {
                       .unix(Number(ele.management_start_date) / 1000)
                       .format('MMDD')
                   : ''
-                ele.sup = (ele.sup && SUP_LEVEL[ele.sup]) || '-'
+                ele.sup = (ele.sup && SUP_LEVEL_ALL[ele.sup]) || '-'
               }
             })
           this.tableData = _data

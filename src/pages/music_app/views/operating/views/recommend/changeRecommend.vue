@@ -174,7 +174,7 @@ export default {
         if (origin.includes('test')) {
           url = 'ai-app-vue-boss-test/'
         }
-        return `${origin}/${url}music_app/#/details/${userId}`
+        return `${origin}/music_app/#/details/${userId}`
       }
     }
   },

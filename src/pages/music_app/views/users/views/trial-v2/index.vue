@@ -59,7 +59,7 @@
             当前结果：学员共计 {{ totalElements }} 名
           </div>
           <div class="statistics-section-right">
-            点击列表中参课、完课、作品、点评、活跃信息可查看详情
+            点击列表中参课、完课、作品、点评可查看详情
             <tool-tip />
           </div>
         </div>
@@ -79,11 +79,7 @@
         >
           <!-- 不能继续用selection-change，因为在两页都有选中的情况下，切回第一页也会触发selection-change，并且返回值是空，无法判断是用户点击触发的还是翻页时触发的 -->
           <!-- @selection-change="handleSelectionChange" -->
-          <el-table-column
-            type="selection"
-            width="30"
-            v-if="showMode === 'trialUserListMode'"
-          ></el-table-column>
+          <el-table-column type="selection" width="30"></el-table-column>
           <el-table-column label="学员" min-width="100" fixed>
             <template slot-scope="scope">
               <extend-user-info
@@ -147,147 +143,69 @@
               </template>
             </template>
           </el-table-column>
-          <el-table-column label="APP信息" min-width="130" class-name="pdl-10">
+          <el-table-column label="APP信息" min-width="110" class-name="pdl-10">
             <template slot-scope="scope">
               <base-user-info :user="scope.row.userInfo" />
             </template>
           </el-table-column>
-          <el-table-column label="意向度" min-width="70">
+          <el-table-column label="微信信息" min-width="110" class-name="pdl-10">
             <template slot-scope="scope">
-              <template
-                v-if="
-                  !scope.row.userIntention ||
-                    +scope.row.userIntention.type === 0
-                "
+              <div
+                v-if="scope.row.userExtends && scope.row.userExtends.wechat_id"
               >
-                <i
-                  class="el-icon-circle-plus-outline intention-icon"
-                  @click="createIntention(scope.$index, scope.row.id)"
-                ></i>
-              </template>
-              <template v-else>
-                <el-select
-                  v-model="scope.row.userIntention.type_name"
-                  size="mini"
-                  class="intent-select"
-                  @change="intentChange($event, scope.$index)"
-                  :class="[
-                    {
-                      'intent-select-none': +scope.row.userIntention.type === 4,
-                      'intent-select-high': +scope.row.userIntention.type === 3,
-                      'intent-select-middle':
-                        +scope.row.userIntention.type === 2,
-                      'intent-select-low': +scope.row.userIntention.type === 1
-                    }
-                  ]"
-                  popper-class="intent-option"
-                >
-                  <el-option label="无" value="NONE"></el-option>
-                  <el-option label="低" value="LOW"></el-option>
-                  <el-option label="中" value="MIDDLE"></el-option>
-                  <el-option label="高" value="HIGH"></el-option>
-                </el-select>
-              </template>
-            </template>
-          </el-table-column>
-          <el-table-column label="沟通备注" min-width="150">
-            <template slot-scope="scope">
-              <template
-                v-if="
-                  !scope.row.userIntention ||
-                    +scope.row.userIntention.type === 0
-                "
-              >
-                <i
-                  class="el-icon-circle-plus-outline intention-icon"
-                  @click="createIntention(scope.$index, scope.row.id)"
-                ></i>
-              </template>
-              <template
-                v-else-if="
-                  !scope.row.userIntention.describe &&
-                    +scope.row.userIntention.is_track === 0
-                "
-              >
-                <i
-                  class="el-icon-circle-plus-outline intention-icon"
-                  @click="intentDescribeChange(scope.$index, scope.row.id)"
-                ></i>
-              </template>
-              <template v-else>
-                <div class="remarks-content">
-                  <div class="d-flex flex-1 align-center">
-                    <span
-                      class="time-icon-text"
-                      v-if="
-                        +scope.row.userIntention.today === today &&
-                          +scope.row.userIntention.is_track === 1
-                      "
-                      ><span class="time-icon-text-t red-color">今</span
-                      ><svg class="iconfont" aria-hidden="true">
-                        <use xlink:href="#iconnaozhong"></use></svg
-                    ></span>
-                    <span
-                      class="time-icon-text"
-                      v-if="
-                        +scope.row.userIntention.today === tomorrow &&
-                          +scope.row.userIntention.is_track === 1
-                      "
-                      ><span class="time-icon-text-t red-color">明</span
-                      ><svg class="iconfont" aria-hidden="true">
-                        <use xlink:href="#iconnaozhong"></use></svg
-                    ></span>
-                    <el-popover
-                      class="flex-1"
-                      placement="top-start"
-                      trigger="hover"
-                      :content="scope.row.userIntention.describe"
-                    >
-                      <div slot="reference" class="remarks-text">
-                        {{ scope.row.userIntention.describe }}
-                      </div>
-                    </el-popover>
-                  </div>
-                  <i
-                    class="el-icon-edit"
-                    @click="intentDescribeChange(scope.$index, scope.row.id)"
-                  ></i>
-                </div>
-              </template>
-            </template>
-          </el-table-column>
-          <el-table-column label="手动标签" min-width="150">
-            <template slot-scope="scope">
-              <template v-if="!scope.row.user_label">
-                <span>-</span>
-              </template>
-              <template v-else>
-                <div class="remarks-content tag-box">
-                  <el-popover
-                    placement="top-start"
-                    trigger="hover"
-                    @show="tagPopoverShow(scope.row)"
-                  >
-                    <div
-                      v-if="!tagPopoverData"
-                      v-loading="true"
-                      style="width: 200px;height: 200px"
-                    ></div>
-                    <tags-popover
-                      ref="tagPopover"
-                      v-if="tagPopoverData"
-                      :tagPopoverData="tagPopoverData"
-                    ></tags-popover>
-                    <div slot="reference">
-                      <tags-item
-                        v-for="(item, index) in scope.row.user_label.split(',')"
-                        :key="index"
-                        :text="item"
-                      ></tags-item>
+                <div class="sys-v2-head-father">
+                  <img
+                    class="sys-v2-head"
+                    :src="
+                      scope.row.userExtends &&
+                        scope.row.userExtends.wechat_avatar
+                    "
+                    alt=""
+                  />
+                  <div class="sys-v2-head-father-right">
+                    <div>
+                      {{ scope.row.userExtends.wechat_nick_name }}
                     </div>
-                  </el-popover>
+                  </div>
                 </div>
-              </template>
+              </div>
+              <div v-else>未绑定</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="添加微信" min-width="60">
+            <template slot-scope="scope">
+              <el-switch
+                v-model="scope.row.added_wechat"
+                active-color="#3582fb"
+                inactive-color="#DCDFE6"
+                :active-value="1"
+                :inactive-value="0"
+                @change="
+                  changeSwitch($event, scope.row, scope.$index, 'wechat')
+                "
+              >
+              </el-switch>
+            </template>
+          </el-table-column>
+          <el-table-column label="进群" min-width="60">
+            <template slot-scope="scope">
+              <el-switch
+                v-model="scope.row.added_group"
+                active-color="#3582fb"
+                inactive-color="#DCDFE6"
+                :active-value="1"
+                :inactive-value="0"
+                @change="changeSwitch($event, scope.row, scope.$index, 'group')"
+              >
+              </el-switch>
+            </template>
+          </el-table-column>
+          <el-table-column label="公众号" min-width="60">
+            <template slot-scope="scope">
+              <span v-if="!scope.row.follow || +scope.row.follow === 0">
+                -
+              </span>
+              <i v-else class="el-icon-check"></i>
             </template>
           </el-table-column>
           <el-table-column
@@ -504,6 +422,144 @@
               </div>
             </template>
           </el-table-column>
+          <el-table-column label="意向度" min-width="70">
+            <template slot-scope="scope">
+              <template
+                v-if="
+                  !scope.row.userIntention ||
+                    +scope.row.userIntention.type === 0
+                "
+              >
+                <i
+                  class="el-icon-circle-plus-outline intention-icon"
+                  @click="createIntention(scope.$index, scope.row.id)"
+                ></i>
+              </template>
+              <template v-else>
+                <el-select
+                  v-model="scope.row.userIntention.type_name"
+                  size="mini"
+                  class="intent-select"
+                  @change="intentChange($event, scope.$index)"
+                  :class="[
+                    {
+                      'intent-select-none': +scope.row.userIntention.type === 4,
+                      'intent-select-high': +scope.row.userIntention.type === 3,
+                      'intent-select-middle':
+                        +scope.row.userIntention.type === 2,
+                      'intent-select-low': +scope.row.userIntention.type === 1
+                    }
+                  ]"
+                  popper-class="intent-option"
+                >
+                  <el-option label="无" value="NONE"></el-option>
+                  <el-option label="低" value="LOW"></el-option>
+                  <el-option label="中" value="MIDDLE"></el-option>
+                  <el-option label="高" value="HIGH"></el-option>
+                </el-select>
+              </template>
+            </template>
+          </el-table-column>
+          <el-table-column label="沟通备注" min-width="150">
+            <template slot-scope="scope">
+              <template
+                v-if="
+                  !scope.row.userIntention ||
+                    +scope.row.userIntention.type === 0
+                "
+              >
+                <i
+                  class="el-icon-circle-plus-outline intention-icon"
+                  @click="createIntention(scope.$index, scope.row.id)"
+                ></i>
+              </template>
+              <template
+                v-else-if="
+                  !scope.row.userIntention.describe &&
+                    +scope.row.userIntention.is_track === 0
+                "
+              >
+                <i
+                  class="el-icon-circle-plus-outline intention-icon"
+                  @click="intentDescribeChange(scope.$index, scope.row.id)"
+                ></i>
+              </template>
+              <template v-else>
+                <div class="remarks-content">
+                  <div class="d-flex flex-1 align-center">
+                    <span
+                      class="time-icon-text"
+                      v-if="
+                        +scope.row.userIntention.today === today &&
+                          +scope.row.userIntention.is_track === 1
+                      "
+                      ><span class="time-icon-text-t red-color">今</span
+                      ><svg class="iconfont" aria-hidden="true">
+                        <use xlink:href="#iconnaozhong"></use></svg
+                    ></span>
+                    <span
+                      class="time-icon-text"
+                      v-if="
+                        +scope.row.userIntention.today === tomorrow &&
+                          +scope.row.userIntention.is_track === 1
+                      "
+                      ><span class="time-icon-text-t red-color">明</span
+                      ><svg class="iconfont" aria-hidden="true">
+                        <use xlink:href="#iconnaozhong"></use></svg
+                    ></span>
+                    <el-popover
+                      class="flex-1"
+                      placement="top-start"
+                      trigger="hover"
+                      :content="scope.row.userIntention.describe"
+                    >
+                      <div slot="reference" class="remarks-text">
+                        {{ scope.row.userIntention.describe }}
+                      </div>
+                    </el-popover>
+                  </div>
+                  <i
+                    class="el-icon-edit"
+                    @click="intentDescribeChange(scope.$index, scope.row.id)"
+                  ></i>
+                </div>
+              </template>
+            </template>
+          </el-table-column>
+          <el-table-column label="手动标签" min-width="150">
+            <template slot-scope="scope">
+              <template v-if="!scope.row.user_label">
+                <span>-</span>
+              </template>
+              <template v-else>
+                <div class="remarks-content tag-box">
+                  <el-popover
+                    placement="top-start"
+                    trigger="hover"
+                    @show="tagPopoverShow(scope.row)"
+                  >
+                    <div
+                      v-if="!tagPopoverData"
+                      v-loading="true"
+                      style="width: 200px;height: 200px"
+                    ></div>
+                    <tags-popover
+                      ref="tagPopover"
+                      v-if="tagPopoverData"
+                      :tagPopoverData="tagPopoverData"
+                    ></tags-popover>
+                    <div slot="reference">
+                      <tags-item
+                        v-for="(item, index) in scope.row.user_label.split(',')"
+                        :key="index"
+                        :text="item"
+                      ></tags-item>
+                    </div>
+                  </el-popover>
+                </div>
+              </template>
+            </template>
+          </el-table-column>
           <el-table-column
             label="作品"
             min-width="60"
@@ -590,7 +646,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             label="活跃信息"
             min-width="130"
             v-if="
@@ -617,43 +673,7 @@
                 <p v-else>-</p>
               </div>
             </template>
-          </el-table-column>
-          <el-table-column label="添加微信" min-width="60">
-            <template slot-scope="scope">
-              <el-switch
-                v-model="scope.row.added_wechat"
-                active-color="#3582fb"
-                inactive-color="#DCDFE6"
-                :active-value="1"
-                :inactive-value="0"
-                @change="
-                  changeSwitch($event, scope.row, scope.$index, 'wechat')
-                "
-              >
-              </el-switch>
-            </template>
-          </el-table-column>
-          <el-table-column label="进群" min-width="60">
-            <template slot-scope="scope">
-              <el-switch
-                v-model="scope.row.added_group"
-                active-color="#3582fb"
-                inactive-color="#DCDFE6"
-                :active-value="1"
-                :inactive-value="0"
-                @change="changeSwitch($event, scope.row, scope.$index, 'group')"
-              >
-              </el-switch>
-            </template>
-          </el-table-column>
-          <el-table-column label="公众号" min-width="60">
-            <template slot-scope="scope">
-              <span v-if="!scope.row.follow || +scope.row.follow === 0">
-                -
-              </span>
-              <i v-else class="el-icon-check"></i>
-            </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column label="盒子物流" min-width="80">
             <template slot-scope="scope">
               <div class="d-flex align-center space-between">
@@ -963,6 +983,12 @@
       @intentConfirm="intentConfirm"
     ></intention-dialog>
 
+    <send-coupon
+      ref="couponDialog"
+      :coupon-data="couponData"
+      :select-user-id="sendGroupCouponIds"
+    />
+
     <!-- 调查问卷 -->
     <questionaire-drawer-component
       ref="questionaireDrawerC"
@@ -1038,5 +1064,18 @@ export default Index
   .el-select-dropdown.is-multiple .el-select-dropdown__item.selected::after {
     right: 5px;
   }
+}
+.sys-v2-head {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+.sys-v2-head-father {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.sys-v2-head-father-right {
+  margin-left: 5px;
 }
 </style>

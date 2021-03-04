@@ -873,7 +873,8 @@ export default {
       this.setSeachParmas(res, [this.wxSerch], 'wildcard')
     },
     getWeixinStatus(res) {
-      this.setSeachParmas(res, [this.weixinStatus], 'wechat_status')
+      this.sendSeachParams(res,this.weixinStatus,'wechat_status')
+      // this.setSeachParmas(res, [this.weixinStatus], 'wechat_status')
     },
     getVersionNu(res) {
       this.setSeachParmas(res, [this.moreVersion || 'product_version'])
@@ -939,7 +940,8 @@ export default {
       this.setSeachParmas(res, [this.operatorId])
     },
     gerEmployeesName(res) {
-      this.setSeachParmas(res, [this.employees])
+      this.sendSeachParams(res,this.employees)
+      // this.setSeachParmas(res, [this.employees])
     },
     getReplenishProduct(res) {
       this.setSeachParmas(res, [this.replenishProduct || 'product_type'])
@@ -962,7 +964,14 @@ export default {
     getSearchCourseware(res) {
       this.setSeachParmas(res, [this.searchTrialStage || 'course_id'], 'terms')
     },
-
+    // 单选搜索
+    sendSeachParams(res,key, extraKey = 'term'){
+      let arr = []
+      arr.push({
+        [extraKey]:res
+      })
+      this.$emit('search', arr)
+    },
     /**  处理接收到的查询参数
      * @res: Object, 子筛选组件返回的表达式对象，如 {sup: 2}
      * @key: Array 指定res的key。如课程类型+期数选项，清除课程类型时，期数也清除了，这里要同步清除must的数据
@@ -972,31 +981,20 @@ export default {
      */
     setSeachParmas(res, key = [], extraKey = 'term', name = 'must') {
       const { must, should } = this
-
       const temp = name === 'must' ? must : should
       key.forEach((k) => {
-        // temp.forEach((item, index) => {
-        //   if (
-        //     JSON.parse(item[extraKey])[k] &&
-        //     (JSON.parse(item[extraKey])[k] ||
-        //       +JSON.parse(item[extraKey])[k] === 0)
-        //   )
-        //     temp.splice(index, 1)
-        // })
         temp.forEach((item, index) => {
-          if (item[extraKey][k] == '') temp.splice(index, 1)
           if (
             item[extraKey] &&
             item[extraKey][k] &&
-            (item[extraKey][k] ||
-              +item[extraKey][k] === 0 ||
-              item[extraKey][k] == '')
+            (item[extraKey][k] || +item[extraKey][k] === 0)
           )
             temp.splice(index, 1)
         })
       })
       // must
       if (name === 'must') {
+        console.log(res, 'res==')
         if (res) {
           if (
             this.selectAddress &&
@@ -1006,18 +1004,15 @@ export default {
               [extraKey]: { [`${this.selectAddress}`]: res }
             })
           } else {
-            if (extraKey === 'wechat_status' && res.wechat_status === '') {
-            } else {
-              temp.push({
-                [extraKey]: res
-              })
-            }
+            temp.push({
+              [extraKey]: res
+            })
           }
 
           this.must = temp
         }
         // this.$emit('search', res === '' ? '' : temp)
-
+        console.log(temp, 'temp==')
         this.$emit('search', temp)
         return
       }
@@ -1032,7 +1027,6 @@ export default {
     }
   },
   created() {
-    console.log(this.$store.getters.subjects.subjectCode)
     const teacherId = isToss()
     if (teacherId) {
       this.teacherId = teacherId

@@ -263,7 +263,7 @@
           <el-col :span="20" :offset="1">
             <el-link
               type="primary"
-              :href="'/users/#/details/' + drawerApprovalDeatail.userId"
+              :href="'/music_app/#/details/' + drawerApprovalDeatail.userId"
               target="_blank"
             >{{ drawerApprovalDeatail.userTel }}</el-link>
           </el-col>
@@ -453,7 +453,7 @@
           <el-col :span="18" :offset="1">
             <el-link
               type="primary"
-              :href="'/users/#/details/' + drawerApprovalDeatail.userId"
+              :href="'/music_app/#/details/' + drawerApprovalDeatail.userId"
               target="_blank"
             >{{ drawerApprovalDeatail.customerPhone }}</el-link>
           </el-col>
@@ -752,7 +752,7 @@
               <el-link
                 v-if="Number(drawerApprovalDeatail.sendId)"
                 type="primary"
-                :href="'/users/#/details/' + drawerApprovalDeatail.sendId"
+                :href="'/music_app/#/details/' + drawerApprovalDeatail.sendId"
                 target="_blank"
               >
                 {{
@@ -814,9 +814,7 @@
         <div
           v-if="
             currentType === 'UNCREDITED' &&
-              (resetParams.staffId === '455930731630301184' ||
-                resetParams.staffId === '455930591481827328' ||
-                resetParams.staffId === '462345658762924032')
+              (roleIdList.indexOf(resetParams.staffId)>=0)
           "
         >
           <el-row class="BOTTOM">
@@ -865,6 +863,11 @@
           ? '审批同意'
           : ''
       "
+      @close="
+            adjustDrawerData.checkSuggestion = ''
+            adjustResultDialogShow = false
+            adjustDialogErrShow = false
+          "
       :visible.sync="adjustResultDialogShow"
     >
       <p class="adjust-dialog-p">
@@ -1074,6 +1077,7 @@ export default {
       }
     }
     return {
+      roleIdList:[],
       tableHeight: 0,
       forSonDataApprovalPersonId: '',
       forSonDataApprovalId: '',
@@ -1158,6 +1162,7 @@ export default {
   created() {
     // 身份类型，4是财务，具体见wiki
     this.roleId = JSON.parse(localStorage.getItem('staff')).roleId
+    this.getRoleIdList()
   },
   mounted() {
     const staff = getStaffInfo()
@@ -1195,6 +1200,11 @@ export default {
   },
 
   methods: {
+    getRoleIdList(){
+      this.$http.Backend.getStaffIds().then(res=>{
+        this.roleIdList = res.payload.approvalIdSet;
+      })
+    },
     getSearchData1(val) {
       console.info('选择部门获取值:', val)
       this.params.page = 1
@@ -1456,8 +1466,8 @@ export default {
       this.$prompt('请输入原因', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        inputPattern: /\S/,
-        inputErrorMessage: '内容不能为空'
+        inputPattern: /\S[\u4E00-\uFA29]|[\uE7C7-\uE7F3]|[a-zA-Z0-9_，。-]/,
+        inputErrorMessage: '内容不能为空,且只能输入中文、英文、数字、"，""。"'
       })
         .then(({ value }) => {
           const params = {
@@ -1506,9 +1516,9 @@ export default {
       this.$prompt('请输入原因', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        inputPattern: /\S/,
+        inputPattern: /^([\u4E00-\uFA29]|[\，\。\,\.]|[\uE7C7-\uE7F3]|[a-zA-Z0-9_-]){1,225}$/,
         inputValue: '同意',
-        inputErrorMessage: '内容不能为空'
+        inputErrorMessage: "仅支持长度小于225的中文/英文/数字/'-'/'_'/','/'.'/'，'/'。'"
       })
         .then(({ value }) => {
           const params = {

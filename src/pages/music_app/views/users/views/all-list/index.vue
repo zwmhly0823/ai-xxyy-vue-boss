@@ -49,6 +49,30 @@
               />
             </template>
           </el-table-column>
+          <el-table-column label="微信信息" min-width="200">
+            <template slot-scope="scope">
+              <div
+                v-if="scope.row.userExtends && scope.row.userExtends.wechat_id"
+              >
+                <div class="sys-v2-head-father">
+                  <img
+                    class="sys-v2-head"
+                    :src="
+                      scope.row.userExtends &&
+                        scope.row.userExtends.wechat_avatar
+                    "
+                    alt=""
+                  />
+                  <div class="sys-v2-head-father-right">
+                    <div>
+                      {{ scope.row.userExtends.wechat_nick_name }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div v-else>未绑定</div>
+            </template>
+          </el-table-column>
           <el-table-column label="是否购买体验课" min-width="100">
             <template slot-scope="scope">
               {{ scope.row.is_trial === '0' ? '否' : '是' }}
@@ -162,11 +186,11 @@
 
 <script>
 import MPagination from '@/components/MPagination/index.vue'
-import BaseUserInfo from '@/components/users/BaseUserInfo.vue'
+import BaseUserInfo from '@/pages/music_app/views/users/components/BaseUserInfo.vue'
 import { formatData, openBrowserTab, getAppSubjectCode } from '@/utils/index'
 import Search from '../../components/SearchAllUsers.vue'
 import { todayTimestamp, tomorrowTimestamp } from '../../utils'
- 
+
 export default {
   name: 'trialUsers',
   components: {
@@ -399,7 +423,7 @@ export default {
       const teamId = row.id
       const teamType = row.team_type || '0'
       teamId &&
-        openBrowserTab(`/music_app/#/teamDetail/${teamId}/${teamType}`)
+        openBrowserTab(`/student-team/#/teamDetail/${teamId}/${teamType}`)
     },
 
     formatDate(date, flag = 's') {
@@ -452,5 +476,18 @@ export default {
       top: -6px;
     }
   }
+}
+.sys-v2-head {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+.sys-v2-head-father {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.sys-v2-head-father-right {
+  margin-left: 5px;
 }
 </style>

@@ -4,10 +4,10 @@
  * @Author: Shentong
  * @Date: 2020-03-14 17:56:29
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-23 18:52:12
+ * @LastEditTime: 2021-01-25 20:46:30
  -->
 <template>
-  <section class="app-main">
+  <section class="app-main with-watermark">
     <!-- <transition name="fade-transform" mode="out-in">
       <router-view :key="key" />
     </transition> -->
@@ -24,12 +24,21 @@
 </template>
 
 <script>
+import tool from '@/utils/watermark'
 export default {
   name: 'AppMain',
   computed: {
     key() {
       return this.$route.path
     }
+  },
+  data() {
+    return {
+      watermarkBackground: ''
+    }
+  },
+  mounted() {
+    this.watermarkBackground = tool.addWaterMark()
   }
 }
 </script>

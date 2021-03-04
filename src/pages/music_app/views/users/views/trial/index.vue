@@ -353,7 +353,7 @@ export default {
       }
       teamId &&
         openBrowserTab(
-          `/music_app/#/teamDetail/${teamId}/${teamType}`,
+          `/student-team/#/teamDetail/${teamId}/${teamType}`,
           `${teamName}`
         )
     },

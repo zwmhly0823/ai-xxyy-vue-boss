@@ -524,7 +524,7 @@ export default {
 
 <script>
 import { timestamp } from '@/utils/index'
-import { formatTeamNameSup } from '@/utils/supList'
+import { courseLevelReplace } from '@/utils/supList'
 import { reviewDegree, _scoreObj } from '@/common/data'
 export default {
   data() {
@@ -559,8 +559,8 @@ export default {
           this.totalElements = Number.parseInt(res.payload.totalElements)
           list.forEach((item, index) => {
             const str = `${item.id}@${item.courseId}`
-            item.courseName = formatTeamNameSup(item.courseName)
-            item.teamName = formatTeamNameSup(item.teamName)
+            item.courseName = courseLevelReplace(item.courseName)
+            item.teamName = courseLevelReplace(item.teamName)
             this.courseIdList.push(str)
           })
           await this.iniToViewInform(list)

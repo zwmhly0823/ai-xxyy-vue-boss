@@ -91,7 +91,7 @@
         <el-form-item label="补发类别" prop="type">
           <el-radio-group v-model="formRepair.type" @change="chooseType">
             <el-radio label="MATERIALS">盒子随材</el-radio>
-            <el-radio label="STORE">小熊商城</el-radio>
+            <el-radio label="STORE">商城礼品</el-radio>
             <el-radio label="RECOMMEND">推荐有礼</el-radio>
             <el-radio label="INVITATION">邀请有奖</el-radio>
           </el-radio-group>

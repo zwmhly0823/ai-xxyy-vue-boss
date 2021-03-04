@@ -58,7 +58,6 @@ import Department from '@/components/MSearch/searchItems/department'
 import GroupSell from '@/components/MSearch/searchItems/groupSell'
 import StageSupLevels from '@/components/MSearch/searchItems/stageSupLevels.vue'
 import { debounce } from 'lodash'
-import { formatTeamNameSupReverse } from '@/utils/supList'
 export default {
   name: 'componentSearch',
   components: {
@@ -113,7 +112,7 @@ export default {
       this.searchRes(sup, 'sup')
     },
     inputHandler() {
-      this.searchRes(formatTeamNameSupReverse(this.teamName), 'teamName')
+      this.searchRes(this.teamName, 'teamName')
     },
     searchRes(val, name) {
       this.searchParams[name] = val
