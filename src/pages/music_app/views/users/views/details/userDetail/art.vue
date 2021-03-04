@@ -172,7 +172,7 @@
                     size="mini"
                     v-for="item of aikelabel"
                     :key="item"
-                    >{{ item }}</el-tag
+                    >{{ courseLevelReplace(item) }}</el-tag
                   >
                   <span
                     v-if="
@@ -188,9 +188,7 @@
                       v-for="item of studentLabels"
                       :key="item.id"
                       >{{
-                        item.subject === 'ART_APP'
-                          ? courseLevelReplace(item.name)
-                          : item.name
+                        courseLevelReplace(item.name)
                       }}</el-tag
                     >
                   </span>

@@ -1596,6 +1596,7 @@ export default {
     },
     // 打开抽屉 传进来4个参数 申请单type 申请单id  申请单申请人id 申请单tag
     getApprovalDeatail(type, id, applyId, tag) {
+      console.log(arguments)
       this.currentType = type // 全局配置:申请单类型
       console.log(type)
       // 体验课调级详情
@@ -1764,7 +1765,7 @@ export default {
                   },
                   {
                     label: '调级级别',
-                    value: this.SUP_LEVEL_ALL[payData.targetSup] || '-'
+                    value: SUP_LEVEL_ALL[payData.targetSup] || '-'
                   }
                 ]
               )

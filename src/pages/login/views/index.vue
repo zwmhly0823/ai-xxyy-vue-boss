@@ -76,6 +76,7 @@
             maxlength="18"
             @focus="checkStart"
             @blur="checkEnd"
+            @keydown.enter.native="pwdLoginHandle('pwdLoginForm')"
           />
           <div style="height:52px;" @click="getVerificationCode">
             <img style="width:auto;height:100%;" :src="`${verificationUrl}?T=${verificationTime}`" alt />
@@ -85,7 +86,7 @@
         <el-button
           type="primary"
           style="width:100%;margin:30px atuo; height: 50px;"
-          @click.native.prevent="pwdLoginHandle('pwdLoginForm')"
+          @click="pwdLoginHandle('pwdLoginForm')"
         >登录</el-button>
       </el-form>
 

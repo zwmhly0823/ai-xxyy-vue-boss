@@ -164,6 +164,7 @@ export default {
   },
   data() {
     return {
+      SUP_LEVEL_ALL,
       staffName: getStaffInfo().staffName, // storage体验或系统课老师-realName
       staffId: getStaffInfo().staffId, // storage体验或系统课老师id
 

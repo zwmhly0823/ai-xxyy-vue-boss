@@ -178,7 +178,7 @@
                     size="mini"
                     v-for="item of aikelabel"
                     :key="item"
-                    >{{ item }}</el-tag
+                    >{{ courseLevelReplace(item) }}</el-tag
                   >
                   <span
                     v-if="

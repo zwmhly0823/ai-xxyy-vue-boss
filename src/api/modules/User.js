@@ -1715,4 +1715,33 @@ export default {
       }`
     })
   },
+  // 获取系统课学员左侧人数统计
+  systemStudentSystemPageMenu(query = {}) {
+    // const params = Object.assign(query, { page })
+    // return axios.post('/api/b/v1/student/center/system/list', params)
+    const q = JSON.stringify(injectSubject(query))
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentSystemPageMenu(query: ${q}) {
+            total_count
+            today_new_count
+            started_count
+            un_started_count
+            finish_count
+            refund_count
+            day7_no_join_count
+            day15_no_join_count
+            day30_no_join_count
+            un_upload_count
+            current_week_no_upload_count
+            current_month_no_upload_count
+          }
+        }
+      `
+    })
+  },
+  // 获取该老师的自定义排版  返回list
+  getTeacherFollowGroups(params) {
+    return axios.get('/api/t/v1/teacher/teacherFollowGroup/getList', params)
+  },
 }

@@ -10,8 +10,9 @@
   <div class="judge-comps">
     <div class="tabs">
       <el-radio-group v-if="!isFrom1v1" v-model="subjectCode" size="mini">
-        <el-radio-button :label="0">美术</el-radio-button>
-        <el-radio-button :label="1">写字</el-radio-button>
+        <!-- <el-radio-button :label="0">美术</el-radio-button>
+        <el-radio-button :label="1">写字</el-radio-button> -->
+        <el-radio-button :label="3">音乐</el-radio-button>
       </el-radio-group>
     </div>
     <component
