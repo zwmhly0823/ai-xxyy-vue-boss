@@ -186,9 +186,7 @@
                       :key="item.id"
                     >
                       {{
-                      item.subject === 'ART_APP'
-                      ? courseLevelReplace(item.name)
-                      : item.name
+                      courseLevelReplace(item.name)
                       }}
                     </el-tag>
                   </span>

@@ -49,6 +49,7 @@ export default {
       `/api/b/v1/backend/completed/reissue/flow?flowApprovalId=${params.flowApprovalId}&staffName=${params.staffName}&staffId=${params.staffId}&isConfirm=${params.isConfirm}&approvalRemark=${params.approvalRemark}`
     )
   },
+  
   // 获取当前物流信息
   getExpressByOrderId(query) {
     return axios.get(

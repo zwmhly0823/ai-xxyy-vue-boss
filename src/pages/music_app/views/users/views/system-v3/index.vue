@@ -166,7 +166,6 @@
               :key="index + keyDate"
             >
               <el-table-column
-                v-if="item.flag"
                 :label="item.title"
                 :key="index"
                 :min-width="item.size"
@@ -467,7 +466,7 @@
                       -
                     </p>
                     <p class="btn-text " v-else @click="openTeam(scope.row)">
-                      {{ scope.row.realname }} ({{ scope.row.teamname }})
+                      {{ scope.row.realname }} ({{ courseLevelReplace(scope.row.teamname) }})
                     </p>
                     <p>{{ scope.row.departmentname }}</p>
                   </div>
@@ -684,6 +683,7 @@ import ModifyAddress from '../../components/ModifyAddress.vue'
 import enums from '../../components/searchData'
 import { formatData, openBrowserTab } from '@/utils/index'
 import { FOLLOW_EXPRESS_STATUS, ISREFUND } from '@/utils/enums'
+import {courseLevelReplace} from '@/utils/supList'
 import CouponPopover from '../../../studentTeam/components/TabPane/components/couponPopover'
 export default {
   name: 'systemUsers',
@@ -711,6 +711,7 @@ export default {
   },
   data() {
     return {
+      courseLevelReplace,
       openColumnLsit: false,
       columnLsit: false, // 判断是否存在列表
       keyDate: '', // 重置table key
@@ -857,6 +858,7 @@ export default {
       this.$http.User.getTeacherFollowGroups(data)
         .then((res) => {
           console.log(res.payload[res.payload.length - 1], '获取自定义列表')
+      
           if (res.code === 0) {
             if (res.payload.length > 0) {
               this.columnLsit = true
@@ -865,6 +867,7 @@ export default {
               )
               this.keyDate = new Date().getTime()
               this.tableList = res.payload[res.payload.length - 1]
+              
             } else {
               this.tableList = {
                 expression: {

@@ -32,8 +32,9 @@
         >
       </section>
       <el-radio-group v-if="!isFrom1v1" v-model="changeSubject" size="mini">
-        <el-radio-button :label="0">美术</el-radio-button>
-        <el-radio-button :label="1">写字</el-radio-button>
+        <!-- <el-radio-button :label="0">美术</el-radio-button>
+        <el-radio-button :label="1">写字</el-radio-button> -->
+        <el-radio-button :label="3">音乐</el-radio-button>
       </el-radio-group>
     </div>
     <el-tabs v-model="assetCurPane">
