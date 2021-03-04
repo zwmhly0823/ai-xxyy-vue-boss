@@ -157,7 +157,7 @@ export default {
         query, // studentId
         this.currentPage
       ).then((res) => {
-        if (res.data.OrderPage) {
+        if (res.data.OrderPage) { 
           console.log('订单物流模块接口', res.data.OrderPage.content)
           const _data = res.data.OrderPage.content
           _data.forEach((item) => {
