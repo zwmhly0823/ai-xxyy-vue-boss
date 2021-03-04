@@ -68,7 +68,7 @@
             size="mini"
             type="text"
             icon="el-icon-plus"
-            @click="handleAdd(scope.row)"
+            @click="handleAddRow(scope.row)"
             >新增</el-button
           >
           <el-button
@@ -94,33 +94,20 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="上级菜单">
-              <!-- <el-tree
-                :data="menuList"
-                :props="{ label: 'name' }"
-                show-checkbox
-                @node-click="handleNodeClick"
-                @check-change="handleCheckChange"
-                highlight-current
-                auto-expand-parent
-                accordion
-                node-key="id"
-                :default-checked-keys="form.parentIdArr"
-              ></el-tree> -->
-              <!-- :default-expanded-keys="expandedArr" -->
               <el-cascader
                 :props="{ label: 'name', value: 'id', checkStrictly: true }"
                 :options="menuOptions"
-                v-model="form.parentIdArr"
+                v-model="form.parentId"
                 @change="handleParentChange"
               >
               </el-cascader>
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="菜单类型" prop="type" v-if="step != 1">
+            <el-form-item label="菜单类型" prop="type">
               <el-radio-group v-model="form.type">
-                <el-radio label="M">目录</el-radio>
-                <el-radio label="C">菜单</el-radio>
+                <el-radio label="0">菜单</el-radio>
+                <el-radio disabled label="1">按钮</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -153,19 +140,9 @@
               />
             </el-form-item>
           </el-col>
-
-          <el-col :span="12">
-            <el-form-item label="是否缓存">
-              <el-radio-group v-model="form.keepAlive">
-                <el-radio label="0">缓存</el-radio>
-                <el-radio label="1">不缓存</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="reset">重置</el-button>
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
@@ -175,6 +152,9 @@
 
 <script>
 import { Message } from 'element-ui'
+
+let parentIds = [];
+
 export default {
   name: 'Menu',
   components: {},
@@ -196,14 +176,12 @@ export default {
         menuType: 'boss',
         icon: '',
         keepAlive: false,
-        menuType: '',
         name: '',
-        parentId: 0,
+        parentId: ['0'],
         path: '',
         permission: '',
         sort: 0,
-        type: '',
-        parentIdArr: [],
+        type: '0',
       },
       // 表单校验
       rules: {
@@ -218,102 +196,108 @@ export default {
         ],
       },
       multipleSelection: [],
-      step: 1,
     }
   },
   created() {
-    this.getList()
+    this.getList();
+    this.getTreeList();
   },
   methods: {
+    getParentId(id, data) {
+      data.map(item => {
+        if (item.id === '0') {
+          return;
+        }
+        if (item.id === id) {
+          parentIds.unshift(item.id);
+          this.getParentId(item.parentId, this.menuOptions);
+        }
+        else {
+          if (item.children) {
+            this.getParentId(id, item.children);
+          }
+        }
+      })
+    },
     handleParentChange(value) {
-      this.form.parentIdArr = value;
+      console.log('parentId', value);
+      this.form.parentId = value;
     },
     handleNodeClick(data) {
       console.log(data)
     },
 
-    // 表单重置
-    reset() {
-      this.expandedArr = []
-      this.form = {
-        icon: '',
-        keepAlive: false,
-        menuType: '',
-        name: '',
-        parentId: 0,
-        path: '',
-        permission: '',
-        sort: 0,
-        type: '',
-        parentIdArr: [],
-      }
-       this.$refs.tree.setCheckedKeys([]);
-      //TODO:
-      console.log(this)
-      this.$refs['form'].resetFields()
+    handleAdd() {
+      this.open = true;
+      this.title = '添加';
     },
-    /** 新增按钮操作 */
-    handleAdd(row) {
-      console.log('rowrowrow', row)
-      this.expandedArr = []
-
+    handleAddRow(row) {
+      this.open = true;
+      this.title = '添加';
       this.getTreeList()
-
-      if (row != null && row.id) {
-        this.step = 2
-        this.expandedArr.push(row.id)
-        let arr = []
-        arr.push(row.id)
-        this.form.parentIdArr = arr
-        // console.log(this.form)
-        this.form.parentId = row.id
-      } else {
-        this.step = 1
-        this.form.parentId = 0
-      }
-      this.open = true
-      // this.reset()
-      this.title = '添加'
+      .then(() => {
+        this.getParentId(row.id, this.menuOptions);
+        this.form = {
+          id: '',
+          name: '',
+          parentId: parentIds,
+          path: '',
+          permission: '',
+          sort: '',
+          type: '0',
+        }
+      })
     },
-    /** 修改按钮操作 */
     handleUpdate(row) {
-      console.log(row)
-      this.reset()
       this.getTreeList()
-      getMenu(row.menuId).then((response) => {
-        this.form = response.data
-        this.open = true
-        this.title = '修改'
+      .then(() => {
+        this.open = true;
+        this.title = '修改';
+
+        this.getParentId(row.id, this.menuOptions);
+        const pids = [ ...parentIds ];
+        console.log('pids', pids);
+        pids.pop();
+
+        this.form = {
+          id: row.id,
+          name: row.name,
+          parentId: pids.length === 0 ? ['0'] : pids,
+          path: row.path,
+          permission: row.permission,
+          sort: row.sort,
+          type: row.type,
+        }
+
       })
     },
     /** 提交按钮 */
     submitForm: function () {
-      console.log(this.form)
-      console.log(this.$refs['form'])
       this.$refs['form'].validate((valid) => {
-        console.log(valid)
-
         if (valid) {
-          let params = {
-            ...this.form,
-            icon: '',
-          }
+          console.log('formData',this.form);
+          const data = {
+          ...this.form,
+          parentId: this.form.parentId ? this.form.parentId[this.form.parentId.length - 1] : '0',
+        }
 
-          if (this.form.menuId != undefined) {
-            // updateMenu(this.form).then((response) => {
-            //   Message('修改成功')
-            //   this.open = false
-            //   this.getList()
-            // })
-          } else {
-            console.log(params)
-            params.type = '0'
-            console.log(params)
-            this.$http.SystemMenu.add(params).then((response) => {
+          if (this.form.id) {
+            this.$http.SystemMenu.edit(data).then((response) => {
+              if (response.code == 0) {
+                Message('修改成功')
+                this.open = false;
+                parentIds = [];
+                this.getList();
+              }
+            })
+          }
+          else {
+            this.$http.SystemMenu.add(data).then((response) => {
               if (response.code == 0) {
                 Message('新增成功')
-                this.open = false
-                this.getList()
+                this.open = false;
+                parentIds = [];
+                this.getList();
               }
             })
           }
@@ -327,14 +311,7 @@ export default {
 
     cancel() {
       this.open = false
-      this.reset()
-    },
-    del(ids) {
-      console.log(ids)
-
-      this.$http.SystemMenu.del({ ids: ids }).then((res) => {
-        console.log(res)
-      })
+      parentIds = [];
     },
     handleDelete(row) {
       let that = this
@@ -343,22 +320,22 @@ export default {
         cancelButtonText: '取消',
         type: 'warning',
       })
-        .then(function () {
-          let ids = []
-          that.treeData([row]).map((item) => {
-            ids.push(item.id)
+      .then((val) => {
+        if(val === 'confirm') {
+          this.$http.SystemMenu.del({ ids: [row.id] }).then((res) => {
+            if(res.code === 0) {
+              Message('删除成功');
+              this.getList();
+            }
           })
-          return that.del(ids)
-        })
-        .then(() => {
-          that.getList()
-          Message('删除成功')
-        })
+        }
+      })
+      .catch(() => {})
     },
     getTreeList() {
-      this.$http.SystemMenu.getMenuTree()
+      return this.$http.SystemMenu.getMenuTree()
         .then((res) => {
-          if (res.payload.length) {
+          if (res.code === 0) {
             this.menuOptions = [
               {
                 id: '0',
@@ -375,8 +352,7 @@ export default {
       this.loading = true
       this.$http.SystemMenu.getMenuList()
         .then((res) => {
-          console.log(res.payload)
-          if (res.payload.length) {
+          if(res.code === 0) {
             this.menuList = this.handleTree(res.payload, 'id')
           }
         })
