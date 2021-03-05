@@ -1077,6 +1077,7 @@ export default {
     },
     // 点击班级名称，打开班级详情
     openTeam(e, res) {
+      console.log(res)
       if (e === 's') {
         const {
           id,
@@ -1085,7 +1086,7 @@ export default {
         } = res.teamInfo
 
         openBrowserTab(
-          `/student-team/#/teamDetail/${id}/${teamState}`,
+          `/music_app/#/teamDetail/${id}/${teamState}`,
           `${teamName}`
         )
       } else if (e === 't') {
@@ -1097,7 +1098,7 @@ export default {
         } = this.sys_student_details_son.trialOfStudentDetails.teamInfo
         id &&
           openBrowserTab(
-            `/student-team/#/detail/trial/${id}/${teamtype}`,
+            `/music_app/#/teamTrialDetail/${id}/${teamtype}`,
             `${teamName}`
           )
       } else if (e === 'j') {
@@ -1108,7 +1109,7 @@ export default {
         } = res.readyTeamInfo
 
         openBrowserTab(
-          `/student-team/#/teamDetail/${id}/${teamState}`,
+          `/music_app/#/teamDetail/${id}/${teamState}`,
           `${teamName}`
         )
       }

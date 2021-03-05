@@ -387,6 +387,8 @@ export default {
       }, 200)
     }
     return {
+      // 根据订单物流获取随材版本
+      proVersion:'',
       fileListC: [],
       dialogImageUrl: '', // 上传文件的预览url
       dialogVisible: false, // 上传文件的预览弹窗显隐开关
@@ -765,6 +767,7 @@ export default {
             // 回显bug无法提交_丹阳&伟霞
             this.levelData = medium.level
             Object.assign(this.formRepair, {
+              proVersion:medium.productVersion,
               totalAddress:
                 medium.province +
                 medium.city +
