@@ -847,6 +847,7 @@ export default {
       endTime: '',
       departmentIds: '', // 新添部门
       teacherIds: '', // 新添老师
+      onlyStatus:'',
       page: 1,
       size: 20
     }
@@ -916,7 +917,7 @@ export default {
     status_resultChange(val) {
       this.params.page = 1
       this.currentPage = 1
-      Object.assign(this.params, { status: val==''?'COMPLETED':val })
+      Object.assign(this.params, { status:'COMPLETED',onlyStatus: val })
       this.checkPending(this.params)
     },
     //  活动名称搜索
