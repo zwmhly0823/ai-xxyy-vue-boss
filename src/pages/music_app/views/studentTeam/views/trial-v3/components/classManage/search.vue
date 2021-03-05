@@ -106,7 +106,7 @@ export default {
       let sup = ''
       if (val.sup.length) {
         sup = val.sup
-        sup = sup.map((item) => `S${item}`)
+        sup = sup.map((item) => `${item}`)
         sup = sup.join().split(',')
       }
       this.searchRes(sup, 'sup')
