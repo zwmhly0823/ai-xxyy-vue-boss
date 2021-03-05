@@ -427,7 +427,7 @@
                   <!-- 学习进度 -->
                   <div v-if="item.title === '学习进度' && item.flag">
                     <p>
-                      {{ scope.row.currentsuper }}{{ scope.row.currentlevel
+                      {{ SUP_LEVEL_ALL[scope.row.currentsuper] }}{{ scope.row.currentlevel
                       }}{{ scope.row.currentunit }}{{ scope.row.currentlesson }}
                     </p>
                   </div>
@@ -683,7 +683,7 @@ import ModifyAddress from '../../components/ModifyAddress.vue'
 import enums from '../../components/searchData'
 import { formatData, openBrowserTab } from '@/utils/index'
 import { FOLLOW_EXPRESS_STATUS, ISREFUND } from '@/utils/enums'
-import {courseLevelReplace} from '@/utils/supList'
+import {SUP_LEVEL_ALL,courseLevelReplace} from '@/utils/supList'
 import CouponPopover from '../../../studentTeam/components/TabPane/components/couponPopover'
 export default {
   name: 'systemUsers',
@@ -711,6 +711,7 @@ export default {
   },
   data() {
     return {
+      SUP_LEVEL_ALL,
       courseLevelReplace,
       openColumnLsit: false,
       columnLsit: false, // 判断是否存在列表
@@ -860,14 +861,13 @@ export default {
           console.log(res.payload[res.payload.length - 1], '获取自定义列表')
       
           if (res.code === 0) {
-            if (res.payload.length > 0) {
+            if (res.payload.length > 0&&JSON.parse(res.payload[0].expression).column.length>0) {
               this.columnLsit = true
               res.payload[res.payload.length - 1].expression = JSON.parse(
                 res.payload[res.payload.length - 1].expression
               )
               this.keyDate = new Date().getTime()
               this.tableList = res.payload[res.payload.length - 1]
-              
             } else {
               this.tableList = {
                 expression: {
