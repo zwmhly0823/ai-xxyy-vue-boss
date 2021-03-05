@@ -204,13 +204,14 @@ export default {
     },
     // 打开新页面
     openTeam(row) {
+      console.log(row)
       openBrowserTab(
-        `/approval/#/moneyBack?cellphone=${row.user.mobile}&order_no=${row.out_trade_no}`
+        `/music_app/#/moneyBack?cellphone=${row.user.mobile}&order_no=${row.out_trade_no}`
       )
     },
     openTeams(row) {
       openBrowserTab(
-        `/approval/#/approvalGift?mobile=${row.user.mobile}&}&id=${row.id}`
+        `/music_app/#/approvalGift?mobile=${row.user.mobile}&}&id=${row.id}`
       )
     },
     // 推荐人

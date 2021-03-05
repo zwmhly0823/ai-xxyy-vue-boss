@@ -32,16 +32,20 @@
         <div class="course-base">
           <div class="module">
             <span>最近活跃：</span>
-            <span>{{
+            <span>
+              {{
               (stuInfor_add.lastBehaviorLog &&
-                stuInfor_add.lastBehaviorLog.device_model) ||
-                '--'
-            }}</span>
-            <span style="margin-left:5px;">{{
+              stuInfor_add.lastBehaviorLog.device_model) ||
+              '--'
+              }}
+            </span>
+            <span style="margin-left:5px;">
+              {{
               (stuInfor_add.lastBehaviorLog &&
-                stuInfor_add.lastBehaviorLog.action_time) ||
-                '--'
-            }}</span>
+              stuInfor_add.lastBehaviorLog.action_time) ||
+              '--'
+              }}
+            </span>
           </div>
           <div class="module">
             <span>最近参课：</span>
@@ -68,9 +72,8 @@
             class="head-portrait"
             :src="stuInfor_add.head || defaultHead"
             :preview-src-list="[stuInfor_add.head || defaultHead]"
-          >
-          </el-image>
-          <i v-if="stuInfor_add.sex == '2'" class="female el-icon-female " />
+          ></el-image>
+          <i v-if="stuInfor_add.sex == '2'" class="female el-icon-female" />
           <i v-else-if="stuInfor_add.sex == '1'" class="male el-icon-male" />
           <i v-else class="el-icon-toilet-paper" />
         </div>
@@ -106,28 +109,30 @@
               class="d-flex"
             >
               <svg class="lk-icon-green" aria-hidden="true">
-                <use xlink:href="#icongongzhonghao"></use>
+                <use xlink:href="#icongongzhonghao" />
               </svg>
-              <span> 已关注公众号</span>
+              <span>已关注公众号</span>
             </div>
             <div v-else class="d-flex">
               <svg class="lk-icon" aria-hidden="true">
-                <use xlink:href="#icongongzhonghao"></use>
+                <use xlink:href="#icongongzhonghao" />
               </svg>
-              <span style="margin-left: 3px;"> 未关注公众号</span>
+              <span style="margin-left: 3px;">未关注公众号</span>
             </div>
           </div>
           <!-- 只有系统课显示 -->
           <div class="course-info upset_24col">
-            <el-tag type="danger" class="tag-setting" size="small">{{
+            <el-tag type="danger" class="tag-setting" size="small">
+              {{
               (stuInfor && stuInfor.statusCH) || '--'
-            }}</el-tag>
+              }}
+            </el-tag>
             <!-- <el-tag type="danger" class="tag-setting" size="small">{{
               (firstTeam.orderInfo && firstTeam.orderInfo.packages_name) || '--'
-            }}</el-tag> -->
+            }}</el-tag>-->
             <!-- <el-tag type="warning" class="tag-setting" size="small">{{
               firstTeam.teamStatusCH || '--'
-            }}</el-tag> -->
+            }}</el-tag>-->
           </div>
         </el-col>
 
@@ -138,8 +143,7 @@
               type="primary"
               @click="$refs.couponPopover.issueCoupons = true"
               v-if="isTossSys"
-              >发优惠券</el-button
-            >
+            >发优惠券</el-button>
             <template v-if="changeSubject === 0">
               <el-button
                 size="mini"
@@ -147,8 +151,7 @@
                 @click="queryJump(item)"
                 v-for="(item, index) of operatBtn"
                 :key="index"
-                >{{ item }}</el-button
-              >
+              >{{ item }}</el-button>
             </template>
           </div>
           <!-- <div class="authoraziton-btn" v-if="changeSubject === 0">
@@ -160,7 +163,7 @@
               :key="index"
               >{{ item }}</el-button
             >
-          </div> -->
+          </div>-->
         </el-col>
       </el-row>
       <!-- tab标签页 -->
@@ -184,20 +187,12 @@
             />
           </el-tab-pane>
           <el-tab-pane label="上课记录" name="learningRecord">
-            <studyRecord
-              :stuInforAdd="stuInfor_add"
-              :stuInfor="stuInfor"
-              :tab="tabData"
-            />
+            <studyRecord :stuInforAdd="stuInfor_add" :stuInfor="stuInfor" :tab="tabData" />
           </el-tab-pane>
           <el-tab-pane label="作品集" name="collectionOf">
             <portfolio />
           </el-tab-pane>
-          <el-tab-pane
-            label="学习周报"
-            name="studyWeekly"
-            v-if="changeSubject === 0"
-          >
+          <el-tab-pane label="学习周报" name="studyWeekly" v-if="changeSubject === 0">
             <studyWeekly />
           </el-tab-pane>
           <el-tab-pane label="订单记录" name="orderRecord">
@@ -215,11 +210,7 @@
           <el-tab-pane label="审批记录" name="approvalRecord">
             <approval-record :stuInfor_add="stuInfor_add.mobile" />
           </el-tab-pane>
-          <el-tab-pane
-            label="行为轨迹"
-            name="behaviorLocus"
-            v-if="changeSubject === 0"
-          >
+          <el-tab-pane label="行为轨迹" name="behaviorLocus" v-if="changeSubject === 0">
             <behaviorLocus />
           </el-tab-pane>
           <el-tab-pane label="用户触达" name="notifyRecord">
@@ -395,6 +386,9 @@ export default {
             break
           case 'COLLEGE_APP':
             item = 'AI学院'
+            break
+          case 'MUSIC_APP':
+            item = '小熊音乐'
             break
           default:
             item = '未知学科'

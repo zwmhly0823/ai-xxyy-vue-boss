@@ -750,6 +750,7 @@ export default {
     },
     // 通过订单id查询物流信息
     async getSeletInput(val) {
+      console.log(val)
       if (val.id) {
         this.$http.Express.getExpressByOrderId(val.id).then((res) => {
           if (res && res.payload) {

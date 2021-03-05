@@ -56,8 +56,8 @@
         }}</el-col>
       </el-row>
       <el-row>
-        <el-col :span="5">物流单数量:</el-col>
-        <el-col :span="18" :offset="1">{{
+        <el-col :span="6">物流单数量:</el-col>
+        <el-col :span="17" :offset="1">{{
           drawerGiftDeatail.expressCount
         }}</el-col>
       </el-row>
@@ -113,10 +113,10 @@
         "
       >
         <el-col :span="20" :offset="1" style="margin-top: 40px">
-          <el-button type="button" size="mini" @click="refuseDialog"
+          <el-button type="button" size="small" @click="refuseDialog"
             >拒 绝</el-button
           >
-          <el-button type="primary" size="mini" @click="ensureReplenish"
+          <el-button type="primary" size="small" @click="ensureReplenish"
             >同 意</el-button
           >
         </el-col>
@@ -207,10 +207,11 @@ export default {
 
 <style lang="scss" scoped>
 .approvallk {
+  padding:0 20px;
   ::v-deep {
     .el-row {
       margin-bottom: 10px;
-      font-size: 12px;
+      // font-size: 12px;
     }
   }
 }
