@@ -1008,7 +1008,7 @@ export default {
         formData.append('success_action_status', 200) // 成功后返回的操作码
         formData.append('name', filename)
         formData.append('file', file.file, filename)
-        const fileUrl = `${Contants.OSS_IMG_BASE_URL}/${dirPath}${filename}`
+        const fileUrl = `${getOssToken.realmName}/${dirPath}${filename}`
 
         axios
           .post(requestHost, formData, {
