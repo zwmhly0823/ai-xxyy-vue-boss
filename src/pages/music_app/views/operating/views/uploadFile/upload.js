@@ -88,7 +88,7 @@ const uploadFile = async (file, device = 'Pc') => {
     const filename = new Date().getTime() + getSuffix(file.name)
     const dirPath = `${device}/fileUpload/`
     const formData = new FormData()
-    // location.origin.indexOf('prod')||location.origin.indexOf('live')
+    
     const fileUrl = `${Contants.OSS_IMG_BASE_URL}/${dirPath}${filename}`
 
     formData.append('key', dirPath + filename) // 存储在oss的文件路径
