@@ -893,7 +893,7 @@ export default {
   // 订单·物流数据
   getOrderPage(query = '', page = 1, size = '20', status = 3) {
     const formattingQuery = JSON.stringify({
-      uid: query,
+      ...query,
       status: status
     })
     return axios.post(`/graphql/v1/toss`, {
@@ -906,17 +906,42 @@ export default {
           content{
             rmbRefundStatusText
             id
+            regtype
             isrefund
             invoice_status_text
+            packages_course_week
+            remaining_week
             packages_name
+            promotionsList{
+              gifts_name
+            }
             amount
             order_status
             out_trade_no
             ctime
+             total_amount
+            discount_amount
+            topic_id
+            pay_channel_user_extends{
+              username
+              mobile
+              u_id
+            }
             express{
+              express_nu
               express_total
               last_express_status
             }
+            user{
+              mobile
+            }
+          paymentPay{
+          transaction_id
+          trade_type_text
+          }
+            channelDetail{
+            channel_outer_name
+          }
             team{
               team_name
               teacher_info{
@@ -932,6 +957,48 @@ export default {
       }`
     })
   },
+  // // 订单·物流数据
+  // getOrderPage(query = '', page = 1, size = '20', status = 3) {
+  //   const formattingQuery = JSON.stringify({
+  //     ...query,
+  //     status: status
+  //   })
+  //   return axios.post(`/graphql/v1/toss`, {
+  //     query: `{
+  //       OrderPage(query:${JSON.stringify(formattingQuery)},
+  //         page: ${page},
+  //         size:${size}){
+  //         totalPages
+  //         totalElements
+  //         content{
+  //           rmbRefundStatusText
+  //           id
+  //           isrefund
+  //           invoice_status_text
+  //           packages_name
+  //           amount
+  //           order_status
+  //           out_trade_no
+  //           ctime
+  //           express{
+  //             express_total
+  //             last_express_status
+  //           }
+  //           team{
+  //             team_name
+  //             teacher_info{
+  //               realname
+  //               departmentInfo{
+  //                 id
+  //                 name
+  //               }
+  //             }
+  //           }
+  //         }
+  //       }
+  //     }`
+  //   })
+  // },
   // 小熊币优惠券上头
   _reqGetUserTop(paramsObj) {
     return axios.post(`/graphql/v1/toss`, {
@@ -1743,5 +1810,36 @@ export default {
   // 获取该老师的自定义排版  返回list
   getTeacherFollowGroups(params) {
     return axios.get('/api/t/v1/teacher/teacherFollowGroup/getList', params)
+  },
+  // 获取最近订单的物流详情
+  getExpressList(query = '', page = 1, size = '20') {
+    const sort = `{ "ctime": "desc" }`
+    const formattingQuery = JSON.stringify({
+      order_id: query.id
+    })
+    return axios.post(`/graphql/v1/toss`, {
+      query: `{
+   ExpressList(query:${JSON.stringify(formattingQuery)},
+   sort: ${JSON.stringify(sort)},
+          page: ${page},
+          size:${size}){
+      user_id
+    order_id
+    province
+    receipt_name
+     city
+      receipt_tel
+    express_company
+    express_status_text
+    express_status
+    express_nu
+    product_name
+    address_detail
+    logistics_mode
+    out_trade_no
+    express_total
+        }
+}`
+    })
   },
 }

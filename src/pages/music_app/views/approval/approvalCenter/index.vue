@@ -27,3 +27,8 @@ export default {
   overflow: hidden;
 }
 </style>
+<style lang="scss">
+.el-image-viewer__wrapper{
+  z-index: 2010!important;
+}
+</style>

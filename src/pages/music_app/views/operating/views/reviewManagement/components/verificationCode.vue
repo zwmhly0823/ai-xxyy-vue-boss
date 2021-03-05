@@ -49,9 +49,7 @@
         <el-table-column label="发送时间" align="center">
           <template slot-scope="scope">
             {{
-              new Date(Number(scope.row.ctime))
-                .toLocaleString()
-                .replace(/[上下午]+/g, '')
+timestamp(scope.row.ctime,2)
             }}
           </template>
         </el-table-column>
@@ -70,9 +68,11 @@
 </template>
 
 <script>
+import {timestamp} from '@/utils/index'
 export default {
   data() {
     return {
+      timestamp,
       cellphone: '',
       tableData: []
     }

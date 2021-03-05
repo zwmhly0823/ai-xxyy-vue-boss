@@ -1653,6 +1653,7 @@ export default {
       }
       // 无归属订单详情
       if (type === 'UNCREDITED') {
+        
         this.$http.Backend.getNoAttributionDetail(id).then((res) => {
           if (res && res.payload) {
             res.payload.orderTime = timestamp(res.payload.orderTime, 2)
@@ -1662,6 +1663,7 @@ export default {
             this.drawerApprovalDeatail.chat_url = res.payload.chatUrl[0]
             this.drawerApprovalDeatail.pay_url = res.payload.paymentUrl[0]
             this.drawerApproval = true
+            
           }
         })
       }

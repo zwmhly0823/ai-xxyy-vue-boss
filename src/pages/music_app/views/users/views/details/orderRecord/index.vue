@@ -131,7 +131,7 @@ export default {
         console.log(res, 'yyyyyyyyyyyyyyyyyy')
         this.$refs.order_id.drawer = true
         this.order_id = res.data.ExpressList[0].order_id
-        this.experId = res.data.ExpressList[0].id
+        this.experId = res.data.ExpressList[0].user_id
         // this.dialogVisible = true
         // this.expressData = res.data.ExpressList[0]
         // this.tableData = res.data.ExpressList
@@ -150,7 +150,7 @@ export default {
     reqgetOrderPage() {
       const query = {
         regtype: this.changeType === 1 ? [4, 5, 6] : [1, 2, 3, 7, 10, 11, 13],
-        id: this.$route.params.id
+        uid: this.$route.params.id
       }
       // const regtype = this.changeType?[4,5,6]:[1,2,3,7]
       this.$http.User.getOrderPage(

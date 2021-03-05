@@ -389,6 +389,9 @@ export default {
           case 'COLLEGE_APP':
             item = 'AI学院'
             break
+          case 'MUSIC_APP':
+            item = '小熊音乐'
+            break
           default:
             item = '未知学科'
             break
