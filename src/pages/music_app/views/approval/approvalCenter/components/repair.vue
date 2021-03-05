@@ -799,6 +799,7 @@ export default {
             })
           } else {
             Object.assign(this.formRepair, {
+              proVersion:medium.productVersion,
               userId: val.uid,
               stage: val.stage,
               productInfo: val.packagesName,
