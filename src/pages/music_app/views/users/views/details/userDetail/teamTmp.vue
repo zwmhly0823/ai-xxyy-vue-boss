@@ -1230,6 +1230,8 @@ export default {
     },
     // 体验课包装
     packageTrialTeamList(list = []) {
+      console.log('sssssssssssssssss')
+      console.log(list)
       list.forEach((team) => {
         const {
           // orderInfo = {},
