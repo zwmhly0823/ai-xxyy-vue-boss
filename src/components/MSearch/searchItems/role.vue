@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import consigneePhoneVue from './consigneePhone.vue'
 export default {
   props: {
     size: {

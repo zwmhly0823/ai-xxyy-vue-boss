@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
- * @LastEditors: liukun
- * @LastEditTime: 2020-08-27 17:42:51
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-12-19 21:43:21
 -->
 <template>
   <div class="ivr-content">
@@ -360,6 +360,7 @@ export default {
 
 <style lang="scss" scoped>
 .ivr-content {
+  padding: 10px;
   margin-bottom: 30px;
   .fliter-content {
     .form-item-margin {

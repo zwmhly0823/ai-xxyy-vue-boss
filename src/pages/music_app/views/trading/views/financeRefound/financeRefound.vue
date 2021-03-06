@@ -133,8 +133,7 @@
           <template slot-scope="scope">
             <div>
               {{
-              scope.row.outTradeNo &&
-              scope.row.outTradeNo.replace(/[a-z]*/g, '')
+              scope.row.outTradeNo
               }}
               <br />
               {{ scope.row.transactionId }}
@@ -352,7 +351,7 @@ export default {
         if (this.num1_) {
           this.searchJson.transactionId = ''
           this.searchJson.mobile = ''
-          this.searchJson.outTradeNo = 'xiong' + this.num1_
+          this.searchJson.outTradeNo = this.num1_
           this.arrangeParams()
         } else {
           this.$message({
@@ -401,7 +400,7 @@ export default {
         if (val) {
           this.searchJson.transactionId = ''
           this.searchJson.mobile = ''
-          this.searchJson.outTradeNo = 'xiong' + val
+          this.searchJson.outTradeNo = val
           this.arrangeParams()
         } else {
           this.searchJson.transactionId = ''

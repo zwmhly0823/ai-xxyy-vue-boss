@@ -157,7 +157,7 @@
 <script>
 import Department from '@/components/MSearch/searchItems/department'
 import GroupSell from '@/components/MSearch/searchItems/groupSell'
-import { formatTeamNameSup } from '@/utils/supList'
+import { courseLevelReplace } from '@/utils/supList'
 export default {
   props: {
     index: {
@@ -326,7 +326,7 @@ export default {
             return
           }
           this.classList = res.payload.map((item) => {
-            item.teamName = formatTeamNameSup(item.teamName)
+            item.teamName = courseLevelReplace(item.teamName)
             return item
           })
           this.flag = false

@@ -11,21 +11,11 @@
     <div class="form-container">
       <!-- logo -->
       <div class="logo-container">
-        <img src="../../../assets/images/boss.png" alt="" />
+        <img src="../../../assets/images/boss.png" alt />
       </div>
       <div class="title-container login-type">
-        <div
-          :class="{ active: tabFirstActive }"
-          @click="loginTypeHandle('codeLoginForm')"
-        >
-          密码登录
-        </div>
-        <div
-          :class="{ active: !tabFirstActive }"
-          @click="loginTypeHandle('pwdLoginForm')"
-        >
-          验证码登录
-        </div>
+        <div :class="{ active: tabFirstActive }" @click="loginTypeHandle('codeLoginForm')">密码登录</div>
+        <div :class="{ active: !tabFirstActive }" @click="loginTypeHandle('pwdLoginForm')">验证码登录</div>
       </div>
       <!-- 密码登录 -->
       <el-form
@@ -72,12 +62,32 @@
             <i class="el-icon-key" v-else></i>
           </span>
         </el-form-item>
+        <el-form-item prop="codeImage">
+          <div style="display:flex;justify-content:flex-start;align-item:center;">
+            <span class="svg-container">
+            <i class="el-icon-user-solid"></i>
+          </span>
+          <el-input
+            v-model.trim="pwdLoginForm.codeImage"
+            placeholder="请计算验证码"
+            name="codeImage"
+            type="text"
+            auto-complete="on"
+            maxlength="18"
+            @focus="checkStart"
+            @blur="checkEnd"
+            @keydown.enter.native="pwdLoginHandle('pwdLoginForm')"
+          />
+          <div style="height:52px;" @click="getVerificationCode">
+            <img style="width:auto;height:100%;" :src="`${verificationUrl}?T=${verificationTime}`" alt />
+          </div>
+          </div>
+        </el-form-item>
         <el-button
           type="primary"
           style="width:100%;margin:30px atuo; height: 50px;"
-          @click.native.prevent="pwdLoginHandle('pwdLoginForm')"
-          >登录</el-button
-        >
+          @click="pwdLoginHandle('pwdLoginForm')"
+        >登录</el-button>
       </el-form>
 
       <!-- 验证码登录 -->
@@ -129,12 +139,13 @@
               class="get-code"
               type="primary"
               @click.prevent="getCodeHandle()"
-              >获取验证码</el-button
-            >
+            >获取验证码</el-button>
             <el-button disabled plain v-else>
-              <span style="width:20px;display:inline-block;">{{
+              <span style="width:20px;display:inline-block;">
+                {{
                 cutDown
-              }}</span>
+                }}
+              </span>
               <span>s 重试</span>
             </el-button>
           </div>
@@ -144,8 +155,7 @@
           type="primary"
           style="width:100%;margin:30px atuo; height: 50px;"
           @click.native.prevent="pwdLoginHandle('codeLoginForm')"
-          >登录</el-button
-        >
+        >登录</el-button>
       </el-form>
       <!-- 验证码登录 end -->
       <!-- 修改用户密码 dialog -->
@@ -158,8 +168,8 @@
       >
         <span class="update-pwd_tip">
           <span style="margin-right:5px">⚠️</span>
-          系统检测到您当前账号密码安全等级较低，请修改密码后重新登录</span
-        >
+          系统检测到您当前账号密码安全等级较低，请修改密码后重新登录
+        </span>
         <el-form
           ref="updatePwd"
           :model="updatePwd"
@@ -176,14 +186,13 @@
                 size="medium"
                 @click="dialogVisible = false"
                 >取 消</el-button
-              > -->
+              >-->
               <el-button
                 style="width:100px;"
                 size="medium"
                 type="primary"
                 @click="handleSureReplacePassword('updatePwd')"
-                >确 认</el-button
-              >
+              >确 认</el-button>
             </div>
           </el-form-item>
         </el-form>
@@ -257,6 +266,8 @@ export default {
       }
     }
     return {
+      verificationUrl: '/api/b/v1/kaptcha/getCodeImage/account',
+      verificationTime:'',
       userInfo: null,
       updatePwdRules: {
         newPassword: [
@@ -272,6 +283,7 @@ export default {
       timer: null,
       tabFirstActive: true,
       pwdLoginForm: {
+        codeImage:'',
         userName: '',
         pwd: '',
         origin: 1 // 标记后端登录
@@ -284,6 +296,7 @@ export default {
       checkInterval: '',
       passwordType: 'password',
       pwdLoginRules: {
+        codeImage:[{ required: true,max: 4, message: '请根据图片计算验证码', trigger: 'change' }],
         userName: [
           { required: true, trigger: 'change', validator: validateUsername }
         ],
@@ -313,6 +326,10 @@ export default {
     }
   },
   methods: {
+    // 切换验证码
+    getVerificationCode() {
+      this.verificationTime = new Date().getTime();
+    },
     // 切换登录方式点击事件
     loginTypeHandle(loginType) {
       if (this.$refs[loginType]) {
@@ -354,7 +371,6 @@ export default {
     // 通过密码登录
     async loginByPwd() {
       const pwdLoginIn = await this.$http.Login.pwdLoginIn(this.pwdLoginForm)
-
       if (pwdLoginIn && pwdLoginIn.payload) {
         return pwdLoginIn.payload
       }
@@ -401,6 +417,7 @@ export default {
           : (getToken = await this.loginBycode().catch((err) =>
               console.log(err)
             ))
+
         if (getToken && getToken.token) {
           setToken(getToken.token)
           if (getToken.teacher) {
@@ -425,8 +442,10 @@ export default {
           }
           if (getToken.staff) {
             // 前端设置权限管理
-            getToken.staff.roleId = '7';
-            getToken.staff.mobile = '15801332536'
+
+            // getToken.staff.roleId = '19';
+            // getToken.staff.mobile = '15801332536'
+            console.log('ss')
             localStorage.setItem(
               'staff',
               JSON.stringify(getToken.staff || '{}')
@@ -508,6 +527,10 @@ export default {
         }
       }, 1000)
     }
+  },
+  created() {
+    // 根据url获取地址
+    this.verificationUrl = location.origin + this.verificationUrl
   }
 }
 </script>

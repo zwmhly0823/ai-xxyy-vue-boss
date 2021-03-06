@@ -15,6 +15,7 @@ import {
 } from '@/utils/index'
 
 var staff = JSON.parse(localStorage.getItem('staff')) || {}
+
 if (!staff) {
   removeToken()
   location.href = `${baseUrl()}login/#/`
@@ -58,7 +59,7 @@ if (staff.roleId === '19') {
   let superOperatingRouter = []
   let superTeacherRouter = []
   let uploadFilePeimission = []
-
+  let adminTeacherRouter = []
   // TODO:
   if (staff && staff.mobile === '15801332536') {
     uploadFilePeimission = [{
@@ -96,14 +97,15 @@ if (staff.roleId === '19') {
         }
       }
     ]
-    superTeacherRouter = [{
-        path: '/teacherManagement',
-        name: 'teacherManagement',
-        meta: {
-          title: '员工帐号',
-          module: 'teacher'
-        }
-      },
+    superTeacherRouter = [
+      // {
+      //   path: '/teacherManagement',
+      //   name: 'teacherManagement',
+      //   meta: {
+      //     title: '员工帐号',
+      //     module: 'teacher'
+      //   }
+      // },
       {
         path: '/weixinManagement',
         name: 'weixinManagement',
@@ -111,7 +113,15 @@ if (staff.roleId === '19') {
           title: '员工微信',
           module: 'teacher'
         }
-      }
+      },
+      // {
+      //   path: '/systemAccount',
+      //   name: 'systemAccount',
+      //   meta: {
+      //     title: '系统帐号',
+      //     module: 'teacher'
+      //   }
+      // },
     ]
   }
   // 管理员权限
@@ -123,6 +133,14 @@ if (staff.roleId === '19') {
         title: '手机号替换',
         // module: 'operating'
         module
+      }
+    })
+    adminTeacherRouter.push({
+      path: '/systemAccount',
+      name: 'systemAccount',
+      meta: {
+        title: '系统帐号',
+        module: 'teacher'
       }
     })
   }
@@ -520,6 +538,16 @@ if (staff.roleId === '19') {
             module
           }
         },
+        // 投诉中心  经理和区长可以查看
+        {
+          path: '/complaint',
+          name: 'complaint',
+          // hidden: teacherInfo.dutyId !== '1',
+          meta: {
+            title: '投诉中心',
+            module
+          }
+        },
         ...uploadFilePeimission,
         ...superOperatingRouter,
         ...adminRouter
@@ -588,37 +616,35 @@ if (staff.roleId === '19') {
         module
       }
     },
-    {
-      path: '/outbound',
-      name: 'outbound',
-      meta: {
-        title: '呼叫中心',
-        icon: 'icondianhua',
-        // module: 'outbound'
-        module
-      },
-      children: [{
-          path: '/CallRecord',
-          name: 'CallRecord',
-          meta: {
-            title: '通话记录',
-            // module: 'outbound',
-            module,
-            style: 'line'
-          }
-        },
-        {
-          path: '/CallCenter',
-          name: 'CallCenter',
-          meta: {
-            title: '席位配置',
-            // module: 'outbound',
-            module,
-            style: 'line'
-          }
-        }
-      ]
-    },
+    // {
+    //   path: '/outbound',
+    //   name: 'outbound',
+    //   meta: {
+    //     title: '呼叫中心',
+    //     icon: 'icondianhua',
+    //     // module: 'outbound'
+    //     module
+    //   },
+    //   children: [{
+    //       path: '/CallRecord',
+    //       name: 'CallRecord',
+    //       meta: {
+    //         title: '通话记录',
+    //         // module: 'outbound',
+    //         module,
+    //       }
+    //     },
+    //     {
+    //       path: '/CallCenter',
+    //       name: 'CallCenter',
+    //       meta: {
+    //         title: '席位配置',
+    //         // module: 'outbound',
+    //         module,
+    //       }
+    //     }
+    //   ]
+    // },
     // 数据中心
     // {
     //   path: '/statistics',
@@ -694,20 +720,21 @@ if (staff.roleId === '19') {
         module: 'teacher'
       },
       children: [
+        ...adminTeacherRouter,
         ...superTeacherRouter,
+        {
+          path: '/wechatWaterArmy',
+          name: 'wechatWaterArmy',
+          meta: {
+            title: '水军微信',
+            module: 'teacher'
+          }
+        },
         {
           path: '/workHandover',
           name: 'workHandover',
           meta: {
             title: '离职交接',
-            module: 'teacher'
-          }
-        },
-        {
-          path: '/systemAccount',
-          name: 'systemAccount',
-          meta: {
-            title: '系统帐号',
             module: 'teacher'
           }
         },
@@ -730,6 +757,46 @@ if (staff.roleId === '19') {
       ]
     },
     {
+      path: '/bossAuth',
+      name: 'active',
+      // hidden: true,
+      meta: {
+        title: 'boss权限',
+        icon: 'iconiconset',
+        module: 'bossAuth',
+      },
+      children: [
+        {
+          path: '/systemAccount',
+          name: 'systemAccount',
+          meta: {
+            title: '系统帐号',
+            module: 'boss-auth'
+          }
+        },
+      ],
+    },
+    {
+      path: '/tossAuth',
+      name: 'active',
+      // hidden: true,
+      meta: {
+        title: 'toss权限',
+        icon: 'iconiconset',
+        module: 'tossAuth',
+      },
+      children: [
+        {
+          path: '/teacherManagement',
+          name: 'teacherManagement',
+          meta: {
+            title: '员工帐号',
+            module: 'toss-auth'
+          }
+        },
+      ],
+    },
+    {
       path: '/active',
       name: 'active',
       // hidden: true,
@@ -738,7 +805,7 @@ if (staff.roleId === '19') {
         icon: 'iconiconset',
         module: module,
       },
-    }
+    },
   ]
 }
 

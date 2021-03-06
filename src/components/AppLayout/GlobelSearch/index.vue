@@ -32,8 +32,9 @@ export default {
 
   watch: {},
   created() {
-    this.currentUrl =
-      this.$store.getters.subjects.subjectCode === 1 ? 'write_app' : 'users'
+    
+      // this.$store.getters.subjects.subjectCode === 1 ? 'write_app' :
+    this.currentUrl = 'music_app'
   },
   methods: {
     selectStu() {

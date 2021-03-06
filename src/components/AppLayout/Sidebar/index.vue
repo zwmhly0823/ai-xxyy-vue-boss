@@ -45,24 +45,7 @@ export default {
     routes() {
       return routes.filter((item) => !item.hidden)
     },
-    // 高亮选中状态
-    activeMenu() {
-      const { path } = this.$route
-      const { pathname } = location
-      let active = '0'
-      if (this.routes.length === 0) return active
-      this.routes.forEach((item, index) => {
-        if (pathname.includes(item.meta.module)) {
-          active = index.toString()
-          if (item.children) {
-            item.children.forEach((child, cindex) => {
-              if (child.path.includes(path)) active = `${index}-${cindex}`
-            })
-          }
-        }
-      })
-      return active
-    },
+   
     showLogo() {
       return this.$store.state.settings.sidebarLogo
     },
@@ -77,15 +60,27 @@ export default {
     // 默认全部展开
     defaultOpendIndex() {
       const ids = routes.map((_, index) => index.toString())
+      console.log(ids)
       return ids
     }
   },
   data() {
     return {
-      currentMenu: null
+      currentMenu: null,
+      activeMenu: '0'
     }
   },
+  created() {
+    this.getActive()
+  },
+  activated() {
+    this.getActive()
+  },
   methods: {
+    getActive() {
+      let active = localStorage.getItem('menuActive')
+      this.activeMenu = active==null?'':active;
+    },
     handleLeave() {
       // this.$store.dispatch('app/resetSidebar')
     }

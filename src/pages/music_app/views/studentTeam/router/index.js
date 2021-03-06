@@ -33,7 +33,7 @@
    },
 
    /**
-    * 体验课班级V2.0 End
+    * 体验课班级V2.0  
     */
    {
      path: '/trialTeam', // 体验课班级
@@ -56,13 +56,23 @@
      component: () => import('../views/systemTeam/index.vue')
    },
    {
-     path: '/teamDetail/:id/:type', // 班级详情
+     path: '/teamTrialDetail/:id/:type', // 体验课班级中心
      name: 'teamDetail',
      meta: {
-       title: '班级中心'
+       title: '体验课班级中心'
      },
      hidden: true,
      component: () => import('../views/teamDetail/trial-v3/index.vue')
    },
+   {
+    path: '/teamDetail/:id/:type', // 系统课班级中心
+    name: 'teamDetail',
+    meta: {
+      title: '系统课班级中心'
+    },
+    hidden: true,
+    component: () =>
+      import(/* webpackChunkName: "student" */ '../views/teamDetail/index.vue')
+  },
  ]
  export default routes;

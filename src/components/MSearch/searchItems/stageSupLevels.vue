@@ -73,10 +73,11 @@
 <script>
 import axios from '@/api/axiosConfig'
 import { mapState } from 'vuex'
-import { SUP_LEVEL_LIST, SUP_LEVEL_LIST_LOWER } from '@/utils/supList'
+import { SUP_LEVEL_LIST_UPPER, SUP_LEVEL_LIST_LOWER } from '@/utils/supList'
 
 export default {
   props: {
+    
     stageName: {
       type: String,
       default: ''
@@ -140,7 +141,8 @@ export default {
     await this.getStage()
     // await this.getSup()
     await this.getLevel()
-    this.supList = this.addSupS ? SUP_LEVEL_LIST_LOWER : SUP_LEVEL_LIST
+    console.log(this.addSupS)
+    this.supList = this.addSupS ? SUP_LEVEL_LIST_LOWER : SUP_LEVEL_LIST_UPPER
   },
   methods: {
     // 期数

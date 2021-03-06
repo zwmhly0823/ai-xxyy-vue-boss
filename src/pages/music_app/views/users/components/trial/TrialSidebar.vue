@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-28 11:20:19
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-09 22:03:46
+ * @LastEditTime: 2020-12-19 15:26:16
 -->
 <template>
   <div class="trial-list-sidebar">
@@ -126,6 +126,23 @@ export default {
             {
               id: 'user-vip',
               label: 'VIP学员'
+            },
+            {
+              id: 'user-filling',
+              label: '待补差学员'
+            }
+          ]
+        },
+        {
+          label: '系统课退费学员',
+          children: [
+            {
+              id: 'refund-1',
+              label: '退费中'
+            },
+            {
+              id: 'refund-2',
+              label: '已退费'
             }
           ]
         }
@@ -191,6 +208,24 @@ export default {
         // VIP学员
         case 'user-vip':
           param = { 'vip_name.like': { 'vip_name.keyword': '*vip*' } }
+          break
+        // 待补差学员
+        case 'user-filling':
+          param = {
+            is_conversion: 1,
+            continue_order_count: 0,
+            course_day: {
+              gte: getDaysTimestamp(-44),
+              lte: getDaysTimestamp(-12)
+            }
+          }
+          break
+        // 系统课退费学员
+        case 'refund-1':
+          param = { recent_order_refund_status: 1 }
+          break
+        case 'refund-2':
+          param = { recent_order_refund_status: 2 }
           break
         // track-today
         case 'track-today':

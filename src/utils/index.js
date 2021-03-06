@@ -13,6 +13,9 @@ import store from '@/store'
 import { subjects, subjectsList } from '@/config/subjects'
 // import { of } from 'core-js/fn/array'https://s1.meixiu.mobi/Pc/fileUpload/1603790950384.jpeg
 
+export const defaultHead =
+  'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png'
+
 /**
  * 是否 toss。 是toss返回 teacher_id,否则返回 null
  * 测试环境同一域名，除localstorage外，根据pathname区别
@@ -410,11 +413,11 @@ export function getAppSubjectCode() {
   const key = getAppSubject(false)
   // return Object.keys(subjects).findIndex((item) => item === key) + ''
   let subjectCode = 3
-  subjectsList.map((item, index) => {
-    if (item.key === key) {
-      subjectCode = item.index
-    }
-  })
+  // subjectsList.map((item, index) => {
+  //   if (item.key === key) {
+  //     subjectCode = item.index
+  //   }
+  // })
   return subjectCode
 }
 // 注入 课程类型 subject 参数接受 对象和序列化的字符串
@@ -451,4 +454,59 @@ export function copyText(text, msg = '复制内容不存在，请确认') {
     type: 'success'
   })
   oInput.remove()
+}
+/**
+ * 返回倒计时时间
+ */
+export function MillisecondToDate(msd) {
+  const flag = msd > 0 ? 1 : 0
+  var time = Math.abs(parseFloat(msd) / 1000)
+
+  if (time > 60 && time < 60 * 60) {
+    time =
+      getZero(parseInt(time / 60.0)) +
+      ':' +
+      getZero(parseInt((parseFloat(time / 60.0) - parseInt(time / 60.0)) * 60))
+  } else if (time >= 60 * 60) {
+    time =
+      getZero(parseInt(time / 3600.0)) +
+      ':' +
+      getZero(
+        parseInt((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60)
+      ) +
+      ':' +
+      getZero(
+        parseInt(
+          (parseFloat(
+            (parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60
+          ) -
+            parseInt(
+              (parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60
+            )) *
+            60
+        )
+      )
+  } else {
+    time = getZero(parseInt(time))
+  }
+  if (flag) {
+    return time
+  } else {
+    return `-${time}`
+  }
+}
+// 补零
+export function getZero(num) {
+  // 单数前面加0
+  if (parseInt(num) < 10) {
+    num = '0' + num
+  }
+  return num
+}
+export async function calcBrowerClienHeight(_this, ref, minus = 0) {
+  await _this.$nextTick()
+  // Element.getBoundingClientRect() 方法返回元素的大小及其相对于视口的位置。
+  const DomTop = _this.$refs[ref].getBoundingClientRect().y
+  //  document.body.clientHeight 返回body元素内容的高度
+  return document.body.clientHeight - DomTop - minus + 'px'
 }

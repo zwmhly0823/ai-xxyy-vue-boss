@@ -12,6 +12,8 @@ COPY ./dist/login/index.html /usr/share/nginx/html/login/index.html
 COPY ./dist/marketing/index.html /usr/share/nginx/html/marketing/index.html
 COPY ./dist/music_app/index.html /usr/share/nginx/html/music_app/index.html
 COPY ./dist/teacher/index.html /usr/share/nginx/html/teacher/index.html
+COPY ./dist/boss-auth/index.html /usr/share/nginx/html/boss-auth/index.html
+COPY ./dist/toss-auth/index.html /usr/share/nginx/html/toss-auth/index.html
 
 COPY ./src/main/nginx/default.conf /etc/nginx/conf.d/default.conf
 

@@ -13,58 +13,60 @@
         当前结果：社群销售<span>{{ resultStatistics.wechatSize }}</span
         >人，计划招生<span>{{ resultStatistics.planSumTeamSize }}</span>
         <span>（</span>
-        <span v-if="courseType != '0'"
-          >{{ SCHEDULE_LEVE(courseType)['S4'] }}:{{
-            (resultStatistics.S4 && resultStatistics.S4.planSumTeamSize) || 0
-          }}
-        </span>
+        
         <span
-          >{{ SCHEDULE_LEVE(courseType)['S1'] }}:{{
+          >{{ SUP_LEVEL_ALL['S1'] }}:{{
             (resultStatistics.S1 && resultStatistics.S1.planSumTeamSize) || 0
           }}
         </span>
         <span
-          >{{ SCHEDULE_LEVE(courseType)['S2'] }}:{{
+          >{{ SUP_LEVEL_ALL['S2'] }}:{{
             (resultStatistics.S2 && resultStatistics.S2.planSumTeamSize) || 0
           }}
         </span>
-        <span v-if="courseType != '0'"
-          >{{ SCHEDULE_LEVE(courseType)['S5'] }}:{{
+        <!-- <span v-if="courseType != '0'"
+          >{{ SUP_LEVEL_ALL['S5'] }}:{{
             (resultStatistics.S5 && resultStatistics.S5.planSumTeamSize) || 0
           }}
-        </span>
+        </span> -->
         <span
-          >{{ SCHEDULE_LEVE(courseType)['S3'] }}:{{
+          >{{ SUP_LEVEL_ALL['S3'] }}:{{
             (resultStatistics.S3 && resultStatistics.S3.planSumTeamSize) || 0
+          }}
+        </span>
+        <span v-if="courseType != '0'"
+          >{{ SUP_LEVEL_ALL['S4'] }}:{{
+            (resultStatistics.S4 && resultStatistics.S4.planSumTeamSize) || 0
           }}
         </span>
         <span>）</span>
 
         实际招生<span>{{ resultStatistics.realSumTeamSize }}</span>
         <span>（</span>
-        <span v-if="courseType != '0'"
-          >{{ SCHEDULE_LEVE(courseType)['S4'] }}:{{
-            (resultStatistics.S4 && resultStatistics.S4.realSumTeamSize) || 0
-          }}
-        </span>
+        
         <span
-          >{{ SCHEDULE_LEVE(courseType)['S1'] }}:{{
+          >{{ SUP_LEVEL_ALL['S1'] }}:{{
             (resultStatistics.S1 && resultStatistics.S1.realSumTeamSize) || 0
           }}
         </span>
         <span
-          >{{ SCHEDULE_LEVE(courseType)['S2'] }}:{{
+          >{{ SUP_LEVEL_ALL['S2'] }}:{{
             (resultStatistics.S2 && resultStatistics.S2.realSumTeamSize) || 0
           }}
         </span>
-        <span v-if="courseType != '0'"
-          >{{ SCHEDULE_LEVE(courseType)['S5'] }}:{{
+        <!-- <span v-if="courseType != '0'"
+          >{{ SUP_LEVEL_ALL['S5'] }}:{{
             (resultStatistics.S5 && resultStatistics.S5.realSumTeamSize) || 0
           }}
-        </span>
+        </span> -->
         <span
-          >{{ SCHEDULE_LEVE(courseType)['S3'] }}:{{
+          >{{ SUP_LEVEL_ALL['S3'] }}:{{
             (resultStatistics.S4 && resultStatistics.S3.realSumTeamSize) || 0
+          }}
+        </span>
+        <span v-if="courseType != '0'"
+          >{{ SUP_LEVEL_ALL['S4'] }}:{{
+            (resultStatistics.S4 && resultStatistics.S4.realSumTeamSize) || 0
           }}
         </span>
         <span>）</span>
@@ -170,7 +172,7 @@
 <script>
 import EleTable from '@/components/Table/EleTable'
 import { COURSECATEGORY } from '@/utils/enums'
-import { SCHEDULE_LEVE } from '@/utils/supList'
+import { SUP_LEVEL_ALL } from '@/utils/supList'
 export default {
   props: {
     paramsInfo: {
@@ -183,7 +185,7 @@ export default {
   },
   data() {
     return {
-      SCHEDULE_LEVE,
+      SUP_LEVEL_ALL,
       courseCategory: {
         0: '双周体验课',
         2: '年系统课',
@@ -276,7 +278,7 @@ export default {
 
           value.courseCategoryCHN = courseCategoryCHN
           value.courseDifficulty =
-            SCHEDULE_LEVE(this.courseType)[value.courseDifficulty] || ''
+            SUP_LEVEL_ALL[value.courseDifficulty] || ''
         })
 
         this.tableData = content

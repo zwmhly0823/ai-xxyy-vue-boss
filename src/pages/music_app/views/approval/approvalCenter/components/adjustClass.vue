@@ -91,9 +91,10 @@
 import _ from 'lodash'
 import SearchPhone from '@/components/MSearch/searchItems/searchPhone'
 import {
-  SUP_LEVEL_UPPER,
+  SUP_LEVEL_ALL,
+  SUP_LEVEL_LIST_LOWER,
   SUP_LEVEL_LIST_UPPER,
-  formatTeamNameSup
+  courseLevelReplace
 } from '@/utils/supList'
 
 export default {
@@ -429,11 +430,12 @@ export default {
   methods: {
     // 后退
     back() {
-      this.$router.push('/approvalCenter')
+      this.$router.push('/approval')
     },
     // searchPhone的返回值
     getSearchPhoneData(data) {
       // console.log('data')
+      
       this.formData.userId = data.userId
       this.formData.userId && this.renderOrderList()
     },
@@ -518,6 +520,7 @@ export default {
                 // 依照补发货取的字段
                 label: orderItem.outTradeNo + orderItem.packagesName,
                 value: {
+                  courseCategory:orderItem.courseCategory,
                   orderId: orderItem.id,
                   outTradeNo: orderItem.outTradeNo,
                   index: index++,
@@ -549,6 +552,7 @@ export default {
     // select change
     // 处理所有需要选择后再走的逻辑
     selectChange(event, data) {
+      console.log(data)
       // 选择班级这儿逻辑稍微复杂一些，调班时用户选完订单后即可渲染班级列表，调级时选完订单后还得选申请调级级别，同理调期时还得选了调整开课日期
       this.handleStageAndSupChooseClass(event, data)
 
@@ -605,6 +609,7 @@ export default {
     handleStageAndSupChooseClass(event, data) {
       // 调期
       if (this.adjustType === 1 && data.model === 'targetStage') {
+
         this.commonSelectHandleFunction(
           'dateChooseClass',
           {
@@ -669,6 +674,7 @@ export default {
       // 选完订单后的loading
       this.showSelectLoading(name)
       const resData = await this.commonGetDateFunction(name, query, msg)
+      
       this.hideSelectLoading(name)
       // console.log(resData)
       if (resData === 'error') {
@@ -813,7 +819,7 @@ export default {
           resData.forEach((chooseItem, chooseKey) => {
             // 其实只有调班需要做这个判断，但其他的类型没有currentClassId所以无所谓这么判断不会出问题
             if (chooseItem.id !== this.formData.currentClassId) {
-              const teamName = formatTeamNameSup(chooseItem.teamName)
+              const teamName = courseLevelReplace(chooseItem.teamName)
               item.options.push({
                 label: `${teamName}-${chooseItem.teacherRealName}`,
                 value: {
@@ -839,7 +845,8 @@ export default {
       // 记录后面选择班级需要的stage
       this.formData.orderId.tempSatge = resData.term
       // this.formData.currentPeriod = `${resData.currentSuper}${resData.currentLevel}${resData.currentUnit}`
-      this.formData.currentPeriod = `${SUP_LEVEL_UPPER[resData.currentSuper]}${
+
+      this.formData.currentPeriod = `${SUP_LEVEL_ALL[resData.currentSuper]}${
         resData.currentLevel
       }${resData.currentUnit}`
       // 记录当前级别
@@ -876,7 +883,8 @@ export default {
       //     })
       //   }
       // })
-      const levelList = SUP_LEVEL_LIST_UPPER
+      console.log(this.formData)
+      const levelList = this.formData.courseCategory==0?SUP_LEVEL_LIST_UPPER:SUP_LEVEL_LIST_LOWER
       this.showData.content.forEach((item) => {
         if (item.model === 'targetSup') {
           item.options = []
@@ -893,10 +901,11 @@ export default {
     handleCurrentClass(resData) {
       // console.log('resData', resData)
       this.formData.currentClassId = resData.id
-      const teamName = formatTeamNameSup(resData.teamName)
+      const teamName = courseLevelReplace(resData.teamName)
       this.formData.currentClassName = `${teamName}-${resData.teacherRealName}`
 
       // 调班-调整班级列表,需要先获取到currentClassId
+      
       this.commonSelectHandleFunction(
         'classChooseClass',
         { stage: resData.term, sup: resData.currentSuper },
@@ -970,7 +979,7 @@ export default {
       this.adjustLoading = false
       if (result === 'success') {
         this.$router.push({
-          name: 'approval',
+          path: '/approval',
           params: { activeApprove: 'second' }
         })
       }

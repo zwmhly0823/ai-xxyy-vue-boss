@@ -893,7 +893,7 @@ export default {
   // 订单·物流数据
   getOrderPage(query = '', page = 1, size = '20', status = 3) {
     const formattingQuery = JSON.stringify({
-      uid: query,
+      ...query,
       status: status
     })
     return axios.post(`/graphql/v1/toss`, {
@@ -906,17 +906,42 @@ export default {
           content{
             rmbRefundStatusText
             id
+            regtype
             isrefund
             invoice_status_text
+            packages_course_week
+            remaining_week
             packages_name
+            promotionsList{
+              gifts_name
+            }
             amount
             order_status
             out_trade_no
             ctime
+             total_amount
+            discount_amount
+            topic_id
+            pay_channel_user_extends{
+              username
+              mobile
+              u_id
+            }
             express{
+              express_nu
               express_total
               last_express_status
             }
+            user{
+              mobile
+            }
+          paymentPay{
+          transaction_id
+          trade_type_text
+          }
+            channelDetail{
+            channel_outer_name
+          }
             team{
               team_name
               teacher_info{
@@ -932,6 +957,48 @@ export default {
       }`
     })
   },
+  // // 订单·物流数据
+  // getOrderPage(query = '', page = 1, size = '20', status = 3) {
+  //   const formattingQuery = JSON.stringify({
+  //     ...query,
+  //     status: status
+  //   })
+  //   return axios.post(`/graphql/v1/toss`, {
+  //     query: `{
+  //       OrderPage(query:${JSON.stringify(formattingQuery)},
+  //         page: ${page},
+  //         size:${size}){
+  //         totalPages
+  //         totalElements
+  //         content{
+  //           rmbRefundStatusText
+  //           id
+  //           isrefund
+  //           invoice_status_text
+  //           packages_name
+  //           amount
+  //           order_status
+  //           out_trade_no
+  //           ctime
+  //           express{
+  //             express_total
+  //             last_express_status
+  //           }
+  //           team{
+  //             team_name
+  //             teacher_info{
+  //               realname
+  //               departmentInfo{
+  //                 id
+  //                 name
+  //               }
+  //             }
+  //           }
+  //         }
+  //       }
+  //     }`
+  //   })
+  // },
   // 小熊币优惠券上头
   _reqGetUserTop(paramsObj) {
     return axios.post(`/graphql/v1/toss`, {
@@ -1371,5 +1438,408 @@ export default {
     return axios.post(
       `/api/ts/v1/teaching/student/task/delete?taskId=${taskId}`
     )
-  }
+  },
+  // 2021/3/3 新增
+  // 提现记录
+  getUserAssetsCashRecord(subject = '', uid = '', page = 1, size = 20) {
+    const formattingQuery = JSON.stringify({
+      subject,
+      uid,
+      account_type: 1,
+      trans_type: [1, 3, 4, 8]
+    })
+    const sort = `{ "ctime": "desc" }`
+    return axios.post(`/graphql/v1/toss`, {
+      query: `{
+        AccountPage(query:${JSON.stringify(formattingQuery)},
+        sort: ${JSON.stringify(sort)},
+        page: ${page},
+        size:${size}) {
+          totalElements
+          content {
+            trans_type
+            desc
+            amount
+            ctime
+          }
+        }
+      }`
+    })
+  },
+  // 审批记录列表
+  approvalRecordList(params = {}, size = 20, page = 1, sort) {
+    const q = JSON.stringify(injectSubject(params))
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+      FlowApprovalPage(query:${q},size:${size},page:${page},sort:${JSON.stringify(
+        sort
+      )}) {
+        totalPages
+        totalElements
+        content{
+          id
+          type
+          status
+          apply_name
+          apply_department
+          ctime
+          end_time
+          abstract_content
+        }
+      }
+      }`
+    })
+  },
+  
+  // 转介绍记录tab给index取转介绍相关数据
+  getDataStatiscsForDetailInDex(query) {
+    console.warn('查询转介绍人数据对象')
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        Order(
+          query: ${JSON.stringify(JSON.stringify(query))}
+        ){
+          pay_channel_user_extends {
+            u_id
+            user_num
+            username
+          }
+        }
+      }`
+    })
+  },
+  // 学员详情-转介绍记录列表
+  OrderPageRecord(query, page, size) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        OrderPage(
+          query: ${JSON.stringify(JSON.stringify(query))},
+              size:${size},
+              page:${page}
+        ){
+          totalElements
+          content {
+            user {
+              id
+              mobile
+              user_num
+              status
+            }
+            buytime
+            sup_text
+            packages_name
+            channelDetail {
+              channel_outer_name
+            }
+          }
+        }
+      }`
+    })
+  },
+  // 体验课list by shentong
+  StudentTrialList(query) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentTrialV2StatisticsList(query: ${JSON.stringify(
+          JSON.stringify(query)
+        )}){
+            sup
+            id
+            buytime
+            teacherInfo {
+              realname
+              departmentInfo {
+                name
+                parentDepartmentInfo {
+                  name
+                  parentDepartmentInfo {
+                    name
+                  }
+                }
+              }
+              weixin {
+                weixin_no
+              }
+              phone
+            }
+            managementInfo {
+              course_day
+              end_course_day
+            }
+            teamInfo {
+              id
+              team_name
+              team_type
+              class_start
+              class_end
+              stop_end_time
+            }
+            orderInfo {
+              packages_name
+            }
+            all_join_course_count
+            join_course_count
+            send_course_count
+            start_course_count
+            all_complete_course_count
+            complete_course_count
+            task_count
+            comment_count
+            listen_comment_count
+            current_lesson
+            added_group
+            added_wechat
+            express_status
+            course_state
+            last_join_time
+            last_complete_time
+            remaining_week
+            ctime
+            team_id
+        }
+      }`
+    })
+  },
+  // 钻石
+  getUserAssetsDiamond(subject = '', uid = '', page = 1, size = 20) {
+    const formattingQuery = JSON.stringify({
+      subject,
+      uid,
+      account_type: 3,
+      trans_type: [1, 5, 9]
+    })
+    const sort = `{ "ctime": "desc" }`
+    return axios.post(`/graphql/v1/toss`, {
+      query: `{
+        AccountPage(query:${JSON.stringify(formattingQuery)},
+        sort: ${JSON.stringify(sort)},
+        page: ${page},
+        size:${size}) {
+          totalElements
+          content {
+            trans_type
+            desc
+            amount
+            ctime
+          }
+        }
+      }`
+    })
+  },
+  // 学员详情
+  sysStudentDetails(query = {}) {
+    const q = JSON.stringify(injectSubject(query))
+    return axios.post('/graphql/v1/toss', {
+      query: `{  StudentDetails(query: ${q}) {
+        systemCourseOfStudentDetails {
+              course_state
+              current_super
+              current_progress
+              send_course_count
+              join_course_count
+              complete_course_count
+              buy_system_order_weeks
+              logic_end_course_time
+              task_count
+              comment_count
+              listen_comment_count
+              casualTeacherInfo {
+                realname
+              }
+              teamInfo {
+                id
+                team_name
+                team_type
+                class_end
+                teacher_wechat_info {
+                  wechat_no
+                }
+                teacher_info {
+                  phone
+                  realname
+                  departmentInfo {
+                    name
+                    parentDepartmentInfo {
+                      name
+                      parentDepartmentInfo {
+                        name
+                      }
+                    }
+                  }
+                }
+              }
+              readyTeamInfo {
+                id
+                team_type
+                team_name
+                team_state
+              }
+              added_group
+              added_wechat
+              first_order_buytime
+              system_order_count
+              remaining_week
+              first_send_course_time
+            }
+            trialOfStudentDetails {
+              course_state
+              current_super
+              current_progress
+              send_course_count
+              join_course_count
+              remaining_week
+              complete_course_count
+              task_count
+              comment_count
+              listen_comment_count
+              logic_end_course_time
+              teamInfo {
+                id
+                team_name
+                class_end
+                team_type
+                teacher_wechat_info {
+                  wechat_no
+                }
+                teacher_info {
+                  phone
+                  realname
+                  departmentInfo {
+                    name
+                    parentDepartmentInfo {
+                      name
+                      parentDepartmentInfo {
+                        name
+                        parentDepartmentInfo{
+                          name
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              orderInfo{
+                buytime
+                packages_course_week
+              }
+              added_group
+              added_wechat
+              userIntention {
+                id
+                describe
+                type
+                today
+              }
+              first_send_course_time
+            }
+          }
+        }`,
+      variables: null
+    })
+  },
+  // 订单·物流数据
+  getExpressPage(query = '', page = 1, size = '20', status = 3) {
+    const sort = `{ "ctime": "desc" }`
+    const formattingQuery = JSON.stringify({
+      user_id: query.id,
+      source_type: query.regtype
+    })
+    return axios.post(`/graphql/v1/toss`, {
+      query: `{
+        ExpressPage(query:${JSON.stringify(formattingQuery)},
+          sort: ${JSON.stringify(sort)},
+                page: ${page},
+                size:${size}){
+                totalPages
+                totalElements
+                content {
+                  id
+                  address_id
+                  order_id
+                  source_type
+                  product_name
+                  replenish_type
+                  product_type
+                  receipt_name
+                  receipt_tel
+                  province
+                  city
+                  area
+                  address_detail
+                  express_remark
+                  express_status
+                  express_status_text
+                  ctime
+                  express_company
+                  express_nu
+                  express_total
+                  center_product_code
+                  center_ctime
+                  delivery_collect_time
+                  signing_time
+                }
+              }
+      }`
+    })
+  },
+  // 获取系统课学员左侧人数统计
+  systemStudentSystemPageMenu(query = {}) {
+    // const params = Object.assign(query, { page })
+    // return axios.post('/api/b/v1/student/center/system/list', params)
+    const q = JSON.stringify(injectSubject(query))
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentSystemPageMenu(query: ${q}) {
+            total_count
+            today_new_count
+            started_count
+            un_started_count
+            finish_count
+            refund_count
+            day7_no_join_count
+            day15_no_join_count
+            day30_no_join_count
+            un_upload_count
+            current_week_no_upload_count
+            current_month_no_upload_count
+          }
+        }
+      `
+    })
+  },
+  // 获取该老师的自定义排版  返回list
+  getTeacherFollowGroups(params) {
+    return axios.get('/api/t/v1/teacher/teacherFollowGroup/getList', params)
+  },
+  // 获取最近订单的物流详情
+  getExpressList(query = '', page = 1, size = '20') {
+    const sort = `{ "ctime": "desc" }`
+    const formattingQuery = JSON.stringify({
+      order_id: query.id
+    })
+    return axios.post(`/graphql/v1/toss`, {
+      query: `{
+   ExpressList(query:${JSON.stringify(formattingQuery)},
+   sort: ${JSON.stringify(sort)},
+          page: ${page},
+          size:${size}){
+      user_id
+    order_id
+    province
+    receipt_name
+     city
+      receipt_tel
+    express_company
+    express_status_text
+    express_status
+    express_nu
+    product_name
+    address_detail
+    logistics_mode
+    out_trade_no
+    express_total
+        }
+}`
+    })
+  },
 }

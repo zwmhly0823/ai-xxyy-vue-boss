@@ -49,6 +49,7 @@ export default {
       `/api/b/v1/backend/completed/reissue/flow?flowApprovalId=${params.flowApprovalId}&staffName=${params.staffName}&staffId=${params.staffId}&isConfirm=${params.isConfirm}&approvalRemark=${params.approvalRemark}`
     )
   },
+  
   // 获取当前物流信息
   getExpressByOrderId(query) {
     return axios.get(
@@ -84,5 +85,39 @@ export default {
     return axios.get(`/api/toss/v1/toss-api/label/getMarketingLabelInfo`, {
       type: 1
     })
-  }
+  },
+  // 校验退款的时候是否有审核中的关单赠品数据审批信息：
+  // orderId
+  findOrderGiftApprovalStatus(query) {
+    return axios.post(`/api/b/v1/backend/refund/system/findOrderGiftApprovalStatus?orderId=${query}`)
+  },
+  // 查询赠品相关的信息（金额、产品列表等信息）
+  // orderId
+  findOrderGiftInfo(query) {
+    return axios.post(`/api/b/v1/backend/refund/system/findOrderGiftInfo?orderId=${query}`)
+  },
+  findSystemByOrderNo(orderNo) {
+    return axios.get(
+      `/api/ts/v1/teaching/student/system/findSystemByOrderNo?orderNo=${orderNo}`
+    )
+  },
+  findTrailByOrderNo(orderNo) {
+    return axios.get(
+      `/api/ts/v1/teaching/student/trial/findTrailByOrderNo?orderNo=${orderNo}`
+    )
+  },
+  // 查询所有有效活动
+  getPromotionsList({ userId, orderId }) {
+    return axios.get(
+      `/api/b/v1/backend/promotions/flow/getPromotionsListByUserIdAndOrderId`,
+      { userId, orderId }
+    )
+  },
+  // 新建关单赠品申请
+  applyGiftAdd(data = {}) {
+    const params = Object.assign(data, { role: 1 })
+    return axios.post(`/api/b/v1/backend/promotions/detail/add`, params)
+  },diologRefundTagChange(param) {
+    return axios.post(`/api/b/v1/backend/flowApproval/updateTag`, param)
+  },
 }

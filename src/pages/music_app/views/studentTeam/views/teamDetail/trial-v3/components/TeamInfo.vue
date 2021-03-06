@@ -4,7 +4,7 @@
       <div class="d-flex align-center" v-if="teamInfo">
         <div class="team-info-bar_tag">班</div>
         <h3 @click="handleToggle">
-          {{ teamInfo.team_name }}
+          {{ courseLevelReplace(teamInfo.team_name) }}
           <i :class="`el-icon-caret-${opened ? 'top' : 'bottom'}`"></i>
         </h3>
         <p class="danger">{{ teamInfo.system_order_count || 0 }}笔首单</p>
@@ -41,6 +41,7 @@
 <script>
 import { formatData } from '@/utils'
 import { TEAM_STATE } from '@/utils/enums'
+import {courseLevelReplace} from '@/utils/supList.js'
 export default {
   props: {
     team: {
@@ -51,7 +52,8 @@ export default {
   data() {
     return {
       opened: false,
-      teamState: TEAM_STATE
+      teamState: TEAM_STATE,
+      courseLevelReplace
     }
   },
   computed: {

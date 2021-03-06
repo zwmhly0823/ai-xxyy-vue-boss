@@ -61,7 +61,7 @@ export default {
    */
   getCourseMaterials(params) {
     return axios.get(
-      `/api/p/v1/product/getCourseMaterials?courseType=${params.packagesType}&proVersion=&courseDifficulty=${params.sup}&courseLevel=${params.level}`
+      `/api/p/v1/product/getCourseMaterials?courseType=${params.packagesType}&proVersion=${params.proVersion}&courseDifficulty=${params.sup}&courseLevel=${params.level}`
     )
   },
   /**

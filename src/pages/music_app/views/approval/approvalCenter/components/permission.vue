@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-05-06 18:31:51
- * @LastEditors: liukun
- * @LastEditTime: 2020-05-25 22:34:15
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2021-01-01 15:58:43
  -->
 <template>
   <div class="container">
@@ -42,6 +42,10 @@
             <i class="el-icon-s-claim color-3"></i>
             <span class="item-text">调班申请</span>
           </div>
+          <div class="adjust-item" @click="goApprovalGift" v-if="showGift">
+            <i class="el-icon-present color-1"></i>
+            <span class="item-text">赠品申请</span>
+          </div>
         </div>
       </div>
     </div>
@@ -52,33 +56,58 @@
 export default {
   data() {
     return {
-      showMergeBoxes: false
+      showMergeBoxes: false,
+      // 赠品审批权限人 469897200621719552（申爽）;455930591481827328（刘彩屏）;492806900967149568（小雪小美女）；459001293009195008（魏文秀）
+      // bearboss 470676591924613120
+      giftPermission: [
+        '469897200621719552',
+        '455930591481827328',
+        '492806900967149568',
+        '459001293009195008',
+        '470676591924613120'
+      ],
+      staffId: ''
+    }
+  },
+  computed: {
+    showGift() {
+      return this.giftPermission.includes(this.staffId)
     }
   },
   created() {
     // 随材打包只对特定人员可见
     const userinfo = JSON.parse(localStorage.getItem('staff'))
-    const passUser = ['15210892350', '17610067673', '18515545600']
+    const passUser = [
+      '15210892350',
+      '17610067673',
+      '18515545600',
+      '18202647739',
+      '17767267870'
+    ]
     if (passUser.includes(userinfo.mobile)) {
       this.showMergeBoxes = true
     }
+    this.staffId = userinfo.id
   },
   methods: {
     goReplenish() {
       this.$router.push('/repair')
     },
     goMoneyBack() {
-      this.$router.push({ path: '/moneyBack' })
+      this.$router.push({ name: 'moneyBack' })
     },
     jumpAdjustPage(data) {
       this.$router.push({
-        path: '/adjust',
+        path: '/approval/adjust',
         query: { adjustType: data }
       })
     },
+    goApprovalGift() {
+      this.$router.push('/approvalGift')
+    },
     // 随材打包
     mergeBoxes() {
-      this.$router.push('/mergeboxes')
+      this.$router.push('/approval/mergeboxes')
     }
   }
 }
@@ -126,10 +155,12 @@ export default {
       }
     }
     .adjust-box {
+      padding-top: 40px;
       padding-left: 25px;
       .adjust-box-row {
         margin-bottom: 40px;
         .adjust-title {
+          margin-bottom: 10px;
           font-size: 16px;
         }
         .adjust-item {

@@ -330,7 +330,7 @@
 <script>
 import _ from 'lodash'
 import { calculateWD } from '@/utils/validate'
-import { formatTeamNameSup } from '@/utils/supList'
+import { courseLevelReplace } from '@/utils/supList'
 import TableSearch from '../../components/tableSearch/index'
 import EleTable from '@/components/Table/EleTable'
 import { formatData, openBrowserTab } from '@/utils/index'
@@ -511,7 +511,7 @@ export default {
         item.ctime = +item.ctime ? formatData(item.ctime) : ''
         item.utime = +item.utime ? formatData(item.utime) : ''
         item.WD = item.current_lesson ? calculateWD(item.current_lesson) : ''
-        item.current_lesson = formatTeamNameSup(item.current_lesson)
+        item.current_lesson = courseLevelReplace(item.current_lesson)
 
         item.teamStatus = item.team_state
           ? this.teamStatusKeyVal[+item.team_state]

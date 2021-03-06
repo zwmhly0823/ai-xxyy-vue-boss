@@ -74,11 +74,11 @@ export default {
   },
   methods: {
     onChange(val) {
-      console.info(val)
       this.$emit('clear')
       this.value = ''
     },
     querySearch(query, cb) {
+      console.log('sssssssssssssssssssss')
       console.log(query)
       let result = []
       if (!query) {
@@ -92,7 +92,7 @@ export default {
           if (res.data && res.data.OrderListEx) {
             result = res.data.OrderListEx.map((item) => {
               if (item.out_trade_no)
-                item.value = item.out_trade_no.replace('xiong', '')
+                item.value = item.out_trade_no.replace('yy','')
               return item
             })
           }
@@ -179,6 +179,7 @@ export default {
     },
     handleSelect(data) {
       const obj = {}
+      
       if (this.select === '0') {
         Object.assign(obj, { [this.keyword]: data.out_trade_no })
       } else if (this.select === '1') {

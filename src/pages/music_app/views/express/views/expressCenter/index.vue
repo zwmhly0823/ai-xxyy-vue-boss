@@ -34,6 +34,7 @@
             :hideCol="hideCol"
             :hideSearchItem="hideSearchItem"
             :teamClass="teamClass"
+            :addSupS="false"
           />
           <toggle
             @result="getStatus"
@@ -69,6 +70,7 @@
             :hideCol="allExpressHideCol"
             :hideSearchItem="allExpressHideSearchItemSystem"
             :teamClass="teamClassSys"
+            :addSupS="true"
           />
           <toggle
             @result="getStatus"
@@ -277,6 +279,7 @@
 import toggle from '../components/toggle'
 import rightDown from '../components/rightDown'
 import rightUp from '../components/rightUp'
+import {courseLevelReplace} from '@/utils/supList.js'
 const allExpressHideCol = {
   replenishType: false,
   productType: false,
@@ -351,6 +354,7 @@ export default {
   },
   data() {
     return {
+      courseLevelReplace,
       tabsShowed: ['0'],
       dialogDelivery: false, // 一键发货弹窗
       deliveryParams: {},
@@ -410,6 +414,7 @@ export default {
     this.$nextTick(() => {
       this.calcSrollHeight()
     })
+    
   },
   methods: {
     handleCommand(command) {

@@ -36,7 +36,7 @@
           </el-form>
         </el-col>
         <!-- 目前只有 18618194642 （463055260383186944）有导入权限 -->
-        <el-col :span="2" v-if="isAuth">
+        <el-col :span="2">
           <el-button size="mini" type="primary" @click="dialogVisible = true">
             导入模板
           </el-button>

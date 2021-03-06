@@ -6,7 +6,20 @@
  * @LastEditors: YangJiyong
  * @LastEditTime: 2020-09-15 17:16:34
  */
+
+
 const routes = [
+  {
+    path: '/',
+    name: 'users',
+    meta: {
+      title: '学员中心',
+      icon: 'el-icon-s-custom',
+      keepAlive: true
+    },
+    // TOSS,根据老师角色跳转
+    redirect: '/trial'
+  },
   {
     path: '/trial',
     name: 'trialUsers',

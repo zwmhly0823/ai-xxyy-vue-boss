@@ -270,6 +270,9 @@ export default {
             id
             ctime
             utime
+            class_start
+            class_end
+            stop_end_time
             team_name
             team_type
             teacher_id
@@ -277,6 +280,7 @@ export default {
             pre_enroll
             enrolled
             added_wechat
+            added_wechat_rate
             unadd_wechat
             added_group
             unadd_group
@@ -302,6 +306,35 @@ export default {
             to_be_delivered_count
             course_day
             end_course_day
+            today_enroll_count
+            follow_count
+            follow_rate
+            open_app_count
+            open_app_rate
+            no_address_count
+            no_address_rate
+            delivered_start_count
+            delivered_start_rate
+            delivered_sign_count
+            delivered_sign_rate
+            today_join_course_count
+            today_join_course_rate
+            today_actual_join_course_count
+            today_actual_join_course_rate
+            today_complete_course_count
+            today_complete_course_rate
+            today_actual_complete_course_count
+            today_actual_complete_course_rate
+            today_system_order_count
+            today_system_order_rate
+            all_join_course_rate
+            all_complete_course_rate
+            all_task_rate
+            all_commont_rate
+            refund_system_count
+            refund_system_rate
+            start_date
+            end_date
           }
       }}`
     })

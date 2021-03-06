@@ -110,11 +110,11 @@ export default {
           must: query
             ? [
                 { wildcard: { 'realname.keyword': `*${query}*` } },
-                {
-                  wildcard: {
-                    'subject.keyword': `*${this.$store.getters.subjects.subjectCode}*`
-                  }
-                }
+                // {
+                //   wildcard: {
+                //     'subject.keyword': `*${this.$store.getters.subjects.subjectCode}*`
+                //   }
+                // }
               ]
             : [
                 {
@@ -125,9 +125,9 @@ export default {
               ]
         }
       }
-      console.log('test', this.teacherscope)
-      if (this.teacherscope) {
-        q.bool.must.push({ terms: { id: this.teacherscope } })
+      console.log(q)
+      if (this.teacherscope&&this.teacherscope.length) {
+        q.bool.must.push({ terms: { department_id: this.teacherscope } })
       }
       // q.bool.must.push({ terms: { id: this.teacherscope || '' } })
       getDepartmentTeacherEx(JSON.stringify(q))

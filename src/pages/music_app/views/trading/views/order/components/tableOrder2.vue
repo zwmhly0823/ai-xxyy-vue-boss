@@ -6,7 +6,7 @@
     <el-table :data="orderList" v-loading="loading">
       <el-table-column label="用户信息" prop="user" min-width="180" fixed>
         <template slot-scope="scope">
-          <user :user="scope.row.user" />
+          <user courseType='trial' :user="scope.row.user" />
         </template>
       </el-table-column>
       <el-table-column label="归属地" prop="QCellCore" min-width="120">
@@ -69,7 +69,7 @@
             >
               ({{
               trialTeam[scope.row.id]
-              ? trialTeam[scope.row.id].team_name
+              ? courseLevelReplace(trialTeam[scope.row.id].team_name)
               : '-'
               }})
             </span>
@@ -182,6 +182,7 @@ import MPagination from '@/components/MPagination/index.vue'
 import { formatData, isToss, deepClone, openBrowserTab } from '@/utils/index.js'
 import ExpressDetail from '../../components/expressDetail'
 import User from '../../components/User.vue'
+import {courseLevelReplace} from '@/utils/supList.js'
 export default {
   components: {
     MPagination,
@@ -221,6 +222,7 @@ export default {
   },
   data() {
     return {
+      courseLevelReplace,
       loading: false,
       // 给物流详情组件传递的订单id
       order_id: '',
@@ -478,7 +480,7 @@ export default {
     // 打开班级详情
     openDetail(id, row) {
       row && console.log(row)
-      id && openBrowserTab(`/music_app/#/teamDetail/${id}/0`)
+      id && openBrowserTab(`/music_app/#/teamTrialDetail/${id}/0`)
     },
     // 用户详情
     openUserDetail(id) {

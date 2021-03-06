@@ -105,7 +105,7 @@ export default {
     // ...mapActions('tabbed', ['setCurrentTabbed', 'setTabbedList']),
     // 展开更多
     handleOpen(item, index = 0, hasChildren = false) {
-      console.log(item)
+      localStorage.setItem('menuActive',index)
       // 外链情况
       if (item.path.includes('http')) {
         window.open(item.path, '_blank')

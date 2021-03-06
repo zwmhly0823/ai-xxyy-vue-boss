@@ -156,7 +156,7 @@
               />
               <simple-select
                 name="is_login"
-                placeholder="登陆APP"
+                placeholder="登录APP"
                 :multiple="false"
                 :data-list="loginStatus"
                 :my-style="{ width: '120px' }"

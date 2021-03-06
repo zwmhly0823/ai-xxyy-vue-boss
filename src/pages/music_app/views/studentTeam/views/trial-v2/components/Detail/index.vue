@@ -132,6 +132,7 @@ export default {
   },
   created() {
     this.status = this.$route.params.status
+    
   },
   watch: {
     teamId(val) {

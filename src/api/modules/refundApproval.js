@@ -125,5 +125,55 @@ export default {
             }
           `
     })
+  },
+  // start-体验课调级申请
+  assertLevel(orderId) {
+    // 判断能否调级
+    return axios.post(
+      `/api/ts/v1/teaching/student/trial/isOpen/orderId?orderNo=${orderId}`
+    )
+  },
+  showExpressStatus(orderId) {
+    // 物流状态查询
+    return axios.get('/api/ex/v1/express/getExperienceExpressListByOrderId', {
+      orderId
+    })
+  },
+  submitoTrial(params) {
+    // 提交表单
+    return axios.post(
+      '/api/b/v1/backend/trial/apply/adjustment/sup/flow',
+      params
+    )
+  },
+  getAllData(flowApprovalId) {
+    // 右抽屉详情数据
+    return axios.get('/api/b/v1/backend/trial/adjustment/sup/flow/info', {
+      flowApprovalId
+    })
+  },
+  getClassList(orderNo, sup) {
+    // 可选班级列表
+    return axios.post(
+      `/api/ts/v1/teaching/student/trial/teamList?orderNo=${orderNo}&sup=${sup}`
+    )
+  },
+  comfirmEnd(params) {
+    // 审批调级通过拒绝
+    return axios.post(
+      `/api/b/v1/backend/completed/reissue/flow?staffName=${
+        params.staffName
+      }&staffId=${params.staffId}&flowApprovalId=${
+        params.flowApprovalId
+      }&approvalRemark=${params.approvalRemark}&isConfirm=${params.isConfirm}${
+        'targetClassId' in params
+          ? '&targetClassId=' + params.targetClassId
+          : ''
+      }${
+        'targetClassName' in params
+          ? '&targetClassName=' + params.targetClassName
+          : ''
+      }`
+    )
   }
 }

@@ -50,20 +50,12 @@
 
       <el-form-item v-if="date">
         <!-- 下单时间 -->
-        <date-picker
-          :name="date"
-          @result="getDate"
-          :date-placeholder="datePlaceholder"
-        />
+        <date-picker :name="date" @result="getDate" :date-placeholder="datePlaceholder" />
       </el-form-item>
 
       <el-form-item v-if="timeData">
         <!-- 下拉时间选择 -->
-        <select-date
-          :name="timeData"
-          @result="getTimeData"
-          @timeCallBack="getTimeCallBack"
-        />
+        <select-date :name="timeData" @result="getTimeData" @timeCallBack="getTimeCallBack" />
       </el-form-item>
 
       <el-form-item v-if="channel">
@@ -89,7 +81,6 @@
       <el-form-item v-if="level || sup || stage">
         <stage-sup-levels
           ref="stagesuplevels"
-          v-if="this.$store.getters.subjects.subjectCode === 0"
           @stageCallBack="stageCallBack"
           @supCallBack="supCallBack"
           @levelCallBack="levelCallBack"
@@ -101,9 +92,8 @@
           :supPlaceholder="supPlaceholder"
           style="margin-bottom:0px"
         />
-
+        <!-- 
         <hard-write-level
-          v-if="this.$store.getters.subjects.subjectCode === 1"
           :tab="tab"
           :subType="tab"
           :class="['margin_l10']"
@@ -111,17 +101,12 @@
           style="width:140px"
           name="sup"
           @result="supCallBack"
-        />
+        />-->
       </el-form-item>
 
       <el-form-item v-if="schedule">
         <!-- 排期 -->
-        <Schedule
-          ref="schedule"
-          @result="selectSchedule"
-          :name="schedule"
-          :teamClass="teamClass"
-        />
+        <Schedule ref="schedule" @result="selectSchedule" :name="schedule" :teamClass="teamClass" />
       </el-form-item>
 
       <el-form-item v-if="teacherphone">
@@ -157,11 +142,7 @@
 
       <!-- 员工角色 -->
       <el-form-item v-if="employees">
-        <employees-role
-          :size="size"
-          :devalueValue="devalueValue"
-          @result="gerEmployeesName"
-        />
+        <employees-role :size="size" :devalueValue="devalueValue" @result="gerEmployeesName" />
       </el-form-item>
 
       <el-form-item v-if="teachernickname">
@@ -175,11 +156,7 @@
       </el-form-item>
       <el-form-item v-if="teacherwx">
         <!-- 老师模块微信号搜索 -->
-        <teacher-wx
-          :teacherwx="teacherwx"
-          :WeChat="WeChat"
-          @getWxTeacher="getWxTeacher"
-        />
+        <teacher-wx :teacherwx="teacherwx" :WeChat="WeChat" @getWxTeacher="getWxTeacher" />
       </el-form-item>
       <el-form-item v-if="rank || induction || landing || position">
         <!-- 老师模块职级，登陆状态，入职状态，选择职务搜索 -->
@@ -200,10 +177,7 @@
 
       <el-form-item v-if="systemCourseType">
         <!-- 系统课类型 -->
-        <system-course-type
-          @result="getSystemCourseType"
-          :name="systemCourseType"
-        />
+        <system-course-type @result="getSystemCourseType" :name="systemCourseType" />
       </el-form-item>
 
       <!-- && !teacherId -->
@@ -214,11 +188,7 @@
 
       <el-form-item v-if="groupSell">
         <!-- 社群销售 -->
-        <group-sell
-          @result="selectSellTeacher"
-          :name="groupSell"
-          :tip="teacherTip"
-        />
+        <group-sell @result="selectSellTeacher" :name="groupSell" :tip="teacherTip" />
       </el-form-item>
 
       <!-- && !teacherId -->
@@ -230,10 +200,7 @@
       <!-- && !teacherId -->
       <el-form-item v-if="searchTrialTeamName">
         <!-- 体验课班级名称搜索 -->
-        <search-trial-team-name
-          @result="getTrialTeamName"
-          :name="searchTrialTeamName"
-        />
+        <search-trial-team-name @result="getTrialTeamName" :name="searchTrialTeamName" />
       </el-form-item>
 
       <el-form-item v-if="searchStage">
@@ -243,11 +210,7 @@
 
       <el-form-item v-if="searchTrialStage">
         <!-- 体验课排期搜索 -->
-        <search-stage
-          @result="getSearchTrialStage"
-          :name="searchTrialStage"
-          type="0"
-        />
+        <search-stage @result="getSearchTrialStage" :name="searchTrialStage" type="0" />
       </el-form-item>
 
       <!-- <el-form-item
@@ -270,18 +233,18 @@
             <i class="el-icon-arrow-down" />
           </el-button>
         </el-popover>
-      </el-form-item> -->
+      </el-form-item>-->
 
-      <el-form-item
-        v-if="wxSerch || wxTeacherPhone || wxStatus || wxConcatTeacher || wxId"
-      >
+      <el-form-item v-if="wxSerch || wxTeacherPhone || wxStatus || wxConcatTeacher || wxId">
         <wx-list
           :wxSerch="wxSerch"
           :wxTeacherPhone="wxTeacherPhone"
           :wxStatus="wxStatus"
+          :weixinStatus="weixinStatus"
           :wxConcatTeacher="wxConcatTeacher"
           :wxId="wxId"
           :wxRecordId="wxRecordId"
+          @getWeixinStatus="getWeixinStatus"
           @getWxSerch="getWxSerch"
           @getPhone="getPhoneData"
           @getWxStatus="getWxStatus"
@@ -302,10 +265,7 @@
       </el-form-item>
       <!-- 补发方式 -->
       <el-form-item v-if="replenishMethod">
-        <replenish-method
-          @result="getReplenishMethod"
-          :sourceType="sourceType"
-        />
+        <replenish-method @result="getReplenishMethod" :sourceType="sourceType" />
       </el-form-item>
       <!-- 物流类型 -->
       <el-form-item v-if="regType">
@@ -331,11 +291,7 @@
       </el-form-item>
       <el-form-item v-if="searchCourseware">
         <!-- 系统课名称搜索 -->
-        <search-courseware
-          @result="getSearchCourseware"
-          :name="searchCourseware"
-          type="0"
-        />
+        <search-courseware @result="getSearchCourseware" :name="searchCourseware" type="0" />
       </el-form-item>
       <el-form-item>
         <slot></slot>
@@ -351,7 +307,7 @@ import ChannelSelect from './searchItems/channel.vue'
 import ProductTopic from './searchItems/productTopic.vue'
 import ProductTypelog from './searchItems/productTypelog.vue'
 import StageSupLevels from './searchItems/stageSupLevels.vue'
-import hardWriteLevel from './searchItems/hardWriteLevel.vue'
+// import hardWriteLevel from './searchItems/hardWriteLevel.vue'
 
 import SearchPhone from './searchItems/searchPhone.vue'
 import OutTradeNo from './searchItems/outTradeNo.vue'
@@ -638,6 +594,10 @@ export default {
       type: String,
       default: '' // wxStatus
     },
+    weixinStatus: {
+      type: String,
+      default: ''
+    },
     // 是否关联老师搜索
     wxConcatTeacher: {
       type: String,
@@ -782,8 +742,7 @@ export default {
     employeesRole,
     staffName,
     expressType,
-    SearchCourseware,
-    hardWriteLevel
+    SearchCourseware
   },
   data() {
     return {
@@ -913,6 +872,10 @@ export default {
     getWxSerch(res) {
       this.setSeachParmas(res, [this.wxSerch], 'wildcard')
     },
+    getWeixinStatus(res) {
+      this.sendSeachParams(res,this.weixinStatus,'wechat_status')
+      // this.setSeachParmas(res, [this.weixinStatus], 'wechat_status')
+    },
     getVersionNu(res) {
       this.setSeachParmas(res, [this.moreVersion || 'product_version'])
     },
@@ -977,7 +940,8 @@ export default {
       this.setSeachParmas(res, [this.operatorId])
     },
     gerEmployeesName(res) {
-      this.setSeachParmas(res, [this.employees])
+      this.sendSeachParams(res,this.employees)
+      // this.setSeachParmas(res, [this.employees])
     },
     getReplenishProduct(res) {
       this.setSeachParmas(res, [this.replenishProduct || 'product_type'])
@@ -1000,7 +964,14 @@ export default {
     getSearchCourseware(res) {
       this.setSeachParmas(res, [this.searchTrialStage || 'course_id'], 'terms')
     },
-
+    // 单选搜索
+    sendSeachParams(res,key, extraKey = 'term'){
+      let arr = []
+      arr.push({
+        [extraKey]:res
+      })
+      this.$emit('search', arr)
+    },
     /**  处理接收到的查询参数
      * @res: Object, 子筛选组件返回的表达式对象，如 {sup: 2}
      * @key: Array 指定res的key。如课程类型+期数选项，清除课程类型时，期数也清除了，这里要同步清除must的数据
@@ -1012,14 +983,6 @@ export default {
       const { must, should } = this
       const temp = name === 'must' ? must : should
       key.forEach((k) => {
-        // temp.forEach((item, index) => {
-        //   if (
-        //     JSON.parse(item[extraKey])[k] &&
-        //     (JSON.parse(item[extraKey])[k] ||
-        //       +JSON.parse(item[extraKey])[k] === 0)
-        //   )
-        //     temp.splice(index, 1)
-        // })
         temp.forEach((item, index) => {
           if (
             item[extraKey] &&
@@ -1064,7 +1027,6 @@ export default {
     }
   },
   created() {
-    console.log(this.$store.getters.subjects.subjectCode)
     const teacherId = isToss()
     if (teacherId) {
       this.teacherId = teacherId

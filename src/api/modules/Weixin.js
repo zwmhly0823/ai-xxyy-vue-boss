@@ -14,7 +14,7 @@ export default {
     const obj = JSON.stringify(params)
     return axios.get(`/graphql/v1/boss`, {
       query: `{
-        WeChatTeacherPage(query:${JSON.stringify(obj)},page: ${currentPage}) {
+        WeChatTeacherPage(query:${obj=='""'?obj:JSON.stringify(obj)},page: ${currentPage}) {
           totalElements
           totalPages
           number
@@ -27,6 +27,7 @@ export default {
             head_img_url
             wechat_id
             wechat_record_id
+            wechat_status
           }
         }
       }`

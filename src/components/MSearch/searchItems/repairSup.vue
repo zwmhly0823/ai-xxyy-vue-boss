@@ -29,7 +29,7 @@
 
 <script>
 // import axios from '@/api/axiosConfig'
-import { SUP_LEVEL_LIST, SUP_LEVEL_LIST_TRIAL } from '@/utils/supList'
+import { SUP_LEVEL_LIST_UPPER, SUP_LEVEL_LIST_LOWER } from '@/utils/supList'
 
 export default {
   props: {
@@ -50,12 +50,14 @@ export default {
   },
   computed: {
     supList() {
-      return this.isTrial ? SUP_LEVEL_LIST_TRIAL : SUP_LEVEL_LIST
+      console.log(this.isTrial)
+      return this.isTrial ? SUP_LEVEL_LIST_UPPER : SUP_LEVEL_LIST_LOWER
+
     }
   },
   created() {
     // this.getSup()
-    // this.supList = SUP_LEVEL_LIST
+    // this.supList = SUP_LEVEL_LIST_UPPER
   },
   mounted() {
     this.$root.$on('qingkong', () => {

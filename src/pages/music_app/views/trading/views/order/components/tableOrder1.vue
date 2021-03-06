@@ -4,7 +4,7 @@
     <el-table :data="orderList" v-loading="loading">
       <el-table-column label="用户信息" prop="user" min-width="180" fixed>
         <template slot-scope="scope">
-          <user :user="scope.row.user" :singleData="scope.row" />
+          <user courseType='system' :user="scope.row.user" :singleData="scope.row" />
         </template>
       </el-table-column>
       <el-table-column label="归属地" prop="QCellCore" min-width="120">
@@ -66,7 +66,7 @@
                 @click="
                   openDetail(trialTeamUid[scope.row.uid].id, scope.row, 0)
                 "
-              >（{{ trialTeamUid[scope.row.uid].team_name }}）</span>
+              >（{{ courseLevelReplace(trialTeamUid[scope.row.uid].team_name) }}）</span>
               <span v-else>-</span>
             </p>
             <p>
@@ -98,7 +98,7 @@
               <span
                 :class="{ 'primary-text': scope.row.team }"
                 @click="openDetail(scope.row.team.id, scope.row, 2)"
-              >({{ scope.row.team ? scope.row.team.team_name : '-' }})</span>
+              >({{ scope.row.team ? courseLevelReplace(scope.row.team.team_name) : '-' }})</span>
             </p>
             <p>
               {{
@@ -237,6 +237,7 @@
 import _ from 'lodash'
 import MPagination from '@/components/MPagination/index.vue'
 import { formatData, isToss, deepClone, openBrowserTab } from '@/utils/index.js'
+import { courseLevelReplace } from '@/utils/supList.js'
 import ExpressDetail from '../../components/expressDetail'
 import User from '../../components/User.vue'
 export default {
@@ -298,7 +299,8 @@ export default {
       departmentObj: {}, // 组织机构 obj
       orderStatisticsResult: [], // 统计结果
       trialTeam: {}, // 学员的体验课班级名称
-      trialTeamUid: {}
+      trialTeamUid: {},
+      courseLevelReplace:courseLevelReplace
     }
   },
   created() {
@@ -551,9 +553,6 @@ export default {
       })
       this.trialTeam = result || {}
       this.trialTeamUid = resultUid || {}
-      console.log(this.trialTeam)
-      console.log(this.trialTeamUid)
-
       // return result
     },
 
@@ -570,7 +569,8 @@ export default {
     openDetail(id, row, type) {
       // type 0体验课 2系统课
       row && console.log(row)
-      id && openBrowserTab(`/music_app/#/teamDetail/${id}/${type}`)
+      let str = type==0?'teamTrialDetail':'teamDetail';
+      id && openBrowserTab(`/music_app/#/${str}/${id}/${type}`)
     },
     // 用户详情
     openUserDetail(id) {

@@ -21,6 +21,9 @@
 <script>
 export default {
   name: 'login',
-  components: {}
+  components: {},
+  created(){
+    localStorage.setItem('menuActive','')
+  }
 }
 </script>
