@@ -18,6 +18,8 @@ export default {
   name: 'music_app',
   components: {
     AppLayout
+  },
+  created(){
   }
 }
 </script>

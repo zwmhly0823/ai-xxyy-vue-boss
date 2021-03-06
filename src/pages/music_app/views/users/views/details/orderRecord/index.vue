@@ -123,11 +123,12 @@ export default {
   methods: {
     // 点击物流详情
     goTrack(val) {
+      console.log(val)
       const query = {
         id: val.id
         // id: '177177182042'
       }
-      this.$http.User.getExpressList(query).then((res) => {
+      this.$http.User.getExpressDetails(query).then((res) => {
         console.log(res, 'yyyyyyyyyyyyyyyyyy')
         this.$refs.order_id.drawer = true
         this.order_id = res.data.ExpressList[0].order_id

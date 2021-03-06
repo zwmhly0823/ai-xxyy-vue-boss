@@ -46,21 +46,43 @@ export default {
       return routes.filter((item) => !item.hidden)
     },
     // 高亮选中状态
-    activeMenu() {
+    activeMenuCopy() {
       const { path } = this.$route
       const { pathname } = location
       let active = '0'
-      if (this.routes.length === 0) return active
-      this.routes.forEach((item, index) => {
+      let firstIndex = '0'
+      let secondIndex = ''
+      if (this.routes.length === 0) {
+        return active
+      }
+      for (let i = 0; i < this.routes.length; i++) {
+        let item = this.routes[i]
         if (pathname.includes(item.meta.module)) {
-          active = index.toString()
-          if (item.children) {
-            item.children.forEach((child, cindex) => {
-              if (child.path.includes(path)) active = `${index}-${cindex}`
-            })
+          firstIndex = i
+          for (let j = 0; j < item.length; j++) {
+            let child = item[j]
+            if (child.path.includes(path)) {
+              secondIndex = j
+            }
           }
         }
-      })
+      }
+      // this.routes.forEach((item, index) => {
+      //   if (pathname.includes(item.meta.module)) {
+      //     // active = index.toString()
+      //     firstIndex = index.toString()
+      //     if (item.children) {
+      //       item.children.forEach((child, cindex) => {
+      //         if (child.path.includes(path)) {
+      //           // active = `${index}-${cindex}`
+      //           secondIndex = cindex.toString()
+      //         }
+      //       })
+      //     }
+      //   }
+      // })
+      active = firstIndex + (secondIndex == '' ? '' : '-' + secondIndex)
+      console.log(active)
       return active
     },
     showLogo() {
@@ -82,10 +104,21 @@ export default {
   },
   data() {
     return {
-      currentMenu: null
+      currentMenu: null,
+      activeMenu: '0'
     }
   },
+  created() {
+    this.getActive()
+  },
+  activated() {
+    this.getActive()
+  },
   methods: {
+    getActive() {
+      let active = localStorage.getItem('menuActive')
+      this.activeMenu = active==null?'':active;
+    },
     handleLeave() {
       // this.$store.dispatch('app/resetSidebar')
     }

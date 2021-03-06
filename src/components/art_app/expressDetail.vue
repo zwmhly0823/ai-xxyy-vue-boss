@@ -299,6 +299,7 @@ export default {
   },
   watch: {
     transferExpress(val) {
+      console.log(val)
       this.waitFor = false
       this.activities = []
       this.expressDetailsInfo = []
@@ -313,11 +314,11 @@ export default {
       // }
 
       // 2020-10-02 强哥说 根据delivery_type这个字段区分，0是取快递100的详情，1是取中台的详情
-      if (+val.delivery_type === 1) {
+      // if (+val.delivery_type === 1) {
         this.getExpressDetails(this.expressNu)
-      } else {
-        this.expressList(this.expressNu, val.express_status)
-      }
+      // } else {
+      //   this.expressList(this.expressNu, val.express_status)
+      // }
     },
     order_id(val) {
       this.waitFor = false

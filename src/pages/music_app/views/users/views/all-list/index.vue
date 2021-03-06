@@ -75,12 +75,12 @@
           </el-table-column>
           <el-table-column label="是否购买体验课" min-width="100">
             <template slot-scope="scope">
-              {{ scope.row.is_trial === '0' ? '否' : '是' }}
+              {{ (scope.row.is_trial === '0'||scope.row.is_trial === null) ? '否' : '是' }}
             </template>
           </el-table-column>
           <el-table-column label="是否购买系统课" min-width="100">
             <template slot-scope="scope">
-              {{ scope.row.is_system === '0' ? '否' : '是' }}
+              {{ (scope.row.is_system === '0'||scope.row.is_system === null) ? '否' : '是' }}
             </template>
           </el-table-column>
           <!-- 体验课信息 -->
@@ -386,13 +386,16 @@ export default {
         if (item?.userInfo?.teams) {
           // 销售/班级（体验课班级）
           item.trailTeams = item.userInfo.teams.filter(
-            (item) => item.subject === this.subjectCode && +item.team_type === 0
+            (item) => {
+              return +item.subject === this.subjectCode && +item.team_type === 0
+            }
           )
           // 班主任/班级（系统课班级）
           item.systemTeams = item.userInfo.teams.filter(
-            (item) => item.subject === this.subjectCode && +item.team_type > 0
+            (item) => +item.subject === this.subjectCode && +item.team_type > 0
           )
         }
+        
         // userExtendsInfo 添加学员id字段
         if (item.userExtendsInfo) {
           item.userExtendsInfo.id = item.uid
