@@ -291,8 +291,8 @@ export default {
       console.log('params哈哈哈哈哈', params)
       if (!params) {
         params = ''
-      }
-      
+      } 
+      console.log(params)
       this.$http.Weixin.getWeChatTeacherPage(params, this.currentPage)
         .catch((err) => console.log(err))
         .then((res) => {

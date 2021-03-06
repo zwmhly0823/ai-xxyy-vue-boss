@@ -12,7 +12,7 @@ import Cookies from 'js-cookie'
 const state = {
   sidebar: {
     test: '',
-    opened: true,
+    opened: false,
     withoutAnimation: false
   },
   popMenu: {

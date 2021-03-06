@@ -45,46 +45,7 @@ export default {
     routes() {
       return routes.filter((item) => !item.hidden)
     },
-    // 高亮选中状态
-    activeMenuCopy() {
-      const { path } = this.$route
-      const { pathname } = location
-      let active = '0'
-      let firstIndex = '0'
-      let secondIndex = ''
-      if (this.routes.length === 0) {
-        return active
-      }
-      for (let i = 0; i < this.routes.length; i++) {
-        let item = this.routes[i]
-        if (pathname.includes(item.meta.module)) {
-          firstIndex = i
-          for (let j = 0; j < item.length; j++) {
-            let child = item[j]
-            if (child.path.includes(path)) {
-              secondIndex = j
-            }
-          }
-        }
-      }
-      // this.routes.forEach((item, index) => {
-      //   if (pathname.includes(item.meta.module)) {
-      //     // active = index.toString()
-      //     firstIndex = index.toString()
-      //     if (item.children) {
-      //       item.children.forEach((child, cindex) => {
-      //         if (child.path.includes(path)) {
-      //           // active = `${index}-${cindex}`
-      //           secondIndex = cindex.toString()
-      //         }
-      //       })
-      //     }
-      //   }
-      // })
-      active = firstIndex + (secondIndex == '' ? '' : '-' + secondIndex)
-      console.log(active)
-      return active
-    },
+   
     showLogo() {
       return this.$store.state.settings.sidebarLogo
     },
@@ -99,6 +60,7 @@ export default {
     // 默认全部展开
     defaultOpendIndex() {
       const ids = routes.map((_, index) => index.toString())
+      console.log(ids)
       return ids
     }
   },
