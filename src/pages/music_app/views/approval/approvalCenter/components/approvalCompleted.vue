@@ -1286,7 +1286,7 @@ export default {
   .approvallk .el-row:nth-last-of-type {
     margin-bottom: 0;
   }
-  .approvallk .el-row .el-col-5 {
+  .approvallk .el-row .el-col-5,.approvallk .el-row .el-col-6 {
     text-align: right;
   }
   .time {

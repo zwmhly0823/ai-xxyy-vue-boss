@@ -56,8 +56,8 @@
         }}</el-col>
       </el-row>
       <el-row>
-        <el-col :span="6">物流单数量:</el-col>
-        <el-col :span="17" :offset="1">{{
+        <el-col :span="5">物流单数量:</el-col>
+        <el-col :span="18" :offset="1">{{
           drawerGiftDeatail.expressCount
         }}</el-col>
       </el-row>
