@@ -425,7 +425,7 @@ export default {
               })
             })
             if (!code && payload > 0) {
-              this.refundForm.residueFee = 10000
+              this.refundForm.residueFee = payload
             } else {
               this.$message({
                 message: '该订单剩余金额获取失败或为0',
