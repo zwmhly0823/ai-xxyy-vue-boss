@@ -568,7 +568,7 @@ if (staff.roleId === '19') {
           path: '/marketing',
           name: 'marketing',
           meta: {
-            title: '营销中心',
+            title: '兑换码',
             module: 'marketing',
             // module,
             style: 'line'
