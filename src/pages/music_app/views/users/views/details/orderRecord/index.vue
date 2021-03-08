@@ -125,14 +125,16 @@ export default {
     goTrack(val) {
       console.log(val)
       const query = {
-        id: val.id
+        expressNo: val.express.express_nu
         // id: '177177182042'
       }
-      this.$http.User.getExpressDetails(query).then((res) => {
+      this.$http.Express.getExpressDetails(query).then((res) => {
         console.log(res, 'yyyyyyyyyyyyyyyyyy')
         this.$refs.order_id.drawer = true
-        this.order_id = res.data.ExpressList[0].order_id
-        this.experId = res.data.ExpressList[0].user_id
+        if(res.data.ExpressList&&res.data.ExpressList.length>=0){
+          this.order_id = res.data.ExpressList[0].order_id
+          this.experId = res.data.ExpressList[0].user_id
+        }
         // this.dialogVisible = true
         // this.expressData = res.data.ExpressList[0]
         // this.tableData = res.data.ExpressList

@@ -422,11 +422,13 @@ export default {
 
     // 点击班级名称，打开班级详情
     openTeam(row) {
+      console.log(row)
       if (!row.id) return
       const teamId = row.id
       const teamType = row.team_type || '0'
+      const typeUrl = teamType==2?'teamDetail':'teamTrialDetail'
       teamId &&
-        openBrowserTab(`/student-team/#/teamDetail/${teamId}/${teamType}`)
+        openBrowserTab(`/music_app/#/${typeUrl}/${teamId}/${teamType}`)
     },
 
     formatDate(date, flag = 's') {

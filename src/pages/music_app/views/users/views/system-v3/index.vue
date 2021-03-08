@@ -500,7 +500,7 @@
                   </div>
                   <!-- 剩余周数 -->
                   <div v-if="item.title === '剩余周数' && item.flag">
-                    <p>{{ scope.row.remaining_week }}</p>
+                    <p>{{ scope.row.remaining_week}}</p>
                   </div>
                   <!-- 放课/结课时间 -->
                   <div v-if="item.title === '放课/结课时间' && item.flag">
@@ -1111,6 +1111,7 @@ export default {
               defContent = content
             }
             this.dataList = defContent
+            console.log(this.dataList)
             this.totalPages = +defTotalPages
             this.totalElements = +defTotalElements
             loading.close()
@@ -1249,7 +1250,7 @@ export default {
       const { teamid, teamname, teamtype = '1' } = row
       teamid &&
         openBrowserTab(
-          `/student-team/#/teamDetail/${teamid}/${teamtype}`,
+          `/music_app/#/teamDetail/${teamid}/${teamtype}`,
           `${teamname}`
         )
     },

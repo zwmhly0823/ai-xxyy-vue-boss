@@ -20,10 +20,10 @@
       @change="supChange"
     >
       <el-option
-        v-for="item in supList"
+        v-for="(item,index) in supList"
         :key="item.id"
         :label="item.text"
-        :value="item.id"
+        :value="(index+1)"
       >
       </el-option>
     </el-select>
@@ -142,6 +142,7 @@ export default {
           this.$emit('result', '')
         })
       } else {
+        
         this.$emit(
           'result',
           data.length > 0 ? { [this.name]: this.supData } : ''
