@@ -1,8 +1,8 @@
 import axios from '../axiosConfig'
 
 export default {
-  getMenuList(queryParams) {
-    return axios.get('/api/b/boss/v1/menu/list')
+  getRoleList(queryParams) {
+    return axios.get('/api/b/boss/v1/role/list', queryParams)
   },
   getMenuTree(queryParams) {
     return axios.get('/api/b/boss/v1/menu/getMenuTree')
@@ -17,8 +17,8 @@ export default {
     return axios.post(`/api/b/boss/v1/menu/update`, params)
   },
   del(params) {
-    return axios.post(`/api/b/boss/v1/menu/delete`, params,{
-        headers: { 'Content-Type': 'application/json' }
-      })
+    return axios.post(`/api/b/boss/v1/menu/delete`, params, {
+      headers: { 'Content-Type': 'application/json' }
+    })
   }
 }

@@ -46,13 +46,15 @@ import TeamV2 from './modules/TeamV2'
 import Active from './modules/Active'
 import TeamV3 from './modules/studentTeam/TeamV3' // 班级接口
 import Complaint from './modules/complaint/complaint.js' // 投诉中心
-import SystemMenu from './modules/SystemMenu.js' // c菜单资源
+import SystemMenu from './modules/SystemMenu.js' // 菜单资源
+import SystemRole from './modules/SystemRole.js' // 角色管理
 
 export default Object.assign(
   {},
   // { writeApp },
   { Complaint },
   { SystemMenu },
+  { SystemRole },
   {
     Base
   },
