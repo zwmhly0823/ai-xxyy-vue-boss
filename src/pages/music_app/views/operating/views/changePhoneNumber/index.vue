@@ -79,6 +79,20 @@
               >{{ (scope.row.staff && scope.row.staff.real_name) || '-' }}</template>
             </el-table-column>
             <el-table-column prop="utime_text" label="修改时间"></el-table-column>
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-popconfirm
+                  confirm-button-text="确定"
+                  cancel-button-text="取消"
+                  icon="el-icon-info"
+                  icon-color="red"
+                  @confirm="logoutUser(scope.row)"
+                  title="确定注销此用户吗？"
+                >
+                  <el-button slot="reference" type="text" >注销用户</el-button>
+                </el-popconfirm>
+              </template>
+            </el-table-column>
           </el-table>
         </div>
         <m-pagination
@@ -157,6 +171,20 @@ export default {
     this.getLogData()
   },
   methods: {
+    // 注销用户
+    logoutUser(row) {
+      let params = {
+        staffId: this.staff.id,
+        oldMobile: row.old_mobile,
+        subject: 'MUSIC_APP'
+      }
+      this.$http.Operating.channelMobile(params).then((res) => {
+        if(res.code===0){
+          this.$message.success('注销成功')
+        }
+        this.getLogData()
+      })
+    },
     onSubmit(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
