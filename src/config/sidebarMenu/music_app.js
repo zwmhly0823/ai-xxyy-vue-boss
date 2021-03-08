@@ -146,52 +146,52 @@ if (staff.roleId === '19') {
   }
   bearArt = [
     // 班级
-    {
-      path: '/student-team',
-      name: 'student-team',
-      meta: {
-        title: '体验课班级(新版)',
-        icon: 'iconbanjiguanli',
-        module
-      },
-      children: [{
-          path: '/trail/0/prepare',
-          name: 'trialTeam0',
-          meta: {
-            title: '待上课',
-            module,
-            show: true
-          }
-        },
-        {
-          path: '/trail/1/ongoing',
-          name: 'trialTeam1',
-          meta: {
-            title: '上课中',
-            module,
-            show: true
-          }
-        },
-        {
-          path: '/trail/2/complete',
-          name: 'trialTeam2',
-          meta: {
-            title: '已完课',
-            module,
-            show: true
-          }
-        }
-      ]
-    },
-    {
-      path: '/systemTeam',
-      name: 'systemTeam',
-      meta: {
-        title: '系统课班级',
-        icon: 'iconbanjiguanli',
-        module
-      }
-    },
+    // {
+    //   path: '/student-team',
+    //   name: 'student-team',
+    //   meta: {
+    //     title: '体验课班级(新版)',
+    //     icon: 'iconbanjiguanli',
+    //     module
+    //   },
+    //   children: [{
+    //       path: '/trail/0/prepare',
+    //       name: 'trialTeam0',
+    //       meta: {
+    //         title: '待上课',
+    //         module,
+    //         show: true
+    //       }
+    //     },
+    //     {
+    //       path: '/trail/1/ongoing',
+    //       name: 'trialTeam1',
+    //       meta: {
+    //         title: '上课中',
+    //         module,
+    //         show: true
+    //       }
+    //     },
+    //     {
+    //       path: '/trail/2/complete',
+    //       name: 'trialTeam2',
+    //       meta: {
+    //         title: '已完课',
+    //         module,
+    //         show: true
+    //       }
+    //     }
+    //   ]
+    // },
+    // {
+    //   path: '/systemTeam',
+    //   name: 'systemTeam',
+    //   meta: {
+    //     title: '系统课班级',
+    //     icon: 'iconbanjiguanli',
+    //     module
+    //   }
+    // },
     {
       path: '/trail/:status',
       name: '',

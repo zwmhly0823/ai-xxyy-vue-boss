@@ -15,6 +15,7 @@ import BaseUserInfo from '@/components/BaseUserInfo/Base.vue'
 import ModifyAddress from '../../components/ModifyAddress.vue'
 import enums from '../../components/searchData'
 import { formatData, openBrowserTab } from '@/utils/index'
+import {courseLevelReplace} from '@/utils/supList'
 import intentionDialog from '../../components/intentionDialog'
 import { FOLLOW_EXPRESS_STATUS } from '@/utils/enums'
 import Search from '../../components/Search.vue'
@@ -135,6 +136,7 @@ export default {
       search: [],
       term: '',
       currentPage: 1,
+      courseLevelReplace,
       totalElements: 0,
       totalPages: 1,
       dataList: [],
@@ -614,7 +616,7 @@ export default {
       const teamId = row.team_id
       const teamType = row.teamInfo.team_type || '0'
       teamId &&
-        openBrowserTab(`/student-team/#/detail/trial/${teamId}/${teamType}`)
+        openBrowserTab(`/music_app/#/teamTrialDetail/${teamId}/${teamType}`)
     },
 
     formatDate(date, flag = 's') {

@@ -379,6 +379,9 @@ export default {
             totalPages
             totalElements
             content {
+              remaining_week
+              course_day
+              end_course_day
               last_complete_time
               last_join_time
               flag_total_count
@@ -444,6 +447,10 @@ export default {
               sys_label
               send_id
               remain_order_count
+              lastUserFollowLog{
+                ctime
+                content
+              }
               user_info{
                 sender{
                   id

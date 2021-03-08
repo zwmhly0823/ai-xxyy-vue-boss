@@ -34,7 +34,7 @@
             (resultStatistics.S3 && resultStatistics.S3.planSumTeamSize) || 0
           }}
         </span>
-        <span v-if="courseType != '0'"
+        <span
           >{{ SUP_LEVEL_ALL['S4'] }}:{{
             (resultStatistics.S4 && resultStatistics.S4.planSumTeamSize) || 0
           }}
@@ -64,7 +64,7 @@
             (resultStatistics.S4 && resultStatistics.S3.realSumTeamSize) || 0
           }}
         </span>
-        <span v-if="courseType != '0'"
+        <span 
           >{{ SUP_LEVEL_ALL['S4'] }}:{{
             (resultStatistics.S4 && resultStatistics.S4.realSumTeamSize) || 0
           }}
@@ -255,10 +255,14 @@ export default {
         }
         // 转介绍招生数
         const intruStuNumRes = await this.getIntroduceCountByIds(query)
+        console.log(content)
+        console.log(intruStuNumRes)
         intruStuNumRes.forEach((item) => {
           content.forEach((value) => {
             if (item.id === value.teacherId) {
               value.intruNum = item.count || 0
+              value.realSumTeamSize = value.realSumTeamSize?value.realSumTeamSize:0;
+              value.realTeam = value.realTeam?value.realTeam:0;
               // 市场招生数
               value.marketStuNum = value.realSumTeamSize - value.intruNum
               // 招生完成率
@@ -277,8 +281,8 @@ export default {
           })
 
           value.courseCategoryCHN = courseCategoryCHN
-          value.courseDifficulty =
-            SUP_LEVEL_ALL[value.courseDifficulty] || ''
+          // value.courseDifficulty =
+          //   SUP_LEVEL_ALL[value.courseDifficulty] || ''
         })
 
         this.tableData = content

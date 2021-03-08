@@ -133,7 +133,7 @@ export default {
       this.$http.Express.getExpressDetails(query).then((res) => {
         console.log(res, 'yyyyyyyyyyyyyyyyyy')
         this.$refs.order_id.drawer = true
-        if (res.data.ExpressList) {
+        if(res.data.ExpressList&&res.data.ExpressList.length>=0){
           this.order_id = res.data.ExpressList[0].order_id
           this.experId = res.data.ExpressList[0].user_id
         }

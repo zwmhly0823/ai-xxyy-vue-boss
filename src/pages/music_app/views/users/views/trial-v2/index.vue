@@ -815,7 +815,7 @@
                       scope.row.teamInfo.team_name &&
                       scope.row.teamInfo.team_name !== '-'
                   "
-                  >({{ scope.row.teamInfo.team_name }})</span
+                  >({{ courseLevelReplace(scope.row.teamInfo.team_name) }})</span
                 >
                 <span v-else>-</span>
               </p>
@@ -1013,6 +1013,7 @@
 
 <script>
 import Index from './index'
+// import {}
 export default Index
 </script>
 

@@ -56,6 +56,7 @@ export const SUP_LEVEL_SYSTEM = {
   S3:'M3',
   S4:'M4'
 }
+
 export const SUP_LEVEL_ALL = {
   S1:'M1',
   S2:'M2',
