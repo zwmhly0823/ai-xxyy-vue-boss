@@ -682,7 +682,7 @@ export default {
      * @name: String 结果放到上层表达式中的位置，默认must. 可指定 should
      */
     setSeachParmas(res, key = [], extraKey = 'term', name = 'must') {
-      console.info(key)
+      console.info(res)
       const { must, should } = this
       const temp = name === 'must' ? must : should
       key.forEach((k) => {

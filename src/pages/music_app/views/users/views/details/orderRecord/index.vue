@@ -124,15 +124,19 @@ export default {
     // 点击物流详情
     goTrack(val) {
       console.log(val)
+      let expressNu = val.express.express_nu
+
       const query = {
-        id: val.id
+        expressNo: expressNu ? expressNu : ''
         // id: '177177182042'
       }
-      this.$http.User.getExpressDetails(query).then((res) => {
+      this.$http.Express.getExpressDetails(query).then((res) => {
         console.log(res, 'yyyyyyyyyyyyyyyyyy')
         this.$refs.order_id.drawer = true
-        this.order_id = res.data.ExpressList[0].order_id
-        this.experId = res.data.ExpressList[0].user_id
+        if (res.data.ExpressList) {
+          this.order_id = res.data.ExpressList[0].order_id
+          this.experId = res.data.ExpressList[0].user_id
+        }
         // this.dialogVisible = true
         // this.expressData = res.data.ExpressList[0]
         // this.tableData = res.data.ExpressList
@@ -158,7 +162,7 @@ export default {
         query, // studentId
         this.currentPage
       ).then((res) => {
-        if (res.data.OrderPage) { 
+        if (res.data.OrderPage) {
           console.log('订单物流模块接口', res.data.OrderPage.content)
           const _data = res.data.OrderPage.content
           _data.forEach((item) => {
