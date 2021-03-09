@@ -1,12 +1,7 @@
 <template>
   <div class="students-popup">
     <div>
-      <el-dialog
-        title="发放优惠卷"
-        :visible.sync="issueCoupons"
-        width="30%"
-        :append-to-body="true"
-      >
+      <el-dialog title="发放优惠卷" :visible.sync="issueCoupons" width="30%" :append-to-body="true">
         <span class="label">选择优惠卷:</span>
         <el-select
           v-model="value"
@@ -19,8 +14,7 @@
             :key="index"
             :label="`${item.amount}元${item.name} `"
             :value="item.amount"
-          >
-          </el-option>
+          ></el-option>
         </el-select>
         <div class="coupons-time">
           <span class="label">选择到期时间:</span>
@@ -30,15 +24,14 @@
             placeholder="请设置优惠券到期时间"
             :picker-options="pickerOptions"
           >
-          </el-date-picker> -->
+          </el-date-picker>-->
           <el-date-picker
             v-model="couponsDate"
             type="date"
             placeholder="请选择日期"
             value-format="yyyy-MM-dd"
             :picker-options="pickerDateOptions"
-          >
-          </el-date-picker>
+          ></el-date-picker>
         </div>
         <div class="coupons-time">
           <span class="label"></span>
@@ -51,24 +44,16 @@
               minTime: now
             }"
             placeholder="请选择小时"
-          >
-          </el-time-select>
+          ></el-time-select>
         </div>
         <span slot="footer" class="dialog-footer">
           <el-button @click="issueCoupons = false">取 消</el-button>
-          <el-button type="primary" :plain="true" @click="issueCouponsBtn">
-            确 定
-          </el-button>
+          <el-button type="primary" :plain="true" @click="issueCouponsBtn">确 定</el-button>
         </span>
       </el-dialog>
     </div>
     <div>
-      <el-dialog
-        title="发放优惠券"
-        :visible.sync="couponConf"
-        width="30%"
-        :append-to-body="true"
-      >
+      <el-dialog title="发放优惠券" :visible.sync="couponConf" width="30%" :append-to-body="true">
         <i class="el-icon-warning">
           <span>
             是否确认向用户发放"{{ dropdownSelected.amount }}元
@@ -79,44 +64,31 @@
         </i>
         <span slot="footer" class="dialog-footer">
           <el-button @click="couponConf = false">取 消</el-button>
-          <el-button type="primary" @click="couponconfBtn(dropdownSelected.id)">
-            确 定
-          </el-button>
+          <el-button type="primary" @click="couponconfBtn(dropdownSelected.id)">确 定</el-button>
         </span>
       </el-dialog>
     </div>
     <div class="paid-out">
-      <el-dialog
-        title="发放完毕"
-        :visible.sync="couponSuccessful"
-        width="30%"
-        :append-to-body="true"
-      >
+      <el-dialog title="发放完毕" :visible.sync="couponSuccessful" width="30%" :append-to-body="true">
         <div
           class="coupons-successful"
           v-show="paidOut === 'OK' || paidOut === 'ALL'"
-        >
-          {{ paidoutOk }}张优惠券发放成功
-        </div>
+        >{{ paidoutOk }}张优惠券发放成功</div>
         <div
           class="coupons-failure"
           v-show="paidOut === 'NO' || paidOut === 'ALL'"
-        >
-          {{ paidoutNo }}张优惠券发放失败
-        </div>
+        >{{ paidoutNo }}张优惠券发放失败</div>
         <!-- 优惠卷发放失败原因 -->
         <div class="failure-why" v-show="paidOut === 'NO' || paidOut === 'ALL'">
           <div v-for="(item, index) in failureWhy" :key="index">
             {{ index + 1 }}.用户:{{ item.mobile }} 失败原因:{{
-              item.errorReason
+            item.errorReason
             }}
           </div>
         </div>
         <span slot="footer" class="dialog-footer">
           <el-button @click="couponsucBtn">取 消</el-button>
-          <el-button type="primary" @click="couponsucBtn">
-            确 定
-          </el-button>
+          <el-button type="primary" @click="couponsucBtn">确 定</el-button>
         </span>
       </el-dialog>
     </div>
@@ -126,7 +98,12 @@
 // import { isToss } from '@/utils'
 export default {
   props: {
-    couponData: Array,
+    couponList: {
+      type: Array,
+      default() {
+        return []
+      }
+    },
     selectUserId: Array,
     needReload: Boolean
   },
@@ -189,10 +166,15 @@ export default {
     couponsDateTime(val) {
       console.log(val)
     },
-    couponData(val) {
-      this.couponDropdown = val.filter((item) => {
-        return this.trialCouponIds.includes(item.id)
-      })
+    couponList: {
+      deep: true,
+      immediate: true,
+      handler: function(val) {
+        console.log(val)
+        this.couponDropdown = val.filter((item) => {
+          return this.trialCouponIds.includes(item.id)
+        })
+      }
     },
     selectUserId(val) {
       console.log(val, '用户idprops传参')

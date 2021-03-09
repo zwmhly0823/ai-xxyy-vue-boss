@@ -134,6 +134,7 @@ export default {
   mounted() {
     this.getTopData()
     this.getcolorData() // 获取背景色4个数据来源4个子组件
+    
   },
 
   methods: {
