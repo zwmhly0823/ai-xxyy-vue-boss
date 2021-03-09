@@ -4,21 +4,13 @@ export default {
   getRoleList(queryParams) {
     return axios.get('/api/b/boss/v1/role/list', queryParams)
   },
-  getMenuTree(queryParams) {
-    return axios.get('/api/b/boss/v1/menu/getMenuTree')
+  addRole(params) {
+    return axios.post('/api/b/boss/v1/role/add', params)
   },
-  getMenuInfo(queryParams) {
-    return axios.get(`/api/b/boss/v1/menu/info?menuId=${queryParams}`)
+  updateRole(params) {
+    return axios.post('/api/b/boss/v1/role/update', params)
   },
-  add(params) {
-    return axios.post(`/api/b/boss/v1/menu/add`, params)
+  deleteRole(params) {
+    return axios.post('/api/b/boss/v1/role/delete', params)
   },
-  edit(params) {
-    return axios.post(`/api/b/boss/v1/menu/update`, params)
-  },
-  del(params) {
-    return axios.post(`/api/b/boss/v1/menu/delete`, params, {
-      headers: { 'Content-Type': 'application/json' }
-    })
-  }
 }
