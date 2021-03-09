@@ -305,8 +305,7 @@ export default {
         express_nu: '快递单号',
         express_company: '物流公司',
         express_company_nu: '物流公司编号',
-        center_express_id:'中台物流Id',
-        center_product_code:'中台商品码'
+        center_express_id:'中台物流Id'
       }
 
       const params = {
