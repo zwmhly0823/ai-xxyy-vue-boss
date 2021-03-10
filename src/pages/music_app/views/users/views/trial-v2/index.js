@@ -890,7 +890,6 @@ export default {
     // 待跟进数量
     getTodayCount(type = 'today') {
       const params = {
-        teacher_id: [],
         is_track: 1,
         today: type === 'today' ? this.today : this.tomorrow
       }
