@@ -123,24 +123,22 @@ export default {
   methods: {
     // 点击物流详情
     goTrack(val) {
-      console.log(val)
-      let expressNu = val.express.express_nu
+      // let expressNu = val.express.express_nu
 
-      const query = {
-        expressNo: expressNu ? expressNu : ''
-        // id: '177177182042'
-      }
-      this.$http.Express.getExpressDetails(query).then((res) => {
-        console.log(res, 'yyyyyyyyyyyyyyyyyy')
-        this.$refs.order_id.drawer = true
-        if(res.data.ExpressList&&res.data.ExpressList.length>=0){
-          this.order_id = res.data.ExpressList[0].order_id
-          this.experId = res.data.ExpressList[0].user_id
-        }
-        // this.dialogVisible = true
-        // this.expressData = res.data.ExpressList[0]
-        // this.tableData = res.data.ExpressList
-      })
+      // const query = {
+      //   expressNo: expressNu ? expressNu : ''
+      // }
+      this.order_id = val.id
+      this.$refs.order_id.drawer = true
+      // this.$http.Express.getExpressDetails(query).then((res) => {
+      //   if (
+      //     res.data &&
+      //     res.data.ExpressList &&
+      //     res.data.ExpressList.length >= 0
+      //   ) {
+      //     this.experId = res.data.ExpressList[0].user_id
+      //   }
+      // })
     },
     handleClose() {
       this.dialogVisible = false

@@ -76,7 +76,7 @@ export default {
 
       tableData: [],
       searchJson: {
-        subject: 0,
+        subject: 3,
         pay_channel_user: this.$route.params.id,
         regtype: 1,
         status: 3

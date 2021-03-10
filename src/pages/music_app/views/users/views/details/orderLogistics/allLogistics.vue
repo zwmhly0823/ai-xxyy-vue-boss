@@ -173,12 +173,10 @@ export default {
   methods: {
     // 鼠标进入显示操作栏
     handleMouseEnter(row) {
-      console.log(row, row.address_id)
       this.current = row
     },
     handleMouseLeave(row) {
       this.current = {}
-      console.log(row, row.address_id)
     },
     // 修改地址
     editAddress(rowData) {
@@ -204,7 +202,6 @@ export default {
       }
     },
     goTrack(val) {
-      console.log(111, val)
       this.$emit('goTrack', val)
     }
   },
