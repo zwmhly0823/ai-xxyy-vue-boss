@@ -48,7 +48,7 @@
           </span>
           <el-input
             :type="passwordType"
-            v-model.trim="pwdLoginForm.pwd"
+            v-model.trim="pwdLoginForm.password"
             placeholder="密码"
             maxlength="16"
             name="password"
@@ -285,7 +285,7 @@ export default {
       pwdLoginForm: {
         codeImage:'',
         userName: '',
-        pwd: '',
+        password: '',
         origin: 1 // 标记后端登录
       },
       codeLoginForm: {
@@ -300,7 +300,7 @@ export default {
         userName: [
           { required: true, trigger: 'change', validator: validateUsername }
         ],
-        pwd: [
+        password: [
           {
             required: true,
             max: 16,
@@ -365,15 +365,24 @@ export default {
       // /[^0-9A-Za-z]/g
       this.codeLoginForm.code = this.codeLoginForm.code.replace(test, '')
       this.pwdLoginForm.userName = this.pwdLoginForm.userName.replace(test, '')
-      this.pwdLoginForm.pwd = this.pwdLoginForm.pwd.replace(test, '')
+      this.pwdLoginForm.password = this.pwdLoginForm.password.replace(test, '')
       this.codeLoginForm.phone = this.codeLoginForm.phone.replace(test, '')
     },
     // 通过密码登录
     async loginByPwd() {
       const pwdLoginIn = await this.$http.Login.pwdLoginIn(this.pwdLoginForm)
+      setToken(pwdLoginIn.payload.accessToken)
+
+      const authRouter = await this.$http.Login.getCurrentRouter();
+      let result = {}
       if (pwdLoginIn && pwdLoginIn.payload) {
-        return pwdLoginIn.payload
+        result.accessToken = pwdLoginIn.payload.accessToken
       }
+      if (authRouter && authRouter.payload) {
+        result.staff = authRouter.payload.staff;
+        result.menuList = authRouter.payload.menuList;
+      }
+      return result;
     },
     // 通过验证码登录接口
     async loginBycode() {
@@ -418,42 +427,44 @@ export default {
               console.log(err)
             ))
 
-        if (getToken && getToken.token) {
-          setToken(getToken.token)
-          if (getToken.teacher) {
-            const {
-              teacher,
-              department,
-              departmentId,
-              duty,
-              dutyId,
-              rank,
-              rankId
-            } = getToken
-            Object.assign(teacher, {
-              department,
-              departmentId,
-              duty,
-              dutyId,
-              rank,
-              rankId
-            })
-            localStorage.setItem('teacher', JSON.stringify(teacher || '{}'))
-          }
+        if (getToken && getToken.accessToken) {
+
+          // if (getToken.teacher) {
+          //   const {
+          //     teacher,
+          //     department,
+          //     departmentId,
+          //     duty,
+          //     dutyId,
+          //     rank,
+          //     rankId
+          //   } = getToken
+          //   Object.assign(teacher, {
+          //     department,
+          //     departmentId,
+          //     duty,
+          //     dutyId,
+          //     rank,
+          //     rankId
+          //   })
+          //   localStorage.setItem('teacher', JSON.stringify(teacher || '{}'))
+          // }
           if (getToken.staff) {
             // 前端设置权限管理
-
-            // getToken.staff.roleId = '19';
-            // getToken.staff.mobile = '15801332536'
-            console.log('ss')
             localStorage.setItem(
               'staff',
               JSON.stringify(getToken.staff || '{}')
             )
             // 如果是 教研 角色，跳转到 设置-员工帐号
-            if (getToken.staff.roleId === '19') {
-              path = path.replace(/student-team/, 'teacher')
-            }
+            // if (getToken.staff.roleId === '19') {
+            //   path = path.replace(/student-team/, 'teacher')
+            // }
+          }
+          if(getToken.menuList) {
+            localStorage.setItem(
+              'menuList',
+              JSON.stringify(getToken.menuList || '{}')
+            )
           }
           // 登录后，设置默认multiTabbed
           // const tabs = {
@@ -471,6 +482,7 @@ export default {
           //     this.dialogVisible = true
           //   }
           // } else {
+            console.log('path', path);
           location.href = `${path}#/`
           // }
         }
@@ -494,7 +506,7 @@ export default {
           const res = await this.$http.Login.resetPwd(id, newPassword)
           if (res.code === 0) {
             this.$message.success('密码修改成功～')
-            this.pwdLoginForm.pwd = ''
+            this.pwdLoginForm.password = ''
             this.dialogVisible = false
           }
         } catch (error) {

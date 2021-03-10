@@ -26,7 +26,11 @@ export default {
    * 密码登录
    * */
   pwdLoginIn(params) {
-    return axios.post('/api/b/v1/staff/login', params)
+    return axios.post('/api/b/boss/v1/auth/login', params)
+  },
+
+  getCurrentRouter(params) {
+    return axios.get('/api/b//boss/v1/staff/current', params)
   },
   /**
    * 修改密码

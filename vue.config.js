@@ -42,12 +42,12 @@ if (env === 'dev') {
 } else if (env === 'prod') {
   // 预发布环境
   publicPath = publicPath + version;
-  targetGrapqhlEnv = 'http://ai-xxyy-prod-graphql-boss.yinyuebao.cloud'
-  targetApiEnv = 'http://ai-xxyy-prod-boss.yinyuebao.cloud'
+  targetGrapqhlEnv = 'http://ai-xxyy-prod-graphql-boss.xiaoxiongyinyue.cloud'
+  targetApiEnv = 'http://ai-xxyy-prod-boss.xiaoxiongyinyue.cloud'
 } else if (env === 'live') {
   publicPath = publicPath + version;
-  targetGrapqhlEnv = 'http://ai-xxyy-live-graphql-boss.yinyuebao.cloud'
-  targetApiEnv = 'http://ai-xxyy-live-boss.yinyuebao.cloud'
+  targetGrapqhlEnv = 'http://ai-xxyy-live-graphql-boss.xiaoxiongyinyue.cloud'
+  targetApiEnv = 'http://ai-xxyy-live-boss.xiaoxiongyinyue.cloud'
 }
 
 // editOperation('构建')
