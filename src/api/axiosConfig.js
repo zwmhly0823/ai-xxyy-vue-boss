@@ -9,9 +9,19 @@
 import axios from './axios'
 import { getToken } from '@/utils/auth'
 import { baseUrl, getAppSubject } from '@/utils/index'
+import defaultSetting  from '../settings';
 // 转json
 
 axios.defaults.withCredentials = true
+
+const getPlateformByUa = () => {
+  const ua = window.navigator.userAgent;
+  const reg = /\((.*?)\)/;
+  const result = ua.match(reg);
+  return result[1];
+}
+
+const platform = getPlateformByUa();
 
 function strToJson(str) {
   // eslint-disable-next-line no-new-func
@@ -149,7 +159,10 @@ export default {
     const headers = {
       'Content-Type': 'application/json;charset=UTF-8',
       operatorId,
-      subject
+      subject,
+      'version': defaultSetting.version,
+      'os-type': platform,
+      Authorization: getToken(),
     }
     if (token) {
       headers.Authorization = token.includes('Bearer ')

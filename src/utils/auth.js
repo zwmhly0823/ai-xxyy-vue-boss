@@ -26,6 +26,7 @@ export function setToken(token) {
 export function removeToken() {
   // localStorage.removeItem('teacher')
   localStorage.removeItem('staff')
+  localStorage.removeItem('menuList')
   // 每次退出清除悬浮框标示
   localStorage.removeItem('feedFlag')
   // 清除multiTabbed

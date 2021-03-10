@@ -11,6 +11,8 @@ import App from './App.vue'
 import router from './router'
 import store from '@/store'
 import '@/plugins/element-ui'
+import { getToken } from '@/utils/auth'
+
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 import '@/assets/styles/index.scss' // global css
 
@@ -39,7 +41,7 @@ const _Vue = new Vue({
 
 window._Vue = _Vue
 _Vue.$router.beforeEach((to, from, next) => {
-  var isLogin = JSON.parse(localStorage.getItem('staff'))
+  var isLogin = getToken();
   // 判断是否登录
   if (isLogin) {
     next()
