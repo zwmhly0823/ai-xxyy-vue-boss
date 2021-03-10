@@ -189,7 +189,6 @@ export default {
   methods: {
     // 物流列表信息
     goTrack(val) {
-      console.log(111, val)
       this.$emit('goTrack', val)
     },
     clickSee(e) {

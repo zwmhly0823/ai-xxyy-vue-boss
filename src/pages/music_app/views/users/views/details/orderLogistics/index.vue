@@ -78,15 +78,22 @@ export default {
   methods: {
     // 点击物流详情
     goTrack(val) {
-      console.log(val)
-      this.$refs.order_id.drawer = true
+      // this.$refs.order_id.drawer = true
       this.order_id = val.order_id
       this.experId = val.id
-      // if (val.express && val.express.express_total > 0) {
-      //   this.$refs.order_id.drawer = true
-      //   this.order_id = val.order_id
+      this.$refs.order_id.drawer = true
+      
+      // let expressNu = val.express_nu
+
+      // const query = {
+      //   expressNo: expressNu ? expressNu : ''
       // }
-      // return this.$message('暂无物流')
+
+      // this.$http.Express.getExpressDetails(query).then((res) => {
+      //   if(res.payload&&res.payload.length>=0){
+      //     this.tableData = res.payload
+      //   }
+      // })
     },
     // 翻页
     handleCurrentChange(val) {
