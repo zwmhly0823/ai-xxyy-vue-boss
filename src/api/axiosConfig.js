@@ -128,6 +128,58 @@ export default {
       })
     }
   },
+  form(url, params, extend = {}) {
+    if (process.env.NODE_ENV === 'development') {
+      if (url.match(/graphql/)) {
+        const reg = /[\s][\w]+\(query:/
+        const matchs = params.query.match(reg)
+        if (matchs && matchs.length) {
+          const tail = matchs[0].replace(/\s/, '').replace('(query:', '')
+          url
+        }
+        const regParam = /\(query:[\w\W]+\)/
+        const matchsParam = params.query.match(regParam)
+        if (matchsParam && matchsParam.length) {
+          const str = matchsParam[0]
+            .replace(/"{/g, '{')
+            .replace(/}"/g, '}')
+            .replace('(', '{')
+            .replace(')', '}')
+            .replace(/\\/g, '')
+          try {
+            // console.log(strToJson(str))
+            const visableData = strToJson(str)
+            params = { ...params, data: visableData }
+          } catch (error) {
+            console.log(error)
+          }
+        }
+      }
+    }
+    if (this.judgeToken()) {
+      return new Promise((resolve, reject) => {
+        const extendObj = {
+          headers:
+            params && params.headers ? params.headers : this.getHeadersForm(),
+          ...extend
+        }
+        axios
+          .post(url, params, {
+            ...extendObj
+          })
+          .then((res) => {
+            if (res.status === 500) {
+              reject(res)
+              return
+            }
+            resolve(res)
+          })
+          .catch((err) => {
+            reject(err)
+          })
+      })
+    }
+  },
   /**
    * put方法，对应put请求
    * @param {String} url [请求的url地址]
@@ -158,6 +210,28 @@ export default {
     const token = getToken() || ''
     const headers = {
       'Content-Type': 'application/json;charset=UTF-8',
+      operatorId,
+      subject,
+      'version': defaultSetting.version,
+      'os-type': platform,
+      Authorization: getToken(),
+    }
+    if (token) {
+      headers.Authorization = token.includes('Bearer ')
+        ? token
+        : `Bearer ${token}`
+    }
+    return headers
+  },
+  getHeadersForm() {
+    // 科目
+    const subject = getAppSubject()
+    // 增加操作人ID
+    const staff = JSON.parse(localStorage.getItem('staff') || '{}')
+    const operatorId = (staff && staff.id) || ''
+    const token = getToken() || ''
+    const headers = {
+      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
       operatorId,
       subject,
       'version': defaultSetting.version,

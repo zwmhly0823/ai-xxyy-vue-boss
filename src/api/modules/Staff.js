@@ -19,32 +19,32 @@ export default {
       }`
     })
   },
+  createDepartment(params) {
+    return axios.post('/api/b/boss/v1/department/addDepartment', params)
+  },
+  updateDepartment(params) {
+    return axios.post('/api/b/boss/v1/department/updateDepartment', params)
+  },
+  getDepartmentTree(params) {
+    return axios.get('/api/b/boss/v1/department/getDepartmentTree', params)
+  },
+  getdepartmentAllList(params) {
+    return axios.get('/api/b/boss/v1/department/getPageDepartment', params)
+  },
   // 添加/编辑员工
   addStaff(params) {
-    return axios.post('/api/b/v1/staff/addStaff', params)
+    return axios.post('/api/b/boss/v1/staff/add', params)
+  },
+  updateStaff(params) {
+    return axios.post('/api/b/boss/v1/staff/update', params)
   },
   // 获取员工列表
-  getStaffList(page = 1, query = '', size = '20') {
-    const sort = JSON.stringify({ id: 'desc' })
-    return axios.post('/graphql/v1/toss', {
-      query: `{
-        StaffPage(page: ${page}, query: ${JSON.stringify(
-        query
-      )}, sort: ${JSON.stringify(sort)}, size: ${size}){
-          totalPages
-          totalElements
-          content {
-            id
-            real_name
-            user_name
-            mobile
-            status
-            role_id
-            is_login,
-            password
-          }
-        }
-      }`
+  getStaffList(page = 1, size = 20, realName = '', staffType = '') {
+    return axios.post('/api/b/boss/v1/staff/getPage', {
+      pageNum: page,
+      pageSize: size,
+      realName,
+      staffType,
     })
   },
   //  员工id，姓名模糊搜索
