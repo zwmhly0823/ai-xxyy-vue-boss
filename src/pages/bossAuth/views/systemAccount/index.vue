@@ -55,6 +55,14 @@
               align="center"
               prop="userName"
             ></el-table-column>
+            <el-table-column label="部门" min-width="80" align="center" prop="departmentList">
+              <template slot-scope="scope">
+                <span v-for="(item, index) of scope.row.departmentList" :key="item.id">
+                  <span v-if="index + 1 < scope.row.departmentList.length">{{item.name}}/</span>
+                  <span v-else>{{item.name}}</span>
+                </span>
+              </template>
+            </el-table-column>
             <el-table-column label="员工角色" min-width="80" align="center" prop="roleList">
               <template slot-scope="scope">
                 <div v-for="item of scope.row.roleList" :key="item.id">
@@ -143,6 +151,7 @@ export default {
         page: 1,
         realName: '',
         staffType: '',
+        departmentId: '',
       },
       totalElements: 0,
       handleType: '',
@@ -151,13 +160,11 @@ export default {
       searchQuery: '',
       departmentQuery: '',
       resetPassword: false,
-      defaultPassword: 'MsbNB123',
+      defaultPassword: 'Msb-123456',
       resetCurrentName: '',
       resetCurrentId: '',
       showTip: false,
       resetTip: false,
-      // 当前选择的机构
-      currentDept: {},
     }
   },
   mounted() {
@@ -165,24 +172,22 @@ export default {
   },
   methods: {
     leftBarHandler(data) {
-      this.currentDept = data
+      const query = {
+        size: 20,
+        page: 1,
+        realName: '',
+        staffType: '',
+        departmentId: data.id,
+      };
+      this.tabQuery = query;
+      this.getStaffList();
+
     },
     // 获取员工列表
     async getStaffList() {
-      let query = {}
-      if (this.departmentQuery || this.searchQuery) {
-        query = Object.assign(
-          {},
-          this.departmentQuery || {},
-          this.searchQuery || {}
-        )
-      }
-      const queryParams = query ? JSON.stringify(query) : ''
       this.loading = true
       try {
-        const res = await this.$http.Staff.getStaffList(
-          this.tabQuery.page,
-        )
+        const res = await this.$http.Staff.getStaffList(this.tabQuery);
         this.tableData =
           res.payload.content.length !== 0
             ? res.payload.content
@@ -206,20 +211,15 @@ export default {
     },
     // 员工身份搜索
     handleSearchEmployees(data) {
-      console.log(data)
-      if (data.length > 0) {
-        const term = {}
-        data.forEach((res) => {
-          if (res.term) {
-            term.role_id = res.term
-          }
-        })
-        this.departmentQuery = term
-        this.tabQuery.page = 1
-      } else {
-        this.departmentQuery = ''
-      }
-      this.getStaffList()
+      const query = {
+        size: 20,
+        page: 1,
+        realName: this.tabQuery.realName,
+        roleId: data[0].term,
+        departmentId: this.tabQuery.id,
+      };
+      this.tabQuery = query;
+      this.getStaffList();
     },
     // 新增、编辑员工
     handleAddEmployees(item = '', type) {

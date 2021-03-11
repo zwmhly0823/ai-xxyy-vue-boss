@@ -114,7 +114,7 @@ export default {
         id: this.handleType === 'add' ? '' : this.editItem.id,
         status: this.handleType === 'add' ? 'TENURE' : this.editItem.status,
         roles: this.handleType === 'add' ? [] :  (this.editItem.roleList ? [this.editItem.roleList[0].id] : []),
-        departments: this.handleType === 'add' ? [] : this.editItem.departmentList[0].id,
+        departments: this.handleType === 'add' ? [] : this.getDeportIds(this.editItem.departmentList),
       },
       menuOptions: [],
       devalueValue: this.handleType === 'add' ? '' : (this.editItem.roleList ? this.editItem.roleList[0].id : ''),
@@ -128,8 +128,15 @@ export default {
     })
   },
   methods: {
-    handleParentChange() {
-
+    getDeportIds(data) {
+      let result = [];
+      data && data.map(item => {
+        result.push(item.id);
+      })
+      return result;
+    },
+    handleParentChange(data) {
+      console.log('ss', data);
     },
     handleSearchEmployees(res) {
       this.form.roles = [res[0].term];

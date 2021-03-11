@@ -39,13 +39,8 @@ export default {
     return axios.post('/api/b/boss/v1/staff/update', params)
   },
   // 获取员工列表
-  getStaffList(page = 1, size = 20, realName = '', staffType = '') {
-    return axios.post('/api/b/boss/v1/staff/getPage', {
-      pageNum: page,
-      pageSize: size,
-      realName,
-      staffType,
-    })
+  getStaffList(params) {
+    return axios.post('/api/b/boss/v1/staff/getPage', params)
   },
   //  员工id，姓名模糊搜索
   StaffListEx(name, params) {

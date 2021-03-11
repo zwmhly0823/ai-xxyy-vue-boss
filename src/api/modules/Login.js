@@ -36,10 +36,7 @@ export default {
    * 修改密码
    * */
   resetPwd(staffId, pwd) {
-    return axios.put(`/api/b/boss/v1/staff/resetPasswordById`, {
-      staffId: staffId,
-      password: pwd,
-    })
+    return axios.put(`/api/b/boss/v1/staff/resetPasswordById?staffId=${staffId}&password=${pwd}`)
   },
   /**
    * 查找操作日志
