@@ -114,6 +114,7 @@ export default {
         id: this.handleType === 'add' ? '' : this.editItem.id,
         status: this.handleType === 'add' ? 'TENURE' : this.editItem.status,
         roles: this.handleType === 'add' ? [] :  (this.editItem.roleList ? [this.editItem.roleList[0].id] : []),
+        departments: this.handleType === 'add' ? [] : this.editItem.departmentList[0].id,
       },
       menuOptions: [],
       devalueValue: this.handleType === 'add' ? '' : (this.editItem.roleList ? this.editItem.roleList[0].id : ''),
@@ -123,7 +124,7 @@ export default {
   mounted() {
     this.$http.Staff.getDepartmentTree()
     .then(res => {
-
+      this.menuOptions = res.payload;
     })
   },
   methods: {
