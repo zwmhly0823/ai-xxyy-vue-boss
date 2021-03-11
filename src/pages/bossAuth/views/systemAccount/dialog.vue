@@ -41,6 +41,15 @@
       <el-form-item label="真实名字" :rules="{ required: true }">
         <el-input size="medium" v-model="form.realName" />
       </el-form-item>
+      <el-form-item label="员工部门" :rules="{ required: true }">
+        <el-cascader
+          :props="{ label: 'name', value: 'id', checkStrictly: true }"
+          :options="menuOptions"
+          v-model="form.departments"
+          @change="handleParentChange"
+        >
+        </el-cascader>
+      </el-form-item>
       <el-form-item label="员工角色" :rules="{ required: true }">
         <employees-role
           employees="id"
@@ -51,9 +60,9 @@
         />
       </el-form-item>
       <el-form-item label="账号状态" :rules="{ required: true }" class="status">
-        <el-radio-group v-model="form.isLogin">
-          <el-radio label="YES">启用</el-radio>
-          <el-radio label="NO">禁用</el-radio>
+        <el-radio-group v-model="form.status">
+          <el-radio label="TENURE">启用</el-radio>
+          <el-radio label="LEAVE">禁用</el-radio>
         </el-radio-group>
       </el-form-item>
     </el-form>
@@ -98,25 +107,31 @@ export default {
   data() {
     return {
       form: {
-        userName: '' || this.editItem.user_name,
+        userName: '' || this.editItem.userName,
         password: this.handleType === 'add' ? '' : this.editItem.password,
-        mobile: '' || this.editItem.mobile,
-        realName: '' || this.editItem.real_name,
-        id: '' || this.editItem.role_id, // 员工角色id
-        isLogin:
-          '' || this.editItem.is_login === '0'
-            ? 'YES'
-            : this.editItem.is_login === '1'
-            ? 'NO'
-            : ''
+        mobile: this.handleType === 'add' ? '' : this.editItem.mobile,
+        realName: this.handleType === 'add' ? '' : this.editItem.realName,
+        id: this.handleType === 'add' ? '' : this.editItem.id,
+        status: this.handleType === 'add' ? 'TENURE' : this.editItem.status,
+        roles: this.handleType === 'add' ? [] :  (this.editItem.roleList ? [this.editItem.roleList[0].id] : []),
       },
-      devalueValue: '' || this.editItem.role_id,
+      menuOptions: [],
+      devalueValue: this.handleType === 'add' ? '' : (this.editItem.roleList ? this.editItem.roleList[0].id : ''),
       isShowDialog: false
     }
   },
+  mounted() {
+    this.$http.Staff.getDepartmentTree()
+    .then(res => {
+
+    })
+  },
   methods: {
+    handleParentChange() {
+
+    },
     handleSearchEmployees(res) {
-      this.form.id = res.length !== 0 && res[0].term
+      this.form.roles = [res[0].term];
     },
     handleSubmit() {
       const { form } = this
@@ -124,7 +139,11 @@ export default {
       if(this.handleType !== 'add'){
         delete form.password
       }
-      
+      else {
+        delete form.id
+      }
+
+      console.log('hhh', form);
       const flag = Object.keys(form).some((item) => {
         return form[item] === ''
       })

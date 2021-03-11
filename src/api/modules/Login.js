@@ -14,7 +14,7 @@ export default {
    *
    */
   getCodeByPhone(params) {
-    return axios.post(`/api/b/v1/staff/sendCode?mobile=${params.mobile}`)
+    return axios.post(`/api/b/boss/v1/auth/sendCode`, params)
   },
   /**
    * 验证码登录
@@ -30,13 +30,16 @@ export default {
   },
 
   getCurrentRouter(params) {
-    return axios.get('/api/b//boss/v1/staff/current', params)
+    return axios.get('/api/b/boss/v1/staff/current', params)
   },
   /**
    * 修改密码
    * */
   resetPwd(staffId, pwd) {
-    return axios.put(`/api/b/v1/staff/resetPwd?staffId=${staffId}&pwd=${pwd}`)
+    return axios.post(`/api/b/boss/v1/staff/resetPasswordById`, {
+      staffId: staffId,
+      password: pwd,
+    })
   },
   /**
    * 查找操作日志
