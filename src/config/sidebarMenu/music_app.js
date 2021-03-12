@@ -496,6 +496,23 @@ let bearArt = [
           module: 'toss-auth'
         }
       },
+
+      // {
+      //   path: '/teacherManagement',
+      //   name: 'teacherManagement',
+      //   meta: {
+      //     title: '角色设置',
+      //     module: 'toss-auth'
+      //   }
+      // },
+      // {
+      //   path: '/teacherManagement',
+      //   name: 'teacherManagement',
+      //   meta: {
+      //     title: '菜单分配',
+      //     module: 'toss-auth'
+      //   }
+      // },
     ],
   },
   {

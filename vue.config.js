@@ -28,7 +28,7 @@ const ossConfig = {
 
 // graphql api
 // let targetGrapqhlEnv = 'http://docker.meixiu.mobi:33401'
-let targetGrapqhlEnv = 'http://ai-xxyy-default-graphql-boss.xiaoxiongyinyue.cloud'
+let targetGrapqhlEnv = 'http://ai-xxyy-default-graphql-boss.yinyuebao.cloud'
 // let targetApiEnv = 'http://ai-xxyy-default-boss.yinyuebao.cloud'
 let targetApiEnv = 'https://ai-xxyy-default-boss-h5.xiaoxiongyinyue.com';
 let publicPath = baseUrl();

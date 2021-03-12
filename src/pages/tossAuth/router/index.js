@@ -28,6 +28,16 @@ const routes = [
         '../views/teacherManagement/teacherManage.vue'
       )
   },
+  {
+    path: '/newTeacher',
+    name: 'newTeacher',
+    meta: {
+      title: '新增老师',
+      keepAlive: false
+    },
+    component: () =>
+      import('../views/teacherManagement/components/newTeacher.vue')
+  },
 ]
 
 const router = new VueRouter({
