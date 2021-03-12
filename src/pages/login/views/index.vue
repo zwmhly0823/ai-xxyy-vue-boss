@@ -370,7 +370,7 @@ export default {
     // 通过密码登录
     async loginByPwd() {
       const pwdLoginIn = await this.$http.Login.pwdLoginIn(this.pwdLoginForm)
-      setToken(pwdLoginIn.payload.accessToken)
+      setToken(`Bearer ${pwdLoginIn.payload.accessToken}`)
 
       const authRouter = await this.$http.Login.getCurrentRouter();
       let result = {}
