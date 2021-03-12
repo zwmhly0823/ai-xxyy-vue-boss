@@ -30,24 +30,24 @@ const ossConfig = {
 // let targetGrapqhlEnv = 'http://docker.meixiu.mobi:33401'
 let targetGrapqhlEnv = 'http://ai-xxyy-default-graphql-boss.yinyuebao.cloud'
 // let targetApiEnv = 'http://ai-xxyy-default-boss.yinyuebao.cloud'
-let targetApiEnv = 'https://ai-xxyy-default-boss-h5.yinyuebao.com';
+let targetApiEnv = 'https://ai-xxyy-default-boss-h5.xiaoxiongyinyue.com';
 let publicPath = baseUrl();
 if (env === 'dev') {
-  targetGrapqhlEnv = 'http://ai-xxyy-dev-graphql-boss.yinyuebao.cloud'
-  targetApiEnv = 'http://ai-xxyy-dev-boss.yinyuebao.cloud'
+  targetGrapqhlEnv = 'http://ai-xxyy-dev-graphql-boss.xiaoxiongyinyue.cloud'
+  targetApiEnv = 'http://ai-xxyy-dev-boss.xiaoxiongyinyue.cloud'
 } else if (env === 'test') {
   // test环境
-  targetGrapqhlEnv = 'http://ai-xxyy-test-graphql-boss.yinyuebao.cloud'
-  targetApiEnv = 'http://ai-xxyy-test-boss.yinyuebao.cloud'
+  targetGrapqhlEnv = 'http://ai-xxyy-test-graphql-boss.xiaoxiongyinyue.cloud'
+  targetApiEnv = 'http://ai-xxyy-test-boss.xiaoxiongyinyue.cloud'
 } else if (env === 'prod') {
   // 预发布环境
   publicPath = publicPath + version;
-  targetGrapqhlEnv = 'http://ai-xxyy-prod-graphql-boss.yinyuebao.cloud'
-  targetApiEnv = 'http://ai-xxyy-prod-boss.yinyuebao.cloud'
+  targetGrapqhlEnv = 'http://ai-xxyy-prod-graphql-boss.xiaoxiongyinyue.cloud'
+  targetApiEnv = 'http://ai-xxyy-prod-boss.xiaoxiongyinyue.cloud'
 } else if (env === 'live') {
   publicPath = publicPath + version;
-  targetGrapqhlEnv = 'http://ai-xxyy-live-graphql-boss.yinyuebao.cloud'
-  targetApiEnv = 'http://ai-xxyy-live-boss.yinyuebao.cloud'
+  targetGrapqhlEnv = 'http://ai-xxyy-live-graphql-boss.xiaoxiongyinyue.cloud'
+  targetApiEnv = 'http://ai-xxyy-live-boss.xiaoxiongyinyue.cloud'
 }
 
 // editOperation('构建')

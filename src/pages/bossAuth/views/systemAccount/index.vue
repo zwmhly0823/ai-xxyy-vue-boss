@@ -6,117 +6,136 @@
  * @LastEditTime: 2020-11-06 18:00:25
  -->
 <template>
-  <div class="system-container">
-    <div class="content-top">
-      <m-search
-        @search="handleSearch"
-        staffname="real_name.keyword"
-        class="search-container"
-      />
-      <employees-role
-        employees="role_id"
-        @search="handleSearchEmployees"
-        class="search-container"
-      />
-      <el-button
-        type="primary"
-        class="button"
-        size="mini"
-        @click="handleAddEmployees('', 'add')"
-        >新增员工</el-button
-      >
-    </div>
-    <ele-table :dataList="tableData" :loading="loading" class="mytable">
-      <el-table-column type="index" label="序号" align="center">
-      </el-table-column>
-      <el-table-column
-        label="真实姓名"
-        min-width="80"
-        align="center"
-        prop="real_name"
-      ></el-table-column>
-      <el-table-column
-        label="手机号"
-        min-width="80"
-        align="center"
-        prop="mobile"
-      ></el-table-column>
-      <el-table-column
-        label="登录账号"
-        min-width="80"
-        align="center"
-        prop="user_name"
-      ></el-table-column>
-      <el-table-column label="员工角色" min-width="80" align="center">
-        <template slot-scope="scope">
-          <div v-for="item of roleList" :key="item.id">
-            <span>{{ scope.row.role_id === item.id ? item.name : '' }}</span>
+  <el-row type="flex" class="app-main height teacherContainer">
+    <el-col class="teacherContainer-left">
+      <div class="grid-content">
+        <left-bar @change="leftBarHandler" />
+      </div>
+    </el-col>
+    <el-col class="teacherContainer-right">
+      <div class="grid-content">
+        <div class="system-container">
+          <div class="content-top">
+            <m-search
+              @search="handleSearch"
+              staffname="realName.keyword"
+              class="search-container"
+            />
+            <employees-role
+              employees="role_id"
+              @search="handleSearchEmployees"
+              class="search-container"
+            />
+            <el-button
+              type="primary"
+              class="button"
+              size="mini"
+              @click="handleAddEmployees('', 'add')"
+              >新增员工</el-button
+            >
           </div>
-        </template>
-      </el-table-column>
-      <el-table-column label="状态" min-width="80" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.is_login === '0' ? '启用' : '禁用' }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" min-width="80">
-        <template slot-scope="scope">
-          <el-button type="text" @click="handleAddEmployees(scope.row, 'edit')"
-            >编辑</el-button
+          <ele-table :dataList="tableData" :loading="loading" class="mytable">
+            <el-table-column type="index" label="序号" align="center">
+            </el-table-column>
+            <el-table-column
+              label="真实姓名"
+              min-width="80"
+              align="center"
+              prop="realName"
+            ></el-table-column>
+            <el-table-column
+              label="手机号"
+              min-width="80"
+              align="center"
+              prop="mobile"
+            ></el-table-column>
+            <el-table-column
+              label="登录账号"
+              min-width="80"
+              align="center"
+              prop="userName"
+            ></el-table-column>
+            <el-table-column label="部门" min-width="80" align="center" prop="departmentList">
+              <template slot-scope="scope">
+                <span v-for="(item, index) of scope.row.departmentList" :key="item.id">
+                  <span v-if="index + 1 < scope.row.departmentList.length">{{item.name}}/</span>
+                  <span v-else>{{item.name}}</span>
+                </span>
+              </template>
+            </el-table-column>
+            <el-table-column label="员工角色" min-width="80" align="center" prop="roleList">
+              <template slot-scope="scope">
+                <div v-for="item of scope.row.roleList" :key="item.id">
+                  <span>{{item.name}}</span>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="状态" min-width="80" align="center">
+              <template slot-scope="scope">
+                <span>{{ scope.row.status === 'TENURE' ? '在职' : '离职' }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" align="center" min-width="80">
+              <template slot-scope="scope">
+                <el-button type="text" @click="handleAddEmployees(scope.row, 'edit')"
+                  >编辑</el-button
+                >
+                <el-button type="text" @click="handleResetPassword(scope.row)"
+                  >重置密码</el-button
+                >
+              </template>
+            </el-table-column>
+          </ele-table>
+          <m-pagination
+            @current-change="pageChange_handler"
+            :current-page="+tabQuery.page"
+            :total="totalElements"
+            open="calc(100vw - 95px - 100px)"
+            close="calc(100vw - 23px - 50px)"
+          />
+          <Dialog
+            v-if="dialogVisible"
+            :title="title"
+            :handleType="handleType"
+            :dialogVisible="dialogVisible"
+            @submit="handleSubmit"
+            @cancleDialog="cancleDialog"
+            :editItem="editItem"
+            ref="dialogForm"
+          />
+          <!-- 密码重置弹框 -->
+          <el-dialog
+            title="重置密码"
+            :visible.sync="resetPassword"
+            width="450px"
+            @close="handleSure"
           >
-          <el-button type="text" @click="handleResetPassword(scope.row)"
-            >重置密码</el-button
-          >
-        </template>
-      </el-table-column>
-    </ele-table>
-    <m-pagination
-      @current-change="pageChange_handler"
-      :current-page="+tabQuery.page"
-      :total="totalElements"
-      open="calc(100vw - 95px - 100px)"
-      close="calc(100vw - 23px - 50px)"
-    />
-    <Dialog
-      v-if="dialogVisible"
-      :title="title"
-      :handleType="handleType"
-      :dialogVisible="dialogVisible"
-      @submit="handleSubmit"
-      @cancleDialog="cancleDialog"
-      :editItem="editItem"
-      ref="dialogForm"
-    />
-    <!-- 密码重置弹框 -->
-    <el-dialog
-      title="重置密码"
-      :visible.sync="resetPassword"
-      width="450px"
-      @close="handleSure"
-    >
-      <div v-if="showTip">
-        <svg class="iconhj1" aria-hidden="true">
-          <use xlink:href="#iconhj1"></use>
-        </svg>
-        <span class="reset-name"
-          >是否确认重置员工“{{ resetCurrentName }}”的 密码</span
-        >
-        <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="handleSureReset">确 定</el-button>
-          <el-button @click="resetPassword = false">取 消</el-button>
+            <div v-if="showTip">
+              <svg class="iconhj1" aria-hidden="true">
+                <use xlink:href="#iconhj1"></use>
+              </svg>
+              <span class="reset-name"
+                >是否确认重置员工“{{ resetCurrentName }}”的 密码</span
+              >
+              <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="handleSureReset">确 定</el-button>
+                <el-button @click="resetPassword = false">取 消</el-button>
+              </div>
+            </div>
+            <div v-if="resetTip">
+              <span class="reset-name"
+                >重置成功，默认密码为“{{ defaultPassword }}”</span
+              >
+              <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="handleSure">确 定</el-button>
+                <el-button @click="handleSure">取 消</el-button>
+              </div>
+            </div>
+          </el-dialog>
         </div>
       </div>
-      <div v-if="resetTip">
-        <span class="reset-name"
-          >重置成功，默认密码为“{{ defaultPassword }}”</span
-        >
-        <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="handleSure">确 定</el-button>
-          <el-button @click="handleSure">取 消</el-button>
-        </div>
-      </div>
-    </el-dialog>
-  </div>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
@@ -129,7 +148,10 @@ export default {
       loading: false,
       tabQuery: {
         size: 20,
-        page: 1
+        page: 1,
+        realName: '',
+        staffType: '',
+        departmentId: '',
       },
       totalElements: 0,
       handleType: '',
@@ -138,42 +160,39 @@ export default {
       searchQuery: '',
       departmentQuery: '',
       resetPassword: false,
-      defaultPassword: 'MsbNB123',
+      defaultPassword: 'Msb-123456',
       resetCurrentName: '',
       resetCurrentId: '',
       showTip: false,
-      resetTip: false
+      resetTip: false,
     }
-  },
-  created() {
-    this.roleList = JSON.parse(localStorage.getItem('roleLit'))
   },
   mounted() {
     this.getStaffList()
   },
   methods: {
+    leftBarHandler(data) {
+      const query = {
+        size: 20,
+        page: 1,
+        realName: '',
+        staffType: '',
+        departmentId: data.id,
+      };
+      this.tabQuery = query;
+      this.getStaffList();
+
+    },
     // 获取员工列表
     async getStaffList() {
-      let query = {}
-      if (this.departmentQuery || this.searchQuery) {
-        query = Object.assign(
-          {},
-          this.departmentQuery || {},
-          this.searchQuery || {}
-        )
-      }
-      const queryParams = query ? JSON.stringify(query) : ''
       this.loading = true
       try {
-        const res = await this.$http.Staff.getStaffList(
-          this.tabQuery.page,
-          queryParams
-        )
+        const res = await this.$http.Staff.getStaffList(this.tabQuery);
         this.tableData =
-          res.data.StaffPage.content.length !== 0
-            ? res.data.StaffPage.content
+          res.payload.content.length !== 0
+            ? res.payload.content
             : []
-        this.totalElements = +res.data.StaffPage.totalElements
+        this.totalElements = +res.payload.totalElements
         this.loading = false
       } catch (error) {
         console.log(error)
@@ -183,14 +202,8 @@ export default {
     // 按名字搜索
     handleSearch(data) {
       if (data.length > 0) {
-        const term = {}
-        data.forEach((res) => {
-          if (res.term) {
-            Object.assign(term, res.term)
-          }
-        })
-        this.searchQuery = term
-        this.tabQuery.page = 1
+        this.tabQuery.page = 1;
+        console.log('data', data);
       } else {
         this.searchQuery = ''
       }
@@ -198,20 +211,15 @@ export default {
     },
     // 员工身份搜索
     handleSearchEmployees(data) {
-      console.log(data)
-      if (data.length > 0) {
-        const term = {}
-        data.forEach((res) => {
-          if (res.term) {
-            term.role_id = res.term
-          }
-        })
-        this.departmentQuery = term
-        this.tabQuery.page = 1
-      } else {
-        this.departmentQuery = ''
-      }
-      this.getStaffList()
+      const query = {
+        size: 20,
+        page: 1,
+        realName: this.tabQuery.realName,
+        roleId: data[0].term,
+        departmentId: this.tabQuery.id,
+      };
+      this.tabQuery = query;
+      this.getStaffList();
     },
     // 新增、编辑员工
     handleAddEmployees(item = '', type) {
@@ -228,27 +236,24 @@ export default {
     },
     // 提交表单
     async handleSubmit() {
-      const form = this.$refs.dialogForm.form
-      let params = {}
-      params.staff = Object.assign({}, form)
-      params.staff.id = this.handleType === 'add' ? '' : this.editItem.id
-      params.role = {}
-      params.role.id = form.id
-      try {
-        const res = await this.$http.Staff.addStaff(params)
-        if (res.code === 0) {
-          this.$message.success(`${this.title}成功~`)
-          this.dialogVisible = false
-          this.editItem = {}
-          this.handleType = ''
-          setTimeout(() => {
-            this.getStaffList()
-          }, 1000)
-        }
-      } catch (error) {
-        console.log(error)
+      const form = this.$refs.dialogForm.form;
+      let res;
+      if(form.id) {
+        res = await this.$http.Staff.updateStaff(form);
       }
-      params = {}
+      else {
+        res = await this.$http.Staff.addStaff(form);
+      }
+      if (res.code === 0) {
+        this.$message.success(`${this.title}成功~`)
+        this.dialogVisible = false
+        this.editItem = {}
+        this.handleType = ''
+        setTimeout(() => {
+          this.getStaffList()
+        }, 1000)
+      }
+
     },
     pageChange_handler(page) {
       this.tabQuery.page = page
@@ -257,7 +262,7 @@ export default {
     handleResetPassword(item) {
       this.resetPassword = true
       this.showTip = true
-      this.resetCurrentName = item.real_name
+      this.resetCurrentName = item.realName
       this.resetCurrentId = item.id
     },
     // 重置密码
@@ -291,7 +296,8 @@ export default {
     EmployeesRole: () => import('@/components/MSearch/index.vue'),
     Dialog: () => import('./dialog.vue'),
     EleTable: () => import('@/components/Table/EleTable'),
-    MPagination: () => import('@/components/MPagination/index.vue')
+    MPagination: () => import('@/components/MPagination/index.vue'),
+    LeftBar: () => import('./components/leftBar.vue'),
   }
 }
 </script>
@@ -325,6 +331,31 @@ export default {
   }
   .dialog-footer {
     text-align: right;
+  }
+}
+.teacherContainer {
+  &-left {
+    padding-left: 0px;
+    padding-right: 10px;
+    width: 240px;
+    overflow-x: auto;
+    // min-width: 240px;
+    border-right: 1px solid #e3e3e3;
+  }
+  &-right {
+    overflow-x: hidden;
+    flex: 1;
+    margin: 10px;
+    padding-bottom: 45px;
+  }
+  .grid-content {
+    background: white;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    &.right {
+      padding: 0;
+    }
   }
 }
 </style>

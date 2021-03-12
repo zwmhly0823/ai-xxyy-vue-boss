@@ -49,8 +49,8 @@ export default {
   methods: {
     async getRole() {
       try {
-        const res = await this.$http.Staff.getRoleList()
-        this.options = res.data.RoleList
+        const res = await this.$http.SystemRole.getRoleList()
+        this.options = res.payload.content;
         localStorage.setItem('roleLit', JSON.stringify(this.options))
       } catch (error) {
         console.log(error)

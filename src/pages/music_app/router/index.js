@@ -9,7 +9,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-// 小度活动 
+// 小度活动
 import active from '../views/active/index.vue';
 // 审批中心
 import approval from '../views/approval/router';
@@ -43,16 +43,16 @@ if (staff && staff.mobile === '15801332536') {
   uploadFilePeimission = operatingUploadList
 }
 // 超级管理员权限
-if (staff.roleId === '7') {
+// if (staff.roleId === '7') {
   superOperatingRouter = [
     ...operatingSchedule,
     ...operatingMobile
   ]
-}
+// }
 // 管理员权限
-if (staff.roleId === '1') {
+// if (staff.roleId === '1') {
   adminRouter.push(operatingMobile[0])
-}
+// }
 Vue.use(VueRouter)
 
 const routes = [
