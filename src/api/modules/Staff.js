@@ -23,7 +23,7 @@ export default {
     return axios.post('/api/b/boss/v1/department/addDepartment', params)
   },
   updateDepartment(params) {
-    return axios.post('/api/b/boss/v1/department/updateDepartment', params)
+    return axios.put('/api/b/boss/v1/department/updateDepartment', params)
   },
   getDepartmentTree(params) {
     return axios.get('/api/b/boss/v1/department/getDepartmentTree', params)
