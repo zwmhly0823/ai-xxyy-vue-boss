@@ -227,10 +227,10 @@ export default {
       try {
         let res;
         if(params.id) {
-          res = await this.$http.Staff.createDepartment(params)
+          res = await this.$http.Staff.updateDepartment(params)
         }
         else {
-          res = await this.$http.Staff.updateDepartment(params)
+          res = await this.$http.Staff.createDepartment(params)
         }
 
         if (res.code === 0) {
