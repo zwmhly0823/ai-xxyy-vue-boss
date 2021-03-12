@@ -32,6 +32,8 @@ export default {
    * 修改密码
    * */
   resetPwd(staffId, pwd) {
+    pwd = encodeURIComponent(pwd);
+    console.log(pwd, 'pwdpwdpwd')
     return axios.put(`/api/b/v1/staff/resetPwd?staffId=${staffId}&pwd=${pwd}`)
   },
   /**
