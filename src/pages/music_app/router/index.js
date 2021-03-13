@@ -39,9 +39,8 @@ let superOperatingRouter = []
 let uploadFilePeimission = []
 // 管理员、
 const adminRouter = []
-if (staff && staff.mobile === '15801332536') {
+
   uploadFilePeimission = operatingUploadList
-}
 // 超级管理员权限
 // if (staff.roleId === '7') {
   superOperatingRouter = [
