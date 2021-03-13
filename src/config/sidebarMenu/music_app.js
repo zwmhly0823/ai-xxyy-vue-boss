@@ -393,14 +393,6 @@ let bearArt = [
     },
     children: [
       {
-        path: '/systemAccount',
-        name: 'systemAccount',
-        meta: {
-          title: '系统帐号',
-          module: 'teacher'
-        }
-      },
-      {
         path: '/weixinManagement',
         name: 'weixinManagement',
         meta: {

@@ -48,7 +48,7 @@
 
       <el-table-column label="创建时间" align="center" prop="createTime">
         <template slot-scope="scope">
-          <span>{{ scope.row.ctime }}</span>
+          <span>{{ formatTime(scope.row.ctime) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -152,6 +152,7 @@
 
 <script>
 import { Message } from 'element-ui'
+import moment from 'moment'
 
 let parentIds = [];
 
@@ -203,6 +204,9 @@ export default {
     this.getTreeList();
   },
   methods: {
+    formatTime(stamp) {
+      return moment.unix(stamp.substring(0, 10)).format('YYYY-MM-DD HH:mm:ss')
+    },
     getParentId(id, data) {
       data.map(item => {
         if (item.id === '0') {
