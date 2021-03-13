@@ -16,11 +16,11 @@
       <div class="grid-content">
         <div class="system-container">
           <div class="content-top">
-            <m-search
+            <!-- <m-search
               @search="handleSearch"
               staffname="realName.keyword"
               class="search-container"
-            />
+            /> -->
             <employees-role
               employees="role_id"
               @search="handleSearchEmployees"
@@ -88,7 +88,7 @@
           </ele-table>
           <m-pagination
             @current-change="pageChange_handler"
-            :current-page="+tabQuery.page"
+            :current-page="+tabQuery.pageNum"
             :total="totalElements"
             open="calc(100vw - 95px - 100px)"
             close="calc(100vw - 23px - 50px)"
@@ -147,8 +147,8 @@ export default {
       tableData: [],
       loading: false,
       tabQuery: {
-        size: 20,
-        page: 1,
+        pageSize: 20,
+        pageNum: 1,
         realName: '',
         staffType: '',
         departmentId: '',
@@ -173,8 +173,8 @@ export default {
   methods: {
     leftBarHandler(data) {
       const query = {
-        size: 20,
-        page: 1,
+        pageSize: 20,
+        pageNum: 1,
         realName: '',
         staffType: '',
         departmentId: data.id,
@@ -202,7 +202,7 @@ export default {
     // 按名字搜索
     handleSearch(data) {
       if (data.length > 0) {
-        this.tabQuery.page = 1;
+        this.tabQuery.pageNum = 1;
         console.log('data', data);
       } else {
         this.searchQuery = ''
@@ -212,8 +212,8 @@ export default {
     // 员工身份搜索
     handleSearchEmployees(data) {
       const query = {
-        size: 20,
-        page: 1,
+        pageSize: 20,
+        pageNum: 1,
         realName: this.tabQuery.realName,
         roleId: data[0].term,
         departmentId: this.tabQuery.id,
@@ -256,7 +256,7 @@ export default {
 
     },
     pageChange_handler(page) {
-      this.tabQuery.page = page
+      this.tabQuery.pageNum = page
       this.getStaffList()
     },
     handleResetPassword(item) {
@@ -292,7 +292,7 @@ export default {
     }
   },
   components: {
-    MSearch: () => import('@/components/MSearch/index.vue'),
+    // MSearch: () => import('@/components/MSearch/index.vue'),
     EmployeesRole: () => import('@/components/MSearch/index.vue'),
     Dialog: () => import('./dialog.vue'),
     EleTable: () => import('@/components/Table/EleTable'),
