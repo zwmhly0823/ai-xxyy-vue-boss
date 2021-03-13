@@ -333,7 +333,7 @@ let bearArt = [
     ]
   },
   {
-    path: '/marketing',
+    path: '/marketingCenter',
     name: 'marketing',
     meta: {
       title: '营销中心',
@@ -341,35 +341,36 @@ let bearArt = [
       module: 'marketing'
       // module
     },
-    children: [{
-      path: '/marketing',
-      name: 'marketing',
-      meta: {
-        title: '码库',
-        module: 'marketing',
-        // module,
-        style: 'line'
+    children: [
+      {
+        path: '/marketing',
+        name: 'marketing',
+        meta: {
+          title: '码库',
+          module: 'marketing',
+          // module,
+          style: 'line'
+        }
+      },
+      {
+        path: '/coupon',
+        name: 'coupon',
+        meta: {
+          title: '优惠券',
+          module: 'marketing',
+          // module,
+          style: 'line'
+        }
+      },
+      {
+        path: '/whites',
+        name: 'whites',
+        meta: {
+          title: '用户白名单',
+          module: 'marketing',
+          show: true
+        }
       }
-    },
-    {
-      path: '/coupon',
-      name: 'coupon',
-      meta: {
-        title: '优惠券',
-        module: 'marketing',
-        // module,
-        style: 'line'
-      }
-    },
-    {
-      path: '/whites',
-      name: 'whites',
-      meta: {
-        title: '用户白名单',
-        module: 'marketing',
-        show: true
-      }
-    }
     ]
   },
   {
@@ -488,23 +489,6 @@ let bearArt = [
           module: 'toss-auth'
         }
       },
-
-      // {
-      //   path: '/teacherManagement',
-      //   name: 'teacherManagement',
-      //   meta: {
-      //     title: '角色设置',
-      //     module: 'toss-auth'
-      //   }
-      // },
-      // {
-      //   path: '/teacherManagement',
-      //   name: 'teacherManagement',
-      //   meta: {
-      //     title: '菜单分配',
-      //     module: 'toss-auth'
-      //   }
-      // },
     ],
   },
   {
