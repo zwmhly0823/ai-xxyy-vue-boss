@@ -73,18 +73,20 @@ export default {
           }
         })
       }
-      result.map(like => {
-        let arr = []
-        if (like.children) {
-          menuList.map((author, i) => {
-            let router = parseAuthorRouters(like.children, author)
-            if (router) {
-              arr.push(router)
-            }
-          })
-          like.children = arr
-        }
-      })
+      if(menuList && menuList.length > 0) {
+        result.map(like => {
+          let arr = []
+          if (like.children) {
+            menuList.map((author, i) => {
+              let router = parseAuthorRouters(like.children, author)
+              if (router) {
+                arr.push(router)
+              }
+            })
+            like.children = arr
+          }
+        })
+      }
       return result;
     },
    
