@@ -49,7 +49,7 @@
         width="180"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.ctime }}</span>
+          <span>{{  formatTime(scope.row.ctime) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -134,6 +134,7 @@
 
 <script>
 import { Message } from 'element-ui'
+import moment from 'moment';
 export default {
   name: 'Role',
   data() {
@@ -217,6 +218,9 @@ export default {
     this.getMenuTree();
   },
   methods: {
+    formatTime(stamp) {
+      return moment.unix(stamp.substring(0, 10)).format('YYYY-MM-DD HH:mm:ss')
+    },
     handlePageChange() {
       this.getList();
     },

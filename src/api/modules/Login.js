@@ -20,7 +20,7 @@ export default {
    * 验证码登录
    * */
   codeLoginIn(params) {
-    return axios.post(`/api/b/v1/staff/mobileLogin`, params)
+    return axios.post(`/api/b/boss/v1/auth/mobileLogin`, params)
   },
   /**
    * 密码登录

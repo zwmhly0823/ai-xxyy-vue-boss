@@ -15,38 +15,29 @@ const routes = [
     },
     redirect: '/teacherManagement'
   },
-  {
-    path: '/teacherManagement',
-    name: 'teacherManagement',
-    meta: {
-      title: '销售管理',
-      keepAlive: true
-    },
-    component: () =>
-      import(
-        /* webpackChunkName: "teacherManagement" */
-        '../views/teacherManagement/teacherManage.vue'
-      )
-  },  {
-    path: '/newTeacher',
-    name: 'newTeacher',
-    meta: {
-      title: '新增员工账号',
-      keepAlive: false
-    },
-    component: () =>
-      import('../views/teacherManagement/components/newTeacher.vue')
-  },
-  {
-    path: '/newTeacher',
-    name: 'newTeacher',
-    meta: {
-      title: '新增老师',
-      keepAlive: false
-    },
-    component: () =>
-      import('../views/teacherManagement/components/newTeacher.vue')
-  },
+  // {
+  //   path: '/teacherManagement',
+  //   name: 'teacherManagement',
+  //   meta: {
+  //     title: '销售管理',
+  //     keepAlive: true
+  //   },
+  //   component: () =>
+  //     import(
+  //       /* webpackChunkName: "teacherManagement" */
+  //       '../views/teacherManagement/teacherManage.vue'
+  //     )
+  // },
+  // {
+  //   path: '/newTeacher',
+  //   name: 'newTeacher',
+  //   meta: {
+  //     title: '新增老师',
+  //     keepAlive: false
+  //   },
+  //   component: () =>
+  //     import('../views/teacherManagement/components/newTeacher.vue')
+  // },
 ]
 
 const router = new VueRouter({
