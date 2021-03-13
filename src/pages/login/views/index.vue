@@ -388,9 +388,19 @@ export default {
     async loginBycode() {
       const codeLoginIn = await this.$http.Login.codeLoginIn(this.codeLoginForm)
 
+      setToken(`Bearer ${codeLoginIn.payload.accessToken}`)
+      const authRouter = await this.$http.Login.getCurrentRouter();
+      let result = {}
+
+
       if (codeLoginIn && codeLoginIn.payload) {
-        return codeLoginIn.payload
+        result.accessToken = codeLoginIn.payload.accessToken
       }
+      if (authRouter && authRouter.payload) {
+        result.staff = authRouter.payload.staff;
+        result.menuList = authRouter.payload.menuList;
+      }
+      return result;
     },
     // 切换密码小眼睛
     showPwd() {
