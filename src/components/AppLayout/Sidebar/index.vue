@@ -87,6 +87,7 @@ export default {
           }
         })
       }
+      console.log('result', result);
       return result;
     },
     // 高亮选中状态
