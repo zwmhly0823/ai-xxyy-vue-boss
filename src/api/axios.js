@@ -63,6 +63,8 @@ axios.interceptors.response.use(
           case '0':
             _data = null
             break
+          case 401:
+            location.href = `/login/#/`
           case '2':
           default:
             window._Vue.$message.error(_data.errors || `服务器异常: api-${url}`)
