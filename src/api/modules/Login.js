@@ -14,7 +14,7 @@ export default {
    *
    */
   getCodeByPhone(params) {
-    return axios.post(`/api/b/boss/v1/auth/sendCode`, params)
+    return axios.get(`/api/b/boss/v1/auth/sendCode`, params)
   },
   /**
    * 验证码登录
