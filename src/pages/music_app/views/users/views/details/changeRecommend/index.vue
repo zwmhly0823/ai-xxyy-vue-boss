@@ -75,6 +75,12 @@ import { formatDate } from '@/utils/mini_tool_lk'
 
 export default {
   name: 'changeRecommend',
+  props: {
+    pUserId: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
       tableData: [],
@@ -82,7 +88,7 @@ export default {
         new Date().getFullYear(),
         new Date().getMonth()
       ).valueOf(),
-      searchJson: { pageNum: 1, pageSize: 100, userId: this.$route.params.id }
+      searchJson: { pageNum: 1, pageSize: 100, userId: this.pUserId }
     }
   },
 

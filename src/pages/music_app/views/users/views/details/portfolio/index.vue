@@ -199,6 +199,12 @@ import { formatData } from '@/utils/index'
 import {courseLevelReplace} from "@/utils/supList.js"
 export default {
   name: 'portfolio',
+  props: {
+    pUserId: {
+      type: String,
+      default: ''
+    }
+  },
   mounted() {
     this.$root.$on('portfolio', (...argus) => {
       console.info('老爹给作品集的基础数据和写字0元体验', argus[0], argus[1])
@@ -316,12 +322,12 @@ export default {
       this.$http.User.getStudentCourseTaskPage({
         page: this.currentPage,
         subject: this.changeSubject,
-        studentId: this.$route.params.id,
+        studentId: this.pUserId,
 
         teamId: this.teamId, // 班级Id
         courseId: this.courseId // 写字0元体验课
       }).then((res) => {
-        console.log('作品集模块接口', res.data.StudentCourseTaskPage.content)
+        console.log('作品集模块接口', res)
         const _data =
           res.data.StudentCourseTaskPage &&
           res.data.StudentCourseTaskPage.content

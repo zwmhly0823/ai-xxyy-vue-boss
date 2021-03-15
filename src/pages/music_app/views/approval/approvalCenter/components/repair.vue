@@ -1,6 +1,6 @@
 <!--
- * @Descripttion: 
- * @version: 
+ * @Descripttion:
+ * @version:
  * @Author: Lukun
  * @Date: 2020-04-28 13:50:45
  * @LastEditors: liukun
@@ -194,12 +194,12 @@
               >
                 产品质量问题
               </el-radio>
-              <el-radio
+              <!-- <el-radio
                 v-show="formRepair.mode === 'SINGLE'"
                 label="SINGLE_PIGMENT_LEAKAGE"
               >
                 颜料撒漏
-              </el-radio>
+              </el-radio> -->
             </template>
             <el-radio label="OTHER">其他</el-radio>
           </el-radio-group>
@@ -280,7 +280,7 @@
         @selection-change="handleSelectionChange"
         align="center"
       >
-      
+
           <!-- v-if="formRepair.mode === 'SINGLE'" -->
         <el-table-column
           type="selection"
@@ -835,7 +835,7 @@ export default {
         if (resSysData) {
           // console.log(resSysData)
           this.formRepair.currentLesson = `${SUP_LEVEL_ALL[resSysData.currentSuper]}${resSysData.currentLevel}${resSysData.currentUnit}${resSysData.currentLesson}`
-          
+
           // console.log(this.formRepair.currentLesson)
           this.now = new Date().getTime()
         }

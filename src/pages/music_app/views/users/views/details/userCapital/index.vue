@@ -21,7 +21,7 @@
         :label="{ 0: '小熊币', 1: '点点币' }[changeSubject]"
         name="assetBearCoin"
       >
-        <coinComponent :changeSubject="changeSubject" />
+        <coinComponent :changeSubject="changeSubject" :pUserId="pUserId"  />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -31,6 +31,12 @@ import couponComponent from './couponComponent'
 import coinComponent from './coinComponent'
 
 export default {
+  props: {
+    pUserId: {
+      type: String,
+      default: ''
+    }
+  },
   components: {
     couponComponent,
     coinComponent
@@ -59,7 +65,7 @@ export default {
       const {
         data: { UserExtends }
       } = await this.$http.User._reqGetUserTop({
-        u_id: this.$route.params.id,
+        u_id: this.pUserId,
         subject: this.changeSubject
       }).catch((err) => {
         console.error(err)

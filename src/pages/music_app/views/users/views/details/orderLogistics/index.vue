@@ -116,6 +116,12 @@ import ExpressDetail from '@/components/art_app/expressDetail'
 import {courseLevelReplace} from "@/utils/supList.js"
 export default {
   name: 'logistics',
+  props: {
+    pUserId: {
+      type: String,
+      default: ''
+    }
+  },
   components: {
     ExpressDetail
   },
@@ -153,7 +159,7 @@ export default {
     // 数据接口_订单·物流
     reqgetOrderPage() {
       this.$http.User.getOrderPage(
-        this.$route.params.id, // studentId
+        this.pUserId, // studentId
         this.currentPage
       ).then((res) => {
         console.log('订单物流模块接口', res.data.OrderPage.content)

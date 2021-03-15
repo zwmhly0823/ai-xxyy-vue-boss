@@ -109,6 +109,10 @@ export default {
     changeSubject: {
       type: Number,
       required: true
+    },
+    pUserId: {
+      type: String,
+      default: ''
     }
   },
   data() {

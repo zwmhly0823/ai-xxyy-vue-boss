@@ -391,7 +391,7 @@
               <span v-else>完课/放课</span>
               <span
                 >{{
-                 
+
                     (experience_lk.all_complete_course_count || '0')
                 }}次</span
               ><span style="color:#00000000">g</span
@@ -655,11 +655,17 @@ import { formatDate } from '@/utils/mini_tool_lk'
 import { SUP_LEVEL_UPPER,SUP_LEVEL_ALL, formatTeamNameSup,courseLevelReplace } from '@/utils/supList'
 
 export default {
+  props: {
+    pUserId: {
+      type: String,
+      default: ''
+    }
+  },
   created() {
     this.tiyan0()
     this.tiyan()
     this.xitong()
-    
+
   },
   data() {
     return {
@@ -667,7 +673,7 @@ export default {
       experience_lk: {},
       systerm_lk: {},
       loading: false,
-      userId: this.$route.params.id,
+      userId: this.pUserId,
       changeSubject: this.$store.state.subjects.subjectCode,
       SUP_LEVEL_UPPER,SUP_LEVEL_ALL,
       formatTeamNameSup,
@@ -704,14 +710,14 @@ export default {
       const {
         data: { StudentTrialV2Statistics }
       } = await this.$http.User.StudentTrialV2Statistics({
-        id: this.$route.params.id,
+        id: this.userId,
         subject: this.changeSubject,
         team_id: 0
       }).catch((err) => {
         console.error(err)
         this.$message.error('该学员0元体验课信息获取失败')
       })
-    
+
       if (StudentTrialV2Statistics) {
         StudentTrialV2Statistics.buytime = formatDate(
           +StudentTrialV2Statistics.buytime
@@ -731,7 +737,7 @@ export default {
         }[String(StudentTrialV2Statistics.express_status)]
         console.info('0000000', StudentTrialV2Statistics)
         this.experience_lk0 = StudentTrialV2Statistics
-        
+
       } else {
         this.experience_lk0 = {}
       }
@@ -741,7 +747,7 @@ export default {
       const {
         data: { StudentTrialV2Statistics }
       } = await this.$http.User.StudentTrialV2Statistics({
-        id: this.$route.params.id,
+        id: this.userId,
         subject: this.changeSubject,
         team_id: { gt: 0 }
       }).catch((err) => {
@@ -775,7 +781,7 @@ export default {
       const {
         data: { StudentSystemStatisticsList }
       } = await this.$http.User.StudentSystemStatisticsList({
-        studentid: this.$route.params.id,
+        studentid: this.userId,
         subject: this.changeSubject
       }).catch((err) => {
         console.error(err)
