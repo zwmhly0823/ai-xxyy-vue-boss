@@ -16,18 +16,16 @@
               <p>
                 <span v-if="params.courseType == '0'">体验课</span>
                 <span v-else>系统课</span>
-                <span>-</span
-                ><span>{{ scheduleStatistic.periodName || '-' }}</span>
+                <span>-</span>
+                <span>{{ scheduleStatistic.periodName || '-' }}</span>
               </p>
-              <el-button type="primary" size="mini" @click="modify"
-                >修改</el-button
-              >
+              <el-button type="primary" size="mini" @click="modify">修改</el-button>
             </div>
             <el-row :gutter="20">
               <el-col class="label-name" :span="2">排期id:</el-col>
               <el-col :span="2">{{ scheduleStatistic.period || '-' }}</el-col>
               <!-- <el-col class="label-name" :span="2">接速设置:</el-col>
-              <el-col :span="2">{{ scheduleStatistic.robinNum || '' }}</el-col> -->
+              <el-col :span="2">{{ scheduleStatistic.robinNum || '' }}</el-col>-->
             </el-row>
             <el-row :gutter="20">
               <el-col class="label-name" :span="2">开始招生:</el-col>
@@ -64,7 +62,7 @@
             >
             <el-tab-pane label="售卖周期设置" disabled
               >售卖周期设置</el-tab-pane
-            > -->
+            >-->
           </el-tabs>
         </div>
       </el-scrollbar>
@@ -147,6 +145,10 @@ export default {
     // 点击修改按钮
     modify() {
       const { period = 0, courseType = '0' } = this.params
+
+      var staff = JSON.parse(localStorage.getItem('staff'))
+      staff.stepStatus = 1
+      localStorage.setItem('staff', JSON.stringify(staff))
 
       this.$router.push({ path: `/addSchedule/${period}/${courseType}` })
     }

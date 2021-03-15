@@ -1,5 +1,5 @@
 <!--
- * @Descripttion: 
+ * @Descripttion:
  * @version: 1.0.0
  * @Author: zhangjiawen
  * @Date: 2020-10-23 22:18:39
@@ -205,13 +205,15 @@ export default {
     drawer
   },
   created() {
+    const roleList = JSON.parse(localStorage.getItem('staff')).roleList;
+    let roleId = roleList ? roleList[0] : '';
+    this.roleId = roleId;
     // init全量数据展示
     this.arrangeParams()
-    console.log('test')
   },
   data() {
     return {
-      roleId: JSON.parse(localStorage.getItem('staff')).roleId || '',
+      roleId: '',
       selectData: [],
       searchJson: {
         regType: '', // 业务类型

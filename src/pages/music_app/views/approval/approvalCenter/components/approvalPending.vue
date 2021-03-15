@@ -1,6 +1,6 @@
 <!--
- * @Descripttion: 
- * @version: 
+ * @Descripttion:
+ * @version:
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
@@ -1161,7 +1161,9 @@ export default {
   },
   created() {
     // 身份类型，4是财务，具体见wiki
-    this.roleId = JSON.parse(localStorage.getItem('staff')).roleId
+    const roleList = JSON.parse(localStorage.getItem('staff')).roleList;
+    let roleId = roleList ? roleList[0] : '';
+    this.roleId = roleId;
     this.getRoleIdList()
   },
   mounted() {
@@ -1653,7 +1655,7 @@ export default {
       }
       // 无归属订单详情
       if (type === 'UNCREDITED') {
-        
+
         this.$http.Backend.getNoAttributionDetail(id).then((res) => {
           if (res && res.payload) {
             res.payload.orderTime = timestamp(res.payload.orderTime, 2)
@@ -1663,7 +1665,7 @@ export default {
             this.drawerApprovalDeatail.chat_url = res.payload.chatUrl[0]
             this.drawerApprovalDeatail.pay_url = res.payload.paymentUrl[0]
             this.drawerApproval = true
-            
+
           }
         })
       }

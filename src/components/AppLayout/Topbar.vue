@@ -316,7 +316,8 @@ export default {
     handleChangeSubject(command, isNew = false) {
       console.log(command, isNew)
       // 如果角色是教研（roleId=18）,跳转到 设置-员工帐号
-      const { roleId = '' } = this.userInfo
+      const { roleList = [] } = this.userInfo
+      let roleId = roleList.length > 0 ? roleList[0] : '';
       let path = `${baseUrl()}music_app/#/trial`
       if (command !== 'art_app') {
         path =
@@ -336,7 +337,8 @@ export default {
     openNewTab(key) {
       console.log(key, 'new tab')
       // 如果角色是教研（roleId=18）,跳转到 设置-员工帐号
-      const { roleId = '' } = this.userInfo
+      const { roleList = [] } = this.userInfo
+      let roleId = roleList.length > 0 ? roleList[0] : '';
       let path = `/music_app/#/trial`
       // 非小熊美术
       if (key !== 'art_app') {
