@@ -1036,7 +1036,11 @@ export default {
   computed: {
     formatDate: () => formatDate,
     positionIdlk() {
-      return JSON.parse(localStorage.getItem('staff')).positionId
+      const departmentList = JSON.parse(localStorage.getItem('staff')).departmentList;
+      if(departmentList && departmentList.length > 0) {
+        return departmentList [0];
+      }
+      return ''
     }
   },
   props: ['typeTime', 'activeName'],

@@ -56,7 +56,7 @@ function getStaff(staffInfo) {
     {
       staffId: staff.id,
       staffName: staff.realName,
-      isStaffId: staff.positionId === '1'
+      isStaffId: staff.departmentList && staff.departmentList.length > 0 && staff.departmentList[0] === '1'
     }
   )
 }
