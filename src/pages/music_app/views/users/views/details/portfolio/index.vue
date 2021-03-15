@@ -396,12 +396,12 @@ export default {
       this.$http.User.getStudentCourseTaskPage({
         page: this.currentPage,
         subject: this.changeSubject,
-        studentId: this.$route.params.id,
+        studentId: this.pUserId,
 
         teamId: this.teamId, // 班级Id
         courseId: this.courseId // 写字0元体验课
       }).then((res) => {
-        console.log('作品集模块接口', res.data.StudentCourseTaskPage.content)
+        console.log('作品集模块接口', res)
         const _data =
           res.data.StudentCourseTaskPage &&
           res.data.StudentCourseTaskPage.content

@@ -149,7 +149,7 @@
       <div class="rawer-bot">
         <el-button
           type="primary"
-          v-show="+roleId === 4 && ![5].includes(orderData.status)"
+          v-show="![5].includes(orderData.status)"
           @click="comfirmRefund"
           >发起退款支付</el-button
         >
@@ -236,6 +236,7 @@ export default {
     const roleList = JSON.parse(localStorage.getItem('staff')).roleList;
     let roleId = roleList ? roleList[0] : '';
     this.roleId = roleId;
+    console.log('ddd', this.roleId);
   },
   mounted() {
     console.log('参数', this.orderData)

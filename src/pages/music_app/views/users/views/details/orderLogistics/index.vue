@@ -50,6 +50,12 @@ import Normal from './normal'
 import Reissue from './Reissue'
 export default {
   name: 'logistics',
+  props: {
+    pUserId: {
+      type: String,
+      default: ''
+    }
+  },
   components: {
     ExpressDetail,
     Normal,
@@ -82,7 +88,7 @@ export default {
       this.order_id = val.order_id
       this.experId = val.id
       this.$refs.order_id.drawer = true
-      
+
       // let expressNu = val.express_nu
 
       // const query = {

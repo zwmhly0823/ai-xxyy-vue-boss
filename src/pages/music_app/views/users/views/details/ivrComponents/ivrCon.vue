@@ -91,6 +91,12 @@ import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'
 import { formatData } from '@/utils/index'
 export default {
   name: 'ivrCon',
+  props: {
+    pUserId: {
+      type: String,
+      default: ''
+    }
+  },
   components: {
     DatePicker
   },
@@ -124,10 +130,6 @@ export default {
       ]
     }
   },
-  created() {
-    this.initSwitch()
-    this.reqNotifyPage()
-  },
   watch: {
     bubbleData: {
       immediate: false,
@@ -136,13 +138,19 @@ export default {
         console.warn('搜索条件发生变化', newValue)
         this.reqNotifyPage(newValue)
       }
+    },
+    pUserId(newValue, oldValue) {
+      this.initSwitch()
+      this.reqNotifyPage()
     }
   },
   methods: {
     // table数据√
     reqNotifyPage(data = {}) {
+
+      console.log('reqNotifyPage', this.pUserId)
       const query = {
-        userId: this.$route.params.id, // 锁
+        userId: this.pUserId, // 锁
         pageSize: 20, // 锁
         pageNum: this.currentPage,
         sjstime: '',
@@ -285,8 +293,9 @@ export default {
     },
     // 改变switch接口√
     ivrSwitchChange(res) {
+      console.log('ivrSwitchChange', this.pUserId);
       this.$http.User.changeSwitchStatus({
-        userId: this.$route.params.id,
+        userId: this.pUserId,
         status: this.ivrSwitch
       })
         .then((res) => {
@@ -306,7 +315,8 @@ export default {
     },
     // 获取switch状态接口√
     initSwitch() {
-      this.$http.User.getSwitchStatus({ userId: this.$route.params.id })
+      console.log('initSwitch', this.pUserId)
+      this.$http.User.getSwitchStatus({ userId: this.pUserId })
         .then((res) => {
           if (res.payload && res.payload.status) {
             this.ivrSwitch = res.payload.status
