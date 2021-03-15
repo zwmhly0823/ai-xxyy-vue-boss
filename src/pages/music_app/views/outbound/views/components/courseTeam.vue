@@ -1,6 +1,6 @@
 <!--
- * @Descripttion: 
- * @version: 
+ * @Descripttion:
+ * @version:
  * @Author: Lukun
  * @Date: 2020-05-16 17:43:36
  * @LastEditors: YangJiyong
@@ -59,7 +59,9 @@
 <script>
 import { debounce } from 'lodash'
 import axios from '@/api/axiosConfig'
-const positionId = Number(JSON.parse(localStorage.getItem('staff')).positionId)
+
+const departmentList = JSON.parse(localStorage.getItem('staff')).departmentList;
+const positionId = departmentList && departmentList.length > 0 ? departmentList[0] : '';
 export default {
   props: {
     // 老师ID,通过老师获取对应的排期

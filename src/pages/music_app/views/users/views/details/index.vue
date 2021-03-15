@@ -190,7 +190,7 @@
             <studyRecord :stuInforAdd="stuInfor_add" :stuInfor="stuInfor" :tab="tabData" />
           </el-tab-pane>
           <el-tab-pane label="作品集" name="collectionOf">
-            <portfolio />
+            <portfolio :pUserId="studentId" />
           </el-tab-pane>
           <el-tab-pane label="学习周报" name="studyWeekly" v-if="changeSubject === 0">
             <studyWeekly />
@@ -205,7 +205,7 @@
             <capital :tab="tabData" :stuInforAdd="stuInfor_add" />
           </el-tab-pane>
           <el-tab-pane label="转介绍" name="changeRecommend">
-            <changeRecommend />
+            <changeRecommend :pUserId="studentId" />
           </el-tab-pane>
           <el-tab-pane label="审批记录" name="approvalRecord">
             <approval-record :stuInfor_add="stuInfor_add.mobile" />

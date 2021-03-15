@@ -11,7 +11,7 @@ Vue.use(VueRouter)
 const staff = JSON.parse(localStorage.getItem('staff'))
 var systemAccount = []
 
-if (staff.roleId == 7 || staff.roleId == 1) {
+if (staff.roleList && staff.roleList[0] === '7' || staff.staff.roleList[0] === '1') {
   systemAccount = [{
     path: '/systemAccount',
     name: 'systemAccount',

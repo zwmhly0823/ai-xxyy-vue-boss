@@ -1,6 +1,6 @@
 <!--
- * @Descripttion: 
- * @version: 
+ * @Descripttion:
+ * @version:
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
@@ -823,7 +823,7 @@ export default {
         MULTI_TIMEOUT_RETURN: '超时退回',
         MULTI_ADJUSTMENT_SUP: '调级补发',
         SINGLE_QUALITY: '产品质量问题',
-        SINGLE_PIGMENT_LEAKAGE: '颜料撒漏'
+        // SINGLE_PIGMENT_LEAKAGE: '颜料撒漏'
       },
       courseOptions: { TESTCOURSE: '体验课', SYSTEMCOURSE: '系统课' },
       currentType: ''
@@ -1250,7 +1250,7 @@ export default {
             item.receptContent = this.courseLevelReplace(zhaiyao[2])
             item.reason = this.courseLevelReplace(zhaiyao[3])
             item.refundTypeStr = this.courseLevelReplace(zhaiyao[4])
-            
+
             item.openTime = timestamp(item.ctime, 2)
             item.approveTime = timestamp(item.endTime, 2)
             // item.applyDepartment = ''

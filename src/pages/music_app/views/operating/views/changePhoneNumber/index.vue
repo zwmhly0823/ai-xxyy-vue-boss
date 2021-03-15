@@ -92,7 +92,7 @@
             <el-table-column prop="name" label="修改人">
               <template
                 slot-scope="scope"
-              >{{ (scope.row.staff && scope.row.staff.real_name) || '-' }}</template>
+              >{{ (scope.row.staff && scope.row.staff.realName) || '-' }}</template>
             </el-table-column>
             <el-table-column prop="utime_text" label="修改时间"></el-table-column>
             <!-- <el-table-column label="操作">

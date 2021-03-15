@@ -1,5 +1,5 @@
 <!--
- * @Descripttion: 
+ * @Descripttion:
  * @version: 1.0.0
  * @Author: zhangjiawen
  * @Date: 2020-10-23 22:18:39
@@ -106,7 +106,7 @@
         </el-form-item>
       </el-form>
       <div>
-        <el-button v-show="+roleId === 4" type="primary" @click.stop="BatchRefund">批量发起退款支付</el-button>
+        <el-button type="primary" @click.stop="BatchRefund">批量发起退款支付</el-button>
       </div>
     </div>
     <el-divider></el-divider>
@@ -205,13 +205,15 @@ export default {
     drawer
   },
   created() {
+    const roleList = JSON.parse(localStorage.getItem('staff')).roleList;
+    let roleId = roleList ? roleList[0] : '';
+    this.roleId = roleId;
     // init全量数据展示
     this.arrangeParams()
-    console.log('test')
   },
   data() {
     return {
-      roleId: JSON.parse(localStorage.getItem('staff')).roleId || '',
+      roleId: '',
       selectData: [],
       searchJson: {
         regType: '', // 业务类型
