@@ -831,7 +831,6 @@ export default {
   },
   created() {
     const staff = getStaffInfo()
-    console.log(staff, 'staff')
 
     this.resetParams = staff
     this.staffName = staff.staffName

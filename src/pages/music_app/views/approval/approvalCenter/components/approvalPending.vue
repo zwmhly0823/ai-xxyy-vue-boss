@@ -1185,7 +1185,7 @@ export default {
       page: 1,
       size: 20
     }
-    this.params.isOperation = this.isStaffId
+    this.params.isOperation = this.isStaffId ? this.isStaffId : false
     // lk 为3,4 初始拿数据就得带上_课程类型参数保证看到的搜索条件与结果一致↓↓
     if (this.positionIdlk === '0' || this.positionIdlk === '1') {
       // 父组件mounted时刻请求数据 0,1不带课程类型参数 拿全量
