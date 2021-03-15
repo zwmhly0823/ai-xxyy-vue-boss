@@ -160,6 +160,12 @@ import { formatData } from '@/utils/index'
 import { courseLevelReplace } from '@/utils/supList'
 export default {
   name: 'studyRecord',
+  props: {
+    pUserId: {
+      type: String,
+      default: ''
+    }
+  },
   mounted() {
     this.$root.$on('study', (...argus) => {
       console.info('老爹给学习记录的基础数据和写字0元体验', argus[0], argus[1])
@@ -252,7 +258,7 @@ export default {
       this.$http.User.getSendCourseLogPage({
         page: this.currentPage,
         subject: this.changeSubject,
-        studentId: this.$route.params.id,
+        studentId: this.pUserId,
 
         teamId: this.teamId, // 班级Id
         lessonType: this.lessonType, // 课程类型

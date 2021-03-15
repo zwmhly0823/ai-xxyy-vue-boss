@@ -1,5 +1,5 @@
 <!--
- * @Descripttion: 
+ * @Descripttion:
  * @version: 1.0.0
  * @Author: zhangjiawen
  * @Date: 2020-12-09 15:49:39
@@ -146,7 +146,7 @@ export default {
       const { username, mobile, userId } = val
       // 新标签打开详情页
       openBrowserTab(
-        `/music_app/#/details/${userId}`,
+        `/music_app/#/details/${userId}/true`,
         `学员：${username || mobile}`
       )
     },

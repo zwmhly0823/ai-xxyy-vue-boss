@@ -100,7 +100,7 @@
       </section>
     </div>
     <div v-else class="no-data">暂无数据</div>
-    <trackMore ref="track_more" :changeSubject="changeSubject" />
+    <trackMore :pUserId="pUserId" ref="track_more" :changeSubject="changeSubject" />
   </div>
 </template>
 
@@ -109,6 +109,12 @@ import { formatDate } from '@/utils/mini_tool_lk'
 import trackMore from './track_more'
 export default {
   name: 'index',
+  props: {
+    pUserId: {
+      type: String,
+      default: ''
+    }
+  },
   components: { trackMore },
   data() {
     return {
@@ -134,7 +140,7 @@ export default {
         }
       } = await this.$http.User.getTrackList({
         subject: this.changeSubject,
-        uid: this.$route.params.id
+        uid: this.pUserId
       }).catch((err) => {
         this.$message.error('flow更多数据获取失败')
         console.error(err)

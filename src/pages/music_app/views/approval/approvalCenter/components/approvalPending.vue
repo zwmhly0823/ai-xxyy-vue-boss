@@ -1146,7 +1146,7 @@ export default {
         MULTI_TIMEOUT_RETURN: '超时退回',
         MULTI_ADJUSTMENT_SUP: '调级补发',
         SINGLE_QUALITY: '产品质量问题',
-        SINGLE_PIGMENT_LEAKAGE: '颜料撒漏'
+        // SINGLE_PIGMENT_LEAKAGE: '颜料撒漏'
       },
       courseOptions: { TESTCOURSE: '体验课', SYSTEMCOURSE: '系统课' },
       currentType: '',

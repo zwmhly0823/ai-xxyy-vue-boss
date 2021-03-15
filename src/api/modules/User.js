@@ -39,6 +39,9 @@ export default {
   sendMsgForTeacher(orderId) {
     return axios.get(`/api/o/v1/order/sendMsgForTeacher?orderIds=${orderId}`)
   },
+  getUserByUserNum(shortId) {
+    return axios.get(`/api/u/v1/user/getUserByUserNum?userNum=${shortId}`)
+  },
 
   /**
    * 模糊搜索用户手机号，获取用户信息
@@ -618,7 +621,7 @@ export default {
       query: `{
         StudentTrialRecordDetailBossStatistics(
           query:${JSON.stringify(injectSubject(formattingQuery))}
-          
+
           )
           {
     id
@@ -653,7 +656,7 @@ export default {
       ad_all_join_course_rate
       ad_all_complete_course_rate
   }
-          
+
         }`
     })
   },

@@ -263,32 +263,32 @@
         </el-col>
         <el-col :span="7" class="dular">
           <!-- 跟进记录 -->
-          <trackFlow />
+          <trackFlow :pUserId="studentId"/>
         </el-col>
       </el-row>
       <!-- tab标签页 -->
       <div class="tab-sty">
         <el-tabs type="border-card" v-model="tabData">
           <el-tab-pane label="详细信息" name="detailsInfo">
-            <detailsInfo />
+            <detailsInfo :pUserId="studentId" />
           </el-tab-pane>
           <el-tab-pane label="学习记录" name="learningRecord">
-            <studyRecord />
+            <studyRecord :pUserId="studentId"/>
           </el-tab-pane>
           <el-tab-pane label="作品集" name="collectionOf">
-            <portfolio />
+            <portfolio :pUserId="studentId" />
           </el-tab-pane>
           <el-tab-pane label="订单·物流记录" name="orderLogistics">
-            <logistics />
+            <logistics :pUserId="studentId" />
           </el-tab-pane>
           <el-tab-pane label="用户资产" name="userAsset">
-            <capital />
+            <capital :pUserId="studentId" />
           </el-tab-pane>
           <el-tab-pane label="通知事件记录" name="notifyRecord">
-            <ivr />
+            <ivr :pUserId="studentId" />
           </el-tab-pane>
           <el-tab-pane label="转介绍" name="changeRecommend">
-            <changeRecommend />
+            <changeRecommend :pUserId="studentId" />
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -313,6 +313,7 @@
     <!-- 推荐弹窗 -->
     <recommend
       ref="recommend"
+      :pUserId="studentId"
       :recommendHuman="
         stuInfor_add.sender
           ? stuInfor_add.sender
@@ -364,7 +365,7 @@ export default {
       // <修改地址>组件弹窗显示隐藏
       dialogTableVisible: false,
       // 该学员id
-      studentId: this.$route.params.id,
+      studentId: '',
       // 推荐人id
       sendId: '0',
       // 学员基本信息(公用_老)
@@ -389,7 +390,7 @@ export default {
   computed: {
     studyCount() {
       return this.stuInfor.bought_subject.map((item) => {
-        
+
         switch (item) {
           case 'MUSIC_APP':
             item = '小熊音乐'
@@ -421,9 +422,24 @@ export default {
     }
   },
   created() {
-    this.reqUser() // 学员信息接口
-    this.reqUser_add() // 学员信息接口-分类补充
-    this.getlabelWithoutAike() // 获取艾克之外的标签
+    if(this.$route.params.isShort) {
+      this.$http.User.getUserByUserNum(this.$route.params.id)
+      .then(res => {
+        if(res.code === 0) {
+          this.studentId = res.payload.id;
+
+          this.reqUser() // 学员信息接口
+          this.reqUser_add() // 学员信息接口-分类补充
+          this.getlabelWithoutAike() // 获取艾克之外的标签
+        }
+      })
+    }
+    else {
+      this.studentId = this.$route.params.id;
+      this.reqUser() // 学员信息接口
+      this.reqUser_add() // 学员信息接口-分类补充
+      this.getlabelWithoutAike() // 获取艾克之外的标签
+    }
   },
   methods: {
     // 获取艾克之外的标签
@@ -434,9 +450,9 @@ export default {
         this.$message.error('标签获取失败')
         console.error(err)
       })
-      
+
       if (!code && payload && payload.length) {
-        
+
         this.babels_lk = payload
       }
     },
@@ -470,7 +486,6 @@ export default {
     },
     // 数据接口_学员信息分类补充
     reqUser_add() {
-      console.count('nihao')
       this.$http.User.getUser_add({
         u_id: this.studentId,
         subject: this.changeSubject

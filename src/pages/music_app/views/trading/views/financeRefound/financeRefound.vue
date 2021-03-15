@@ -106,7 +106,7 @@
         </el-form-item>
       </el-form>
       <div>
-        <el-button v-show="+roleId === 4" type="primary" @click.stop="BatchRefund">批量发起退款支付</el-button>
+        <el-button type="primary" @click.stop="BatchRefund">批量发起退款支付</el-button>
       </div>
     </div>
     <el-divider></el-divider>
