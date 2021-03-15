@@ -1,6 +1,6 @@
 <!--
- * @Descripttion: 
- * @version: 
+ * @Descripttion:
+ * @version:
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
@@ -1157,7 +1157,9 @@ export default {
   },
   created() {
     // 身份类型，4是财务，具体见wiki
-    this.roleId = JSON.parse(localStorage.getItem('staff')).roleId
+    const roleList = JSON.parse(localStorage.getItem('staff')).roleList;
+    let roleId = roleList ? roleList[0] : '';
+    this.roleId = roleId;
   },
   mounted() {
     const staff = getStaffInfo()
