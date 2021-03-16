@@ -34,6 +34,22 @@
               <el-button type="primary" @click="onSubmit('phoneForm')">替换</el-button>
             </el-form-item>
           </el-form>
+
+          <el-form
+            :inline="true"
+            size="mini"
+            :model="cancelPhone"
+            :rules="cancelPhoneRules"
+            ref="cancelPhone"
+          >
+            <el-form-item label="手机号" prop="phone">
+              <el-input v-model="cancelPhone.phone" placeholder="请输入学员手机号" maxlength="11" clearable></el-input>
+            </el-form-item>
+
+            <el-form-item>
+              <el-button type="primary" @click="cancelSubmit('cancelPhone')">注销</el-button>
+            </el-form-item>
+          </el-form>
         </el-card>
 
         <div class="record-list">
@@ -79,6 +95,20 @@
               >{{ (scope.row.staff && scope.row.staff.realName) || '-' }}</template>
             </el-table-column>
             <el-table-column prop="utime_text" label="修改时间"></el-table-column>
+            <!-- <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-popconfirm
+                  confirm-button-text="确定"
+                  cancel-button-text="取消"
+                  icon="el-icon-info"
+                  icon-color="red"
+                  @confirm="logoutUser(scope.row)"
+                  title="确定注销此用户吗？"
+                >
+                  <el-button slot="reference" type="text">注销用户</el-button>
+                </el-popconfirm>
+              </template>
+            </el-table-column> -->
           </el-table>
         </div>
         <m-pagination
@@ -133,6 +163,9 @@ export default {
         oldMobile: '',
         newMobile: ''
       },
+      cancelPhone: {
+        phone: ''
+      },
       rules: {
         oldMobile: [
           { required: true, validator: checkPhone, trigger: 'change' }
@@ -140,6 +173,9 @@ export default {
         newMobile: [
           { required: true, validator: checkPhone, trigger: 'change' }
         ]
+      },
+      cancelPhoneRules: {
+        phone: [{ required: true, validator: checkPhone, trigger: 'change' }]
       },
       recordList: [],
       staff: {}
@@ -157,6 +193,47 @@ export default {
     this.getLogData()
   },
   methods: {
+    // 注销用户
+    logoutUser(row) {
+      let params = {
+        staffId: this.staff.id,
+        oldMobile: row.old_mobile,
+        subject: 'MUSIC_APP'
+      }
+      this.$http.Operating.channelMobile(params).then((res) => {
+        if (res.code === 0) {
+          this.$message.success('注销成功')
+        }
+        this.getLogData()
+      })
+    },
+    cancelSubmit(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          console.log('123成功')
+          let rows = {
+            old_mobile: this.cancelPhone.phone
+          }
+          this.$confirm(`您确定要注销 ${rows.old_mobile} 此手机号吗?`, '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          })
+            .then(() => {
+              this.logoutUser(rows)
+            })
+            .catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消删除'
+              })
+            })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
     onSubmit(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {

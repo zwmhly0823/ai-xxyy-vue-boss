@@ -275,6 +275,7 @@ export default {
   },
   created() {
     // 默认是待开课
+    
     this.params.teamState = this.teamState
     this.initData()
   },

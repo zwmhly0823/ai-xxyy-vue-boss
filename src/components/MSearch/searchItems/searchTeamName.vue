@@ -21,19 +21,14 @@
       :loading="loading"
       @change="onChange"
     >
-      <el-option
-        v-for="item in teamList"
-        :key="item.id"
-        :label="item.team_name"
-        :value="item.id"
-      >
-      </el-option>
+      <el-option v-for="item in teamList" :key="item.id" :label="courseLevelReplace(item.team_name)" :value="item.id"></el-option>
     </el-select>
   </div>
 </template>
 
 <script>
 import { debounce } from 'lodash'
+import { courseLevelReplace } from '@/utils/supList.js'
 export default {
   props: {
     name: {
@@ -65,7 +60,8 @@ export default {
     return {
       loading: false,
       teamName: '',
-      teamList: []
+      teamList: [],
+      courseLevelReplace
     }
   },
   created() {

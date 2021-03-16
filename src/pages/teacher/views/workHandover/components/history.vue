@@ -57,7 +57,7 @@
 
 <script>
 import { timestamp } from '@/utils/index'
-import { formatTeamNameSup } from '@/utils/supList'
+import { courseLevelReplace } from '@/utils/supList'
 import MPagination from '@/components/MPagination/index.vue'
 import groupSell from './groupSell.vue'
 export default {
@@ -112,7 +112,7 @@ export default {
             ele.content = ele.sendWeixinNo
           } else {
             ele.studentSteamId = '班级交接'
-            ele.content = formatTeamNameSup(ele.teamName) || ''
+            ele.content = courseLevelReplace(ele.teamName) || ''
           }
         })
         this.tableData = _data

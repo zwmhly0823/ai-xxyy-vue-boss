@@ -18,22 +18,6 @@ export const SUP_LEVEL = {
   5: 'S2-进阶',
   3: 'S3'
 }
-// 小写s
-// export const SUP_LEVEL_LOWER = {
-//   s4: 'S1-基础',
-//   s1: 'S1-进阶',
-//   s2: 'S2-基础',
-//   s5: 'S2-进阶',
-//   s3: 'S3'
-// }
-// // S大写的情况
-// export const SUP_LEVEL_UPPER = {
-//   S4: 'S1-基础',
-//   S1: 'S1-进阶',
-//   S2: 'S2-基础',
-//   S5: 'S2-进阶',
-//   S3: 'S3'
-// }
 
  
 // 对象， 大小写s
@@ -49,8 +33,10 @@ export const SUP_LEVEL_UPPER = formatSup('S')
 // export const SUP_LEVEL_LIST_UPPER = formatSupList()
 
 export const SUP_LEVEL_LIST_LOWER = [
-  { id: 'S8', text: 'MA' },
-  { id: 'S9', text: 'MB' },
+  { id: 'S1', text: 'M1' },
+  { id: 'S2', text: 'M2' },
+  { id: 'S3', text: 'M3' },
+  { id: 'S4', text: 'M4' }
 ]
 export const SUP_LEVEL_LIST_UPPER = [
   { id: 'S1', text: 'M1' },
@@ -65,9 +51,12 @@ export const SUP_LEVEL_TRIAL = {
   S4:'M4'
 }
 export const SUP_LEVEL_SYSTEM = {
-  S8:'MA',
-  S9:'MB',
+  S1:'M1',
+  S2:'M2',
+  S3:'M3',
+  S4:'M4'
 }
+
 export const SUP_LEVEL_ALL = {
   S1:'M1',
   S2:'M2',
@@ -143,54 +132,10 @@ export function formatTeamNameSup(teamName) {
   if (idx >= 0 && !upperName.includes('基础') && !upperName.includes('进阶')) {
     const s = upperName.substr(idx, 2)
     teamName = teamName.replace(s, SUP_LEVEL_UPPER[s])
-    
-  }
-  // if (
-  //   upperName.includes('S1') &&
-  //   !upperName.includes('基础') &&
-  //   !upperName.includes('进阶')
-  // ) {
-  //   teamName = teamName.replace('S1', 'S1-进阶')
-  // }
-  // if (
-  //   upperName.includes('S2') &&
-  //   !upperName.includes('基础') &&
-  //   !upperName.includes('进阶')
-  // ) {
-  //   teamName = teamName.replace('S2', 'S2-基础')
-  // }
-  return teamName
-}
-
-/**
- * 美术 - 课程难度更改 END
- */
-export function formatTeamNameSupReverse(teamName) {
-  if (!teamName) return
-  const upperName = teamName.toLocaleUpperCase()
-  let idx = -1
-  if (upperName.indexOf('S1-基础') > -1) {
-    idx = upperName.indexOf('S1-基础')
-  }
-  if (upperName.indexOf('S1-进阶') > -1) {
-    idx = upperName.indexOf('S1-进阶')
-  }
-  if (upperName.indexOf('S2-基础') > -1) {
-    idx = upperName.indexOf('S2-基础')
-  }
-  if (upperName.indexOf('S2-进阶') > -1) {
-    idx = upperName.indexOf('S2-进阶')
-  }
-  if (upperName.indexOf('S3专项技能课') > -1) {
-    idx = upperName.indexOf('S3专项技能课')
-  }
-
-  if (idx >= 0) {
-    const s = upperName.substr(idx, 5)
-    teamName = teamName.replace(s, SUP_LEVEL_LIST_UPPER_REVERSE.get(s))
   }
   return teamName
 }
+
 
 // 课程难度替换
 

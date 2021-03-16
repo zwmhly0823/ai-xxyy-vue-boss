@@ -6,6 +6,41 @@
  * @LastEditors: liukun
  * @LastEditTime: 2020-10-27 19:20:20
  */
+export function formatDateByType(date1, divider = '-', type = 'Y') {
+  if (!date1 || date1 === '0') return ''
+  var date = new Date(+date1)
+
+  var YY = date.getFullYear() + divider
+  var MM =
+    (date.getMonth() + 1 < 10
+      ? '0' + (date.getMonth() + 1)
+      : date.getMonth() + 1) + divider
+  var DD = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+  var hh = date.getHours() < 10 ? '0' + date.getHours() : date.getHours()
+  var mm =
+    ':' + (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes())
+  var ss =
+    ':' + (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds())
+
+  if (type === 'Y') {
+    return YY + MM + DD
+  }
+
+  if (type === 'M') {
+    return YY + MM + DD + ' ' + hh + mm
+  }
+
+  if (type === 'MS') {
+    return MM + DD + ' ' + hh + mm
+  }
+
+  if (type === 'MD') {
+    return MM + DD
+  }
+  if (type === 'YS') {
+    return YY + MM + DD + ' ' + hh + mm + ss
+  }
+}
 export function formatDate(date1, ymd = true) {
   if (!date1 || date1 === '0') return '-'
   var date = new Date(+date1)

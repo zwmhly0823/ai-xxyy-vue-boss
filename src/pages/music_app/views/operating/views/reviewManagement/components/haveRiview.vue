@@ -191,7 +191,7 @@
 
 <script>
 import { formatData } from '@/utils/index'
-import { formatTeamNameSup } from '@/utils/supList'
+import { courseLevelReplace } from '@/utils/supList'
 export default {
   components: {
     MPagination: () => import('@/components/MPagination/index.vue'),
@@ -230,7 +230,7 @@ export default {
           this.list = this.list.map((item) => {
             if (item?.courseware?.no) {
               const coursewareNo = this.formatCourse(item.courseware.no)
-              item.courseware.no = formatTeamNameSup(coursewareNo)
+              item.courseware.no = courseLevelReplace(coursewareNo)
             }
             return item
           })

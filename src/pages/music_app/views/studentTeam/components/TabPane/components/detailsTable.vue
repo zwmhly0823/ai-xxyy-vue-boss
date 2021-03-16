@@ -264,7 +264,7 @@
             <div>
               <span class="logistics-address-name">
                 {{
-                formatTeamNameSup(scope.row.product_name)
+                courseLevelReplace(scope.row.product_name)
                 }}
               </span>
               <br />
@@ -603,7 +603,7 @@ import MPagination from '@/components/MPagination/index.vue'
 import logisticsForm from '../components/logisticsForm'
 import modifyAddress from '../components/modifyAddress'
 import { openBrowserTab } from '@/utils/index'
-import { formatTeamNameSup } from '@/utils/supList'
+import { courseLevelReplace } from '@/utils/supList'
 export default {
   name: 'detailsTable',
   props: {
@@ -631,7 +631,7 @@ export default {
   },
   data() {
     return {
-      formatTeamNameSup,
+      courseLevelReplace,
       expressStatus: '',
       rowId: '', // 判断页面那条数据显示
       showModifyAddressBtn: false,

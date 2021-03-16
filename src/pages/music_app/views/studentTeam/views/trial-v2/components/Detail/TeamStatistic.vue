@@ -328,7 +328,7 @@ export default {
           if (this.tab === '1' && data.complete_course_count_group) {
             data.complete_course_count_group =
               JSON.parse(data.complete_course_count_group) || []
-          }
+          } 
           this.statistics = data
           if (this.tab === '0') {
             this.initPrePareList()

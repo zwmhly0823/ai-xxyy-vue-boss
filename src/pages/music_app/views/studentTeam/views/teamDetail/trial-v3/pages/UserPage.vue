@@ -528,6 +528,7 @@ export default {
         if (!data) {
           return
         }
+        console.log(data)
         this.tagDataMap.set(uid, data)
       }
       // console.log(this.tagDataMap.get(uid))

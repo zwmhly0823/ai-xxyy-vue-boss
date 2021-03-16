@@ -26,7 +26,7 @@
 <script>
 // import SearchSystem from '../components/SearchSystem.vue'
 import TrialList from './trial-v2/index.vue'
-import SystemList from './system-v2/index.vue'
+import SystemList from './system-v3/index.vue'
 import AllList from './all-list/index.vue'
 
 export default {

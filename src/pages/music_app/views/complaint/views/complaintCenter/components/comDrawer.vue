@@ -185,15 +185,15 @@ export default {
   methods: {
     onSubmit() {
       const { desc, status, type } = this.form
-      const { realName, phone, id } = JSON.parse(
-        localStorage.getItem('teacher')
+      const { realName, mobile, id } = JSON.parse(
+        localStorage.getItem('staff')
       )
       const parmes = {
         cpStatus: status,
         complaintNo: this.drawerData.complaintNo || '',
         currentStaffId: id || '',
         currentStaffName: realName || '',
-        currentStaffMobile: phone || '',
+        currentStaffMobile: mobile || '',
         uid: this.drawerData.userId || '',
         contactType: type,
         handleComment: desc,

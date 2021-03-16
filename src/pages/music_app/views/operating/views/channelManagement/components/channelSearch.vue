@@ -448,8 +448,8 @@ export default {
             : location.origin.includes('test')
             ? 'https://ai-xxyy-test.yinyuebao.com'
             : location.origin.includes('prod')
-            ? 'https://ai-xxyy-prod.yinyuebao.com'
-            : 'https://ai-xxyy-live.yinyuebao.com'
+            ? 'https://ai-xxyy-prod.xiaoxiongyinyue.com'
+            : 'https://ai-xxyy-live.xiaoxiongyinyue.com'
           res.channelNameLink =
             qudaourl + `/channel/index?changeImg=1&channelId=${res.pay_channel}`
           // 线索数
@@ -573,8 +573,8 @@ export default {
       }}`
       this.$http.Operating.ChannelDetailStatisticsList(channelValue).then(
         (ele) => {
+          console.log(_data)
           const __data = ele?.data?.ChannelDetailStatisticsList
-
           if (!__data) return
           _data.forEach((val) => {
             __data.forEach((item) => {

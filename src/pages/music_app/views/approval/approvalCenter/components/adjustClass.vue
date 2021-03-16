@@ -94,7 +94,7 @@ import {
   SUP_LEVEL_ALL,
   SUP_LEVEL_LIST_LOWER,
   SUP_LEVEL_LIST_UPPER,
-  formatTeamNameSup
+  courseLevelReplace
 } from '@/utils/supList'
 
 export default {
@@ -819,7 +819,7 @@ export default {
           resData.forEach((chooseItem, chooseKey) => {
             // 其实只有调班需要做这个判断，但其他的类型没有currentClassId所以无所谓这么判断不会出问题
             if (chooseItem.id !== this.formData.currentClassId) {
-              const teamName = formatTeamNameSup(chooseItem.teamName)
+              const teamName = courseLevelReplace(chooseItem.teamName)
               item.options.push({
                 label: `${teamName}-${chooseItem.teacherRealName}`,
                 value: {
@@ -901,7 +901,7 @@ export default {
     handleCurrentClass(resData) {
       // console.log('resData', resData)
       this.formData.currentClassId = resData.id
-      const teamName = formatTeamNameSup(resData.teamName)
+      const teamName = courseLevelReplace(resData.teamName)
       this.formData.currentClassName = `${teamName}-${resData.teacherRealName}`
 
       // 调班-调整班级列表,需要先获取到currentClassId

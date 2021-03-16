@@ -46,9 +46,9 @@ export default {
       productVersion: [
         { name: '退款', value: 'REFUND' },
         { name: '补发货', value: 'REISSUE' },
-        { name: '体验课调级', value: 'ADJUSTMENT_SUP_TRIAL' },
+        { name: '体验课调级申请', value: 'ADJUSTMENT_SUP_TRIAL' },
         { name: '调期申请', value: 'ADJUSTMENT_STAGE' },
-        { name: '调级申请', value: 'ADJUSTMENT_SUP' },
+        { name: '系统课调级申请', value: 'ADJUSTMENT_SUP' },
         { name: '调班申请', value: 'ADJUSTMENT_CLASS' },
         { name: '随材打包', value: 'PACKAGE_BOX' },
         { name: '无归属订单审批', value: 'UNCREDITED' },

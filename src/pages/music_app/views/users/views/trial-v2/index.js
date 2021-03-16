@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-09-04 18:38:15
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-11-04 18:10:44
+ * @LastEditTime: 2020-12-12 11:52:00
  */
 import _ from 'lodash'
 import { todayTimestamp, tomorrowTimestamp } from '../../utils'
@@ -15,6 +15,7 @@ import BaseUserInfo from '@/components/BaseUserInfo/Base.vue'
 import ModifyAddress from '../../components/ModifyAddress.vue'
 import enums from '../../components/searchData'
 import { formatData, openBrowserTab } from '@/utils/index'
+import {courseLevelReplace} from '@/utils/supList'
 import intentionDialog from '../../components/intentionDialog'
 import { FOLLOW_EXPRESS_STATUS } from '@/utils/enums'
 import Search from '../../components/Search.vue'
@@ -26,6 +27,7 @@ import tagsItem from '../../components/trial/tags/TagsItem.vue'
 import tagsPopover from '../../components/trial/tags/TagsPopover.vue'
 // import ModifyWechatRemark from '../../components/ModifyWechatRemark.vue'
 // import HandleDrawer from '../../components/trial/HandleDrawer.vue'
+import SendCoupon from '../../../studentTeam/components/TabPane/components/couponPopover.vue'
 export default {
   name: 'trialUsers',
   components: {
@@ -40,7 +42,8 @@ export default {
     QuestionaireDrawerComponent,
     UserInfoDialog,
     tagsItem,
-    tagsPopover
+    tagsPopover,
+    SendCoupon
     // ModifyWechatRemark
     // HandleDrawer
   },
@@ -133,6 +136,7 @@ export default {
       search: [],
       term: '',
       currentPage: 1,
+      courseLevelReplace,
       totalElements: 0,
       totalPages: 1,
       dataList: [],
@@ -191,7 +195,10 @@ export default {
       tagPopoverData: null,
       currentHoverUser: null,
       currentHoverTab: '',
-      showMode: 'trialUserListMode'
+      showMode: 'trialUserListMode',
+      // 群发优惠券的学员id
+      sendGroupCouponIds: [],
+      couponData: []
     }
   },
   watch: {
@@ -247,6 +254,9 @@ export default {
     // 消息中心传递过来的预设参数
     this.paramsFromUrl()
     this.getManagement()
+  },
+  mounted() {
+    this.getCouponList()
   },
   methods: {
     checkShowMode() {
@@ -374,6 +384,8 @@ export default {
         Object.assign(obj, this.teamParams)
       }
       const query = Object.assign({}, obj)
+      // 学员列表筛掉特价课的
+      query.team_category = [0, 5, 6, 7]
 
       const page = this.currentPage
       const sort = {}
@@ -738,8 +750,8 @@ export default {
     changeSwitch(val, data, index, type) {
       const params = {
         teamId: data.team_id,
-        courseType:
-          data.teamInfo && +data.teamInfo.team_type === 0 ? 'TRAIL' : 'YEAR',
+        courseType: 'TRAIL',
+        // data.teamInfo && +data.teamInfo.team_type === 0 ? 'TRAIL' : 'YEAR',
         studentId: data.id
       }
       if (type === 'wechat') {
@@ -878,7 +890,6 @@ export default {
     // 待跟进数量
     getTodayCount(type = 'today') {
       const params = {
-        teacher_id: [],
         is_track: 1,
         today: type === 'today' ? this.today : this.tomorrow
       }
@@ -993,6 +1004,42 @@ export default {
           message: '已发送短信',
           type: 'success'
         })
+      })
+    },
+    // 发送批量加好友短信
+    sendGroupAddMessage() {
+      if (!this.selectUsers.length) {
+        return
+      }
+      const oIds = this.selectUsers
+        .map((item) => {
+          console.log(item)
+          return item.order_no
+        })
+        .join(',')
+      // 接口从旧版班级详情页粘过来
+      // src/pages/studentTeam/components/TabPane/components/detailsTable.vue
+      this.$http.User.sendMsgForTeacher(oIds).then((res) => {
+        this.$message({
+          message: '已发送短信',
+          type: 'success'
+        })
+      })
+    },
+    getCouponList() {
+      this.$http.Team.getAllCoupons(0).then((res) => {
+        this.couponData = (res.payload && res.payload.content) || []
+      })
+    },
+    // 发送批量优惠券
+    sendGroupCoupon() {
+      if (!this.selectUsers.length) {
+        return
+      }
+      this.$refs.couponDialog.issueCoupons = true
+      this.$refs.couponDialog.couponsTime = ''
+      this.sendGroupCouponIds = this.selectUsers.map((item) => {
+        return item.id
       })
     }
   }

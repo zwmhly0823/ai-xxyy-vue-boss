@@ -76,7 +76,7 @@
             clearable
           >
             <el-option
-              v-for="(value, key) in { S1: 'S1', S2: 'S2', S3: 'S3' }"
+              v-for="(value, key) in courseLevelList"
               :key="key"
               :value="value"
               :label="key"
@@ -106,7 +106,7 @@
 
 <script>
 import SearchPhone from '@/components/MSearch/searchItems/searchPhone'
-
+import {SUP_LEVEL_TRIAL} from '@/utils/supList'
 export default {
   name: 'changeExperience',
   components: {
@@ -114,6 +114,7 @@ export default {
   },
   data() {
     return {
+      courseLevelList:SUP_LEVEL_TRIAL,
       orderOptions: [],
       selectOrder: {},
       refundForm: {

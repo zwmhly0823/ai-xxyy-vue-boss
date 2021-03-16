@@ -470,7 +470,8 @@ export default {
         address_detail: '详细地址',
         express_nu: '快递单号',
         express_company: '物流公司',
-        express_company_nu: '物流公司编号'
+        express_company_nu: '物流公司编号',
+        center_express_id:'中台物流Id'
       }
       // 补发货列表新增补发原因表头
       if (this.tab === '1') {

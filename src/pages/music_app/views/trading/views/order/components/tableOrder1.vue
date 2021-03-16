@@ -4,7 +4,7 @@
     <el-table :data="orderList" v-loading="loading">
       <el-table-column label="用户信息" prop="user" min-width="180" fixed>
         <template slot-scope="scope">
-          <user :user="scope.row.user" :singleData="scope.row" />
+          <user courseType='system' :user="scope.row.user" :singleData="scope.row" />
         </template>
       </el-table-column>
       <el-table-column label="归属地" prop="QCellCore" min-width="120">
@@ -569,7 +569,8 @@ export default {
     openDetail(id, row, type) {
       // type 0体验课 2系统课
       row && console.log(row)
-      id && openBrowserTab(`/music_app/#/teamDetail/${id}/${type}`)
+      let str = type==0?'teamTrialDetail':'teamDetail';
+      id && openBrowserTab(`/music_app/#/${str}/${id}/${type}`)
     },
     // 用户详情
     openUserDetail(id) {

@@ -135,11 +135,11 @@
             style="width:140px"
           />
           <!-- BOSS 显示单双周选择 -->
-          <trial-course-type
+          <!-- <trial-course-type
             class="margin_l10"
             name="packages_id"
             @result="getTrialCourseType"
-          />
+          /> -->
         </div>
       </el-form-item>
     </el-form>
@@ -193,7 +193,8 @@ import GroupSell from '@/components/MSearch/searchItems/groupSell'
 import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
-import TrialCourseType from '@/components/MSearch/searchItems/trialClassType'
+// 单双周搜索  体验课类型
+// import TrialCourseType from '@/components/MSearch/searchItems/trialClassType'
 import { downloadHandle } from '@/utils/download'
 import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
@@ -217,7 +218,6 @@ export default {
     Department,
     SearchTeamName,
     SearchStage,
-    TrialCourseType,
     SearchPhoneAndUsername,
     SimpleSelect
   },

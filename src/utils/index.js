@@ -219,7 +219,12 @@ export function GetAgeByBrithday(birth) {
 
     if (todayMonth <= birthdayMonth) {
       month = todayMonth - birthdayMonth + 12
-      age--
+      age--;
+      if(age<0){
+        age=0;
+        month = 0;
+      }
+
     } else {
       month = todayMonth - birthdayMonth
     }
@@ -413,11 +418,11 @@ export function getAppSubjectCode() {
   const key = getAppSubject(false)
   // return Object.keys(subjects).findIndex((item) => item === key) + ''
   let subjectCode = 3
-  subjectsList.map((item, index) => {
-    if (item.key === key) {
-      subjectCode = item.index
-    }
-  })
+  // subjectsList.map((item, index) => {
+  //   if (item.key === key) {
+  //     subjectCode = item.index
+  //   }
+  // })
   return subjectCode
 }
 // 注入 课程类型 subject 参数接受 对象和序列化的字符串
@@ -502,4 +507,11 @@ export function getZero(num) {
     num = '0' + num
   }
   return num
+}
+export async function calcBrowerClienHeight(_this, ref, minus = 0) {
+  await _this.$nextTick()
+  // Element.getBoundingClientRect() 方法返回元素的大小及其相对于视口的位置。
+  const DomTop = _this.$refs[ref].getBoundingClientRect().y
+  //  document.body.clientHeight 返回body元素内容的高度
+  return document.body.clientHeight - DomTop - minus + 'px'
 }

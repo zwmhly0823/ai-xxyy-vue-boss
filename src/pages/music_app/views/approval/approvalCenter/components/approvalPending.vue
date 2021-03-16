@@ -814,9 +814,7 @@
         <div
           v-if="
             currentType === 'UNCREDITED' &&
-              (resetParams.staffId === '455930731630301184' ||
-                resetParams.staffId === '455930591481827328' ||
-                resetParams.staffId === '462345658762924032')
+              (roleIdList.indexOf(resetParams.staffId)>=0)
           "
         >
           <el-row class="BOTTOM">
@@ -865,6 +863,11 @@
           ? '审批同意'
           : ''
       "
+      @close="
+            adjustDrawerData.checkSuggestion = ''
+            adjustResultDialogShow = false
+            adjustDialogErrShow = false
+          "
       :visible.sync="adjustResultDialogShow"
     >
       <p class="adjust-dialog-p">
@@ -1078,6 +1081,7 @@ export default {
       }
     }
     return {
+      roleIdList:[],
       tableHeight: 0,
       forSonDataApprovalPersonId: '',
       forSonDataApprovalId: '',
@@ -1164,6 +1168,7 @@ export default {
     const roleList = JSON.parse(localStorage.getItem('staff')).roleList;
     let roleId = roleList ? roleList[0] : '';
     this.roleId = roleId;
+    this.getRoleIdList()
   },
   mounted() {
     const staff = getStaffInfo()
@@ -1201,6 +1206,11 @@ export default {
   },
 
   methods: {
+    getRoleIdList(){
+      this.$http.Backend.getStaffIds().then(res=>{
+        this.roleIdList = res.payload.approvalIdSet;
+      })
+    },
     getSearchData1(val) {
       console.info('选择部门获取值:', val)
       this.params.page = 1
@@ -1592,6 +1602,7 @@ export default {
     },
     // 打开抽屉 传进来4个参数 申请单type 申请单id  申请单申请人id 申请单tag
     getApprovalDeatail(type, id, applyId, tag) {
+      console.log(arguments)
       this.currentType = type // 全局配置:申请单类型
       console.log(type)
       // 体验课调级详情
@@ -1648,6 +1659,7 @@ export default {
       }
       // 无归属订单详情
       if (type === 'UNCREDITED') {
+
         this.$http.Backend.getNoAttributionDetail(id).then((res) => {
           if (res && res.payload) {
             res.payload.orderTime = timestamp(res.payload.orderTime, 2)
@@ -1657,6 +1669,7 @@ export default {
             this.drawerApprovalDeatail.chat_url = res.payload.chatUrl[0]
             this.drawerApprovalDeatail.pay_url = res.payload.paymentUrl[0]
             this.drawerApproval = true
+
           }
         })
       }
@@ -1760,7 +1773,7 @@ export default {
                   },
                   {
                     label: '调级级别',
-                    value: this.SUP_LEVEL_ALL[payData.targetSup] || '-'
+                    value: SUP_LEVEL_ALL[payData.targetSup] || '-'
                   }
                 ]
               )

@@ -600,5 +600,12 @@ export default {
     return axios.post(
       '/api/t/v1/teacherChannel/delRecord?id='+params
     )
+  },
+  // 删除定向分配销售
+  async channelMobile(params){
+    return axios.post(
+      '/api/u/v2/user/cancelMobile',
+      params
+    )
   }
 }

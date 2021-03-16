@@ -105,17 +105,16 @@ export default {
     getTeacher(query = '') {
       const { getDepartmentTeacherEx } = this.$http.Department
       this.loading = true
-     
       const q = {
         bool: {
           must: query
             ? [
-                // { wildcard: { 'realname.keyword': `*${query}*` } },
-                {
-                  wildcard: {
-                    'subject.keyword': `*${this.$store.getters.subjects.subjectCode}*`
-                  }
-                }
+                { wildcard: { 'realname.keyword': `*${query}*` } },
+                // {
+                //   wildcard: {
+                //     'subject.keyword': `*${this.$store.getters.subjects.subjectCode}*`
+                //   }
+                // }
               ]
             : [
                 {
@@ -126,7 +125,7 @@ export default {
               ]
         }
       }
-      
+      console.log(q)
       if (this.teacherscope&&this.teacherscope.length) {
         q.bool.must.push({ terms: { department_id: this.teacherscope } })
       }

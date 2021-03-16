@@ -12,9 +12,7 @@ import Cookies from 'js-cookie'
 const state = {
   sidebar: {
     test: '',
-    opened: Cookies.get('sidebarStatus')
-      ? !!+Cookies.get('sidebarStatus')
-      : true,
+    opened: false,
     withoutAnimation: false
   },
   popMenu: {

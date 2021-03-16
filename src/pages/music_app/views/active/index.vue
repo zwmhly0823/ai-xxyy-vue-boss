@@ -94,7 +94,6 @@
 <script>
 import _ from 'lodash'
 import { calculateWD } from '@/utils/validate'
-import { formatTeamNameSup } from '@/utils/supList'
 import EleTable from '@/components/Table/EleTable'
 import { formatData, openBrowserTab } from '@/utils/index'
 // import ScheduleTable from './components/index.vue'

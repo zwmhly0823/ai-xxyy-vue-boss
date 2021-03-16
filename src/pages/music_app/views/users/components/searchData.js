@@ -1,4 +1,4 @@
-import { SUP_LEVEL_LIST_UPPER } from '@/utils/supList'
+import { SUP_LEVEL_LIST_LOWER } from '@/utils/supList'
 
 const enums = {
   addedWechatStatus: [
@@ -180,7 +180,7 @@ const enums = {
   //     text: 's5'
   //   }
   // ],
-  supList: SUP_LEVEL_LIST_UPPER,
+  supList: SUP_LEVEL_LIST_LOWER,
   // 转介绍学员
   user_StatusList: [
     {

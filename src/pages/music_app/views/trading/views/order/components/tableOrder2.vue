@@ -6,7 +6,7 @@
     <el-table :data="orderList" v-loading="loading">
       <el-table-column label="用户信息" prop="user" min-width="180" fixed>
         <template slot-scope="scope">
-          <user :user="scope.row.user" />
+          <user courseType='trial' :user="scope.row.user" />
         </template>
       </el-table-column>
       <el-table-column label="归属地" prop="QCellCore" min-width="120">

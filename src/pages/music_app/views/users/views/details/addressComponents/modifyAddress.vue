@@ -258,7 +258,8 @@ export default {
         addressId:
           this.modifyFormData.address &&
           this.modifyFormData.address[0] &&
-          this.modifyFormData.address[0].id,
+          (this.modifyFormData.address[0].address_id ||
+            this.modifyFormData.address[0].id),
         expressId: '',
         // userId: this.modifyFormData.userid,
         receiptName: this.ruleForm.receiptName,

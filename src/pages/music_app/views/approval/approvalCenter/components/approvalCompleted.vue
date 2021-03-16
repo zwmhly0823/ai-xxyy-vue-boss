@@ -747,7 +747,7 @@ import GroupSell from './groupSell'
 import searchPhone from '@/components/MSearch/searchItems/searchPhone.vue'
 import MPagination from '@/components/MPagination/index.vue'
 import { timestamp } from '@/utils/index'
-import { courseLevelReplace, SUP_LEVEL_UPPER } from '@/utils/supList'
+import { courseLevelReplace, SUP_LEVEL_ALL } from '@/utils/supList'
 import { getStaffInfo } from '../common'
 import courseTeam from './courseTeam'
 import TabTimeSelect from './timeSearch'
@@ -792,7 +792,7 @@ export default {
       forSonDataApprovalId: '',
       checkTypeAssert: '', // 审批类型判断-公用
       tableDataNode: [], // 退款审批抽屉专用_审批流程节点
-      SUP_LEVEL_UPPER,
+      SUP_LEVEL_ALL,
       courseLevelReplace,
       zero_time: '', // 0课时绑定值
       status_result: '', // 审批结果筛选
@@ -846,6 +846,7 @@ export default {
       endTime: '',
       departmentIds: '', // 新添部门
       teacherIds: '', // 新添老师
+      onlyStatus:'',
       page: 1,
       size: 20
     }
@@ -915,7 +916,7 @@ export default {
     status_resultChange(val) {
       this.params.page = 1
       this.currentPage = 1
-      Object.assign(this.params, { onlyStatus: val })
+      Object.assign(this.params, { status:'COMPLETED',onlyStatus: val })
       this.checkPending(this.params)
     },
     //  活动名称搜索
@@ -1117,7 +1118,7 @@ export default {
                   },
                   {
                     label: '调级级别',
-                    value: SUP_LEVEL_UPPER[payData.targetSup] || '-'
+                    value: SUP_LEVEL_ALL[payData.targetSup] || '-'
                   }
                 ]
               )
@@ -1254,6 +1255,7 @@ export default {
             // item.applyDepartment = ''
             return item
           })
+          console.log()
         }
       })
     },
@@ -1283,7 +1285,7 @@ export default {
   .approvallk .el-row:nth-last-of-type {
     margin-bottom: 0;
   }
-  .approvallk .el-row .el-col-5 {
+  .approvallk .el-row .el-col-5,.approvallk .el-row .el-col-6 {
     text-align: right;
   }
   .time {

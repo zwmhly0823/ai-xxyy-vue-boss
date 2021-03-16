@@ -387,6 +387,8 @@ export default {
       }, 200)
     }
     return {
+      // 根据订单物流获取随材版本
+      proVersion:'',
       fileListC: [],
       dialogImageUrl: '', // 上传文件的预览url
       dialogVisible: false, // 上传文件的预览弹窗显隐开关
@@ -748,6 +750,7 @@ export default {
     },
     // 通过订单id查询物流信息
     async getSeletInput(val) {
+      console.log(val)
       if (val.id) {
         this.$http.Express.getExpressByOrderId(val.id).then((res) => {
           if (res && res.payload) {
@@ -765,6 +768,7 @@ export default {
             // 回显bug无法提交_丹阳&伟霞
             this.levelData = medium.level
             Object.assign(this.formRepair, {
+              proVersion:medium.productVersion,
               totalAddress:
                 medium.province +
                 medium.city +
@@ -796,6 +800,7 @@ export default {
             })
           } else {
             Object.assign(this.formRepair, {
+              proVersion:medium.productVersion,
               userId: val.uid,
               stage: val.stage,
               productInfo: val.packagesName,

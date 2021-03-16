@@ -35,6 +35,10 @@
 import { GetAgeByBrithday, openBrowserTab } from '@/utils/index'
 export default {
   props: {
+    courseType:{
+      type:String,
+      default:''
+    },
     user: {
       type: Object,
       default: () => ({})
@@ -58,7 +62,8 @@ export default {
         return false
       }
       row && console.log(row)
-      console.log(this.singleData && this.singleData.isrefund)
+      let str = this.courseType == 'system'?'details':'teamTrialDetail'
+      console.log(uid)
       if (Object.keys(this.singleData).length) {
         uid &&
           openBrowserTab(

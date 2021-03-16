@@ -92,7 +92,7 @@ export default {
           if (res.data && res.data.OrderListEx) {
             result = res.data.OrderListEx.map((item) => {
               if (item.out_trade_no)
-                // item.value = item.out_trade_no.replace('xiong', '')
+                item.value = item.out_trade_no.replace('yy','')
               return item
             })
           }

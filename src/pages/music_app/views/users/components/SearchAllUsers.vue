@@ -82,7 +82,7 @@ import Channel from '@/components/MSearch/searchItems/channel.vue'
 import SearchPhoneOrUsernum from '@/components/MSearch/searchItems/searchPhoneOrUsernum.vue'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect.vue'
 import DatePicker from './Picker.vue'
-import enums from '@/components/users/searchData'
+import enums from '@/pages/music_app/views/users/components/searchData'
 
 export default {
   components: {

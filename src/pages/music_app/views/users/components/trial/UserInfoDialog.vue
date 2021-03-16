@@ -281,6 +281,10 @@ export default {
     teamIdProp: {
       type: String,
       default: ''
+    },
+    limit: {
+      type: Object,
+      default: () => {}
     }
   },
   computed: {
@@ -328,11 +332,13 @@ export default {
       const page = this.currentPage
       const studentId = this.userInfo.id
       const teamId = this.teamId
+      const limit = this.limit
       const params = {
         studentId,
         teamId,
         page,
-        size: 5
+        size: 5,
+        limit
       }
       this.$http.User.getSendCourseLogPage(params)
         .then((res) => {
@@ -371,7 +377,7 @@ export default {
         teamId,
         page,
         size: 5,
-        subject: '3'
+        subject: '0'
       }).then((res) => {
         if (res?.data?.StudentCourseTaskPage) {
           const {

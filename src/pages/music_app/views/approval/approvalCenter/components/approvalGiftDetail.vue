@@ -113,10 +113,10 @@
         "
       >
         <el-col :span="20" :offset="1" style="margin-top: 40px">
-          <el-button type="button" size="mini" @click="refuseDialog"
+          <el-button type="button" size="small" @click="refuseDialog"
             >拒 绝</el-button
           >
-          <el-button type="primary" size="mini" @click="ensureReplenish"
+          <el-button type="primary" size="small" @click="ensureReplenish"
             >同 意</el-button
           >
         </el-col>
@@ -207,10 +207,11 @@ export default {
 
 <style lang="scss" scoped>
 .approvallk {
+  padding:0 20px;
   ::v-deep {
     .el-row {
       margin-bottom: 10px;
-      font-size: 12px;
+      // font-size: 12px;
     }
   }
 }
