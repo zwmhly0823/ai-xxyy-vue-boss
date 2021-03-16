@@ -10,10 +10,10 @@
   <div class="user-capital">
     <el-tabs v-model="assetCurPane">
       <el-tab-pane label="体验课推荐记录" name="changeRecord">
-        <changeRecord />
+        <changeRecord :pUserId="pUserId"/>
       </el-tab-pane>
       <el-tab-pane label="转介绍截图" name="changeImg">
-        <changeImg />
+        <changeImg :pUserId="pUserId" />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -23,6 +23,12 @@ import changeImg from './changeImg'
 import changeRecord from './changeRecord'
 
 export default {
+  props: {
+    pUserId: {
+      type: String,
+      default: ''
+    }
+  },
   components: {
     changeImg,
     changeRecord
