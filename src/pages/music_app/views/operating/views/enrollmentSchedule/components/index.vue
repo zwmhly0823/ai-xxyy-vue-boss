@@ -123,7 +123,7 @@
 // import MSearch from '@/components/MSearch/index.vue' TODO:
 import EleTable from '@/components/Table/EleTable'
 import { formatData } from '@/utils'
-import { SUP_LEVEL_TRIAL, SUP_LEVEL_SYSTEM } from '@/utils/supList'
+import { SUP_LEVEL_TRIAL,SUP_LEVEL_ALL, SUP_LEVEL_SYSTEM } from '@/utils/supList'
 export default {
   props: {
     department: {
@@ -179,7 +179,7 @@ export default {
   methods: {
     /** adolf-start */
     tabs_click(index) {
-      this.supLevelUpper = +index ? SUP_LEVEL_SYSTEM:SUP_LEVEL_TRIAL
+      this.supLevelUpper = SUP_LEVEL_ALL
 
       this.tabIndex = index
       this.tabQuery.page = 1

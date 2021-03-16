@@ -61,6 +61,10 @@ export default {
       type: Object,
       default: () => {},
       required: true
+    },
+    pUserId: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -75,7 +79,7 @@ export default {
       const {
         data: { UserExtendsList }
       } = await this.$http.User.getRecommendList({
-        send_id: this.$route.params.id,
+        send_id: this.pUserId,
         subject: this.$store.state.subjects.subjectCode
       }).catch((err) => {
         console.error(err)

@@ -127,10 +127,11 @@
           </el-form-item>
           <el-form-item label="是否扣除乐器费用：" prop="instrument">
             <el-radio-group v-model="jsonDate3.instrument" @change="casket">
-              <el-radio :label="0">扣除1800元</el-radio>
               <el-radio :label="1">不扣除乐器费用</el-radio>
+              <el-radio :label="0">扣除1800元</el-radio>
             </el-radio-group>
           </el-form-item>
+
           <el-form-item label="随材盒子：" prop="deductMaterial">
             <el-radio-group
               v-model="jsonDate3.deductMaterial"
@@ -297,6 +298,7 @@ export default {
       deep: true,
       handler(newValue, oldValue) {
         console.info('refundAmountComputed改变被捕获:', newValue)
+
         if (this.refundForm.residueFee - newValue < 0 || newValue < 0) {
           this.$message.warning(
             (newValue < 0 ? '退款金额小于0' : '退款金额大于剩余金额') +
@@ -360,7 +362,7 @@ export default {
           // 次月课程,随材盒子,乐器费用
           deductMonth: 0,
           deductMaterial: '',
-          instrument: '',
+          instrument: 1,
           boxAble: false
         }
         this.onePrice = '' // 3条二轮计算用到的月单价
@@ -579,6 +581,9 @@ export default {
           if (newValue === 0) {
             this.refundForm.refundAmount = '' // 退款额
             this.refundForm.refundMonths = ''
+            this.jsonDate3.deductMonth = 0;
+            this.jsonDate3.deductMaterial = 0
+            this.jsonDate3.instrument = 1
             if (this.refundForm.residueFee >= 200) {
               this.couponTypeOptions = []
               this.refundForm.couponType = ''
@@ -1065,7 +1070,7 @@ export default {
     refundAmountComputed() {
       if (this.refundForm.refundType === 1) {
         // 乐器费用
-        let instrument = this.jsonDate3.instrument === 0 ? 0.01 : 0
+        let instrument = this.jsonDate3.instrument === 0 ? 1800 : 0
         // 课程退款
         if (this.jsonDate3.deductMonth === 1 && this.onePrice > 0) {
           // 保留次月
@@ -1077,7 +1082,7 @@ export default {
           // 不保留次月
           return (
             this.refundForm.refundAmount -
-            ((this.jsonDate3.deductMaterial === 1 ? 0.01 : 0) +
+            ((this.jsonDate3.deductMaterial === 1 ? 100 : 0) +
               this.fontPrice +
               instrument)
           )

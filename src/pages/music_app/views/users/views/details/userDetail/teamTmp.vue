@@ -22,91 +22,95 @@
             <span class="label">上课状态：</span>
             <el-tag type="warning" class="tag-setting" size="small">
               {{
-                sys_student_details_son.systemCourseOfStudentDetails &&
-                  sys_student_details_son.systemCourseOfStudentDetails
-                    .course_state_name
+              sys_student_details_son.systemCourseOfStudentDetails &&
+              sys_student_details_son.systemCourseOfStudentDetails
+              .course_state_name
               }}
             </el-tag>
           </div>
           <div class="_item">
             <span class="label">当前级别：</span>
-            <span class="val">{{
+            <span class="val">
+              {{
               sys_student_details_son.systemCourseOfStudentDetails &&
-                SUP_LEVEL_ALL[sys_student_details_son.systemCourseOfStudentDetails
-                  .current_super]
-            }}</span>
+              SUP_LEVEL_ALL[sys_student_details_son.systemCourseOfStudentDetails
+              .current_super]
+              }}
+            </span>
           </div>
           <div class="_item">
             <span class="label">学习进度：</span>
             <span class="val">
               {{
-                sys_student_details_son.systemCourseOfStudentDetails &&
-                  courseLevelReplace(sys_student_details_son.systemCourseOfStudentDetails
-                    .current_progress)
+              sys_student_details_son.systemCourseOfStudentDetails &&
+              courseLevelReplace(sys_student_details_son.systemCourseOfStudentDetails
+              .current_progress)
               }}
             </span>
           </div>
           <div class="_item">
             <span class="label">参课/放课：</span>
-            <span class="val"
-              >{{
-                sys_student_details_son.systemCourseOfStudentDetails &&
-                  sys_student_details_son.systemCourseOfStudentDetails
-                    .join_course_count
+            <span class="val">
+              {{
+              sys_student_details_son.systemCourseOfStudentDetails &&
+              sys_student_details_son.systemCourseOfStudentDetails
+              .join_course_count
               }}节/{{
-                sys_student_details_son.systemCourseOfStudentDetails &&
-                  sys_student_details_son.systemCourseOfStudentDetails
-                    .send_course_count
-              }}节</span
-            >
+              sys_student_details_son.systemCourseOfStudentDetails &&
+              sys_student_details_son.systemCourseOfStudentDetails
+              .send_course_count
+              }}节
+            </span>
           </div>
           <div class="_item">
             <span class="label">完课/放课：</span>
-            <span class="val"
-              >{{
-                sys_student_details_son.systemCourseOfStudentDetails &&
-                  sys_student_details_son.systemCourseOfStudentDetails
-                    .complete_course_count
+            <span class="val">
+              {{
+              sys_student_details_son.systemCourseOfStudentDetails &&
+              sys_student_details_son.systemCourseOfStudentDetails
+              .complete_course_count
               }}节/{{
-                sys_student_details_son.systemCourseOfStudentDetails &&
-                  sys_student_details_son.systemCourseOfStudentDetails
-                    .send_course_count
-              }}节</span
-            >
+              sys_student_details_son.systemCourseOfStudentDetails &&
+              sys_student_details_son.systemCourseOfStudentDetails
+              .send_course_count
+              }}节
+            </span>
           </div>
           <div class="_item">
             <span class="label">上传作品：</span>
-            <span class="val"
-              >{{
-                sys_student_details_son.systemCourseOfStudentDetails &&
-                  sys_student_details_son.systemCourseOfStudentDetails
-                    .task_count
-              }}张</span
-            >
+            <span class="val">
+              {{
+              sys_student_details_son.systemCourseOfStudentDetails &&
+              sys_student_details_son.systemCourseOfStudentDetails
+              .task_count
+              }}张
+            </span>
           </div>
           <div class="_item">
             <span class="label">点评/听点评：</span>
-            <span class="val"
-              >{{
-                sys_student_details_son.systemCourseOfStudentDetails &&
-                  sys_student_details_son.systemCourseOfStudentDetails
-                    .comment_count
+            <span class="val">
+              {{
+              sys_student_details_son.systemCourseOfStudentDetails &&
+              sys_student_details_son.systemCourseOfStudentDetails
+              .comment_count
               }}次/{{
-                sys_student_details_son.systemCourseOfStudentDetails &&
-                  sys_student_details_son.systemCourseOfStudentDetails
-                    .listen_comment_count
-              }}次</span
-            >
+              sys_student_details_son.systemCourseOfStudentDetails &&
+              sys_student_details_son.systemCourseOfStudentDetails
+              .listen_comment_count
+              }}次
+            </span>
           </div>
           <div class="_item">
             <span class="label">兼职老师：</span>
-            <span class="val">{{
+            <span class="val">
+              {{
               sys_student_details_son.systemCourseOfStudentDetails &&
-                sys_student_details_son.systemCourseOfStudentDetails
-                  .casualTeacherInfo &&
-                sys_student_details_son.systemCourseOfStudentDetails
-                  .casualTeacherInfo.realname
-            }}</span>
+              sys_student_details_son.systemCourseOfStudentDetails
+              .casualTeacherInfo &&
+              sys_student_details_son.systemCourseOfStudentDetails
+              .casualTeacherInfo.realname
+              }}
+            </span>
           </div>
         </div>
         <div class="_module">
@@ -121,49 +125,51 @@
                   sys_student_details_son.systemCourseOfStudentDetails
                 )
               "
-              >{{
-                sys_student_details_son.systemCourseOfStudentDetails &&
-                  sys_student_details_son.systemCourseOfStudentDetails
-                    .teamInfo &&
-                  sys_student_details_son.systemCourseOfStudentDetails.teamInfo
-                    .team_name
-              }}</span
             >
+              {{
+              sys_student_details_son.systemCourseOfStudentDetails &&
+              sys_student_details_son.systemCourseOfStudentDetails
+              .teamInfo &&
+              sys_student_details_son.systemCourseOfStudentDetails.teamInfo
+              .team_name
+              }}
+            </span>
           </div>
           <div class="_item">
             <span class="label">负责教辅：</span>
             <span class="val">
               {{
-                sys_student_details_son.systemCourseOfStudentDetails &&
-                  sys_student_details_son.systemCourseOfStudentDetails
-                    .teamInfo &&
-                  sys_student_details_son.systemCourseOfStudentDetails.teamInfo
-                    .teacher_info &&
-                  sys_student_details_son.systemCourseOfStudentDetails.teamInfo
-                    .teacher_info.realname
+              sys_student_details_son.systemCourseOfStudentDetails &&
+              sys_student_details_son.systemCourseOfStudentDetails
+              .teamInfo &&
+              sys_student_details_son.systemCourseOfStudentDetails.teamInfo
+              .teacher_info &&
+              sys_student_details_son.systemCourseOfStudentDetails.teamInfo
+              .teacher_info.realname
               }}·{{
-                sys_student_details_son.systemCourseOfStudentDetails &&
-                  sys_student_details_son.systemCourseOfStudentDetails
-                    .teamInfo &&
-                  sys_student_details_son.systemCourseOfStudentDetails.teamInfo
-                    .teacher_info &&
-                  sys_student_details_son.systemCourseOfStudentDetails.teamInfo
-                    .teacher_info.departmentInfo &&
-                  sys_student_details_son.systemCourseOfStudentDetails.teamInfo
-                    .teacher_info.departmentInfo.name
+              sys_student_details_son.systemCourseOfStudentDetails &&
+              sys_student_details_son.systemCourseOfStudentDetails
+              .teamInfo &&
+              sys_student_details_son.systemCourseOfStudentDetails.teamInfo
+              .teacher_info &&
+              sys_student_details_son.systemCourseOfStudentDetails.teamInfo
+              .teacher_info.departmentInfo &&
+              sys_student_details_son.systemCourseOfStudentDetails.teamInfo
+              .teacher_info.departmentInfo.name
               }}/{{
-                sys_student_details_son.systemCourseOfStudentDetails &&
-                  sys_student_details_son.systemCourseOfStudentDetails
-                    .teamInfo &&
-                  sys_student_details_son.systemCourseOfStudentDetails.teamInfo
-                    .teacher_info &&
-                  sys_student_details_son.systemCourseOfStudentDetails.teamInfo
-                    .teacher_info.departmentInfo &&
-                  sys_student_details_son.systemCourseOfStudentDetails.teamInfo
-                    .teacher_info.departmentInfo.parentDepartmentInfo &&
-                  sys_student_details_son.systemCourseOfStudentDetails.teamInfo
-                    .teacher_info.departmentInfo.parentDepartmentInfo.name
-              }}<span
+              sys_student_details_son.systemCourseOfStudentDetails &&
+              sys_student_details_son.systemCourseOfStudentDetails
+              .teamInfo &&
+              sys_student_details_son.systemCourseOfStudentDetails.teamInfo
+              .teacher_info &&
+              sys_student_details_son.systemCourseOfStudentDetails.teamInfo
+              .teacher_info.departmentInfo &&
+              sys_student_details_son.systemCourseOfStudentDetails.teamInfo
+              .teacher_info.departmentInfo.parentDepartmentInfo &&
+              sys_student_details_son.systemCourseOfStudentDetails.teamInfo
+              .teacher_info.departmentInfo.parentDepartmentInfo.name
+              }}
+              <span
                 v-if="
                   sys_student_details_son.systemCourseOfStudentDetails &&
                     sys_student_details_son.systemCourseOfStudentDetails
@@ -182,47 +188,51 @@
                       .teamInfo.teacher_info.departmentInfo.parentDepartmentInfo
                       .parentDepartmentInfo.name
                 "
-                >/</span
-              >{{
-                sys_student_details_son.systemCourseOfStudentDetails &&
-                  sys_student_details_son.systemCourseOfStudentDetails
-                    .teamInfo &&
-                  sys_student_details_son.systemCourseOfStudentDetails.teamInfo
-                    .teacher_info &&
-                  sys_student_details_son.systemCourseOfStudentDetails.teamInfo
-                    .teacher_info.departmentInfo &&
-                  sys_student_details_son.systemCourseOfStudentDetails.teamInfo
-                    .teacher_info.departmentInfo.parentDepartmentInfo &&
-                  sys_student_details_son.systemCourseOfStudentDetails.teamInfo
-                    .teacher_info.departmentInfo.parentDepartmentInfo
-                    .parentDepartmentInfo &&
-                  sys_student_details_son.systemCourseOfStudentDetails.teamInfo
-                    .teacher_info.departmentInfo.parentDepartmentInfo
-                    .parentDepartmentInfo.name
-              }}</span
-            >
+              >/</span>
+              {{
+              sys_student_details_son.systemCourseOfStudentDetails &&
+              sys_student_details_son.systemCourseOfStudentDetails
+              .teamInfo &&
+              sys_student_details_son.systemCourseOfStudentDetails.teamInfo
+              .teacher_info &&
+              sys_student_details_son.systemCourseOfStudentDetails.teamInfo
+              .teacher_info.departmentInfo &&
+              sys_student_details_son.systemCourseOfStudentDetails.teamInfo
+              .teacher_info.departmentInfo.parentDepartmentInfo &&
+              sys_student_details_son.systemCourseOfStudentDetails.teamInfo
+              .teacher_info.departmentInfo.parentDepartmentInfo
+              .parentDepartmentInfo &&
+              sys_student_details_son.systemCourseOfStudentDetails.teamInfo
+              .teacher_info.departmentInfo.parentDepartmentInfo
+              .parentDepartmentInfo.name
+              }}
+            </span>
           </div>
           <div class="_item">
             <span class="label">辅导电话：</span>
-            <span class="val">{{
+            <span class="val">
+              {{
               sys_student_details_son.systemCourseOfStudentDetails &&
-                sys_student_details_son.systemCourseOfStudentDetails.teamInfo &&
-                sys_student_details_son.systemCourseOfStudentDetails.teamInfo
-                  .teacher_info &&
-                sys_student_details_son.systemCourseOfStudentDetails.teamInfo
-                  .teacher_info.phone
-            }}</span>
+              sys_student_details_son.systemCourseOfStudentDetails.teamInfo &&
+              sys_student_details_son.systemCourseOfStudentDetails.teamInfo
+              .teacher_info &&
+              sys_student_details_son.systemCourseOfStudentDetails.teamInfo
+              .teacher_info.phone
+              }}
+            </span>
           </div>
           <div class="_item">
             <span class="label">教辅微信：</span>
-            <span class="val">{{
+            <span class="val">
+              {{
               sys_student_details_son.systemCourseOfStudentDetails &&
-                sys_student_details_son.systemCourseOfStudentDetails.teamInfo &&
-                sys_student_details_son.systemCourseOfStudentDetails.teamInfo
-                  .teacher_wechat_info &&
-                sys_student_details_son.systemCourseOfStudentDetails.teamInfo
-                  .teacher_wechat_info.wechat_no
-            }}</span>
+              sys_student_details_son.systemCourseOfStudentDetails.teamInfo &&
+              sys_student_details_son.systemCourseOfStudentDetails.teamInfo
+              .teacher_wechat_info &&
+              sys_student_details_son.systemCourseOfStudentDetails.teamInfo
+              .teacher_wechat_info.wechat_no
+              }}
+            </span>
           </div>
           <div class="_item">
             <div class="label">加辅导微信：</div>
@@ -233,8 +243,7 @@
               :active-value="1"
               :inactive-value="0"
               @change="changeSwitch($event, 'wechat')"
-            >
-            </el-switch>
+            ></el-switch>
           </div>
           <div class="_item">
             <div class="label">加班级群：</div>
@@ -245,20 +254,21 @@
               :active-value="1"
               :inactive-value="0"
               @change="changeSwitch($event, 'group')"
-            >
-            </el-switch>
+            ></el-switch>
           </div>
           <div class="_item">
             <span class="label">班级结课时间：</span>
-            <span class="val">{{
+            <span class="val">
+              {{
               formatDate(
-                sys_student_details_son.systemCourseOfStudentDetails &&
-                  sys_student_details_son.systemCourseOfStudentDetails
-                    .teamInfo &&
-                  sys_student_details_son.systemCourseOfStudentDetails.teamInfo
-                    .class_end
+              sys_student_details_son.systemCourseOfStudentDetails &&
+              sys_student_details_son.systemCourseOfStudentDetails
+              .teamInfo &&
+              sys_student_details_son.systemCourseOfStudentDetails.teamInfo
+              .class_end
               ).substring(0, 10)
-            }}</span>
+              }}
+            </span>
           </div>
           <div
             class="_item"
@@ -279,14 +289,15 @@
                   sys_student_details_son.systemCourseOfStudentDetails
                 )
               "
-              >{{
-                sys_student_details_son.systemCourseOfStudentDetails &&
-                  sys_student_details_son.systemCourseOfStudentDetails
-                    .readyTeamInfo &&
-                  sys_student_details_son.systemCourseOfStudentDetails
-                    .readyTeamInfo.team_name
-              }}</span
             >
+              {{
+              sys_student_details_son.systemCourseOfStudentDetails &&
+              sys_student_details_son.systemCourseOfStudentDetails
+              .readyTeamInfo &&
+              sys_student_details_son.systemCourseOfStudentDetails
+              .readyTeamInfo.team_name
+              }}
+            </span>
           </div>
         </div>
       </div>
@@ -295,63 +306,70 @@
           <p class="_study_info">报名信息</p>
           <div class="_item">
             <span class="label">首次购买系统课时间：</span>
-            <span class="val">{{
+            <span class="val">
+              {{
               formatDate(
-                sys_student_details_son.systemCourseOfStudentDetails &&
-                  sys_student_details_son.systemCourseOfStudentDetails
-                    .first_order_buytime
+              sys_student_details_son.systemCourseOfStudentDetails &&
+              sys_student_details_son.systemCourseOfStudentDetails
+              .first_order_buytime
               )
-            }}</span>
+              }}
+            </span>
           </div>
           <div class="_item">
             <span class="label">系统课订单数：</span>
-            <span class="val special-blue" @click="orderList"
-              >{{
-                sys_student_details_son.systemCourseOfStudentDetails &&
-                  sys_student_details_son.systemCourseOfStudentDetails
-                    .system_order_count
-              }}笔订单</span
-            >
+            <span class="val special-blue" @click="orderList">
+              {{
+              sys_student_details_son.systemCourseOfStudentDetails &&
+              sys_student_details_son.systemCourseOfStudentDetails
+              .system_order_count
+              }}笔订单
+            </span>
           </div>
           <div class="_item">
             <span class="label">购买系统课周数：</span>
-            <span class="val"
-              >{{
-                sys_student_details_son.systemCourseOfStudentDetails &&
-                  sys_student_details_son.systemCourseOfStudentDetails
-                    .buy_system_order_weeks
-              }}周</span
-            >
+            <span class="val">
+              {{
+              sys_student_details_son.systemCourseOfStudentDetails &&
+              sys_student_details_son.systemCourseOfStudentDetails
+              .buy_system_order_weeks
+              }}周
+            </span>
           </div>
           <div class="_item">
             <span class="label">剩余系统课周数数：</span>
-            <span class="val"
-              >{{
-                sys_student_details_son.systemCourseOfStudentDetails &&
-                  sys_student_details_son.systemCourseOfStudentDetails
-                    .remaining_week
-              }}周</span
-            >
+            <span class="val">
+              {{
+              sys_student_details_son.systemCourseOfStudentDetails &&
+              sys_student_details_son.systemCourseOfStudentDetails
+              .remaining_week
+              }}周
+            </span>
           </div>
           <div class="_item">
             <span class="label">首次开课时间：</span>
-            <span class="val">{{
+            <span class="val">
+              {{
               formatDate(
-                sys_student_details_son.systemCourseOfStudentDetails &&
-                  sys_student_details_son.systemCourseOfStudentDetails
-                    .first_send_course_time
+              sys_student_details_son.systemCourseOfStudentDetails &&
+              sys_student_details_son.systemCourseOfStudentDetails
+              .first_send_course_time
               ).substring(0, 10)
-            }}</span>
+              }}
+            </span>
           </div>
           <div class="_item">
             <span class="label">到期结课时间：</span>
-            <span class="val">{{
+            <span class="val">
+              {{
               formatDate(
-                sys_student_details_son.systemCourseOfStudentDetails &&
-                  sys_student_details_son.systemCourseOfStudentDetails
-                    .logic_end_course_time
+              sys_student_details_son.systemCourseOfStudentDetails &&
+              sys_student_details_son.systemCourseOfStudentDetails.teamInfo
+              &&sys_student_details_son.systemCourseOfStudentDetails.teamInfo
+              .class_end
               ).substring(0, 10)
-            }}</span>
+              }}
+            </span>
           </div>
         </div>
         <div class="_module">
@@ -371,7 +389,7 @@
           <div class="_item">
             <span class="label">教辅变更记录：</span>
             <span class="val special-blue">查看信息</span>
-          </div> -->
+          </div>-->
         </div>
       </div>
     </div>
@@ -392,137 +410,136 @@
                     sys_student_details_son.trialOfStudentDetails
                       .course_state === 2
                 "
-              >
-                已结课
-              </div>
+              >已结课</div>
               <div
                 v-if="
                   sys_student_details_son.trialOfStudentDetails &&
                     sys_student_details_son.trialOfStudentDetails
                       .course_state === 1
                 "
-              >
-                上课中
-              </div>
+              >上课中</div>
               <div
                 v-if="
                   sys_student_details_son.trialOfStudentDetails &&
                     sys_student_details_son.trialOfStudentDetails
                       .course_state === 0
                 "
-              >
-                待开课
-              </div>
+              >待开课</div>
             </el-tag>
           </div>
           <div class="_item">
             <span class="label">当前级别：</span>
-            <span class="val">{{
+            <span class="val">
+              {{
               sys_student_details_son.trialOfStudentDetails &&
-                SUP_LEVEL_ALL[sys_student_details_son.trialOfStudentDetails.current_super]
-            }}</span>
+              SUP_LEVEL_ALL[sys_student_details_son.trialOfStudentDetails.current_super]
+              }}
+            </span>
           </div>
           <div class="_item">
             <span class="label">学习进度：</span>
             <span class="val">
               {{
-                sys_student_details_son.trialOfStudentDetails &&
-                  courseLevelReplace(sys_student_details_son.trialOfStudentDetails.current_progress)
+              sys_student_details_son.trialOfStudentDetails &&
+              courseLevelReplace(sys_student_details_son.trialOfStudentDetails.current_progress)
               }}
             </span>
           </div>
           <div class="_item">
             <span class="label">参课/放课：</span>
-            <span class="val"
-              >{{
-                sys_student_details_son.trialOfStudentDetails &&
-                  sys_student_details_son.trialOfStudentDetails
-                    .join_course_count
+            <span class="val">
+              {{
+              sys_student_details_son.trialOfStudentDetails &&
+              sys_student_details_son.trialOfStudentDetails
+              .join_course_count
               }}节/{{
-                sys_student_details_son.trialOfStudentDetails &&
-                  sys_student_details_son.trialOfStudentDetails
-                    .send_course_count
-              }}节</span
-            >
+              sys_student_details_son.trialOfStudentDetails &&
+              sys_student_details_son.trialOfStudentDetails
+              .send_course_count
+              }}节
+            </span>
           </div>
           <div class="_item">
             <span class="label">完课/放课：</span>
-            <span class="val"
-              >{{
-                sys_student_details_son.trialOfStudentDetails &&
-                  sys_student_details_son.trialOfStudentDetails
-                    .complete_course_count
+            <span class="val">
+              {{
+              sys_student_details_son.trialOfStudentDetails &&
+              sys_student_details_son.trialOfStudentDetails
+              .complete_course_count
               }}节/{{
-                sys_student_details_son.trialOfStudentDetails &&
-                  sys_student_details_son.trialOfStudentDetails
-                    .send_course_count
-              }}节</span
-            >
+              sys_student_details_son.trialOfStudentDetails &&
+              sys_student_details_son.trialOfStudentDetails
+              .send_course_count
+              }}节
+            </span>
           </div>
           <div class="_item">
             <span class="label">上传作品：</span>
-            <span class="val"
-              >{{
-                sys_student_details_son.trialOfStudentDetails &&
-                  sys_student_details_son.trialOfStudentDetails.task_count
-              }}张</span
-            >
+            <span class="val">
+              {{
+              sys_student_details_son.trialOfStudentDetails &&
+              sys_student_details_son.trialOfStudentDetails.task_count
+              }}张
+            </span>
           </div>
           <div class="_item">
             <span class="label">点评/听点评：</span>
-            <span class="val"
-              >{{
-                sys_student_details_son.trialOfStudentDetails &&
-                  sys_student_details_son.trialOfStudentDetails.comment_count
+            <span class="val">
+              {{
+              sys_student_details_son.trialOfStudentDetails &&
+              sys_student_details_son.trialOfStudentDetails.comment_count
               }}次/{{
-                sys_student_details_son.trialOfStudentDetails &&
-                  sys_student_details_son.trialOfStudentDetails
-                    .listen_comment_count
-              }}次</span
-            >
+              sys_student_details_son.trialOfStudentDetails &&
+              sys_student_details_son.trialOfStudentDetails
+              .listen_comment_count
+              }}次
+            </span>
           </div>
         </div>
         <div class="_module">
           <p>班级信息</p>
           <div class="_item">
             <span class="label">所属班级：</span>
-            <span class="val special-blue" @click="openTeam('t')">{{
+            <span class="val special-blue" @click="openTeam('t')">
+              {{
               sys_student_details_son.trialOfStudentDetails &&
-                sys_student_details_son.trialOfStudentDetails.teamInfo &&
-                courseLevelReplace(sys_student_details_son.trialOfStudentDetails.teamInfo.team_name)
-            }}</span>
+              sys_student_details_son.trialOfStudentDetails.teamInfo &&
+              courseLevelReplace(sys_student_details_son.trialOfStudentDetails.teamInfo.team_name)
+              }}
+            </span>
           </div>
           <div class="_item">
             <span class="label">负责销售：</span>
-            <span class="val"
-              >{{
-                sys_student_details_son.trialOfStudentDetails &&
-                  sys_student_details_son.trialOfStudentDetails.teamInfo &&
-                  sys_student_details_son.trialOfStudentDetails.teamInfo
-                    .teacher_info &&
-                  sys_student_details_son.trialOfStudentDetails.teamInfo
-                    .teacher_info.realname
+            <span class="val">
+              {{
+              sys_student_details_son.trialOfStudentDetails &&
+              sys_student_details_son.trialOfStudentDetails.teamInfo &&
+              sys_student_details_son.trialOfStudentDetails.teamInfo
+              .teacher_info &&
+              sys_student_details_son.trialOfStudentDetails.teamInfo
+              .teacher_info.realname
               }}·{{
-                sys_student_details_son.trialOfStudentDetails &&
-                  sys_student_details_son.trialOfStudentDetails.teamInfo &&
-                  sys_student_details_son.trialOfStudentDetails.teamInfo
-                    .teacher_info &&
-                  sys_student_details_son.trialOfStudentDetails.teamInfo
-                    .teacher_info.departmentInfo &&
-                  sys_student_details_son.trialOfStudentDetails.teamInfo
-                    .teacher_info.departmentInfo.name
+              sys_student_details_son.trialOfStudentDetails &&
+              sys_student_details_son.trialOfStudentDetails.teamInfo &&
+              sys_student_details_son.trialOfStudentDetails.teamInfo
+              .teacher_info &&
+              sys_student_details_son.trialOfStudentDetails.teamInfo
+              .teacher_info.departmentInfo &&
+              sys_student_details_son.trialOfStudentDetails.teamInfo
+              .teacher_info.departmentInfo.name
               }}/{{
-                sys_student_details_son.trialOfStudentDetails &&
-                  sys_student_details_son.trialOfStudentDetails.teamInfo &&
-                  sys_student_details_son.trialOfStudentDetails.teamInfo
-                    .teacher_info &&
-                  sys_student_details_son.trialOfStudentDetails.teamInfo
-                    .teacher_info.departmentInfo &&
-                  sys_student_details_son.trialOfStudentDetails.teamInfo
-                    .teacher_info.departmentInfo.parentDepartmentInfo &&
-                  sys_student_details_son.trialOfStudentDetails.teamInfo
-                    .teacher_info.departmentInfo.parentDepartmentInfo.name
-              }}<span
+              sys_student_details_son.trialOfStudentDetails &&
+              sys_student_details_son.trialOfStudentDetails.teamInfo &&
+              sys_student_details_son.trialOfStudentDetails.teamInfo
+              .teacher_info &&
+              sys_student_details_son.trialOfStudentDetails.teamInfo
+              .teacher_info.departmentInfo &&
+              sys_student_details_son.trialOfStudentDetails.teamInfo
+              .teacher_info.departmentInfo.parentDepartmentInfo &&
+              sys_student_details_son.trialOfStudentDetails.teamInfo
+              .teacher_info.departmentInfo.parentDepartmentInfo.name
+              }}
+              <span
                 v-if="
                   sys_student_details_son.trialOfStudentDetails &&
                     sys_student_details_son.trialOfStudentDetails.teamInfo &&
@@ -539,46 +556,50 @@
                       .teacher_info.departmentInfo.parentDepartmentInfo
                       .parentDepartmentInfo.name
                 "
-                >/</span
-              >{{
-                sys_student_details_son.trialOfStudentDetails &&
-                  sys_student_details_son.trialOfStudentDetails.teamInfo &&
-                  sys_student_details_son.trialOfStudentDetails.teamInfo
-                    .teacher_info &&
-                  sys_student_details_son.trialOfStudentDetails.teamInfo
-                    .teacher_info.departmentInfo &&
-                  sys_student_details_son.trialOfStudentDetails.teamInfo
-                    .teacher_info.departmentInfo.parentDepartmentInfo &&
-                  sys_student_details_son.trialOfStudentDetails.teamInfo
-                    .teacher_info.departmentInfo.parentDepartmentInfo
-                    .parentDepartmentInfo &&
-                  sys_student_details_son.trialOfStudentDetails.teamInfo
-                    .teacher_info.departmentInfo.parentDepartmentInfo
-                    .parentDepartmentInfo.name
-              }}</span
-            >
+              >/</span>
+              {{
+              sys_student_details_son.trialOfStudentDetails &&
+              sys_student_details_son.trialOfStudentDetails.teamInfo &&
+              sys_student_details_son.trialOfStudentDetails.teamInfo
+              .teacher_info &&
+              sys_student_details_son.trialOfStudentDetails.teamInfo
+              .teacher_info.departmentInfo &&
+              sys_student_details_son.trialOfStudentDetails.teamInfo
+              .teacher_info.departmentInfo.parentDepartmentInfo &&
+              sys_student_details_son.trialOfStudentDetails.teamInfo
+              .teacher_info.departmentInfo.parentDepartmentInfo
+              .parentDepartmentInfo &&
+              sys_student_details_son.trialOfStudentDetails.teamInfo
+              .teacher_info.departmentInfo.parentDepartmentInfo
+              .parentDepartmentInfo.name
+              }}
+            </span>
           </div>
           <div class="_item">
             <span class="label">销售电话：</span>
-            <span class="val">{{
+            <span class="val">
+              {{
               sys_student_details_son.trialOfStudentDetails &&
-                sys_student_details_son.trialOfStudentDetails.teamInfo &&
-                sys_student_details_son.trialOfStudentDetails.teamInfo
-                  .teacher_info &&
-                sys_student_details_son.trialOfStudentDetails.teamInfo
-                  .teacher_info.phone
-            }}</span>
+              sys_student_details_son.trialOfStudentDetails.teamInfo &&
+              sys_student_details_son.trialOfStudentDetails.teamInfo
+              .teacher_info &&
+              sys_student_details_son.trialOfStudentDetails.teamInfo
+              .teacher_info.phone
+              }}
+            </span>
           </div>
           <div class="_item">
             <span class="label">销售微信：</span>
-            <span class="val">{{
+            <span class="val">
+              {{
               sys_student_details_son.trialOfStudentDetails &&
-                sys_student_details_son.trialOfStudentDetails.teamInfo &&
-                sys_student_details_son.trialOfStudentDetails.teamInfo
-                  .teacher_wechat_info &&
-                sys_student_details_son.trialOfStudentDetails.teamInfo
-                  .teacher_wechat_info.wechat_no
-            }}</span>
+              sys_student_details_son.trialOfStudentDetails.teamInfo &&
+              sys_student_details_son.trialOfStudentDetails.teamInfo
+              .teacher_wechat_info &&
+              sys_student_details_son.trialOfStudentDetails.teamInfo
+              .teacher_wechat_info.wechat_no
+              }}
+            </span>
           </div>
           <div class="_item">
             <div class="label">加销售微信：</div>
@@ -589,8 +610,7 @@
               :active-value="1"
               :inactive-value="0"
               @change="changeSwitch($event, 'twechat')"
-            >
-            </el-switch>
+            ></el-switch>
           </div>
           <div class="_item">
             <div class="label">加班级群：</div>
@@ -601,19 +621,20 @@
               :active-value="1"
               :inactive-value="0"
               @change="changeSwitch($event, 'tgroup')"
-            >
-            </el-switch>
+            ></el-switch>
           </div>
           <div class="_item">
             <span class="label">班级结课时间：</span>
-            <span class="val">{{
+            <span class="val">
+              {{
               formatDate(
-                sys_student_details_son.trialOfStudentDetails &&
-                  sys_student_details_son.trialOfStudentDetails.teamInfo &&
-                  sys_student_details_son.trialOfStudentDetails.teamInfo
-                    .class_end
+              sys_student_details_son.trialOfStudentDetails &&
+              sys_student_details_son.trialOfStudentDetails.teamInfo &&
+              sys_student_details_son.trialOfStudentDetails.teamInfo
+              .class_end
               ).substring(0, 10)
-            }}</span>
+              }}
+            </span>
           </div>
         </div>
       </div>
@@ -622,113 +643,104 @@
           <p>报名信息</p>
           <div class="_item">
             <span class="label">购买体验课时间：</span>
-            <span class="val">{{
+            <span class="val">
+              {{
               formatDate(
-                sys_student_details_son.trialOfStudentDetails &&
-                  sys_student_details_son.trialOfStudentDetails.orderInfo &&
-                  sys_student_details_son.trialOfStudentDetails.orderInfo
-                    .buytime
+              sys_student_details_son.trialOfStudentDetails &&
+              sys_student_details_son.trialOfStudentDetails.orderInfo &&
+              sys_student_details_son.trialOfStudentDetails.orderInfo
+              .buytime
               )
-            }}</span>
+              }}
+            </span>
           </div>
           <div class="_item">
             <span class="label">购买体验课周数：</span>
-            <span class="val"
-              >{{
-                sys_student_details_son.trialOfStudentDetails &&
-                  sys_student_details_son.trialOfStudentDetails.orderInfo &&
-                  sys_student_details_son.trialOfStudentDetails.orderInfo
-                    .packages_course_week
-              }}周</span
-            >
+            <span class="val">
+              {{
+              sys_student_details_son.trialOfStudentDetails &&
+              sys_student_details_son.trialOfStudentDetails.orderInfo &&
+              sys_student_details_son.trialOfStudentDetails.orderInfo
+              .packages_course_week
+              }}周
+            </span>
           </div>
           <div class="_item">
             <span class="label">剩余体验课周数：</span>
-            <span class="val"
-              >{{
-                sys_student_details_son.trialOfStudentDetails &&
-                  sys_student_details_son.trialOfStudentDetails.remaining_week
-              }}周</span
-            >
+            <span class="val">
+              {{
+              sys_student_details_son.trialOfStudentDetails &&
+              sys_student_details_son.trialOfStudentDetails.remaining_week
+              }}周
+            </span>
           </div>
           <div class="_item">
             <span class="label">首次开课时间：</span>
-            <span class="val">{{
+            <span class="val">
+              {{
               formatDate(
-                sys_student_details_son.trialOfStudentDetails &&
-                  sys_student_details_son.trialOfStudentDetails
-                    .first_send_course_time
+              sys_student_details_son.trialOfStudentDetails &&
+              sys_student_details_son.trialOfStudentDetails
+              .first_send_course_time
               ).substring(0, 10)
-            }}</span>
+              }}
+            </span>
           </div>
           <div class="_item">
             <span class="label">到期结课时间：</span>
-            <span class="val">{{
+            <span class="val">
+              {{
               formatDate(
-                sys_student_details_son.trialOfStudentDetails &&
-                  sys_student_details_son.trialOfStudentDetails
-                    .logic_end_course_time
+              sys_student_details_son.trialOfStudentDetails &&
+              sys_student_details_son.trialOfStudentDetails.teamInfo &&
+              sys_student_details_son.trialOfStudentDetails.teamInfo.class_end
               ).substring(0, 10)
-            }}</span>
+              }}
+            </span>
           </div>
         </div>
         <div class="_module">
           <p>转换跟进</p>
           <div class="_item">
-            <span class="label"> 意向度：</span>
+            <span class="label">意向度：</span>
             <el-dropdown v-if="isFlags" @command="drownDownHandle">
-              <el-tag type="warning" size="medium"
-                >{{ dropName }}<i class="drown-down-btn"></i
-              ></el-tag>
+              <el-tag type="warning" size="medium">
+                {{ dropName }}
+                <i class="drown-down-btn"></i>
+              </el-tag>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item
                   :command="item"
                   v-for="(item, index) in tagsList"
                   :key="index"
-                >
-                  {{ item.label }}
-                </el-dropdown-item>
+                >{{ item.label }}</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <div
-              v-else
-              class="el-icon-circle-plus-outline"
-              @click="editBtn"
-            ></div>
+            <div v-else class="el-icon-circle-plus-outline" @click="editBtn"></div>
           </div>
           <div class="_item">
             <span class="label">沟通备注：</span>
             <span class="val" v-if="isFlag" style="padding-right:20px">
-              <span>{{
+              <span>
+                {{
                 sys_student_details_son.trialOfStudentDetails &&
-                  sys_student_details_son.trialOfStudentDetails.userIntention &&
-                  sys_student_details_son.trialOfStudentDetails.userIntention.describe.substring(
-                    0,
-                    50
-                  )
-              }}</span>
-              <i
-                style="cursor: pointer;"
-                class="el-icon-edit"
-                @click="editBtn"
-              ></i>
+                sys_student_details_son.trialOfStudentDetails.userIntention &&
+                sys_student_details_son.trialOfStudentDetails.userIntention.describe.substring(
+                0,
+                50
+                )
+                }}
+              </span>
+              <i style="cursor: pointer;" class="el-icon-edit" @click="editBtn"></i>
             </span>
-            <span
-              v-else
-              class="el-icon-circle-plus-outline"
-              @click="editBtn"
-            ></span>
+            <span v-else class="el-icon-circle-plus-outline" @click="editBtn"></span>
           </div>
         </div>
       </div>
     </div>
     <!-- 沟通备注 -->
     <div class="talk-remark">
-      <intention-dialog
-        ref="intentionDialog"
-        :remarks="remarks"
-        @intentConfirm="intentConfirm"
-      ></intention-dialog>
+      <intention-dialog ref="intentionDialog" :remarks="remarks" @intentConfirm="intentConfirm"></intention-dialog>
       <!-- <el-dialog
         :visible.sync="showDialog"
         title="沟通备注"
@@ -782,7 +794,7 @@
             </div>
           </div>
         </section>
-      </el-dialog> -->
+      </el-dialog>-->
     </div>
   </div>
 </template>
@@ -790,7 +802,7 @@
 // 自定义指令函数
 import { formatDateByType } from '@/utils/mini_tool_lk'
 import { formatData, openBrowserTab } from '@/utils/index'
-import { SUP_LEVEL_ALL,courseLevelReplace } from '@/utils/supList'
+import { SUP_LEVEL_ALL, courseLevelReplace } from '@/utils/supList'
 import intentionDialog from '../../../components/intentionDialog'
 const clickOutside = {
   bind(el, binding) {
@@ -857,7 +869,7 @@ export default {
           val.systemCourseOfStudentDetails.course_state
         ]
       }
-      
+
       this.sys_student_details_son = val
 
       if (

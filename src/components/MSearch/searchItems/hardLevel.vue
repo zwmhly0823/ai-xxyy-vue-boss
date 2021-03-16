@@ -20,10 +20,10 @@
       @change="supChange"
     >
       <el-option
-        v-for="item in supList"
+        v-for="(item,index) in supList"
         :key="item.id"
         :label="item.text"
-        :value="item.id"
+        :value="(index+1)"
       >
       </el-option>
     </el-select>
@@ -48,7 +48,7 @@ export default {
       type: String,
       default: '难度'
     },
-    name: {
+    name: { 
       type: String,
       default: 'sup'
     },
@@ -129,6 +129,7 @@ export default {
       // 如果是体验课难度，查询订单的话，需要关联tg_student_team,根据id关联o_order的trial_team_id
       if (this.name === 'trial_team_id') {
         const supArr = data.map((item) => `${item}`)
+
         this.$http.StudentTerm.searchTeamBySup(supArr).then((res) => {
           
           if (res && res.data && res.data.StudentTeamList) {
@@ -142,6 +143,7 @@ export default {
           this.$emit('result', '')
         })
       } else {
+        
         this.$emit(
           'result',
           data.length > 0 ? { [this.name]: this.supData } : ''

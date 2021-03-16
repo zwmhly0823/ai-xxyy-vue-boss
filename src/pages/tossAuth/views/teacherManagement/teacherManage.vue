@@ -53,7 +53,7 @@ export default {
   &-left {
     padding-left: 0px;
     padding-right: 10px;
-    width: 240px;
+    width: 320px;
     overflow-x: auto;
     // min-width: 240px;
     border-right: 1px solid #e3e3e3;

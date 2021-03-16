@@ -1,5 +1,5 @@
 <!--
- * @Descripttion: 
+ * @Descripttion:
  * @version: 1.0.0
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
@@ -149,7 +149,7 @@
       <div class="rawer-bot">
         <el-button
           type="primary"
-          v-show="+roleId === 4 && ![5].includes(orderData.status)"
+          v-show="![5].includes(orderData.status)"
           @click="comfirmRefund"
           >发起退款支付</el-button
         >
@@ -184,7 +184,7 @@ export default {
   },
   data() {
     return {
-      roleId: JSON.parse(localStorage.getItem('staff')).roleId || '',
+      roleId: '',
       payData: [],
       invoiceStatus: ['待开票', '开票中', '已开票', '开票失败', '作废'],
       invoiceTypes: ['无', '普通发票', '专票'],
@@ -232,7 +232,12 @@ export default {
     // }
   },
   watch: {},
-  created() {},
+  created() {
+    const roleList = JSON.parse(localStorage.getItem('staff')).roleList;
+    let roleId = roleList ? roleList[0] : '';
+    this.roleId = roleId;
+    console.log('ddd', this.roleId);
+  },
   mounted() {
     console.log('参数', this.orderData)
   },

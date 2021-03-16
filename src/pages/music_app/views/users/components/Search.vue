@@ -174,7 +174,7 @@
                 @result="getSearchData('sup', arguments)"
               />
             </div>
-          </el-form-item> -->
+          </el-form-item>-->
 
           <el-form-item label="渠道选择:">
             <div class="search-group">
@@ -195,7 +195,7 @@
                 @result="getSearchData('user_label.like', arguments)"
               />
             </div>
-          </el-form-item> -->
+          </el-form-item>-->
           <el-form-item label="手动标签:">
             <div class="search-group">
               <define-label-v2
@@ -268,15 +268,11 @@
           </el-form-item>
           <!-- 用来占位 -->
           <div class="seat-div">
-            <el-button size="mini" type="primary">
-              高级筛选
-            </el-button>
+            <el-button size="mini" type="primary">高级筛选</el-button>
             <p class="clear-btn primary-text">清空筛选</p>
           </div>
           <div class="handle-area d-flex align-center">
-            <el-button size="mini" @click="advancedSearch" type="primary"
-              >高级筛选</el-button
-            >
+            <el-button size="mini" @click="advancedSearch" type="primary">高级筛选</el-button>
             <p @click="handleClear" class="clear-btn primary-text">清空筛选</p>
           </div>
         </el-form>
@@ -359,9 +355,11 @@ export default {
      * search item 回调。 key,自定义参数，res，组件返回的值 res[0]
      */
     getSearchData(key, res) {
-      const search = res && res[0]
-      // console.log(key, res)
-
+      var search = res && res[0]
+      if (key == 'sup') {
+        search.sup = search.sup.replace(/[A-Z]/g, 's')
+        // search.sup = search.sup
+      }
       if (search) {
         // if (key === 'sup') {
         //   const r = search[key].map((item) => `s${item}`)

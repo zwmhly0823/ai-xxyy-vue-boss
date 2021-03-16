@@ -7,7 +7,7 @@
  * @LastEditTime: 2021-02-08 13:34:07
 -->
 <template>
-  <div class="user-list">
+  <div class="user-list systemUserList">
     <!-- <el-tabs v-model="life_cycle">
       <el-tab-pane label="全部学员" name="0,1,2,91,92"></el-tab-pane>
       <el-tab-pane label="开课中" name="1"></el-tab-pane>
@@ -26,7 +26,7 @@
         @toggle="handleToggle"
         ref="sidebar"
       />
-      <div style="width:calc(100vw - 375px)" ref="systemCon">
+      <div :style="`width:calc(100vw - ${systemUserListleftWidth}px)`" ref="systemCon">
         <search-system
           @search="getSearchQuery"
           :teacherIds="teacherIds"
@@ -500,7 +500,7 @@
                   </div>
                   <!-- 剩余周数 -->
                   <div v-if="item.title === '剩余周数' && item.flag">
-                    <p>{{ scope.row.remaining_week }}</p>
+                    <p>{{ scope.row.remaining_week}}</p>
                   </div>
                   <!-- 放课/结课时间 -->
                   <div v-if="item.title === '放课/结课时间' && item.flag">
@@ -711,6 +711,7 @@ export default {
   },
   data() {
     return {
+      systemUserListleftWidth:375,
       SUP_LEVEL_ALL,
       courseLevelReplace,
       openColumnLsit: false,
@@ -966,7 +967,8 @@ export default {
     },
     // 左侧伸缩开关
     handleToggle(data) {
-      this.isOpened = data
+      this.isOpened = data;
+      this.systemUserListleftWidth = data?375:0;
     },
     handLeCopy(row) {
       const url = row.mobile
@@ -1111,6 +1113,7 @@ export default {
               defContent = content
             }
             this.dataList = defContent
+            console.log(this.dataList)
             this.totalPages = +defTotalPages
             this.totalElements = +defTotalElements
             loading.close()
@@ -1249,7 +1252,7 @@ export default {
       const { teamid, teamname, teamtype = '1' } = row
       teamid &&
         openBrowserTab(
-          `/student-team/#/teamDetail/${teamid}/${teamtype}`,
+          `/music_app/#/teamDetail/${teamid}/${teamtype}`,
           `${teamname}`
         )
     },
@@ -1408,5 +1411,16 @@ $primary-color: rgb(255, 139, 140);
 }
 .sys-v2-head-father-right {
   margin-left: 5px;
+}
+</style>
+<style lang="scss">
+.systemUserList{
+  .system-container-sidebar{
+    &.closed {
+      .system-list-sidebar{
+        width:0;
+      }
+    }
+  }
 }
 </style>

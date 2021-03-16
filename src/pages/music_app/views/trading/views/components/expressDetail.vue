@@ -17,7 +17,7 @@
       size="40%"
     >
       <div class="what">
-        <div class="left-click" v-if="leftRow.length > 1">
+        <div class="left-click" v-if="leftRow.length > 0">
           <div
             @click="getexpressInformation(item, i)"
             :class="[{ active: isActive == i }, 'inactive']"
@@ -313,11 +313,11 @@ export default {
       // }
 
       // 2020-10-02 强哥说 根据delivery_type这个字段区分，0是取快递100的详情，1是取中台的详情
-      if (+val.delivery_type === 1) {
+      // if (+val.delivery_type === 1) {
         this.getExpressDetails(this.expressNu)
-      } else {
-        this.expressList(this.expressNu, val.express_status)
-      }
+      // } else {
+      //   this.expressList(this.expressNu, val.express_status)
+      // }
     },
     order_id(val) {
       this.waitFor = false
@@ -465,11 +465,12 @@ export default {
       // }
 
       // 2020-10-02 强哥说 根据delivery_type这个字段区分，0是取快递100的详情，1是取中台的详情
-      if (+item.delivery_type === 1) {
+      // 2021-03-10 只用中台请求数据
+      // if (+item.delivery_type === 1) {
         this.getExpressDetails(item.express_nu)
-      } else {
-        this.expressList(item.express_nu, item.express_status)
-      }
+      // } else {
+      //   this.expressList(item.express_nu, item.express_status)
+      // }
     },
     handleClose() {
       this.drawer = false

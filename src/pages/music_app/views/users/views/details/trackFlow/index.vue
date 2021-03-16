@@ -209,7 +209,7 @@ export default {
         }
       } = await this.$http.User.getTrackList({
         subject: this.changeSubject,
-        uid: this.$route.params.id
+        uid: this.pUserId
       }).catch((err) => {
         this.$message.error('flow更多数据获取失败')
         console.error(err)

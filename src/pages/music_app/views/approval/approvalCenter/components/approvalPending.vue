@@ -1,6 +1,6 @@
 <!--
- * @Descripttion: 
- * @version: 
+ * @Descripttion:
+ * @version:
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
@@ -1036,7 +1036,11 @@ export default {
   computed: {
     formatDate: () => formatDate,
     positionIdlk() {
-      return JSON.parse(localStorage.getItem('staff')).positionId
+      const departmentList = JSON.parse(localStorage.getItem('staff')).departmentList;
+      if(departmentList && departmentList.length > 0) {
+        return departmentList [0];
+      }
+      return ''
     }
   },
   props: ['typeTime', 'activeName'],
@@ -1150,7 +1154,7 @@ export default {
         MULTI_TIMEOUT_RETURN: '超时退回',
         MULTI_ADJUSTMENT_SUP: '调级补发',
         SINGLE_QUALITY: '产品质量问题',
-        SINGLE_PIGMENT_LEAKAGE: '颜料撒漏'
+        // SINGLE_PIGMENT_LEAKAGE: '颜料撒漏'
       },
       courseOptions: { TESTCOURSE: '体验课', SYSTEMCOURSE: '系统课' },
       currentType: '',
@@ -1161,7 +1165,9 @@ export default {
   },
   created() {
     // 身份类型，4是财务，具体见wiki
-    this.roleId = JSON.parse(localStorage.getItem('staff')).roleId
+    const roleList = JSON.parse(localStorage.getItem('staff')).roleList;
+    let roleId = roleList ? roleList[0] : '';
+    this.roleId = roleId;
     this.getRoleIdList()
   },
   mounted() {
@@ -1184,7 +1190,7 @@ export default {
       page: 1,
       size: 20
     }
-    this.params.isOperation = this.isStaffId
+    this.params.isOperation = this.isStaffId ? this.isStaffId : false
     // lk 为3,4 初始拿数据就得带上_课程类型参数保证看到的搜索条件与结果一致↓↓
     if (this.positionIdlk === '0' || this.positionIdlk === '1') {
       // 父组件mounted时刻请求数据 0,1不带课程类型参数 拿全量
@@ -1653,7 +1659,7 @@ export default {
       }
       // 无归属订单详情
       if (type === 'UNCREDITED') {
-        
+
         this.$http.Backend.getNoAttributionDetail(id).then((res) => {
           if (res && res.payload) {
             res.payload.orderTime = timestamp(res.payload.orderTime, 2)
@@ -1663,7 +1669,7 @@ export default {
             this.drawerApprovalDeatail.chat_url = res.payload.chatUrl[0]
             this.drawerApprovalDeatail.pay_url = res.payload.paymentUrl[0]
             this.drawerApproval = true
-            
+
           }
         })
       }

@@ -35,6 +35,23 @@ import CustomPop from './CustomPop.vue'
 import routes from '@/config/sidebarMenu/index'
 import variables from '@/assets/styles/variables.scss'
 
+const menuList = JSON.parse(localStorage.getItem('menuList')) || {}
+var staff = JSON.parse(localStorage.getItem('staff')) || {}
+
+function parseAuthorRouters ( routers, author ) {
+  let data
+  routers.map((route, index) => {
+    if ( route.path === author ) {
+      data = route
+    } else {
+      if ( route.children && route.children.length ) {
+        parseAuthorRouters(route.children, author)
+      }
+    }
+  })
+  return data
+}
+
 export default {
   components: { SidebarItem, Logo, CustomPop },
   computed: {
@@ -43,7 +60,35 @@ export default {
       return this.$store.state.app.sidebar
     },
     routes() {
-      return routes.filter((item) => !item.hidden)
+      let result = [];
+      const newRoutes = routes.filter((item) => !item.hidden);
+      if(staff && staff.admin) {
+        result = newRoutes;
+      }
+      else {
+        menuList.map(author => {
+          let route = parseAuthorRouters(newRoutes, author);
+          if (route) {
+            result.push(route)
+          }
+        })
+      }
+      if(menuList && menuList.length > 0) {
+        result.map(like => {
+          let arr = []
+          if (like.children) {
+            menuList.map((author, i) => {
+              let router = parseAuthorRouters(like.children, author)
+              if (router) {
+                arr.push(router)
+              }
+            })
+            like.children = arr
+          }
+        })
+      }
+      console.log('result', result);
+      return result;
     },
    
     showLogo() {

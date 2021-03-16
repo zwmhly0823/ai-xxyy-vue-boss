@@ -96,6 +96,12 @@ import diamond from './diamond'
 import cashRecord from './cashRecord'
 
 export default {
+  props: {
+    pUserId: {
+      type: String,
+      default: ''
+    }
+  },
   components: {
     couponComponent,
     gradingTicket,
@@ -134,6 +140,7 @@ export default {
   mounted() {
     this.getTopData()
     this.getcolorData() // 获取背景色4个数据来源4个子组件
+
   },
 
   methods: {
@@ -141,7 +148,7 @@ export default {
       const {
         data: { UserExtends }
       } = await this.$http.User._reqGetUserTop({
-        u_id: this.$route.params.id,
+        u_id: this.pUserId,
         subject: this.changeSubject
       }).catch((err) => {
         console.error(err)

@@ -14,25 +14,29 @@ export default {
    *
    */
   getCodeByPhone(params) {
-    return axios.post(`/api/b/v1/staff/sendCode?mobile=${params.mobile}`)
+    return axios.get(`/api/b/boss/v1/auth/sendCode`, params)
   },
   /**
    * 验证码登录
    * */
   codeLoginIn(params) {
-    return axios.post(`/api/b/v1/staff/mobileLogin`, params)
+    return axios.post(`/api/b/boss/v1/auth/mobileLogin`, params)
   },
   /**
    * 密码登录
    * */
   pwdLoginIn(params) {
-    return axios.post('/api/b/v1/staff/login', params)
+    return axios.post('/api/b/boss/v1/auth/login', params)
+  },
+
+  getCurrentRouter(params) {
+    return axios.get('/api/b/boss/v1/staff/current', params)
   },
   /**
    * 修改密码
    * */
   resetPwd(staffId, pwd) {
-    return axios.put(`/api/b/v1/staff/resetPwd?staffId=${staffId}&pwd=${pwd}`)
+    return axios.put(`/api/b/boss/v1/staff/resetPasswordById?staffId=${staffId}&password=${pwd}`)
   },
   /**
    * 查找操作日志

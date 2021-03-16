@@ -53,7 +53,7 @@ function getStaff(staffInfo) {
       staffId: staff.id,
       staffName: staff.realName,
       staffMobile: staff.mobile,
-      isStaffId: staff.positionId !== '0'
+      isStaffId: staff.departmentList && staff.departmentList.length > 0 && staff.departmentList[0] !== '0'
     }
   )
 }

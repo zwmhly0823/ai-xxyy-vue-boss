@@ -80,6 +80,7 @@
       ref="couponPopover"
       :selectUserId="[$route.params.id]"
       :subjectType="changeSubject"
+      :couponList='couponData'
     />
   </div>
 </template>
@@ -120,7 +121,8 @@ export default {
       ],
       faProps: [], // 爹给的(已深拷贝)
       currentPage: 1,
-      allDigit: 0
+      allDigit: 0,
+      couponData:[]
     }
   },
   mounted() {
@@ -128,8 +130,16 @@ export default {
       console.info('老爹给用户资产-优惠券table-基础数据list计算出来', r)
       this.faProps = r
     })
+    this.getCouponList()
   },
   watch: {
+    changeSubject: {
+      immediate: false,
+      deep: true,
+      handler(newValue, oldValue) {
+        this.getCouponList(newValue)
+      }
+    },
     faProps: {
       immediate: false,
       deep: true,
@@ -142,6 +152,14 @@ export default {
     }
   },
   methods: {
+    // 优惠卷列表接口
+    getCouponList(num=0) {
+      this.$http.Team.getAllCoupons(num).then((res) => {
+        console.log('ssssssssssssssssssssssssssssssss')
+        console.log(res)
+        this.couponData = (res.payload && res.payload.content) || []
+      })
+    },
     // 数据接口_用户资产_优惠券
     reqGetUserAssets() {
       console.count('llllll')

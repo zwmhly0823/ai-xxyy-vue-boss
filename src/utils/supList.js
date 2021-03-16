@@ -18,22 +18,6 @@ export const SUP_LEVEL = {
   5: 'S2-进阶',
   3: 'S3'
 }
-// 小写s
-// export const SUP_LEVEL_LOWER = {
-//   s4: 'S1-基础',
-//   s1: 'S1-进阶',
-//   s2: 'S2-基础',
-//   s5: 'S2-进阶',
-//   s3: 'S3'
-// }
-// // S大写的情况
-// export const SUP_LEVEL_UPPER = {
-//   S4: 'S1-基础',
-//   S1: 'S1-进阶',
-//   S2: 'S2-基础',
-//   S5: 'S2-进阶',
-//   S3: 'S3'
-// }
 
  
 // 对象， 大小写s
@@ -72,6 +56,7 @@ export const SUP_LEVEL_SYSTEM = {
   S3:'M3',
   S4:'M4'
 }
+
 export const SUP_LEVEL_ALL = {
   S1:'M1',
   S2:'M2',
