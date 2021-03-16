@@ -219,7 +219,12 @@ export function GetAgeByBrithday(birth) {
 
     if (todayMonth <= birthdayMonth) {
       month = todayMonth - birthdayMonth + 12
-      age--
+      age--;
+      if(age<0){
+        age=0;
+        month = 0;
+      }
+
     } else {
       month = todayMonth - birthdayMonth
     }

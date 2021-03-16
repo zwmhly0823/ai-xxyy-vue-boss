@@ -138,7 +138,7 @@
                 />
               </el-form-item>
               <el-form-item
-                label="美术基础"
+                label="音乐基础"
                 :label-width="innerFormLabelWidth"
                 prop="base_painting"
               >
