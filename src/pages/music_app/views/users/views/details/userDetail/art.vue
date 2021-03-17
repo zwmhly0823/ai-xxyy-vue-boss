@@ -340,12 +340,9 @@ export default {
     teamTmp,
     trackFlow
   },
-  mounted() {
-    this.sysStudentDetails()
-  },
   async created() {
     this.detailHeight = await calcBrowerClienHeight(this, 'userDetailref', 68)
-    this.getlabelWithoutAike()
+
     this.$root.$on('recordData', (...args) => {
       this.recommendDetails = args[0] // 被转介绍人信息对象
     })
@@ -367,7 +364,7 @@ export default {
       studentLabels: [],
       dialogTableVisible: false,
       // 该学员id
-      studentId: this.pUserId,
+      studentId: '',
       teamCutTabs: [
         {
           label: '系统课信息'
@@ -436,6 +433,13 @@ export default {
       deep: true,
       handler(newValue, oldValue) {
         this.systemCourse()
+      }
+    },
+    pUserId(value) {
+      if(value) {
+        this.studentId = value;
+        this.getlabelWithoutAike();
+        this.sysStudentDetails();
       }
     }
   },
