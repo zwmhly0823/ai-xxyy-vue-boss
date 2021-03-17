@@ -188,7 +188,7 @@
             />
           </el-tab-pane>
           <el-tab-pane label="上课记录" name="learningRecord">
-            <studyRecord :stuInforAdd="stuInfor_add" :stuInfor="stuInfor" :tab="tabData" />
+            <studyRecord :pUserId="studentId" :stuInforAdd="stuInfor_add" :stuInfor="stuInfor" :tab="tabData" />
           </el-tab-pane>
           <el-tab-pane label="作品集" name="collectionOf">
             <portfolio :pUserId="studentId" />

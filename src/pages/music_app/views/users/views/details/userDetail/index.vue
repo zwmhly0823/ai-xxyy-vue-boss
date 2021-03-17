@@ -467,7 +467,7 @@
           </div>
         </el-col>
         <el-col :span="7" class="dular">
-          <trackFlow />
+          <trackFlow :pUserId="pUserId" />
         </el-col>
       </el-row>
       <!-- 推荐弹窗 -->
@@ -535,7 +535,11 @@ export default {
     teamList: {
       type: Array,
       default: () => []
-    }
+    },
+    pUserId: {
+      type: String,
+      default: '',
+    },
   },
   components: {
     // showAddress,
