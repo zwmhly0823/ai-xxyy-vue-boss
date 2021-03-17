@@ -88,6 +88,12 @@ import ChangeOrder from './changeOrder'
 import PayOrder from './payOrder'
 export default {
   name: 'logistics',
+  props: {
+    pUserId: {
+      type: String,
+      default: '',
+    }
+  },
   components: {
     ExpressDetail,
     ChangeOrder,
@@ -153,7 +159,7 @@ export default {
     reqgetOrderPage() {
       const query = {
         regtype: this.changeType === 1 ? [4, 5, 6] : [1, 2, 3, 7, 10, 11, 13],
-        uid: this.$route.params.id
+        uid: this.pUserId
       }
       // const regtype = this.changeType?[4,5,6]:[1,2,3,7]
       this.$http.User.getOrderPage(

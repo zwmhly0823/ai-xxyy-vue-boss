@@ -49,7 +49,7 @@ export default {
       `/api/b/v1/backend/completed/reissue/flow?flowApprovalId=${params.flowApprovalId}&staffName=${params.staffName}&staffId=${params.staffId}&isConfirm=${params.isConfirm}&approvalRemark=${params.approvalRemark}`
     )
   },
-  
+
   // 获取当前物流信息
   getExpressByOrderId(query) {
     return axios.get(
@@ -106,6 +106,12 @@ export default {
       `/api/ts/v1/teaching/student/trial/findTrailByOrderNo?orderNo=${orderNo}`
     )
   },
+  refundFlowsRequest(params) {
+    return axios.post(
+      `/api/b/v1/backend/batch/completed/flow?ids=${params.ids}&version=${params.version}&staffId=${params.staffId}&staffName=${params.staffName}&approvalRemark=${params.approvalRemark}&isRecover=${params.isRecover}&isConfirm=${params.isConfirm}`
+    )
+  },
+
   // 查询所有有效活动
   getPromotionsList({ userId, orderId }) {
     return axios.get(
