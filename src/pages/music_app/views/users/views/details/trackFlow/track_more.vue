@@ -141,6 +141,7 @@ export default {
   },
   data() {
     return {
+      studentId: '',
       roles: [
         { id: '1', name: '管理员' },
         { id: '2', name: '运营' },
@@ -202,7 +203,7 @@ export default {
         }
       } = await this.$http.User.getTrackList({
         subject: this.changeSubject,
-        uid: this.$route.params.id,
+        uid: this.studentId,
         size,
         page
       }).catch((err) => {
@@ -246,10 +247,19 @@ export default {
       handler(newValue, oldValue) {
         this.getTrackList()
       }
+    },
+    pUserId(value) {
+      if(value && this.$route.params.isShort) {
+        this.studentId = value
+        this.getTrackList();
+      }
     }
   },
   created() {
-    this.getTrackList()
+    if(!this.$route.params.isShort){
+      this.studentId = this.$route.params.id;
+      this.getTrackList()
+    }
   },
   mounted() {
     // 详情页新增记录刷新列表

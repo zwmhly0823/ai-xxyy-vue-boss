@@ -87,6 +87,7 @@ export default {
   },
   data() {
     return {
+      studentId: '',
       value1: [], // 任务类型-[]
       value2: null, // 获取时间-null
       options: {
@@ -128,12 +129,15 @@ export default {
     }
   },
   mounted() {
+    if(!this.$route.params.isShort){
+      this.studentId = this.$route.params.id;
+      setTimeout(this.reqGetUserCoin.bind(this, 'mounted'), 2000)
+    }
     this.$root.$on('bearCoin', (r) => {
       console.info('老爹给用户资产-小熊币-基础数据', r)
       this.faProps = r || []
       this.top3Show()
     })
-    setTimeout(this.reqGetUserCoin.bind(this, 'mounted'), 2000)
   },
   watch: {
     changeSubject: {
@@ -158,6 +162,12 @@ export default {
         console.info('捕获时间改变', newValue, oldValue)
         this.reqGetUserCoin()
       }
+    },
+    pUserId(value) {
+      if(value && this.$route.params.isShort) {
+        this.studentId = value
+        this.top3Show()
+      }
     }
   },
   computed: {
@@ -172,9 +182,10 @@ export default {
   methods: {
     // 数据接口_用户资产_小熊币
     reqGetUserCoin(other) {
+      console.log('reqGetUserCoinss', this.studentId)
       this.$http.User.getUserAssetsCoin(
         this.changeSubject,
-        this.$route.params.id,
+        this.studentId,
         this.currentPage,
         Array.isArray(this.value1) && this.value1.length
           ? this.value1

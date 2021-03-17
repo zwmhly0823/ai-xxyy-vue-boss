@@ -450,7 +450,7 @@ export default {
     async getUserAllTeam() {
       this.sectionLoading = true
       try {
-        const id = this.$route.params.id
+        const id = this.studentId
         const subject = this.changeSubject
 
         const trialList = await this.trialList(id, subject)

@@ -189,7 +189,7 @@ export default {
         data: { Order }
       } = await this.$http.User.getDataStatiscsForDetailInDex({
         subject: 3,
-        uid: this.$route.params.id,
+        uid: this.searchJson.pay_channel_user,
         regtype: 1,
         status: 3
       })

@@ -80,7 +80,7 @@
         />
       </el-tab-pane>
       <el-tab-pane label="提现记录" name="cashRecord">
-        <cashRecord ref="colorCash" :changeSubject="changeSubject" />
+        <cashRecord :pUserId="pUserId" ref="colorCash" :changeSubject="changeSubject" />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -113,6 +113,7 @@ export default {
   },
   data() {
     return {
+      studentId: '',
       topDatafour: { bear: 0, diamond: 0, coupon: 0, cash: 0 },
       assetCurPane: 'assetBearCoin',
       changeSubject: this.$store.state.subjects.subjectCode
@@ -135,11 +136,21 @@ export default {
           this.assetCurPane = 'assetBearCoin'
         }
       }
+    },
+    pUserId(value) {
+      if(value && this.$route.params.isShort) {
+        this.studentId = value
+        this.getTopData()
+        this.getcolorData() // 获取背景色4个数据来源4个子组件
+      }
     }
   },
   mounted() {
-    this.getTopData()
-    this.getcolorData() // 获取背景色4个数据来源4个子组件
+    if(!this.$route.params.isShort){
+      this.studentId = this.$route.params.id;
+      this.getTopData()
+      this.getcolorData() // 获取背景色4个数据来源4个子组件
+    }
 
   },
 
@@ -148,7 +159,7 @@ export default {
       const {
         data: { UserExtends }
       } = await this.$http.User._reqGetUserTop({
-        u_id: this.pUserId,
+        u_id: this.studentId,
         subject: this.changeSubject
       }).catch((err) => {
         console.error(err)

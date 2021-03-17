@@ -139,7 +139,7 @@
     </div>
     <div v-else class="no-data">暂无数据</div>
     <addNew ref="track_add" :changeSubject="changeSubject" />
-    <trackMore ref="track_more" :changeSubject="changeSubject" />
+    <trackMore :pUserId="pUserId" ref="track_more" :changeSubject="changeSubject" />
   </div>
 </template>
 
@@ -216,6 +216,7 @@ export default {
   },
   methods: {
     async getTrackList({ size = 10, page = 1 } = {}) {
+      console.log('getTrackList', this.studentId);
       const {
         data: {
           UserFollowLogPage: { content }

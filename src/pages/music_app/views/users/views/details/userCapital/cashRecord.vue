@@ -50,10 +50,15 @@ export default {
     changeSubject: {
       type: Number,
       required: true
-    }
+    },
+    pUserId: {
+      type: String,
+      default: ''
+    },
   },
   data() {
     return {
+      studentId: '',
       options: {
         1: '邀请有奖或推荐有礼',
         2: '完成任务',
@@ -90,14 +95,24 @@ export default {
     }
   },
   mounted() {
-    this.getUserAssetsCashRecord()
-    this.top3Show()
+    if(!this.$route.params.isShort){
+      this.studentId = this.$route.params.id;
+      this.getUserAssetsCashRecord()
+      this.top3Show()
+    }
   },
   watch: {
     changeSubject: {
       immediate: false,
       deep: true,
       handler(newValue, oldValue) {
+        this.getUserAssetsCashRecord()
+        this.top3Show()
+      }
+    },
+    pUserId(value) {
+      if(value && this.$route.params.isShort) {
+        this.studentId = value
         this.getUserAssetsCashRecord()
         this.top3Show()
       }
@@ -115,7 +130,7 @@ export default {
       })
       this.$http.User.getUserAssetsCashRecord(
         this.changeSubject,
-        this.$route.params.id,
+        this.studentId,
         this.currentPage
       )
         .then((res) => {
@@ -161,7 +176,7 @@ export default {
       })
       this.$http.User.getUserAssetsCashRecord(
         this.changeSubject,
-        this.$route.params.id,
+        this.studentId,
         1,
         500
       )
