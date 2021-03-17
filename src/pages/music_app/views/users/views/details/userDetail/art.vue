@@ -327,6 +327,10 @@ export default {
     teamList: {
       type: Array,
       default: () => []
+    },
+    pUserId: {
+      type: String,
+      default: '',
     }
   },
   components: {
@@ -363,7 +367,7 @@ export default {
       studentLabels: [],
       dialogTableVisible: false,
       // 该学员id
-      studentId: this.$route.params.id,
+      studentId: this.pUserId,
       teamCutTabs: [
         {
           label: '系统课信息'

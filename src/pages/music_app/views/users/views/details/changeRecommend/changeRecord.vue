@@ -65,6 +65,12 @@ import { formatDate } from '@/utils/mini_tool_lk'
 
 export default {
   name: 'changeRecord',
+  props: {
+    pUserId: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
       // 分页
@@ -77,7 +83,7 @@ export default {
       tableData: [],
       searchJson: {
         subject: 3,
-        pay_channel_user: this.$route.params.id,
+        pay_channel_user: this.pUserId,
         regtype: 1,
         status: 3
       }
@@ -190,10 +196,15 @@ export default {
     }
   },
   computed: {},
-  mounted() {
-    this.getData(this.searchJson, this.currentPage, this.pageSize)
-    this.getDataStatiscsForDetailInDex() // 独立出来-转介绍人信息
-  }
+  watch: {
+    pUserId(value) {
+      if(value) {
+        this.searchJson.pay_channel_user = value;
+        this.getData(this.searchJson, this.currentPage, this.pageSize)
+        this.getDataStatiscsForDetailInDex() // 独立出来-转介绍人信息
+      }
+    }
+  },
 }
 </script>
 
