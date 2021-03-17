@@ -3,8 +3,8 @@
  * @version: 
  * @Author: huzhifu
  * @Date: 2020-05-07 10:50:45
- * @LastEditors: liukun
- * @LastEditTime: 2021-01-21 21:30:44
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-17 15:42:46
  -->
 <template>
   <div class="adjustModule">
@@ -89,6 +89,7 @@
           <el-radio-group v-model="refundForm.refundType">
             <el-radio :label="0" v-show="refundForm.businessType === '系统课'">优惠券退款</el-radio>
             <el-radio :label="1">课程退款</el-radio>
+            <el-radio :label="6">系统课预付款优惠券退款</el-radio>
             <!-- <el-radio
               :label="2"
               v-show="
@@ -179,7 +180,7 @@
           </el-form-item>
         </template>
         <!-- 课程退款&&系统课 -->
-        <template v-if="refundForm.refundType && refundForm.businessType === '系统课'">
+        <template v-if="refundForm.refundType && refundForm.refundType !=6 && refundForm.businessType === '系统课'">
           <el-form-item label="用户已上课周期：" prop="pureWeekYto">
             <el-input v-model="pureWeekYto" disabled :class="$style.order100"></el-input>
           </el-form-item>
@@ -966,7 +967,7 @@ export default {
         refundType: '',
         couponType: '', // 优惠券类型
         refundMonths: '', // 退款月数(给接口)
-        refundAmount: '', // 退款金额(给接口)
+        refundAmount: '0', // 退款金额(给接口)
         reason: '',
         explain: '',
         imageUrl: '',
