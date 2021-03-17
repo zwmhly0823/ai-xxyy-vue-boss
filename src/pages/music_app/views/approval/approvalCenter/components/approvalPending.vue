@@ -1196,10 +1196,10 @@ export default {
       // 父组件mounted时刻请求数据 0,1不带课程类型参数 拿全量
     } else if (this.positionIdlk === '3' || this.positionIdlk === '4') {
       // 父组件mounted时刻请求数据 3,4 带课程类型参数 只拿系统课
-      this.params.managementType = 'SYSTEMCOURSE'
+      // this.params.managementType = 'SYSTEMCOURSE'
     } else if (this.positionIdlk === '2') {
       // 父组件mounted时刻请求数据 2 带课程类型参数 只拿体验课
-      this.params.managementType = 'TESTCOURSE'
+      // this.params.managementType = 'TESTCOURSE'
     }
     console.log('父组件mounted时刻:请求数据了', this.params)
     this.checkPending(this.params)
