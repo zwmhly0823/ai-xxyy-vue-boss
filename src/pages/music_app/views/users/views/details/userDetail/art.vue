@@ -436,11 +436,18 @@ export default {
       }
     },
     pUserId(value) {
-      if(value) {
+      if(value && this.$route.params.isShort) {
         this.studentId = value;
         this.getlabelWithoutAike();
         this.sysStudentDetails();
       }
+    }
+  },
+  mounted() {
+    if(!this.$route.params.isShort){
+      this.studentId = this.$route.params.id;
+      this.getlabelWithoutAike();
+      this.sysStudentDetails();
     }
   },
   methods: {
