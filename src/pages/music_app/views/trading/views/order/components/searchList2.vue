@@ -548,7 +548,8 @@ export default {
             sup_text: '课程难度',
             invoice_status_text: '开票状态',
             invoice_type_text: '开票类型',
-            invoice_code: '发票号码'
+            invoice_code: '发票号码',
+            class_start_text: '开课时间',
           },
           fileName: `体验课订单导出-${fileTitleTime}`, // 文件名称
           query: JSON.stringify(query)
