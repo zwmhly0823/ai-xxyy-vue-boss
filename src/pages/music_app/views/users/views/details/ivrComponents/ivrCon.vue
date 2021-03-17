@@ -148,7 +148,6 @@ export default {
     // table数据√
     reqNotifyPage(data = {}) {
 
-      console.log('reqNotifyPage', this.pUserId)
       const query = {
         userId: this.pUserId, // 锁
         pageSize: 20, // 锁
@@ -162,7 +161,6 @@ export default {
       Object.assign(query, data)
       this.$http.User.getNotifyPage(query)
         .then((res) => {
-          console.log('llll', res)
           if (res.code === 0 && res.status === 'OK') {
             this.allDigit = +res.payload.totalElements
             // arrange list
@@ -287,7 +285,6 @@ export default {
     },
     // 页码变化√
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
       this.currentPage = val
       this.reqNotifyPage(this.bubbleData)
     },

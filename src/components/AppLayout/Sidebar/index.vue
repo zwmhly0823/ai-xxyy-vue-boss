@@ -41,11 +41,11 @@ var staff = JSON.parse(localStorage.getItem('staff')) || {}
 function parseAuthorRouters ( routers, author ) {
   let data
   routers.map((route, index) => {
-    if ( route.path === author ) {
-      data = route
+    if ( author.path === route ) {
+      data = author
     } else {
-      if ( route.children && route.children.length ) {
-        parseAuthorRouters(route.children, author)
+      if ( author.children && author.children.length ) {
+        parseAuthorRouters(author.children, route)
       }
     }
   })
@@ -62,12 +62,15 @@ export default {
     routes() {
       let result = [];
       const newRoutes = routes.filter((item) => !item.hidden);
+
+      // console.log('menuList', menuList)
+      // console.log('newRoutes', newRoutes)
       if(staff && staff.admin) {
         result = newRoutes;
       }
       else {
-        menuList.map(author => {
-          let route = parseAuthorRouters(newRoutes, author);
+        newRoutes.map(author => {
+          let route = parseAuthorRouters(menuList, author);
           if (route) {
             result.push(route)
           }
@@ -77,8 +80,8 @@ export default {
         result.map(like => {
           let arr = []
           if (like.children) {
-            menuList.map((author, i) => {
-              let router = parseAuthorRouters(like.children, author)
+            like.children.map((author, i) => {
+              let router = parseAuthorRouters(menuList, author)
               if (router) {
                 arr.push(router)
               }
@@ -87,10 +90,10 @@ export default {
           }
         })
       }
-      console.log('result', result);
+      // console.log('result', result);
       return result;
     },
-   
+
     showLogo() {
       return this.$store.state.settings.sidebarLogo
     },

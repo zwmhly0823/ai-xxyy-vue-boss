@@ -97,7 +97,12 @@ import { formatData } from '@/utils/index'
 import DateDownQuickSelect from '@/components/MSearch/searchItems/dateDownQuickSelect.vue'
 export default {
   name: 'behaviorLocus',
-  props: {},
+  props: {
+    pUserId: {
+      type: String,
+      default: ''
+    }
+  },
   components: {
     EleTable,
     DateDownQuickSelect
@@ -125,14 +130,16 @@ export default {
   computed: {},
   created() {
     this.getActionTypeList()
-    this.studentId = this.$route.params.id
-    Object.assign(this.search_params, { uid: this.studentId })
-    console.log(this.search_params, '------')
   },
-  mounted() {
-    this.initPage()
+  watch: {
+    pUserId(value) {
+      if(value) {
+        this.studentId = this.$route.params.id
+        Object.assign(this.search_params, { uid: this.studentId })
+        this.initPage()
+      }
+    }
   },
-  watch: {},
   methods: {
     // init列表
     initPage() {
@@ -142,7 +149,7 @@ export default {
         this.tabQuery.page
       )
         .then((res) => {
-          console.log(res, 'res')
+          console.log('initPage', res)
           const payload = res && res.data && res.data.UserBehaviorLogPage
           if (payload) {
             this.totalElements = +payload.totalElements

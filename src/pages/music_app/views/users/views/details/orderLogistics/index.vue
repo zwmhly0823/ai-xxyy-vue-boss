@@ -111,12 +111,13 @@ export default {
     reqgetOrderPage() {
       const query = {
         regtype: this.regtype,
-        id: this.$route.params.id
+        id: this.pUserId
       }
       this.$http.User.getExpressPage(
         query, // studentId
         this.currentPage
       ).then((res) => {
+        console.log('reqgetOrderPage', this.pUserId);
         if (res.data.ExpressPage) {
           console.log('订单物流模块接口', res.data.ExpressPage.content)
           const _data = res.data.ExpressPage.content
