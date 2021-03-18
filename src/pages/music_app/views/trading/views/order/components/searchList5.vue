@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-07-01 11:08:23
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-17 19:55:45
+ * @LastEditTime: 2021-03-18 19:31:58
  -->
 <template>
   <el-card
@@ -26,7 +26,6 @@
         <productStatus @result="getStatus" name="pay_channel" />
       </el-form-item> -->
 
-     
       <br />
 
       <el-form-item label="下单时间:" :class="{ [$style.marginer]: true }">
@@ -87,19 +86,7 @@
             placement="top"
             ><i
               class="el-icon-question"
-              style="padding-left:5px;"
-            ></i></el-tooltip
-        ></el-radio>
-        <el-radio label="2"
-          ><span>薪资核算订单导出</span
-          ><el-tooltip
-            class="item"
-            effect="dark"
-            content="薪资核算人员专用"
-            placement="top"
-            ><i
-              class="el-icon-question"
-              style="padding-left:5px;"
+              style="padding-left: 5px"
             ></i></el-tooltip
         ></el-radio>
       </el-radio-group>
@@ -142,16 +129,16 @@ export default {
       firstOrderList: [
         {
           id: '1',
-          text: '有推荐人'
+          text: '有推荐人',
         },
         {
           id: '0',
-          text: '无推荐人'
-        }
+          text: '无推荐人',
+        },
       ],
       hasSendId: true,
       showChooseDialog: false,
-      chooseExport: '1'
+      chooseExport: '1',
     }
   },
   computed: {},
@@ -261,7 +248,7 @@ export default {
           this.$refs.phoneName.handleEmpty()
         }
         this.setSeachParmas({ is_first_order_send_id: '' }, [
-          'is_first_order_send_id'
+          'is_first_order_send_id',
         ])
         this.setSeachParmas('', ['first_order_send_id'], 'terms')
       } else {
@@ -294,7 +281,7 @@ export default {
         if (res) {
           temp.push({
             // [`${extraKey}`]: `${JSON.stringify(res)}`
-            [extraKey]: res
+            [extraKey]: res,
           })
           this.must = temp
         }
@@ -321,7 +308,7 @@ export default {
       // should
       if (res) {
         temp.push({
-          [`${extraKey}`]: `${JSON.stringify(res)}`
+          [`${extraKey}`]: `${JSON.stringify(res)}`,
         })
         this.should = temp
       }
@@ -330,6 +317,7 @@ export default {
 
     // 导出
     exportOrderHandle() {
+      debugger;
       console.log(this.searchParams)
       console.log(this.$parent.$children[1].finalParams)
       const chooseExport = this.chooseExport
@@ -358,7 +346,7 @@ export default {
       const loading = this.$loading({
         lock: true,
         text: '正在导出，请耐心等待……',
-        spinner: 'el-icon-loading'
+        spinner: 'el-icon-loading',
       })
       if (chooseExport === '1') {
         const params = {
@@ -371,18 +359,19 @@ export default {
             'paymentPay.transaction_id': '交易流水号',
             'paymentPay.trade_type_text': '支付方式',
             amount: '交易金额',
-            product_name: '商品名称',
-            'channel.channel_outer_name': '线索渠道',
+            packages_name: '商品类型',
+            "user_coupon.status_text": '商品状态',
             invoice_status_text: '开票状态',
             invoice_type_text: '开票类型',
-            invoice_code: '发票号码'
+            invoice_code: '发票号码',
+            'user_coupon.coupon_rest_amount': '剩余金额',
+            'user_coupon.coupon_refund_amount': '退费金额',
           },
-          fileName: `素质课订单导出-${fileTitleTime}`, // 文件名称
-          query: JSON.stringify(query)
+          fileName: `预付款优惠券订单导出-${fileTitleTime}`, // 文件名称
+          query: JSON.stringify(query),
         }
         // console.log(exportExcel)
-
-        this.$http.DownloadExcel.exportOrder(params)
+       this.$http.DownloadExcel.exportOrder(params)
           .then((res) => {
             console.log(res)
             downloadHandle(res, `素质课订单导出-${fileTitle}`, () => {
@@ -415,10 +404,10 @@ export default {
             'enrolledInfo.department_area_name': '区',
             buydate: '体验课报名时间',
             'channelDetail.channel_class_name': '二级渠道',
-            'channelDetail.p_channel_class_name': '一级渠道'
+            'channelDetail.p_channel_class_name': '一级渠道',
           },
           fileName: `体验课订单薪资核算表-${fileTitleTime}`, // 文件名称
-          query: JSON.stringify(query)
+          query: JSON.stringify(query),
           // query: '{"status":3}'
         }
         // console.log(exportExcel)
@@ -434,8 +423,8 @@ export default {
           })
           .catch(() => loading.close())
       }
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss" module>

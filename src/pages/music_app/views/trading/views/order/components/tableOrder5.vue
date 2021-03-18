@@ -67,15 +67,21 @@
           scope.row.order_status ? scope.row.order_status : '-'
         }}</template>
       </el-table-column>
-      <!-- <el-table-column label="商品状态" min-width="80">
+      <el-table-column label="商品状态" min-width="80">
         <template slot-scope="scope">{{
-          scope.row.user_coupon.status==1 ?'未使用':scope.row.user_coupon.status==2?'已使用':'-'
+          scope.row.user_coupon && scope.row.user_coupon.status == 1
+            ? '未使用'
+            : scope.row.user_coupon && scope.row.user_coupon.status == 2
+            ? '已使用'
+            : '-'
         }}</template>
-      </el-table-column> -->
+      </el-table-column>
 
-        <el-table-column label="关联系统课订单" min-width="120">
+      <el-table-column label="关联系统课订单" min-width="120">
         <template slot-scope="scope">
-          <user :user="scope.row.user" />
+          <p>
+            {{ scope.row.user_coupon>0 ? scope.row.user_coupon.oid : '-' }} 
+          </p>
         </template>
       </el-table-column>
     </el-table>
@@ -194,7 +200,12 @@ export default {
     // 订单列表
     getOrderList(page = this.currentPage, reloadStatistics = false) {
       this.loading = true
-      const queryObj = { regtype: this.regtype }
+      const queryObj = {
+        regtype: this.regtype,
+        status: 3,
+        packages_id: ['600'],
+        subject: 3,
+      }
       // TOSS
       if (this.teacherId) {
         Object.assign(queryObj, {
@@ -239,6 +250,8 @@ export default {
 
     // 订单列表数据
     orderData(queryObj = {}, page = 1) {
+      // 最终搜索条件
+      this.$emit('get-params', queryObj)
       this.$http.Order.orderPage(`${JSON.stringify(queryObj)}`, page)
         .then((res) => {
           if (!res.data.OrderPage) {
@@ -261,7 +274,7 @@ export default {
                 currency = { currency: '宝石' }
                 Object.assign(item, currency)
                 item.amount = item.gem_integral
-              } 
+              }
             }
           })
           this.orderList = _data
