@@ -61,7 +61,20 @@
                 </el-table-column>
                 <el-table-column label="封面图" align="center">
                   <template slot-scope="scope">
-                    <img :src="scope.row.coverPath" style="width: 40px;height:40px;" />
+                    <el-popover
+                      placement="top"
+                      title="视频预览"
+                      trigger="click"
+                      width="260"
+                      popper-class="preview-video"
+                    >
+                      <video
+                        style="width: 220px;"
+                        :src="scope.row.videoPath"
+                        controls
+                      />
+                      <img slot="reference" :src="scope.row.coverPath" style="width: 40px;height:40px;" />
+                    </el-popover>
                   </template>
                 </el-table-column>
                 <el-table-column label="状态" align="center">
@@ -428,6 +441,12 @@ export default {
 }
 </script>
 <style rel="stylesheet/scss" lang="scss">
+.preview-video{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
 .activity-manage {
   .grop-container {
     position: relative;
