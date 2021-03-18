@@ -256,27 +256,12 @@ export default {
             // 交易方式
             if (item.regtype) {
               let currency = {}
-              if (item.regtype === 4) {
-                item.regtype_text = '推荐有礼'
+              if (item.regtype === 10) {
+                item.regtype_text = '优惠券订单'
                 currency = { currency: '宝石' }
                 Object.assign(item, currency)
                 item.amount = item.gem_integral
-              } else if (item.regtype === 5 && item.topic_id !== '10') {
-                item.regtype_text = '小熊商城'
-                currency = { currency: '小熊币' }
-                Object.assign(item, currency)
-                item.amount = item.bear_integral
-              } else if (item.regtype === 5 && item.topic_id === '10') {
-                item.regtype_text = '邀请有奖-抽奖'
-                currency = { currency: '人民币' }
-                Object.assign(item, currency)
-                item.amount = 0
-              } else if (item.regtype === 6) {
-                item.regtype_text = '邀请有奖'
-                currency = { currency: '赠送' }
-                Object.assign(item, currency)
-                item.amount = 0
-              }
+              } 
             }
           })
           this.orderList = _data
