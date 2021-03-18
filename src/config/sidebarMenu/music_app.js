@@ -203,15 +203,25 @@ let bearArt = [
       module,
       bottom: true
     },
-    children: [{
-      path: '/activityManagement',
-      name: 'activityManagement',
-      meta: {
-        title: '活动管理',
-        // module: 'operating'
-        module
-      }
-    },
+    children: [
+      {
+        path: '/activityManagement',
+        name: 'activityManagement',
+        meta: {
+          title: '活动管理',
+          // module: 'operating'
+          module
+        }
+      },
+      {
+        path: '/review',
+        name: 'review',
+        meta: {
+          title: '作品审核',
+          // module: 'operating'
+          module
+        }
+      },
     {
       path: '/channelManagement',
       name: 'channelManagement',

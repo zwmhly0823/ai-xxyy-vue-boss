@@ -89,7 +89,13 @@ export default {
       }
     }
   },
-
+  mounted() {
+    if(!this.$route.params.isShort){
+      this.searchJson.pay_channel_user = this.$route.params.id;
+      this.getData(this.searchJson, this.currentPage, this.pageSize)
+      this.getDataStatiscsForDetailInDex() // 独立出来-转介绍人信息
+    }
+  },
   methods: {
     // 页容量变化
     handleSizeChange(val) {
@@ -183,7 +189,7 @@ export default {
         data: { Order }
       } = await this.$http.User.getDataStatiscsForDetailInDex({
         subject: 3,
-        uid: this.$route.params.id,
+        uid: this.searchJson.pay_channel_user,
         regtype: 1,
         status: 3
       })
@@ -198,7 +204,7 @@ export default {
   computed: {},
   watch: {
     pUserId(value) {
-      if(value) {
+      if(value && this.$route.params.isShort) {
         this.searchJson.pay_channel_user = value;
         this.getData(this.searchJson, this.currentPage, this.pageSize)
         this.getDataStatiscsForDetailInDex() // 独立出来-转介绍人信息

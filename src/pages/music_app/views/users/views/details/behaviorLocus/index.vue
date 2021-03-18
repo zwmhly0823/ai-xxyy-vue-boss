@@ -129,12 +129,17 @@ export default {
   },
   computed: {},
   created() {
-    this.getActionTypeList()
+    this.getActionTypeList();
+    if(!this.$route.params.isShort){
+      this.studentId = this.$route.params.id;
+      Object.assign(this.search_params, { uid: this.studentId })
+      this.initPage()
+    }
   },
   watch: {
     pUserId(value) {
-      if(value) {
-        this.studentId = this.$route.params.id
+      if(value && this.$route.params.isShort) {
+        this.studentId = value
         Object.assign(this.search_params, { uid: this.studentId })
         this.initPage()
       }
