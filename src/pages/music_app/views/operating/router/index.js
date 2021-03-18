@@ -51,6 +51,25 @@ const operatingRoutes = [{
     component: () => import('../views/activityManagement/index.vue')
   },
   {
+    path: '/review',
+    name: 'review',
+    meta: {
+      title: '作品审核',
+      keepAlive: false
+    },
+    component: () => import('../views/review/index.vue')
+  },
+  {
+    path: '/review/:promotionsId/:type',
+    name: 'review',
+    meta: {
+      title: '新建审核',
+      keepAlive: false
+    },
+    component: () =>
+      import('../views/review/addReview/index.vue')
+  },
+  {
     path: '/newActivityManage/:promotionsId/:type',
     name: 'newActivityManage',
     meta: {
