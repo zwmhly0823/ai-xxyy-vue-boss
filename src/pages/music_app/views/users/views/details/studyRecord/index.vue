@@ -16,6 +16,7 @@
       </el-radio-group>
     </div>
     <component
+      :pUserId="studentId"
       :is="curentComp"
       :subjectCode="subjectCode"
       v-bind="$attrs"
@@ -29,7 +30,12 @@ import Write from './write'
 
 export default {
   name: 'studyRecordIndex',
-
+  poprs:{
+    pUserId: {
+      type: String,
+      default: '',
+    },
+  },
   watch: {},
   components: {
     Art,
@@ -38,7 +44,8 @@ export default {
   created() {},
   data() {
     return {
-      subjectCode: this.$store.state.subjects.subjectCode
+      subjectCode: this.$store.state.subjects.subjectCode,
+      studentId: this.pUserId
     }
   },
   computed: {

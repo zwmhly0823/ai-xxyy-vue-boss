@@ -139,7 +139,7 @@
     </div>
     <div v-else class="no-data">暂无数据</div>
     <addNew ref="track_add" :changeSubject="changeSubject" />
-    <trackMore ref="track_more" :changeSubject="changeSubject" />
+    <trackMore :pUserId="pUserId" ref="track_more" :changeSubject="changeSubject" />
   </div>
 </template>
 
@@ -150,9 +150,16 @@ import addNew from './add_new'
 import trackMore from './track_more'
 export default {
   name: 'index',
+  props: {
+    pUserId: {
+      type: String,
+      default: '',
+    }
+  },
   components: { trackMore, addNew },
   data() {
     return {
+      studentId: '',
       roles: [
         { id: '1', name: '管理员' },
         { id: '2', name: '运营' },
@@ -199,17 +206,24 @@ export default {
         console.info('跟进记录-手动切换科目')
         this.getTrackList()
       }
+    },
+    pUserId(value) {
+      if(value && this.$route.params.isShort) {
+        this.studentId = value
+        this.getTrackList();
+      }
     }
   },
   methods: {
     async getTrackList({ size = 10, page = 1 } = {}) {
+      console.log('getTrackList', this.studentId);
       const {
         data: {
           UserFollowLogPage: { content }
         }
       } = await this.$http.User.getTrackList({
         subject: this.changeSubject,
-        uid: this.pUserId
+        uid: this.studentId
       }).catch((err) => {
         this.$message.error('flow更多数据获取失败')
         console.error(err)
@@ -228,8 +242,11 @@ export default {
     }
   },
   created() {
-    this.getTrackList()
     this.roleId = JSON.parse(localStorage.getItem('staff')).roleId
+    if(!this.$route.params.isShort){
+      this.studentId = this.$route.params.id;
+      this.getTrackList()
+    }
   },
   mounted() {
     // 详情页新增记录刷新列表

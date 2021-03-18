@@ -102,6 +102,7 @@ export default {
   },
   data() {
     return {
+      studentId: '',
       // 通话状态v-model纯显示
       callStatus: '',
       // 分页
@@ -139,7 +140,17 @@ export default {
         this.reqNotifyPage(newValue)
       }
     },
-    pUserId(newValue, oldValue) {
+    pUserId(value) {
+      if(value && this.$route.params.isShort) {
+        this.studentId = value;
+        this.initSwitch()
+        this.reqNotifyPage()
+      }
+    }
+  },
+  mounted() {
+    if(!this.$route.params.isShort){
+      this.studentId = this.$route.params.id;
       this.initSwitch()
       this.reqNotifyPage()
     }
@@ -149,7 +160,7 @@ export default {
     reqNotifyPage(data = {}) {
 
       const query = {
-        userId: this.pUserId, // 锁
+        userId: this.studentId, // 锁
         pageSize: 20, // 锁
         pageNum: this.currentPage,
         sjstime: '',
@@ -290,9 +301,8 @@ export default {
     },
     // 改变switch接口√
     ivrSwitchChange(res) {
-      console.log('ivrSwitchChange', this.pUserId);
       this.$http.User.changeSwitchStatus({
-        userId: this.pUserId,
+        userId: this.studentId,
         status: this.ivrSwitch
       })
         .then((res) => {
@@ -312,8 +322,7 @@ export default {
     },
     // 获取switch状态接口√
     initSwitch() {
-      console.log('initSwitch', this.pUserId)
-      this.$http.User.getSwitchStatus({ userId: this.pUserId })
+      this.$http.User.getSwitchStatus({ userId: this.studentId })
         .then((res) => {
           if (res.payload && res.payload.status) {
             this.ivrSwitch = res.payload.status
