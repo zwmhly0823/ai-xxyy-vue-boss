@@ -269,7 +269,7 @@
           </div>
         </el-col>
         <el-col :span="7" class="dular">
-          <trackFlow />
+          <trackFlow :pUserId="pUserId" />
         </el-col>
       </el-row>
       <!-- 推荐弹窗 -->
@@ -327,6 +327,10 @@ export default {
     teamList: {
       type: Array,
       default: () => []
+    },
+    pUserId: {
+      type: String,
+      default: '',
     }
   },
   components: {
@@ -336,12 +340,9 @@ export default {
     teamTmp,
     trackFlow
   },
-  mounted() {
-    this.sysStudentDetails()
-  },
   async created() {
     this.detailHeight = await calcBrowerClienHeight(this, 'userDetailref', 68)
-    this.getlabelWithoutAike()
+
     this.$root.$on('recordData', (...args) => {
       this.recommendDetails = args[0] // 被转介绍人信息对象
     })
@@ -363,7 +364,7 @@ export default {
       studentLabels: [],
       dialogTableVisible: false,
       // 该学员id
-      studentId: this.$route.params.id,
+      studentId: '',
       teamCutTabs: [
         {
           label: '系统课信息'
@@ -433,6 +434,20 @@ export default {
       handler(newValue, oldValue) {
         this.systemCourse()
       }
+    },
+    pUserId(value) {
+      if(value && this.$route.params.isShort) {
+        this.studentId = value;
+        this.getlabelWithoutAike();
+        this.sysStudentDetails();
+      }
+    }
+  },
+  mounted() {
+    if(!this.$route.params.isShort){
+      this.studentId = this.$route.params.id;
+      this.getlabelWithoutAike();
+      this.sysStudentDetails();
     }
   },
   methods: {

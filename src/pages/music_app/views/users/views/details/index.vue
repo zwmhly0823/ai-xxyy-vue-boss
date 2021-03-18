@@ -182,27 +182,28 @@
               :stuInfor="stuInfor"
               :sysCourse="sysCourse"
               :teamList="trialSysTeamList"
+              :pUserId="studentId"
               @hasEditAddress="hasEditAddress"
               @orderLists="orderLists"
             />
           </el-tab-pane>
           <el-tab-pane label="上课记录" name="learningRecord">
-            <studyRecord :stuInforAdd="stuInfor_add" :stuInfor="stuInfor" :tab="tabData" />
+            <studyRecord :pUserId="studentId" :stuInforAdd="stuInfor_add" :stuInfor="stuInfor" :tab="tabData" />
           </el-tab-pane>
           <el-tab-pane label="作品集" name="collectionOf">
             <portfolio :pUserId="studentId" />
           </el-tab-pane>
           <el-tab-pane label="学习周报" name="studyWeekly" v-if="changeSubject === 0">
-            <studyWeekly />
+            <studyWeekly :pUserId="studentId" />
           </el-tab-pane>
           <el-tab-pane label="订单记录" name="orderRecord">
-            <orderRecord />
+            <orderRecord :pUserId="studentId" />
           </el-tab-pane>
           <el-tab-pane label="物流记录" name="logistics">
-            <logistics />
+            <logistics :pUserId="studentId" />
           </el-tab-pane>
           <el-tab-pane label="账户资产" name="userAsset">
-            <capital :tab="tabData" :stuInforAdd="stuInfor_add" />
+            <capital :pUserId="studentId" :tab="tabData" :stuInforAdd="stuInfor_add" />
           </el-tab-pane>
           <el-tab-pane label="转介绍" name="changeRecommend">
             <changeRecommend :pUserId="studentId" />
@@ -211,10 +212,10 @@
             <approval-record :stuInfor_add="stuInfor_add.mobile" />
           </el-tab-pane>
           <el-tab-pane label="行为轨迹" name="behaviorLocus" v-if="changeSubject === 0">
-            <behaviorLocus />
+            <behaviorLocus :pUserId="studentId" />
           </el-tab-pane>
           <el-tab-pane label="用户触达" name="notifyRecord">
-            <ivr />
+            <ivr :pUserId="studentId" />
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -404,18 +405,33 @@ export default {
         this.tabData = 'changeRecommend'
       }
     })
-    this.studentId = this.$route.params.id
-    this.teamType()
-    this.getUserAllTeam()
+    if(this.$route.params.isShort) {
+      this.$http.User.getUserByUserNum(this.$route.params.id)
+      .then(res => {
+        this.studentId = res.payload.id;
+        this.init();
+      })
+    }
+    else {
+      this.studentId = this.$route.params.id;
+      this.init();
+    }
 
-    this.getUserInfo() // 学员信息接口
-    this.UserExtends() // 学员信息接口-分类补充
-    this.getlabelWithoutAike() // 获取艾克之外的标签
 
-    this.autoHeight = await calcBrowerClienHeight(this, 'autoHeight', 68)
   },
   mounted() {},
   methods: {
+    async init() {
+
+      this.teamType()
+      this.getUserAllTeam()
+
+      this.getUserInfo() // 学员信息接口
+      this.UserExtends() // 学员信息接口-分类补充
+      this.getlabelWithoutAike() // 获取艾克之外的标签
+
+      this.autoHeight = await calcBrowerClienHeight(this, 'autoHeight', 68)
+    },
     // 订单列表
     orderLists() {
       const type = document.getElementById('tab-orderRecord')
@@ -434,7 +450,7 @@ export default {
     async getUserAllTeam() {
       this.sectionLoading = true
       try {
-        const id = this.$route.params.id
+        const id = this.studentId
         const subject = this.changeSubject
 
         const trialList = await this.trialList(id, subject)

@@ -521,6 +521,10 @@ export default {
     tab: {
       type: String,
       default: ''
+    },
+    pUserId: {
+      type: String,
+      default: '',
     }
   },
   components: {
@@ -597,14 +601,14 @@ export default {
       return from === '1v1'
     }
   },
-  created() {
-    this.studentId = this.$route.params.id
-  },
   mounted() {
-    if (this.tab === 'learningRecord') {
-      this.initData()
+    if(!this.$route.params.isShort){
+      this.studentId = this.$route.params.id
+      if (this.tab === 'learningRecord') {
+        this.initData()
+      }
+      this.initWacher()
     }
-    this.initWacher()
   },
   activated() {
     console.log('activitad')
@@ -621,6 +625,15 @@ export default {
       },
       immediate: true,
       deep: true
+    },
+    pUserId(value) {
+      if(value && this.$route.params.isShort) {
+        this.studentId = value;
+        if (this.tab === 'learningRecord') {
+          this.initData()
+        }
+        this.initWacher()
+      }
     }
   },
   methods: {

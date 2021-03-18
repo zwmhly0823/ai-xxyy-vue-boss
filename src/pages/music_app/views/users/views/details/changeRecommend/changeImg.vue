@@ -75,6 +75,12 @@ import { formatDate } from '@/utils/mini_tool_lk'
 
 export default {
   name: 'changeImg',
+  props: {
+    pUserId: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
       tableData: [],
@@ -82,10 +88,15 @@ export default {
         new Date().getFullYear(),
         new Date().getMonth()
       ).valueOf(),
-      searchJson: { pageNum: 1, pageSize: 100, userId: this.$route.params.id }
+      searchJson: { pageNum: 1, pageSize: 100, userId: this.pUserId }
     }
   },
-
+  mounted() {
+    if(!this.$route.params.isShort){
+      this.searchJson.userId = this.$route.params.id;
+      this.getData(this.month_);
+    }
+  },
   methods: {
     tt(r) {
       console.info(r)
@@ -127,9 +138,14 @@ export default {
       return new Date(this.month_).getMonth() + 1
     }
   },
-  mounted() {
-    this.getData(this.month_)
-  }
+  watch: {
+    pUserId(value) {
+      if(value && this.$route.params.isShort) {
+        this.searchJson.userId = value;
+        this.getData(this.month_);
+      }
+    }
+  },
 }
 </script>
 

@@ -65,6 +65,12 @@ import { formatDate } from '@/utils/mini_tool_lk'
 
 export default {
   name: 'changeRecord',
+  props: {
+    pUserId: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
       // 分页
@@ -77,13 +83,19 @@ export default {
       tableData: [],
       searchJson: {
         subject: 3,
-        pay_channel_user: this.$route.params.id,
+        pay_channel_user: this.pUserId,
         regtype: 1,
         status: 3
       }
     }
   },
-
+  mounted() {
+    if(!this.$route.params.isShort){
+      this.searchJson.pay_channel_user = this.$route.params.id;
+      this.getData(this.searchJson, this.currentPage, this.pageSize)
+      this.getDataStatiscsForDetailInDex() // 独立出来-转介绍人信息
+    }
+  },
   methods: {
     // 页容量变化
     handleSizeChange(val) {
@@ -177,7 +189,7 @@ export default {
         data: { Order }
       } = await this.$http.User.getDataStatiscsForDetailInDex({
         subject: 3,
-        uid: this.$route.params.id,
+        uid: this.searchJson.pay_channel_user,
         regtype: 1,
         status: 3
       })
@@ -190,10 +202,15 @@ export default {
     }
   },
   computed: {},
-  mounted() {
-    this.getData(this.searchJson, this.currentPage, this.pageSize)
-    this.getDataStatiscsForDetailInDex() // 独立出来-转介绍人信息
-  }
+  watch: {
+    pUserId(value) {
+      if(value && this.$route.params.isShort) {
+        this.searchJson.pay_channel_user = value;
+        this.getData(this.searchJson, this.currentPage, this.pageSize)
+        this.getDataStatiscsForDetailInDex() // 独立出来-转介绍人信息
+      }
+    }
+  },
 }
 </script>
 

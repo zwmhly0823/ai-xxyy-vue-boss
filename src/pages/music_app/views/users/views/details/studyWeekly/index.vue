@@ -163,13 +163,18 @@ import { formatData } from '@/utils/index'
 import html2canvas from 'html2canvas'
 export default {
   name: 'studtWeekly',
-  props: {},
+  props: {
+    pUserId: {
+      type: String,
+      default: '',
+    }
+  },
   components: {
     EleTable
   },
   data() {
     return {
-      studentId: '',
+      studentId: this.pUserId,
       totalElements: 0,
       tabQuery: {
         size: 20,
@@ -190,9 +195,6 @@ export default {
     }
   },
   computed: {},
-  created() {
-    this.studentId = this.$route.params.id
-  },
   mounted() {
     this.initPage()
     this.initCount()
@@ -207,6 +209,7 @@ export default {
       }
       this.$http.User.getStudyWeeklyPage(params, this.tabQuery.page)
         .then((res) => {
+        console.log('initPage', res);
           const payload = res && res.data && res.data.StudentWeekReportPage
           if (payload) {
             this.totalElements = +payload.totalElements

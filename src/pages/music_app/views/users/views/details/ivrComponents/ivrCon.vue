@@ -102,6 +102,7 @@ export default {
   },
   data() {
     return {
+      studentId: '',
       // 通话状态v-model纯显示
       callStatus: '',
       // 分页
@@ -139,7 +140,17 @@ export default {
         this.reqNotifyPage(newValue)
       }
     },
-    pUserId(newValue, oldValue) {
+    pUserId(value) {
+      if(value && this.$route.params.isShort) {
+        this.studentId = value;
+        this.initSwitch()
+        this.reqNotifyPage()
+      }
+    }
+  },
+  mounted() {
+    if(!this.$route.params.isShort){
+      this.studentId = this.$route.params.id;
       this.initSwitch()
       this.reqNotifyPage()
     }
@@ -148,9 +159,8 @@ export default {
     // table数据√
     reqNotifyPage(data = {}) {
 
-      console.log('reqNotifyPage', this.pUserId)
       const query = {
-        userId: this.pUserId, // 锁
+        userId: this.studentId, // 锁
         pageSize: 20, // 锁
         pageNum: this.currentPage,
         sjstime: '',
@@ -162,7 +172,6 @@ export default {
       Object.assign(query, data)
       this.$http.User.getNotifyPage(query)
         .then((res) => {
-          console.log('llll', res)
           if (res.code === 0 && res.status === 'OK') {
             this.allDigit = +res.payload.totalElements
             // arrange list
@@ -287,15 +296,13 @@ export default {
     },
     // 页码变化√
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
       this.currentPage = val
       this.reqNotifyPage(this.bubbleData)
     },
     // 改变switch接口√
     ivrSwitchChange(res) {
-      console.log('ivrSwitchChange', this.pUserId);
       this.$http.User.changeSwitchStatus({
-        userId: this.pUserId,
+        userId: this.studentId,
         status: this.ivrSwitch
       })
         .then((res) => {
@@ -315,8 +322,7 @@ export default {
     },
     // 获取switch状态接口√
     initSwitch() {
-      console.log('initSwitch', this.pUserId)
-      this.$http.User.getSwitchStatus({ userId: this.pUserId })
+      this.$http.User.getSwitchStatus({ userId: this.studentId })
         .then((res) => {
           if (res.payload && res.payload.status) {
             this.ivrSwitch = res.payload.status

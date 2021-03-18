@@ -757,7 +757,7 @@ export default {
     // 导出
     exportOrderHandle() {
       console.log(this.searchParams)
-      console.log(this.$parent.$children[1].finalParams)
+      console.log('exportOrderHandle', this.$parent.$children[1])
       const chooseExport = this.chooseExport
       if (this.searchParams.length === 0) {
         this.$message.error('请选择筛选条件')
@@ -795,7 +795,8 @@ export default {
             sup_text: '课程难度',
             invoice_status_text: '开票状态',
             invoice_type_text: '开票类型',
-            invoice_code: '发票号码'
+            invoice_code: '发票号码',
+            class_start_text: '开课时间',
             // paymentPayOut 退款流水
             // 'team.team_name': '班级',
             // 'team.team_type': '课程类型',
