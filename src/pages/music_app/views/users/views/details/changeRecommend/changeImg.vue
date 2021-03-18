@@ -91,7 +91,12 @@ export default {
       searchJson: { pageNum: 1, pageSize: 100, userId: this.pUserId }
     }
   },
-
+  mounted() {
+    if(!this.$route.params.isShort){
+      this.searchJson.userId = this.$route.params.id;
+      this.getData(this.month_);
+    }
+  },
   methods: {
     tt(r) {
       console.info(r)
@@ -135,7 +140,7 @@ export default {
   },
   watch: {
     pUserId(value) {
-      if(value) {
+      if(value && this.$route.params.isShort) {
         this.searchJson.userId = value;
         this.getData(this.month_);
       }
