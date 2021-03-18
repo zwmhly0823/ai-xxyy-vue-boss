@@ -37,6 +37,7 @@
                 :total="totalElements"
                 @pageChange="pageChange_handler"
                 @selection-change="handleSelectionChange"
+                :showAllTotalNum="true"
                 class="mytable"
               >
                 <el-table-column
@@ -345,7 +346,6 @@ export default {
     // 活动管理列表
     get_PromotionsPageList() {
       this.getPromotionsPageList(this.sourchParams).then((res) => {
-        console.log(res)
         this.tableData = res.payload.items
         this.totalElements = Number(res.payload.totalCount)
       })
