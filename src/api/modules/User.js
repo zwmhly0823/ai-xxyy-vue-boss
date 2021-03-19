@@ -809,7 +809,8 @@ export default {
   getStudentCourseTaskPage({
     page,
     subject,
-    studentId,
+    cid,
+    // studentId,
     teamId, // 只普通用
     courseId // 只写字0元体验课用
   }) {
@@ -818,7 +819,8 @@ export default {
         ? {
             del: 0,
             subject,
-            student_id: studentId,
+            cid: cid,
+            // student_id: studentId,
             team_id: 0,
             // 写字0元体验课
             course_id: courseId
@@ -826,7 +828,8 @@ export default {
         : {
             del: 0,
             subject,
-            student_id: studentId,
+            cid: cid,
+            // student_id: studentId,
             // normal 体验系统课
             team_id: teamId
           }
@@ -841,9 +844,14 @@ export default {
             totalElements
             content{
               id
+              cid
               student_id
               task_image
               task_video
+              cover_path
+              video_desc
+              video_path
+              status
               taskComment{
                 id
                 sound_comment
@@ -1500,7 +1508,7 @@ export default {
       }`
     })
   },
-  
+
   // 转介绍记录tab给index取转介绍相关数据
   getDataStatiscsForDetailInDex(query) {
     console.warn('查询转介绍人数据对象')
