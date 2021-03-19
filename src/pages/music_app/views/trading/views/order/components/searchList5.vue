@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-07-01 11:08:23
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-18 20:34:50
+ * @LastEditTime: 2021-03-19 11:27:07
  -->
 <template>
   <el-card
@@ -327,6 +327,9 @@ export default {
 
       const query = this.$parent.$children[1].finalParams
       query.subject = 3
+      // delete query.packages_id
+      delete query.regtype
+      // delete query.status
       const fileTitle = dayjs(new Date()).format('YYYY-MM-DD')
       const fileTitleTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
 
@@ -359,7 +362,7 @@ export default {
             'paymentPay.trade_type_text': '支付方式',
             amount: '交易金额',
             packages_name: '商品类型',
-            "user_coupon.status_text": '商品状态',
+            'user_coupon.status_text': '商品状态',
             invoice_status_text: '开票状态',
             invoice_type_text: '开票类型',
             invoice_code: '发票号码',
@@ -370,10 +373,10 @@ export default {
           query: JSON.stringify(query),
         }
         // console.log(exportExcel)
-       this.$http.DownloadExcel.exportOrder(params)
+        this.$http.DownloadExcel.exportOrder(params)
           .then((res) => {
             console.log(res)
-            downloadHandle(res, `素质课订单导出-${fileTitle}`, () => {
+            downloadHandle(res, `预付款优惠券订单导出-${fileTitle}`, () => {
               loading.close()
               this.$message.success('导出成功')
             })
