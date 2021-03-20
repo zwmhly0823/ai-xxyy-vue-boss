@@ -37,6 +37,7 @@
                 :total="totalElements"
                 @pageChange="pageChange_handler"
                 @selection-change="handleSelectionChange"
+                :showAllTotalNum="true"
                 class="mytable"
               >
                 <el-table-column
@@ -67,8 +68,11 @@
                       trigger="click"
                       width="260"
                       popper-class="preview-video"
+                      @hide="() => {handleHide('videoRef' + scope.row.id)}"
+
                     >
                       <video
+                        :ref="`videoRef${scope.row.id}`"
                         style="width: 220px;"
                         :src="scope.row.videoPath"
                         controls
@@ -228,8 +232,6 @@ export default {
   created() {
     this.calcTableHeight()
     this.get_PromotionsPageList()
-    console.log('tableData')
-    console.log(this.tableData)
   },
   mounted() {},
   components: {
@@ -251,6 +253,9 @@ export default {
   },
 
   methods: {
+    handleHide(refName) {
+      this.$refs[refName].pause();
+    },
     handleTopConfirm() {
       this.$http.Operating.topLevel({
         topLevel: this.activeItem.topLevel,
@@ -332,7 +337,6 @@ export default {
     },
     // 获取search
     getSearch(res) {
-      console.log(res, 'res_getSearch=-=-=')
       this.sourchParams = {
         page: 1,
         size: 20,
@@ -345,7 +349,6 @@ export default {
     // 活动管理列表
     get_PromotionsPageList() {
       this.getPromotionsPageList(this.sourchParams).then((res) => {
-        console.log(res)
         this.tableData = res.payload.items
         this.totalElements = Number(res.payload.totalCount)
       })
@@ -386,7 +389,6 @@ export default {
       // this.tableParams.page = res
       this.sourchParams.pageNum = res
       this.get_PromotionsPageList()
-      console.log(res)
     },
     /** 新建活动按钮 */
     new_activity_handle() {
@@ -407,7 +409,6 @@ export default {
       this.activityTimeDialog = true
       this.activityTime.endTime = row.endDate
       this.id = row.id
-      console.log(row)
     },
     _changeActivityTime() {
       const params = {
@@ -415,7 +416,6 @@ export default {
         endDate: this.activityTime.endTime
       }
       this.$http.Operating.updatePromotionsDate(params).then((res) => {
-        console.log(res, '-------------')
         if (res.code === 0) {
           this.$message({
             message: '保存成功',

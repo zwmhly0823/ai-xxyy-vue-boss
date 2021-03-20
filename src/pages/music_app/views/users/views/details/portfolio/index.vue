@@ -79,14 +79,14 @@
           <div class="work-photo">
             <img
               class="work-details"
-              :src="scope.row.task_image + '?x-oss-process=image/resize,l_100'"
-              @click="lookCurImg(scope.row.task_image)"
+              :src="host + scope.row.cover_path"
+              @click="() => { scope.row.video_path ? handlePlay(host + scope.row.video_path) : lookCurImg(host + scope.row.cover_path)}"
             />
             <!-- 如果有视频，显示播放按钮 -->
-            <i class="el-icon-video-play" v-if="scope.row.task_video"></i>
+            <i class="el-icon-video-play" v-if="scope.row.video_path" @click="() => {handlePlay(host + scope.row.video_path)}"></i>
             <el-button
               round
-              v-if="!scope.row.task_video"
+              v-if="!scope.row.video_path"
               class="down-btn"
               @click="downImg(scope.row)"
               size="mini"
@@ -95,6 +95,11 @@
               >下载作品</el-button
             >
           </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" width="70">
+        <template slot-scope="scope">
+          <span>{{getEnumStatus(scope.row.status)}}</span>
         </template>
       </el-table-column>
       <el-table-column label="点评老师" width="70">
@@ -261,31 +266,46 @@
 <script>
 import SingleImgPreview from '@/components/SingleImgPreview/index'
 import { formatData } from '@/utils/index'
+import contants from '@/utils/contants'
+
+const { OSS_IMG_BASE_URL } = contants
+
 export default {
   name: 'portfolio',
+  props: {
+    pUserId: {
+      type: String,
+      default: ''
+    }
+  },
   components: { SingleImgPreview },
   mounted() {
+
     this.$root.$on('portfolio', (...argus) => {
-      console.info('老爹给作品集的基础数据和写字0元体验', argus[0], argus[1])
       this.teams_lk = argus[0] || []
       this.teams_lk_free_write = argus[1] || []
     })
     // 初始化-拿数组第1条数据
-    setTimeout(() => {
-      if (this.teams_lk_filter[0]) {
-        this.teamId = this.teams_lk_filter[0].id
-        this.courseId =
-          this.teams_lk_filter[0] &&
-          this.teams_lk_filter[0].course_ids &&
-          this.teams_lk_filter[0].course_ids.length
-            ? this.teams_lk_filter[0].course_ids
-            : []
-        this.reqStudentCourseTaskPage()
-      }
-    }, 1000)
+    if(!this.$route.params.isShort){
+      this.studentId = this.$route.params.id;
+      setTimeout(() => {
+        if (this.teams_lk_filter[0]) {
+          this.teamId = this.teams_lk_filter[0].id
+          this.courseId =
+            this.teams_lk_filter[0] &&
+            this.teams_lk_filter[0].course_ids &&
+            this.teams_lk_filter[0].course_ids.length
+              ? this.teams_lk_filter[0].course_ids
+              : []
+          this.reqStudentCourseTaskPage()
+        }
+      }, 1000)
+    }
   },
   data() {
     return {
+      host: OSS_IMG_BASE_URL,
+      studentId: '',
       voiceType: {
         0: '人工点评',
         1: '智能点评',
@@ -324,12 +344,6 @@ export default {
       const arrNew = this.teams_lk
         .filter((item) => item.subject === '' + this.changeSubject)
         .concat(this.changeSubject ? this.teams_lk_free_write : [])
-      console.info(
-        '作品集:o元,科目,最终',
-        this.teams_lk_free_write,
-        this.changeSubject,
-        arrNew
-      )
       return arrNew
     }
   },
@@ -341,9 +355,44 @@ export default {
         console.info('作品集-手动切换科目')
         this.reqStudentCourseTaskPage()
       }
+    },
+    pUserId(value) {
+      if(value && this.$route.params.isShort) {
+        this.studentId = value
+        setTimeout(() => {
+          if (this.teams_lk_filter[0]) {
+            this.teamId = this.teams_lk_filter[0].id
+            this.courseId =
+              this.teams_lk_filter[0] &&
+              this.teams_lk_filter[0].course_ids &&
+              this.teams_lk_filter[0].course_ids.length
+                ? this.teams_lk_filter[0].course_ids
+                : []
+            this.reqStudentCourseTaskPage()
+          }
+        }, 1000)
+      }
     }
   },
   methods: {
+    getEnumStatus(val) {
+      if(val === 1) {
+        return '审核中'
+      }
+      if(val === 2) {
+        return '发布成功'
+      }
+      if(val === 3) {
+        return '被禁'
+      }
+      if(val === 4) {
+        return '审核未通过'
+      }
+    },
+    handlePlay(src) {
+      this.currentVideo = src
+      this.videoDialog = true
+    },
     lookCurImg(src) {
       this.imgPreview = src
       this.showViewer = true
@@ -396,7 +445,8 @@ export default {
       this.$http.User.getStudentCourseTaskPage({
         page: this.currentPage,
         subject: this.changeSubject,
-        studentId: this.pUserId,
+        // studentId: this.studentId,
+        cid: this.studentId,
 
         teamId: this.teamId, // 班级Id
         courseId: this.courseId // 写字0元体验课
@@ -435,12 +485,12 @@ export default {
       const that = this
       console.log('下载', val)
       const canvas = document.createElement('canvas')
-      const typeName = val.task_image.lastIndexOf('.')
-      const type = val.task_image.substr(typeName + 1)
+      const typeName = val.cover_path.lastIndexOf('.')
+      const type = val.cover_path.substr(typeName + 1)
       const image = new Image()
       image.setAttribute('crossOrigin', 'anonymous')
 
-      image.src = val.task_image
+      image.src = host + val.cover_path
       image.onload = function() {
         const link = document.createElement('a')
         canvas.width = image.width

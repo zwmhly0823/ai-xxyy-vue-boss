@@ -8,13 +8,25 @@
  */
 import axios from '../axios'
 import { getToken } from '@/utils/auth'
+import defaultSetting from '@/settings';
 
 // const Qs = require('qs')
+const getPlateformByUa = () => {
+  const ua = window.navigator.userAgent;
+  const reg = /\((.*?)\)/;
+  const result = ua.match(reg);
+  return result[1];
+}
+
+const platform = getPlateformByUa();
 
 const getHeaders = () => {
   const token = getToken() || ''
   const headers = {
-    'Content-Type': 'application/json;charset=UTF-8'
+    'Content-Type': 'application/json;charset=UTF-8',
+    'subject': 'music_app',
+    'version': defaultSetting.version,
+    'os-type': platform,
   }
   if (token) {
     headers.Authorization = token.includes('Bearer ')
@@ -117,8 +129,8 @@ export default {
     }
   },
   /**
-   * 
-   * @param {*} params 
+   *
+   * @param {*} params
    */
   updateReferralExcel(params) {
     if (judgeToken()) {
@@ -142,7 +154,7 @@ export default {
   },
   /**
    * 订单导出
-   * @param {*} params 
+   * @param {*} params
    * {
       "apiName": "OrderPage",
       "header": {
