@@ -33,12 +33,17 @@
       </el-table-column>
       <el-table-column label="商品信息" min-width="140">
         <template slot-scope="scope">
-          <p>
+         <p>
             {{
               scope.row.packages_name
                 ? scope.row.packages_name || '-'
                 : scope.row.product_name || '-'
             }}
+          </p>
+          <p>
+           人民币<span v-if="+scope.row.regtype !== 6"
+              >：{{ scope.row.total_amount }}</span
+            >
           </p>
         </template>
       </el-table-column>
@@ -75,7 +80,7 @@
         <template slot-scope="scope">
           <p>
             {{
-             scope.row.user_coupon && scope.row.user_coupon.status > 0 ?scope.row.user_coupon && scope.row.user_coupon.oid : '-'
+             scope.row.user_coupon && scope.row.user_coupon.status > 0 && scope.row.user_coupon.oid !=0? scope.row.user_coupon && scope.row.user_coupon.oid : '-'
             }}
           </p>
         </template>
