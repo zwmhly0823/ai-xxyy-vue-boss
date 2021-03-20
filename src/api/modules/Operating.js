@@ -550,6 +550,18 @@ export default {
   getPromotionsPageList(params) {
     return axios.get(`/api/p/v1/promotions/getPromotionsPageList`, params)
   },
+  // 审核列表
+  getReviewPageList(params) {
+    return axios.post(`/api/wk/v1/works/getStuWorks`, params)
+  },
+  // 批量审核
+  auditWorks(params) {
+    return axios.post(`/api/wk/v1/works/auditWorks`, params)
+  },
+  // 修改权重
+  topLevel(params) {
+    return axios.post(`/api/wk/v1/works/topLevel`, params)
+  },
   // 活动管理详情
   getPromotionsById(params) {
     return axios.get(`/api/p/v1/promotions/getPromotionsById`, params)

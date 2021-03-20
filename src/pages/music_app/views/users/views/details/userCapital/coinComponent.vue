@@ -91,6 +91,7 @@ export default {
   },
   data() {
     return {
+      studentId: '',
       taskType: [], // 任务类型-[]
       timeRange: null, // 获取时间-null
       taskTypes: [
@@ -159,6 +160,9 @@ export default {
     }
   },
   created() {
+    if(!this.$route.params.isShort){
+      this.studentId = this.$route.params.id;
+    }
     this.taskKeyVal = Object.assign({}, this.acquire, this.consume)
   },
   mounted() {
@@ -190,6 +194,12 @@ export default {
       handler(newValue, oldValue) {
         this.reqGetUserCoin()
       }
+    },
+    pUserId(value) {
+      if(value && this.$route.params.isShort) {
+        this.studentId = value
+        this.top3Show()
+      }
     }
   },
   computed: {
@@ -204,9 +214,10 @@ export default {
   methods: {
     // 数据接口_用户资产_小熊币
     reqGetUserCoin(other) {
+      console.log('reqGetUserCoin', this.studentId)
       this.$http.User.getUserAssetsCoin(
         this.changeSubject,
-        this.$route.params.id,
+        this.studentId,
         this.currentPage,
         Array.isArray(this.taskType) && this.taskType.length
           ? this.taskType
