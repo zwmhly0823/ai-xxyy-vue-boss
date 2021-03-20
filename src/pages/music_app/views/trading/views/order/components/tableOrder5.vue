@@ -113,7 +113,7 @@ export default {
     // 支付状态
     status: {
       type: String,
-      default: '',
+      default: ' ',
     },
     search: {
       type: Array,
@@ -199,7 +199,6 @@ export default {
       this.loading = true
       const queryObj = {
         regtype: this.regtype,
-        status: 3,
         packages_id: ['600'],
         subject: 3,
       }
@@ -249,6 +248,8 @@ export default {
     orderData(queryObj = {}, page = 1) {
       // 最终搜索条件
       this.$emit('get-params', queryObj)
+
+      console.log(queryObj,"123123123123");
       this.$http.Order.orderPage(`${JSON.stringify(queryObj)}`, page)
         .then((res) => {
           if (!res.data.OrderPage) {
