@@ -58,7 +58,7 @@
       </el-table-column>
       <el-table-column label="订单状态" min-width="80">
         <template slot-scope="scope">{{
-          scope.row.order_status ? scope.row.order_status : '-'
+         scope.row.status && scope.row.status==3 ?'已完成': '待支付'
         }}</template>
       </el-table-column>
       <el-table-column label="商品状态" min-width="80">
@@ -75,7 +75,7 @@
         <template slot-scope="scope">
           <p>
             {{
-              scope.row.user_coupon.status > 0 ? scope.row.user_coupon.oid : '-'
+             scope.row.user_coupon && scope.row.user_coupon.status > 0 ?scope.row.user_coupon && scope.row.user_coupon.oid : '-'
             }}
           </p>
         </template>
@@ -169,6 +169,7 @@ export default {
     search(val) {
       this.currentPage = 1
       this.searchIn = val
+      console.log(val)
       this.getOrderList()
     },
   },
