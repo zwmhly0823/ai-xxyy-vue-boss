@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-07-01 11:08:23
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-18 19:31:58
+ * @LastEditTime: 2021-03-20 10:51:14
  -->
 <template>
   <el-card
@@ -317,7 +317,6 @@ export default {
 
     // 导出
     exportOrderHandle() {
-      debugger;
       console.log(this.searchParams)
       console.log(this.$parent.$children[1].finalParams)
       const chooseExport = this.chooseExport
