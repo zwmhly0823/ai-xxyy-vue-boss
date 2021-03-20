@@ -19,35 +19,31 @@
           >
             <div class="oride-top">已完成</div>
             <div class="oride-middle">
-              <em>{{ statistics.complete ? statistics.complete.count : 0 }}</em
-              >笔
+              <em>{{ +statisticsObj.payed.value.toFixed(2) || 0 }}</em
+              >元 {{ statisticsObj.payed.count || 0 }}笔
             </div>
-            <div class="oride-bottom">
-              <p>
-                {{ statistics.complete ? statistics.complete.bear : 0 }} 小熊币
-              </p>
-              <p>
-                {{ statistics.complete ? statistics.complete.gem : 0 }} 宝石
-              </p>
-            </div>
+            <!-- <div class="oride-bottom">
+              {{ +statisticsObj.payed.value.toFixed(2) || 0 }}元
+            </div> -->
           </div>
         </el-col>
         <!-- 未支付 0，1 -->
           <el-col :span="5">
-          <div
+         <div
             class="grid-content"
             :class="{ current: status === '0,1' }"
             @click="chnageStatus('0,1')"
           >
             <div class="oride-top">未支付</div>
             <div class="oride-middle">
-              <em>{{ statistics.nopay ? statistics.nopay.count : 0 }}</em
-              >笔
+              <!-- <em>{{ statisticsObj.topay.count }}</em
+              >笔 -->
+              <em>{{ +statisticsObj.topay.value.toFixed(2) }}</em
+              >元 {{ statisticsObj.topay.count }}笔
             </div>
-            <div class="oride-bottom">
-              <p>{{ statistics.nopay ? statistics.nopay.bear : 0 }} 小熊币</p>
-              <p>{{ statistics.nopay ? statistics.nopay.gem : 0 }} 宝石</p>
-            </div>
+            <!-- <div class="oride-bottom">
+              {{ +statisticsObj.topay.value.toFixed(2) }}元
+            </div> -->
           </div>
         </el-col>
         <!-- 退费： 退费中 5，已退费 6，7 -->
@@ -66,20 +62,23 @@
         </el-col> -->
         <!-- 全部订单 -->
        <el-col :span="5">
-          <div
+           <div
             class="grid-content"
             :class="{ current: !status }"
             @click="chnageStatus('')"
           >
-            <div class="oride-top">订单总计</div>
+            <div class="oride-top">全部订单</div>
             <div class="oride-middle">
-              <em>{{ statistics.total ? statistics.total.count : 0 }}</em
+              <em>{{ +statisticsObj.total.value.toFixed(2) }}</em
+              >元 {{ statisticsObj.total.count }}笔
+            </div>
+            <!-- <div class="oride-middle">
+              <em>{{ statisticsObj.total.count }}</em
               >笔
             </div>
             <div class="oride-bottom">
-              <p>{{ statistics.total ? statistics.total.bear : 0 }} 小熊币</p>
-              <p>{{ statistics.total ? statistics.total.gem : 0 }} 宝石</p>
-            </div>
+              <span>{{ +statisticsObj.total.value.toFixed(2) }}元</span>
+            </div> -->
           </div>
         </el-col>
       </el-row>
@@ -127,10 +126,9 @@ export default {
       status: '3',
       // 搜索
       searchIn: [],
-      statistics: {
+     statistics: {
         '0': { count: 0, value: 0 },
         '1': { count: 0, value: 0 },
-        '2': { count: 0, value: 0 },
         '3': { count: 0, value: 0 },
         '5': { count: 0, value: 0 },
         '6': { count: 0, value: 0 },
@@ -139,9 +137,12 @@ export default {
       finalParams: {}
     }
   },
+  
   computed: {
     // statistics format
+    
     statisticsObj: {
+      
       get() {
         const { statistics } = this
         const obj = {}
@@ -149,11 +150,6 @@ export default {
         obj.topay = {
           count: +statistics['0'].count + +statistics['1'].count,
           value: +statistics['0'].value + +statistics['1'].value
-        }
-        // 已支付 2
-        obj.paying = {
-          count: +statistics['2'].count,
-          value: +statistics['2'].value
         }
         // 退费：5，6，7
         obj.refund = {
@@ -171,16 +167,8 @@ export default {
           value: +statistics['3'].value
         }
         obj.total = {
-          count:
-            obj.topay.count +
-            obj.refund.count +
-            obj.payed.count +
-            obj.paying.count,
-          value:
-            obj.topay.value +
-            obj.refund.value +
-            obj.payed.value +
-            obj.paying.value
+          count: obj.topay.count + obj.refund.count + obj.payed.count,
+          value: obj.topay.value + obj.refund.value + obj.payed.value
         }
         return obj
       },
@@ -206,9 +194,25 @@ export default {
     }
   },
   methods: {
-    // 获取订单统计
-    getStatistics(statistics) {
-      this.statistics = statistics
+     // 获取订单统计
+    getStatistics(res) {
+      const obj = {}
+      if (res && res.length > 0) {
+        this.reset()
+        res.forEach((item) => {
+          const { code, count, value } = item
+          obj[`${code}`] = {
+            count,
+            value
+          }
+        })
+        this.statistics = {
+          ...this.statistics,
+          ...obj
+        }
+      } else {
+        this.reset()
+      }
     },
 
     getParams(res) {
@@ -220,6 +224,8 @@ export default {
      */
     chnageStatus(status) {
       this.status = status
+      // emit status, 用于搜索组件判断条件
+      this.$emit('pay-status', status)
     },
 
     reset() {
