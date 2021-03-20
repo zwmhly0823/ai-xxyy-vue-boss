@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-11-20 18:10:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-20 18:52:17
+ * @LastEditTime: 2021-03-20 21:26:51
 -->
 <template>
   <div>
@@ -65,7 +65,7 @@
                 class="logistics"
                 style="color:#0099FF"
                 @click="showExpressDetail(scope.row)"
-                >物流追踪</span
+                >{{scope.row.regtype!=10?'物流追踪':'-'}}</span
               >
             </div>
             <!-- <div>
