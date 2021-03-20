@@ -11,7 +11,7 @@
     <article class="top-box">
       <el-row :gutter="20" type="flex" justify="flex-start">
         <!-- 已完成 3 -->
-        <el-col :span="5">
+       <el-col :span="5">
           <div
             class="grid-content"
             :class="{ current: status === '3' }"
@@ -19,27 +19,21 @@
           >
             <div class="oride-top">已完成</div>
             <div class="oride-middle">
-              <em>{{ +statisticsObj.payed.value.toFixed(2) || 0 }}</em
-              >元 {{ statisticsObj.payed.count || 0 }}笔
+              <em>{{ statistics.complete ? statistics.complete.count : 0 }}</em
+              >笔
             </div>
-          </div>
-        </el-col>
-        <!-- 已支付 2 -->
-        <el-col :span="5">
-          <div
-            class="grid-content"
-            :class="{ current: status === '2' }"
-            @click="chnageStatus('2')"
-          >
-            <div class="oride-top">已支付</div>
-            <div class="oride-middle">
-              <em>{{ +statisticsObj.paying.value.toFixed(2) || 0 }}</em
-              >元 {{ statisticsObj.paying.count || 0 }}笔
+            <div class="oride-bottom">
+              <p>
+                {{ statistics.complete ? statistics.complete.bear : 0 }} 小熊币
+              </p>
+              <p>
+                {{ statistics.complete ? statistics.complete.gem : 0 }} 宝石
+              </p>
             </div>
           </div>
         </el-col>
         <!-- 未支付 0，1 -->
-        <el-col :span="5">
+          <el-col :span="5">
           <div
             class="grid-content"
             :class="{ current: status === '0,1' }"
@@ -47,8 +41,12 @@
           >
             <div class="oride-top">未支付</div>
             <div class="oride-middle">
-              <em>{{ +statisticsObj.topay.value.toFixed(2) }}</em
-              >元 {{ statisticsObj.topay.count }}笔
+              <em>{{ statistics.nopay ? statistics.nopay.count : 0 }}</em
+              >笔
+            </div>
+            <div class="oride-bottom">
+              <p>{{ statistics.nopay ? statistics.nopay.bear : 0 }} 小熊币</p>
+              <p>{{ statistics.nopay ? statistics.nopay.gem : 0 }} 宝石</p>
             </div>
           </div>
         </el-col>
@@ -67,16 +65,20 @@
           </div>
         </el-col> -->
         <!-- 全部订单 -->
-        <el-col :span="5">
+       <el-col :span="5">
           <div
             class="grid-content"
             :class="{ current: !status }"
             @click="chnageStatus('')"
           >
-            <div class="oride-top">全部订单</div>
+            <div class="oride-top">订单总计</div>
             <div class="oride-middle">
-              <em>{{ +statisticsObj.total.value.toFixed(2) }}元</em>
-              {{ statisticsObj.total.count }}笔
+              <em>{{ statistics.total ? statistics.total.count : 0 }}</em
+              >笔
+            </div>
+            <div class="oride-bottom">
+              <p>{{ statistics.total ? statistics.total.bear : 0 }} 小熊币</p>
+              <p>{{ statistics.total ? statistics.total.gem : 0 }} 宝石</p>
             </div>
           </div>
         </el-col>
@@ -205,24 +207,8 @@ export default {
   },
   methods: {
     // 获取订单统计
-    getStatistics(res) {
-      const obj = {}
-      if (res && res.length > 0) {
-        this.reset()
-        res.forEach((item) => {
-          const { code, count, value } = item
-          obj[`${code}`] = {
-            count,
-            value
-          }
-        })
-        this.statistics = {
-          ...this.statistics,
-          ...obj
-        }
-      } else {
-        this.reset()
-      }
+    getStatistics(statistics) {
+      this.statistics = statistics
     },
 
     getParams(res) {

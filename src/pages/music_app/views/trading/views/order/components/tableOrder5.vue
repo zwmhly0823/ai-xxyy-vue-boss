@@ -74,7 +74,7 @@
       <el-table-column label="关联系统课订单" min-width="120">
         <template slot-scope="scope">
           <p>
-            {{ scope.row.user_coupon > 0 ? scope.row.user_coupon.oid : '-' }}
+            {{ scope.row.user_coupon.status > 0 ? scope.row.user_coupon.oid : '-' }}
           </p>
         </template>
       </el-table-column>
@@ -285,7 +285,7 @@ export default {
     async orderStatistics(statisticsQuery = '') {
       const bearResult = await this.$http.Order.orderStatistics(
         statisticsQuery,
-        'bear_integral',
+        'amount',
         'status'
       )
       const gemResult = await this.$http.Order.orderStatistics(
