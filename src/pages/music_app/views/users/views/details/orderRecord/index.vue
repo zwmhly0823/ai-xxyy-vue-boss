@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
- * @LastEditors: YangJiyong
- * @LastEditTime: 2021-02-06 16:58:18
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-20 18:42:43
 -->
 <template>
   <div class="order-record">
@@ -158,7 +158,7 @@ export default {
     // 数据接口_订单·物流
     reqgetOrderPage() {
       const query = {
-        regtype: this.changeType === 1 ? [4, 5, 6] : [1, 2, 3, 7, 10, 11, 13],
+        regtype: this.changeType === 1 ? [4, 5, 6,10] : [1, 2, 3, 7, 11, 13],
         uid: this.pUserId
       }
       // const regtype = this.changeType?[4,5,6]:[1,2,3,7]

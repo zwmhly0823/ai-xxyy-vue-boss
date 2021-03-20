@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 15:16:26
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-25 11:37:01
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-20 20:10:02
  -->
 <template>
   <el-row type="flex" class="orderModule app-main height">
@@ -54,6 +54,20 @@
                   v-if="activeTopic === '1,2,6,10'"
                 />
               </el-tab-pane>
+              <!-- 预付款优惠券 -->
+              <el-tab-pane label="预付款优惠券" name="1,2,6,10,11">
+                <search-list5
+                  :pay-status="payStatus"
+                  @search="handleSearch"
+                  v-if="activeTopic === '1,2,6,10,11'"
+                />
+                <all-order5
+                  :topic="activeTopic"
+                  :search="search"
+                  @pay-status="getPayStatus"
+                  v-if="activeTopic === '1,2,6,10,11'"
+                />
+              </el-tab-pane>
               <!-- <el-tab-pane label="素质课" name="7">
                 <search-list4
                   @search="handleSearch"
@@ -77,10 +91,12 @@
 import allOrder1 from './components/allOrder1'
 import allOrder2 from './components/allOrder2'
 import allOrder3 from './components/allOrder3'
+import allOrder5 from './components/allOrder5'
 // import allOrder4 from './components/allOrder4'
 import searchList1 from './components/searchList1.vue'
 import searchList2 from './components/searchList2.vue'
 import searchList3 from './components/searchList3.vue'
+import searchList5 from './components/searchList5.vue'
 // import searchList4 from './components/searchList4.vue'
 export default {
   name: 'orderModule',
@@ -90,10 +106,12 @@ export default {
     allOrder2,
     allOrder3,
     // allOrder4,
+    allOrder5,
     searchList1,
     searchList2,
     searchList3,
-    // searchList4
+    // searchList4,
+    searchList5,
   },
   data() {
     return {
@@ -103,7 +121,7 @@ export default {
       search: [],
       showSearch: true,
       searchProp: {},
-      payStatus: '3' // 支付状态
+      payStatus: '3', // 支付状态
     }
   },
   computed: {},
@@ -119,7 +137,7 @@ export default {
     getPayStatus(status) {
       console.log(status, 'pay status')
       this.payStatus = status
-    }
+    },
   },
   created() {
     const urlParams = localStorage.getItem('noticeParams')
@@ -129,15 +147,14 @@ export default {
       // this.activeTopic = '4'
       this.searchProp = {
         name: urlParams.split(',')[0],
-        value: urlParams.split(',')[1]
+        value: urlParams.split(',')[1],
       }
     }
-  }
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-
 .order-container {
   display: flex;
   flex-direction: column;
@@ -201,11 +218,10 @@ export default {
     font-size: 12px;
   }
 }
-.orderModule{
-  
-.el-popper {
-  z-index: 2000 !important;
-}
+.orderModule {
+  .el-popper {
+    z-index: 2000 !important;
+  }
 }
 
 .top-style1 {
