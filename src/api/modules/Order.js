@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-28 18:03:42
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-18 19:13:35
  */
 import axios from '../axiosConfig'
 import { injectSubject, getAppSubjectCode } from '@/utils/index'
@@ -64,6 +64,10 @@ export default {
               mobile_province
               mobile_city
               birthday
+            }
+            user_coupon{
+              status
+              oid
             }
             channel {
               channel_outer_name

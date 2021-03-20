@@ -19,7 +19,7 @@
         value: 'id',
         label: 'name',
         emitPath: false,
-        checkStrictly
+        checkStrictly,
       }"
       :show-all-levels="false"
       clearable
@@ -36,47 +36,47 @@ export default {
   props: {
     name: {
       type: String,
-      default: ''
+      default: '',
     },
     placeholder: {
       type: String,
-      default: '销售部'
+      default: '销售部',
     },
     // 有时只需获取 deptid，无须获取teacherids
     onlyDept: {
       type: Number,
-      default: 0
+      default: 0,
     },
     departmentId: {
       type: String,
-      default: '0'
+      default: '0',
     },
     isDisabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     multiple: {
       type: Boolean,
-      default: true
+      default: true,
     },
     // 单行模式下，选择任意一级选项
     checkStrictly: {
       type: Boolean,
-      default: false
+      default: false,
     },
     // 是否是兼职老师
     isParttimeTeacher: {
       type: Boolean,
-      default: false
+      default: false,
     },
     myStyle: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   data() {
     return {
-      departmentList: []
+      departmentList: [],
     }
   },
   created() {
@@ -114,8 +114,7 @@ export default {
           300,
           this.isParttimeTeacher
         )
-        console.log(teacher)
-        const teacherIds = teacher.data.TeacherList.map((item) => item.id)
+        const teacherIds = this.departmentList.map((item) => item.id)
         this.$emit(
           'result',
           data === null || data.length > 0 ? { [this.name]: teacherIds } : ''
@@ -123,7 +122,7 @@ export default {
       }
     },
     handle(property) {
-      return function(a, b) {
+      return function (a, b) {
         const val1 = a[property]
         const val2 = b[property]
         return val2 - val1
@@ -136,8 +135,8 @@ export default {
           this.recursive(item.children)
         }
       })
-    }
-  }
+    },
+  },
 }
 </script>
 
