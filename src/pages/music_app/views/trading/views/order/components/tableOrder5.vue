@@ -40,12 +40,6 @@
                 : scope.row.product_name || '-'
             }}
           </p>
-          <p>
-            {{ scope.row.currency
-            }}<span v-if="+scope.row.regtype !== 6"
-              >：{{ scope.row.amount }}</span
-            >
-          </p>
         </template>
       </el-table-column>
       <el-table-column label="下单时间·订单号" min-width="180">
@@ -80,7 +74,7 @@
       <el-table-column label="关联系统课订单" min-width="120">
         <template slot-scope="scope">
           <p>
-            {{ scope.row.user_coupon>0 ? scope.row.user_coupon.oid : '-' }} 
+            {{ scope.row.user_coupon > 0 ? scope.row.user_coupon.oid : '-' }}
           </p>
         </template>
       </el-table-column>
@@ -270,7 +264,7 @@ export default {
             if (item.regtype) {
               let currency = {}
               if (item.regtype === 10) {
-                item.regtype_text = '优惠券订单'
+                item.regtype_text = '预付款优惠券'
                 currency = { currency: '宝石' }
                 Object.assign(item, currency)
                 item.amount = item.gem_integral

@@ -685,7 +685,7 @@ export default {
             }
           })
         }
-        console.log(res, 'userinfo---------------------------')
+        console.log('getUserInfo', res);
         this.stuInfor = User
         // ②-2给各个组件传基础数据
         this.$root.$emit('study', User.teams, User.zero_teamid_write_trials) // 学习记录+0元体验课
