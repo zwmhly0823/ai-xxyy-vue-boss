@@ -6,7 +6,7 @@ stages:
   - deploy_live
   
 variables:
-  DEPLOY_USER: "wanghongbao liyafei"
+  DEPLOY_USER: "wanghongbao liyafei zhengzhiyong"
 
   KUBECTL_CLI_OPTS: "kubectl --kubeconfig=/home/gitlab-runner/xxyy-devtest-k8s.config"
   
