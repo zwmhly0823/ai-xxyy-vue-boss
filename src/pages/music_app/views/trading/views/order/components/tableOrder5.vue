@@ -264,7 +264,7 @@ export default {
             if (item.regtype) {
               let currency = {}
               if (item.regtype === 10) {
-                item.regtype_text = '优惠券订单'
+                item.regtype_text = '预付款优惠券'
                 currency = { currency: '宝石' }
                 Object.assign(item, currency)
                 item.amount = item.gem_integral
