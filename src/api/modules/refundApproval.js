@@ -75,6 +75,14 @@ export default {
     //   resolve({ code: 0, data: { bala: 54188 } })
     // })
   },
+  // 优惠券订单检测
+  checkCouponOrderStatus({ orderId }) {
+    console.warn('获取剩余金额')
+    return axios.get(`/api/o/v1/order/checkCouponOrderStatus?orderId=${orderId}`)
+    // return new Promise((resolve, reject) => {
+    //   resolve({ code: 0, data: { bala: 54188 } })
+    // })
+  },
   // 获取优惠券list
   getCoupon(params) {
     console.warn('获取优惠券list')

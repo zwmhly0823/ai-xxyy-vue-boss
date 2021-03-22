@@ -1,6 +1,6 @@
 <!--
- * @Descripttion: 
- * @version: 
+ * @Descripttion:
+ * @version:
  * @Author: huzhifu
  * @Date: 2020-05-07 10:50:45
  * @LastEditors: Please set LastEditors
@@ -116,7 +116,7 @@
             <el-radio :label="0" v-show="refundForm.businessType === '系统课'"
               >优惠券退款</el-radio
             >
-            <el-radio :label="1">课程退款</el-radio>
+            <el-radio :label="1" v-show="this.refundForm.businessType!=='预付款优惠券'">课程退款</el-radio>
             <el-radio :label="6" v-show="this.refundForm.businessType==='预付款优惠券'">系统课预付款优惠券退款</el-radio>
             <!-- <el-radio
               :label="2"
@@ -140,6 +140,9 @@
               >补偿</el-radio
             >-->
           </el-radio-group>
+        </el-form-item>
+        <el-form-item label="关联订单：" v-show="this.refundForm.businessType==='预付款优惠券'">
+          无关联
         </el-form-item>
         <!-- 关单赠品-次月课程-随材盒子(出现条件系统课+选中课程退款) -->
         <template
@@ -508,6 +511,19 @@ export default {
                 location.reload()
               }, 4000)
             }
+
+            if(targetItem.regtype === 'TICKET500') {
+              const {
+                code,
+              } = await this.$http.RefundApproval.checkCouponOrderStatus({
+                orderId: targetItem.id,
+              })
+              if(code !== 0) {
+                // setTimeout(() => {
+                //   location.reload()
+                // }, 1000);
+              }
+            }
           }
         }
         if (targetItem && targetItem.id) {
@@ -860,7 +876,11 @@ export default {
                 location.reload()
               }, 4000)
             }
-          } // 补偿
+          }
+          else if(newValue === 6) {
+            this.refundForm.refundAmount = this.refundForm.residueFee
+          }
+           // 补偿
           // else if (newValue === 3) {
           //   this.refundForm.refundAmount = '' // 退款额
           //   this.refundForm.refundMonths = ''
@@ -1347,6 +1367,7 @@ export default {
             const loading = this.$loading({
               lock: true,
             })
+
             this.$http.RefundApproval.submito(params1)
               .then(({ code }) => {
                 if (!code) {

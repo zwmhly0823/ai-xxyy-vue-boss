@@ -167,7 +167,7 @@
       <el-table-column label="用户电话" width="180" prop="userTel"></el-table-column>
       <el-table-column label="开课日期" width="120">
         <template slot-scope="scope">
-          <div>
+          <div v-if="scope.row.subType !== 99">
             <span>
               {{ courseOptions[scope.row.managementType] }}
               {{ scope.row.periodName }}
