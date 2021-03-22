@@ -510,6 +510,7 @@ export default {
               setTimeout(() => {
                 location.reload()
               }, 4000)
+              return
             }
 
             if(targetItem.regtype === 'TICKET500') {
@@ -519,9 +520,10 @@ export default {
                 orderId: targetItem.id,
               })
               if(code !== 0) {
-                // setTimeout(() => {
-                //   location.reload()
-                // }, 1000);
+                setTimeout(() => {
+                  location.reload()
+                }, 1000);
+                return;
               }
             }
           }
