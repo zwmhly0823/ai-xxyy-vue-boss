@@ -467,14 +467,14 @@ export default {
       const labelNames = []
       console.log(this.rightDepartSysTagList)
       console.log(this.rightPersonSysTagList)
-      // Object.keys(this.rightDepartSysTagList).forEach((key) => {
-      //   this.rightDepartSysTagList[key].forEach((item) => {
-      //     if (item.active) {
-      //       labelIds.push(item.labelInfoId)
-      //       labelNames.push(item.name)
-      //     }
-      //   })
-      // })
+      Object.keys(this.rightDepartSysTagList).forEach((key) => {
+        this.rightDepartSysTagList[key].forEach((item) => {
+          if (item.active) {
+            labelIds.push(item.labelInfoId)
+            labelNames.push(item.name)
+          }
+        })
+      })
       this.rightPersonSysTagList &&
         this.rightPersonSysTagList.forEach((item) => {
           if (item.active) {
