@@ -487,6 +487,7 @@ export default {
       const query = {
         teacherId: this.userinfo.id,
         uid: this.uid,
+        subject: "MUSIC_APP",
         labelIds: labelIds.join(',')
       }
       this.$http.Setting.setLabelForUser(query).then((res) => {
