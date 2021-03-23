@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shasen
  * @Date: 2020-06-29 16:50:58
- * @LastEditors: shasen
- * @LastEditTime: 2020-09-24 15:55:42
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-23 10:21:06
 -->
 <template>
   <el-row type="flex" class="activity-manage app-main">
@@ -346,26 +346,26 @@ export default {
           value: '0',
           label: '首单年课'
         },
-        {
-          value: '1',
-          label: '首单两年课'
-        },
-        {
-          value: '2',
-          label: '续费年课'
-        },
-        {
-          value: '3',
-          label: '续费两年课'
-        },
-        {
-          value: '4',
-          label: '补差半年至两年'
-        },
-        {
-          value: '5',
-          label: '补差半年至一年'
-        }
+        // {
+        //   value: '1',
+        //   label: '首单两年课'
+        // },
+        // {
+        //   value: '2',
+        //   label: '续费年课'
+        // },
+        // {
+        //   value: '3',
+        //   label: '续费两年课'
+        // },
+        // {
+        //   value: '4',
+        //   label: '补差半年至两年'
+        // },
+        // {
+        //   value: '5',
+        //   label: '补差半年至一年'
+        // }
       ],
       tableData: [],
       activityFrom: {

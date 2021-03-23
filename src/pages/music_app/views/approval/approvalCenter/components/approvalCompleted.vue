@@ -129,7 +129,7 @@
       </el-table-column>
       <el-table-column label="开课日期" width="120">
         <template slot-scope="scope">
-          <div>
+          <div v-if="scope.row.subType !== 99">
             <span>
               {{ courseOptions[scope.row.managementType] }}
               {{ scope.row.periodName }}
@@ -479,7 +479,8 @@
                 2: '降半年包',
                 3: '补偿',
                 4: '降1年包',
-                5: '降1年半包'
+                5: '降1年半包',
+                6: '系统课预付款优惠券退款',
               }[drawerApprovalDeatail.refundType]
             }}</el-col>
           </el-row>

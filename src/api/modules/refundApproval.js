@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-05-12 15:22:25
- * @LastEditors: liukun
- * @LastEditTime: 2020-10-27 18:15:07
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-17 14:42:47
  */
 
 import axios from '../axiosConfig'
@@ -36,7 +36,7 @@ export default {
   getOrdersByUid(uid) {
     console.warn('我来查名下订单list')
     return axios.get(
-      `/api/o/v1/order/getOrderByRegtypesAndStatus?userId=${uid}&status=COMPLETED&regtypes=DEFAULT,EXPERIENCE,FIRST_ORDER,RENEW`
+      `/api/o/v1/order/getOrderByRegtypesAndStatus?userId=${uid}&status=COMPLETED&regtypes=DEFAULT,EXPERIENCE,FIRST_ORDER,RENEW,TICKET500`
     )
   },
 
@@ -71,6 +71,14 @@ export default {
   getResidueFee({ orderId }) {
     console.warn('获取剩余金额')
     return axios.get(`/api/o/v1/order/getRemainingAmount?orderId=${orderId}`)
+    // return new Promise((resolve, reject) => {
+    //   resolve({ code: 0, data: { bala: 54188 } })
+    // })
+  },
+  // 优惠券订单检测
+  checkCouponOrderStatus({ orderId }) {
+    console.warn('获取剩余金额')
+    return axios.get(`/api/o/v1/order/checkCouponOrderStatus?orderId=${orderId}`)
     // return new Promise((resolve, reject) => {
     //   resolve({ code: 0, data: { bala: 54188 } })
     // })
