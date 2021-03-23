@@ -114,6 +114,7 @@
                 :key="index"
               >
                 <div v-show="item.editing" class="add-new-box">
+                  <!-- 编辑的内容 -->
                   <el-input
                     v-model="editVal"
                     placeholder="请输入内容"
@@ -465,8 +466,8 @@ export default {
     save() {
       const labelIds = []
       const labelNames = []
-      console.log(this.rightDepartSysTagList)
-      console.log(this.rightPersonSysTagList)
+      console.log(this.rightDepartSysTagList,"11111111")
+      console.log(this.rightPersonSysTagList,"22222222")
       // Object.keys(this.rightDepartSysTagList).forEach((key) => {
       //   this.rightDepartSysTagList[key].forEach((item) => {
       //     if (item.active) {
@@ -487,6 +488,7 @@ export default {
       const query = {
         teacherId: this.userinfo.id,
         uid: this.uid,
+        subject: "MUSIC_APP",
         labelIds: labelIds.join(',')
       }
       this.$http.Setting.setLabelForUser(query).then((res) => {
