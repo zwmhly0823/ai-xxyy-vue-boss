@@ -508,3 +508,7 @@ export default {
   line-height: calc(100vh - 290px);
 }
 </style>
+<style lang="scss" scoped>
+/deep/ .el-image-viewer__mask .el-image-viewer__img {
+  z-index: 88;
+}

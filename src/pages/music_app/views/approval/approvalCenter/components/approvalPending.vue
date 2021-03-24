@@ -3,8 +3,8 @@
  * @version:
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
- * @LastEditors: liukun
- * @LastEditTime: 2021-02-02 21:20:18
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-24 17:17:58
  -->
 <template>
   <div class="container" v-loading="vLoading">
@@ -2225,5 +2225,10 @@ export default {
       }
     }
   }
+}
+</style>
+<style lang="scss" scoped>
+/deep/ .el-image-viewer__mask .el-image-viewer__img {
+  z-index: 88;
 }
 </style>
