@@ -1,7 +1,8 @@
 let originUrl = location.origin
 let ossImgUrl = ''
 if (originUrl.indexOf('prod') > 0 || originUrl.indexOf('live') > 0) {
-  ossImgUrl = 'https://ai-xxyy-backend-online.oss-cn-hangzhou.aliyuncs.com'
+  // ossImgUrl = 'https://ai-xxyy-backend-online.oss-cn-hangzhou.aliyuncs.com' //oss域名
+  ossImgUrl = 'https://ai-xxyy-backend-online-oss.xiaoxiongyinyue.com'   //cdn域名
 } else {
   ossImgUrl = 'https://xxyy-kczzht.oss-cn-hangzhou.aliyuncs.com'
 }

@@ -114,6 +114,7 @@
                 :key="index"
               >
                 <div v-show="item.editing" class="add-new-box">
+                  <!-- 编辑的内容 -->
                   <el-input
                     v-model="editVal"
                     placeholder="请输入内容"

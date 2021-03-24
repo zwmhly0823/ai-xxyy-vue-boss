@@ -33,7 +33,7 @@
       </el-table-column>
       <el-table-column label="商品信息" min-width="140">
         <template slot-scope="scope">
-         <p>
+          <p>
             {{
               scope.row.packages_name
                 ? scope.row.packages_name || '-'
@@ -41,7 +41,7 @@
             }}
           </p>
           <p>
-           人民币<span v-if="+scope.row.regtype !== 6"
+            人民币<span v-if="+scope.row.regtype !== 6"
               >：{{ scope.row.total_amount }}</span
             >
           </p>
@@ -63,16 +63,12 @@
       </el-table-column>
       <el-table-column label="订单状态" min-width="80">
         <template slot-scope="scope">{{
-         scope.row.status && scope.row.status==3 ?'已完成': '待支付'
+          scope.row.status && scope.row.status == 3 ? '已完成' : '待支付'
         }}</template>
       </el-table-column>
       <el-table-column label="商品状态" min-width="80">
         <template slot-scope="scope">{{
-          scope.row.user_coupon && scope.row.user_coupon.status == 1
-            ? '未使用'
-            : scope.row.user_coupon && scope.row.user_coupon.status == 2
-            ? '已使用'
-            : '-'
+          scope.row.user_coupon ? scope.row.user_coupon.status_text : '-'
         }}</template>
       </el-table-column>
 
@@ -80,7 +76,9 @@
         <template slot-scope="scope">
           <p>
             {{
-             scope.row.user_coupon && scope.row.user_coupon.status > 0 && scope.row.user_coupon.oid !=0? scope.row.user_coupon && scope.row.user_coupon.oid : '-'
+              scope.row.user_coupon && scope.row.user_coupon.oid != 0
+                ? scope.row.user_coupon.oid
+                : '-'
             }}
           </p>
         </template>
@@ -254,7 +252,7 @@ export default {
       // 最终搜索条件
       this.$emit('get-params', queryObj)
 
-      console.log(queryObj,"123123123123");
+      console.log(queryObj, '123123123123')
       this.$http.Order.orderPage(`${JSON.stringify(queryObj)}`, page)
         .then((res) => {
           if (!res.data.OrderPage) {
