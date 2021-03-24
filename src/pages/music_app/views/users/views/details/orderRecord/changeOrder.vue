@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: zhangjiawen
  * @Date: 2020-11-20 18:10:48
- * @LastEditors: YangJiyong
- * @LastEditTime: 2021-02-06 16:59:22
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-20 21:26:51
 -->
 <template>
   <div>
@@ -15,7 +15,7 @@
     >
       <el-table-column label="订单业务类型">
         <template slot-scope="scope">
-          <div>{{ scope.row.regtype_text }}</div>
+          <div>{{scope.row.regtype==10?'预付款优惠券': scope.row.regtype_text }}</div>
         </template>
       </el-table-column>
       <el-table-column label="下单时间" prop="ctime"> </el-table-column>
@@ -65,7 +65,7 @@
                 class="logistics"
                 style="color:#0099FF"
                 @click="showExpressDetail(scope.row)"
-                >物流追踪</span
+                >{{scope.row.regtype!=10?'物流追踪':'-'}}</span
               >
             </div>
             <!-- <div>

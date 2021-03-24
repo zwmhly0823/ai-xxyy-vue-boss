@@ -159,9 +159,7 @@
     </div>
     <span slot="footer" class="dialog-footer">
       <el-button @click="dialogVisible = false" size="small">取 消</el-button>
-      <el-button type="primary" @click="save" size="small">
-        确 定
-      </el-button>
+      <el-button type="primary" @click="save" size="small"> 确 定 </el-button>
     </span>
   </el-dialog>
 </template>
@@ -171,7 +169,7 @@ import tagsItem from './TagsItem.vue'
 export default {
   name: 'tagDetail',
   components: {
-    tagsItem
+    tagsItem,
   },
   data() {
     return {
@@ -190,7 +188,7 @@ export default {
       tagEditStatus: false,
       hasTagEditStatus: false,
       editVal: '',
-      showGoEdit: false
+      showGoEdit: false,
     }
   },
   created() {
@@ -218,7 +216,7 @@ export default {
     },
     getAllTeacherByRole() {
       return this.$http.Permission.getAllTeacherByRole({
-        teacherId: this.userinfo.id
+        teacherId: this.userinfo.id,
       })
         .then((res) => {
           if (res.length) {
@@ -239,20 +237,27 @@ export default {
       this.leftDepartmentTagList = JSON.parse(JSON.stringify(data.stuDepLabel))
     },
     rightDepartSysTag(data) {
-      this.rightDepartSysTagList = JSON.parse(JSON.stringify(data.teaDepLabel))
+      if (data.teaDepLabel) {
+        this.rightDepartSysTagList = JSON.parse(
+          JSON.stringify(data.teaDepLabel)
+        )
+      }
+
       // 左侧部门库有的标签，在右侧要高亮显示
-      for (const key1 in this.rightDepartSysTagList) {
-        for (const key2 in this.leftDepartmentTagList) {
-          // 先筛组名相同的，然后再筛标签相同的
-          // 四层循环，比较难受
-          if (key1 === key2) {
-            this.rightDepartSysTagList[key1].forEach((item1) => {
-              this.leftDepartmentTagList[key2].forEach((item2) => {
-                if (item1.id === item2.id) {
-                  item1.active = true
-                }
+      if (this.rightDepartSysTagList) {
+        for (const key1 in this.rightDepartSysTagList) {
+          for (const key2 in this.leftDepartmentTagList) {
+            // 先筛组名相同的，然后再筛标签相同的
+            // 四层循环，比较难受
+            if (key1 === key2) {
+              this.rightDepartSysTagList[key1].forEach((item1) => {
+                this.leftDepartmentTagList[key2].forEach((item2) => {
+                  if (item1.id === item2.id) {
+                    item1.active = true
+                  }
+                })
               })
-            })
+            }
           }
         }
       }
@@ -279,7 +284,7 @@ export default {
       const query = {
         teacherId: this.userinfo.id,
         name: this.addNewVal || this.editVal,
-        id: item ? item.id : ''
+        id: item ? item.id : '',
       }
       return this.$http.Setting.saveDefineLabel(query)
         .then((res) => {
@@ -303,13 +308,16 @@ export default {
       this.leftPersonTagList.splice(param.index, 1)
     },
     closeLeftDepartmentTag(param) {
-      Object.keys(this.rightDepartSysTagList).forEach((key) => {
-        this.rightDepartSysTagList[key].forEach((item, index) => {
-          if (item.id === param.item.id) {
-            this.$set(item, 'active', false)
-          }
+      if (this.rightDepartSysTagList) {
+        Object.keys(this.rightDepartSysTagList).forEach((key) => {
+          this.rightDepartSysTagList[key].forEach((item, index) => {
+            if (item.id === param.item.id) {
+              this.$set(item, 'active', false)
+            }
+          })
         })
-      })
+      }
+
       this.leftDepartmentTagList[param.key].splice(param.index, 1)
       if (!this.leftDepartmentTagList[param.key].length) {
         delete this.leftDepartmentTagList[param.key]
@@ -322,13 +330,13 @@ export default {
       this.$confirm('删除标签后，该标签自动从学员身上取消', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       }).then(async () => {
         const res = await this.delDefineLabel(item)
         if (res) {
           this.$message({
             type: 'success',
-            message: '删除成功!'
+            message: '删除成功!',
           })
           this.$emit('deleteTagEmit', this.uid)
         }
@@ -338,7 +346,7 @@ export default {
       const query = {
         labelId: item.id,
         teacherId: this.userinfo.id,
-        type: 1
+        type: 1,
       }
       return this.$http.Setting.delDefineLabel(query)
         .then((res) => {
@@ -377,7 +385,7 @@ export default {
       if (!inputData) {
         this.$message({
           message: '标签名不能为空',
-          type: 'warning'
+          type: 'warning',
         })
         return
       }
@@ -386,7 +394,7 @@ export default {
           if (this.rightPersonSysTagList[i].name === inputData) {
             this.$message({
               message: '标签名在该组已存在，请重新编辑',
-              type: 'warning'
+              type: 'warning',
             })
             return
           }
@@ -396,7 +404,7 @@ export default {
       if (result.code === 0 && result.status === 'OK') {
         this.$message({
           message: '修改成功',
-          type: 'success'
+          type: 'success',
         })
       } else {
         return
@@ -466,16 +474,19 @@ export default {
     save() {
       const labelIds = []
       const labelNames = []
-      console.log(this.rightDepartSysTagList,"11111111")
-      console.log(this.rightPersonSysTagList,"22222222")
-      // Object.keys(this.rightDepartSysTagList).forEach((key) => {
-      //   this.rightDepartSysTagList[key].forEach((item) => {
-      //     if (item.active) {
-      //       labelIds.push(item.labelInfoId)
-      //       labelNames.push(item.name)
-      //     }
-      //   })
-      // })
+      console.log(this.rightDepartSysTagList)
+      console.log(this.rightPersonSysTagList)
+      if (this.rightDepartSysTagList) {
+        Object.keys(this.rightDepartSysTagList).forEach((key) => {
+          this.rightDepartSysTagList[key].forEach((item) => {
+            if (item.active) {
+              labelIds.push(item.labelInfoId)
+              labelNames.push(item.name)
+            }
+          })
+        })
+      }
+
       this.rightPersonSysTagList &&
         this.rightPersonSysTagList.forEach((item) => {
           if (item.active) {
@@ -488,14 +499,14 @@ export default {
       const query = {
         teacherId: this.userinfo.id,
         uid: this.uid,
-        subject: "MUSIC_APP",
-        labelIds: labelIds.join(',')
+        subject: 'MUSIC_APP',
+        labelIds: labelIds.join(','),
       }
       this.$http.Setting.setLabelForUser(query).then((res) => {
         if (res.code === 0 && res.status === 'OK') {
           this.$message({
             type: 'success',
-            message: '保存成功!'
+            message: '保存成功!',
           })
           this.dialogVisible = false
           // 回显到外头的列表上
@@ -516,8 +527,8 @@ export default {
       this.tagEditStatus = false
       this.hasTagEditStatus = false
       this.editVal = ''
-    }
-  }
+    },
+  },
 }
 </script>
 

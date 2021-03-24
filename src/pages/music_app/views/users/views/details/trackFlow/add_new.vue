@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-07-20 16:37:49
- * @LastEditors: YangJiyong
- * @LastEditTime: 2021-01-04 18:56:33
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-20 19:13:33
 --><template>
   <el-dialog title="新建跟进记录" :visible.sync="dialogFormVisible" width="50%">
     <el-form
@@ -152,9 +152,13 @@ export default {
     this.form.uid = this.$route.params.id
     const storage1 = JSON.parse(localStorage.getItem('staff'))
     this.form.cid = storage1.id
-    this.form.roleType = this.roles.filter(
+    console.log(storage1,'1111212');
+    this.form.roleType = this.roles.filter( 
       (n) => n.id === storage1.roleId
-    )[0].name
+    )
+    if(this.form.roleType && this.form.roleType.length>0) {
+     this.form.roleType = this.form.roleType[0].name
+    }
   }
 }
 </script>
