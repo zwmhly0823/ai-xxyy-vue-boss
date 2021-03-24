@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-12-23 21:24:47
- * @LastEditors: YangJiyong
- * @LastEditTime: 2021-01-05 14:03:37
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-24 14:57:57
  */
 import ExtendUserInfo from '@/components/BaseUserInfo/Extend.vue'
 import BaseUserInfo from '@/components/BaseUserInfo/Base.vue'
@@ -151,16 +151,16 @@ export const actions = ({
           }
         }
       },
-      {
-        type: 'a',
-        label: '打标签',
-        click: handleTag,
-        attr: {
-          style: {
-            color: '#2a75ed'
-          }
-        }
-      },
+      // {
+      //   type: 'a',
+      //   label: '打标签',
+      //   click: handleTag,
+      //   attr: {
+      //     style: {
+      //       color: '#2a75ed'
+      //     }
+      //   }
+      // },
       {
         type: 'a',
         label: '好友短信',
