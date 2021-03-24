@@ -510,5 +510,5 @@ export default {
 </style>
 <style lang="scss" scoped>
 /deep/ .el-image-viewer__mask .el-image-viewer__img {
-  z-index: 88;
+  z-index: 2888 !important;
 }
