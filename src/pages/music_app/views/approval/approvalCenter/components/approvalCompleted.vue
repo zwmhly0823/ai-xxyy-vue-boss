@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-23 18:19:41
+ * @LastEditTime: 2021-03-24 16:56:49
  -->
 <template>
   <div class="container">
@@ -1305,11 +1305,11 @@ export default {
   }
 }
 </style>
-<style lang="scss">
+<style lang="scss" scoped>
 .el-tabs--border-card > .el-tabs__content {
   padding: 0px;
 }
-.el-image-viewer__mask .el-image-viewer__img {
+/deep/ .el-image-viewer__mask .el-image-viewer__img {
   z-index: 88;
 }
 </style>
