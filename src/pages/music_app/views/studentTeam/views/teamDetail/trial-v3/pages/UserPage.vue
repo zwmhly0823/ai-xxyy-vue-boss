@@ -31,7 +31,7 @@
       <template slot-scope="scope" slot="survey">
         <div class="user-survey" @click="showHoverUser(scope.row, 'course')">
           <p>
-            打开1111:<span class="danger">{{ scope.row.open_app_count || 0 }}</span>
+            打开:<span class="danger">{{ scope.row.open_app_count || 0 }}</span>
             参课:<span class="danger">
               {{ scope.row.join_course_count || 0 }}
             </span>
@@ -319,7 +319,7 @@ export default {
         }
         // 隐藏不需要的操作列按钮
         let len2 = this.actionFunction.action.length - 1
-        const hideActionArr = ['跟进', '打标签', '好友1111短信']
+        const hideActionArr = ['跟进', '打标签', '好友短信']
         for (let i = 0; len2 >= i; len2--) {
           if (hideActionArr.includes(this.actionFunction.action[len2].label)) {
             this.actionFunction.action.splice(len2, 1)
