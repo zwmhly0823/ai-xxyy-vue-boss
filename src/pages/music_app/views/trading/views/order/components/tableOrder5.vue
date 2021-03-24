@@ -63,11 +63,7 @@
       </el-table-column>
       <el-table-column label="商品状态" min-width="80">
         <template slot-scope="scope">{{
-          scope.row.user_coupon && scope.row.user_coupon.status == 1
-            ? '未使用'
-            : scope.row.user_coupon && scope.row.user_coupon.status == 2
-            ? '已使用'
-            : '-'
+          scope.row.user_coupon.status_text
         }}</template>
       </el-table-column>
 

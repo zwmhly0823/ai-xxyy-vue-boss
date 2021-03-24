@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-18 19:13:35
+ * @LastEditTime: 2021-03-24 11:24:50
  */
 import axios from '../axiosConfig'
 import { injectSubject, getAppSubjectCode } from '@/utils/index'
@@ -68,6 +68,7 @@ export default {
             user_coupon{
               status
               oid
+              status_text
             }
             channel {
               channel_outer_name
