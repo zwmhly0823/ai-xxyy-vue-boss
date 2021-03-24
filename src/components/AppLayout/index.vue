@@ -13,12 +13,17 @@
         <!-- <Feedback /> -->
       </div>
       <app-main />
+      <div class="version-info">
+        <span>Copyright&nbsp;©️&nbsp;美术宝-北京小熊音乐项目组研发</span>
+        <span> Version: {{ version }}</span>
+      </div>
     </div>
     <right-pop :item="rightpopParams" />
   </div>
 </template>
 
 <script>
+import { version } from '@/settings.js'
 import Topbar from './Topbar.vue'
 import Sidebar from './Sidebar/index.vue'
 import AppMain from './AppMain.vue'
@@ -33,9 +38,15 @@ export default {
     Sidebar,
     AppMain,
     // MultiTabbed,
-    RightPop
+    RightPop,
     // Feedback
   },
+  data() {
+    return {
+      version,
+    }
+  },
+
   mixins: [ResizeMixin],
   computed: {
     sidebar() {
@@ -51,14 +62,14 @@ export default {
       return {
         // TODO: 默认展开菜单，调整时修改此处
         // hideSidebar: !this.sidebar.opened,
-        openSidebar: this.sidebar.opened
+        openSidebar: this.sidebar.opened,
         // withoutAnimation: this.sidebar.withoutAnimation,
         // mobile: this.device === 'mobile'
       }
     },
     rightpopParams() {
       return this.$store.state.app.rightpop
-    }
+    },
   },
   created() {
     if (sessionStorage.getItem('store')) {
@@ -83,8 +94,8 @@ export default {
   methods: {
     handleClickOutside() {
       this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -128,5 +139,14 @@ export default {
 
 .mobile .fixed-header {
   width: 100%;
+}
+.version-info {
+  position: fixed;
+  bottom: 17px;
+  z-index: 999;
+  left: 50%;
+  color: #999;
+  margin-left: -100px;
+  font-size: 12px;
 }
 </style>
