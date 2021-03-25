@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
- * @LastEditors: Shentong
- * @LastEditTime: 2020-11-09 11:41:48
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-25 11:23:44
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -77,6 +77,15 @@ const routes = [{
       keepAlive: false
     },
     component: () => import('../views/wechatWaterArmy/index.vue')
+  },
+  {
+    path: '/backstageSql',
+    name: 'backstageSql',
+    meta: {
+      title: 'app升级管理',
+      keepAlive: false
+    },
+    component: () => import('../views/backstageSql/index.vue')
   },
   ...systemAccount
 ]

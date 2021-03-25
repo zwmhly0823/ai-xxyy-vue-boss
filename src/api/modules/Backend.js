@@ -3,16 +3,16 @@
  * @version:
  * @Author: Lukun
  * @Date: 2020-05-10 16:17:21
- * @LastEditors: liukun
- * @LastEditTime: 2020-08-26 18:28:10
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-24 17:02:48
  */
 import axios from '../axiosConfig'
 export default {
-   /**
-   * /v1/backend/approval/staffIds/get
-   * 获取退款审批权限id
-   */
-  getStaffIds(){
+  /**
+  * /v1/backend/approval/staffIds/get
+  * 获取退款审批权限id
+  */
+  getStaffIds() {
     return axios.post('/api/b/v1/backend/approval/staffIds/get?redisKey=approval:uncreditedApprovalIds', {})
   },
   /**
@@ -55,12 +55,9 @@ export default {
    */
   isAggrePass(params) {
     return axios.post(
-      `/api/b/v1/backend/completed/reissue/flow?flowApprovalId=${
-        params.flowApprovalId
-      }&staffName=${params.staffName}&staffId=${params.staffId}&version=${
-        params.version
-      }&isConfirm=${params.isConfirm}&approvalRemark=${params.approvalRemark}&${
-        'isRecover' in params ? 'isRecover=' + params.isRecover : ''
+      `/api/b/v1/backend/completed/reissue/flow?flowApprovalId=${params.flowApprovalId
+      }&staffName=${params.staffName}&staffId=${params.staffId}&version=${params.version
+      }&isConfirm=${params.isConfirm}&approvalRemark=${params.approvalRemark}&${'isRecover' in params ? 'isRecover=' + params.isRecover : ''
       }`
     )
   },
@@ -76,6 +73,9 @@ export default {
     return axios.get(
       `/api/b/v1/backend/promotions/detail/get?flowApprovalId=${params}`
     )
+  },
+  changeCount(params) {
+    return axios.post(`/api/b/v1/backend/update/reissue/productdetails`, params)
   },
   // 赠品批量审批
   batchApproval(params) {

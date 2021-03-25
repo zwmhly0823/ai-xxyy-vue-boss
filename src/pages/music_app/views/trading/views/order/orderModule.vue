@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 15:16:26
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-18 17:35:12
+ * @LastEditTime: 2021-03-20 20:10:02
  -->
 <template>
   <el-row type="flex" class="orderModule app-main height">
@@ -57,12 +57,14 @@
               <!-- 预付款优惠券 -->
               <el-tab-pane label="预付款优惠券" name="1,2,6,10,11">
                 <search-list5
+                  :pay-status="payStatus"
                   @search="handleSearch"
                   v-if="activeTopic === '1,2,6,10,11'"
                 />
                 <all-order5
                   :topic="activeTopic"
                   :search="search"
+                  @pay-status="getPayStatus"
                   v-if="activeTopic === '1,2,6,10,11'"
                 />
               </el-tab-pane>
@@ -109,7 +111,7 @@ export default {
     searchList2,
     searchList3,
     // searchList4,
-    searchList5
+    searchList5,
   },
   data() {
     return {

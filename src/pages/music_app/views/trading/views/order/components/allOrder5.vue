@@ -11,7 +11,7 @@
     <article class="top-box">
       <el-row :gutter="20" type="flex" justify="flex-start">
         <!-- 已完成 3 -->
-        <el-col :span="5">
+       <el-col :span="5">
           <div
             class="grid-content"
             :class="{ current: status === '3' }"
@@ -22,34 +22,28 @@
               <em>{{ +statisticsObj.payed.value.toFixed(2) || 0 }}</em
               >元 {{ statisticsObj.payed.count || 0 }}笔
             </div>
-          </div>
-        </el-col>
-        <!-- 已支付 2 -->
-        <el-col :span="5">
-          <div
-            class="grid-content"
-            :class="{ current: status === '2' }"
-            @click="chnageStatus('2')"
-          >
-            <div class="oride-top">已支付</div>
-            <div class="oride-middle">
-              <em>{{ +statisticsObj.paying.value.toFixed(2) || 0 }}</em
-              >元 {{ statisticsObj.paying.count || 0 }}笔
-            </div>
+            <!-- <div class="oride-bottom">
+              {{ +statisticsObj.payed.value.toFixed(2) || 0 }}元
+            </div> -->
           </div>
         </el-col>
         <!-- 未支付 0，1 -->
-        <el-col :span="5">
-          <div
+          <el-col :span="5">
+         <div
             class="grid-content"
             :class="{ current: status === '0,1' }"
             @click="chnageStatus('0,1')"
           >
             <div class="oride-top">未支付</div>
             <div class="oride-middle">
+              <!-- <em>{{ statisticsObj.topay.count }}</em
+              >笔 -->
               <em>{{ +statisticsObj.topay.value.toFixed(2) }}</em
               >元 {{ statisticsObj.topay.count }}笔
             </div>
+            <!-- <div class="oride-bottom">
+              {{ +statisticsObj.topay.value.toFixed(2) }}元
+            </div> -->
           </div>
         </el-col>
         <!-- 退费： 退费中 5，已退费 6，7 -->
@@ -67,17 +61,24 @@
           </div>
         </el-col> -->
         <!-- 全部订单 -->
-        <el-col :span="5">
-          <div
+       <el-col :span="5">
+           <div
             class="grid-content"
             :class="{ current: !status }"
             @click="chnageStatus('')"
           >
             <div class="oride-top">全部订单</div>
             <div class="oride-middle">
-              <em>{{ +statisticsObj.total.value.toFixed(2) }}元</em>
-              {{ statisticsObj.total.count }}笔
+              <em>{{ +statisticsObj.total.value.toFixed(2) }}</em
+              >元 {{ statisticsObj.total.count }}笔
             </div>
+            <!-- <div class="oride-middle">
+              <em>{{ statisticsObj.total.count }}</em
+              >笔
+            </div>
+            <div class="oride-bottom">
+              <span>{{ +statisticsObj.total.value.toFixed(2) }}元</span>
+            </div> -->
           </div>
         </el-col>
       </el-row>
@@ -122,13 +123,12 @@ export default {
       // 获取teacherid
       teacherId: '',
       // 支付状态  已完成:3, 待支付:0,1，已退费:6,7
-      status: '3',
+      status: '',
       // 搜索
       searchIn: [],
-      statistics: {
+     statistics: {
         '0': { count: 0, value: 0 },
         '1': { count: 0, value: 0 },
-        '2': { count: 0, value: 0 },
         '3': { count: 0, value: 0 },
         '5': { count: 0, value: 0 },
         '6': { count: 0, value: 0 },
@@ -137,9 +137,12 @@ export default {
       finalParams: {}
     }
   },
+  
   computed: {
     // statistics format
+    
     statisticsObj: {
+      
       get() {
         const { statistics } = this
         const obj = {}
@@ -147,11 +150,6 @@ export default {
         obj.topay = {
           count: +statistics['0'].count + +statistics['1'].count,
           value: +statistics['0'].value + +statistics['1'].value
-        }
-        // 已支付 2
-        obj.paying = {
-          count: +statistics['2'].count,
-          value: +statistics['2'].value
         }
         // 退费：5，6，7
         obj.refund = {
@@ -169,16 +167,8 @@ export default {
           value: +statistics['3'].value
         }
         obj.total = {
-          count:
-            obj.topay.count +
-            obj.refund.count +
-            obj.payed.count +
-            obj.paying.count,
-          value:
-            obj.topay.value +
-            obj.refund.value +
-            obj.payed.value +
-            obj.paying.value
+          count: obj.topay.count + obj.refund.count + obj.payed.count,
+          value: obj.topay.value + obj.refund.value + obj.payed.value
         }
         return obj
       },
@@ -204,7 +194,7 @@ export default {
     }
   },
   methods: {
-    // 获取订单统计
+     // 获取订单统计
     getStatistics(res) {
       const obj = {}
       if (res && res.length > 0) {
@@ -234,6 +224,9 @@ export default {
      */
     chnageStatus(status) {
       this.status = status
+      // emit status, 用于搜索组件判断条件
+      console.log(status)
+      this.$emit('pay-status', status)
     },
 
     reset() {

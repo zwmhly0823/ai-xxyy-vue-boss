@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-12-25 16:09:21
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-12-25 17:33:37
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-24 14:53:15
 -->
 <template>
   <div>
@@ -39,7 +39,8 @@
             ></tags-item>
           </div>
         </el-popover>
-        <i class="el-icon-edit" @click="editSysTag(index, row.id)"></i>
+        <!-- 注释标签入口 -->
+        <!-- <i class="el-icon-edit" @click="editSysTag(index, row.id)"></i> -->
       </div>
     </template>
   </div>

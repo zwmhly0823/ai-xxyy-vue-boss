@@ -40,6 +40,11 @@
                 : scope.row.product_name || '-'
             }}
           </p>
+          <p>
+            人民币<span v-if="+scope.row.regtype !== 6"
+              >：{{ scope.row.total_amount }}</span
+            >
+          </p>
         </template>
       </el-table-column>
       <el-table-column label="下单时间·订单号" min-width="180">
@@ -58,23 +63,23 @@
       </el-table-column>
       <el-table-column label="订单状态" min-width="80">
         <template slot-scope="scope">{{
-          scope.row.order_status ? scope.row.order_status : '-'
+          scope.row.status && scope.row.status == 3 ? '已完成' : '待支付'
         }}</template>
       </el-table-column>
       <el-table-column label="商品状态" min-width="80">
         <template slot-scope="scope">{{
-          scope.row.user_coupon && scope.row.user_coupon.status == 1
-            ? '未使用'
-            : scope.row.user_coupon && scope.row.user_coupon.status == 2
-            ? '已使用'
-            : '-'
+          scope.row.user_coupon ? scope.row.user_coupon.status_text : '-'
         }}</template>
       </el-table-column>
 
       <el-table-column label="关联系统课订单" min-width="120">
         <template slot-scope="scope">
           <p>
-            {{ scope.row.user_coupon > 0 ? scope.row.user_coupon.oid : '-' }}
+            {{
+              scope.row.user_coupon && scope.row.user_coupon.oid != 0
+                ? scope.row.user_coupon.oid
+                : '-'
+            }}
           </p>
         </template>
       </el-table-column>
@@ -111,7 +116,7 @@ export default {
     // 支付状态
     status: {
       type: String,
-      default: '',
+      default: ' ',
     },
     search: {
       type: Array,
@@ -167,6 +172,7 @@ export default {
     search(val) {
       this.currentPage = 1
       this.searchIn = val
+      console.log(val)
       this.getOrderList()
     },
   },
@@ -196,7 +202,6 @@ export default {
       this.loading = true
       const queryObj = {
         regtype: this.regtype,
-        status: 3,
         packages_id: ['600'],
         subject: 3,
       }
@@ -246,6 +251,8 @@ export default {
     orderData(queryObj = {}, page = 1) {
       // 最终搜索条件
       this.$emit('get-params', queryObj)
+
+      console.log(queryObj, '123123123123')
       this.$http.Order.orderPage(`${JSON.stringify(queryObj)}`, page)
         .then((res) => {
           if (!res.data.OrderPage) {
@@ -283,85 +290,16 @@ export default {
 
     // 订单统计数据
     async orderStatistics(statisticsQuery = '') {
-      const bearResult = await this.$http.Order.orderStatistics(
+      this.$http.Order.orderStatistics(
         statisticsQuery,
-        'bear_integral',
+        'amount',
         'status'
-      )
-      const gemResult = await this.$http.Order.orderStatistics(
-        statisticsQuery,
-        'gem_integral',
-        'status'
-      )
-      // [ { code: '3', count: '37', type: 'status', value: 38600 },
-      //     { code: '0', count: '2', type: 'status', value: 0 } ]
-      // status: 0,1-未支付；3-已完成；'5,6,7'-退费；
-      const complete = {
-        count: 0, // 订单笔数
-        bear: 0,
-        gem: 0,
-      }
-      const nopay = {
-        count: 0,
-        bear: 0,
-        gem: 0,
-      }
-      const refund = {
-        count: 0,
-        bear: 0,
-        gem: 0,
-      }
-      const total = {
-        count: 0,
-        bear: 0,
-        gem: 0,
-      }
-      const bear =
-        (bearResult && bearResult.data && bearResult.data.OrderStatistics) || []
-      const gem =
-        (gemResult && gemResult.data && gemResult.data.OrderStatistics) || []
-      bear.forEach((item) => {
-        const { code, count, value } = item
-        if (code === '3') {
-          complete.count = +count
-          complete.bear = +value
-        }
-        if (code === '1' || code === '0') {
-          nopay.count += +count
-          nopay.bear += +value
-        }
-        if (code === '5' || code === '6' || code === '7') {
-          refund.count += +count
-          refund.bear += +value
-        }
-      })
-      gem.forEach((item) => {
-        const { code, value } = item
-        if (code === '3') {
-          complete.gem = +value
-        }
-        if (code === '1' || code === '0') {
-          nopay.gem += +value
-        }
-        if (code === '5' || code === '6' || code === '7') {
-          refund.gem += +value
-        }
-      })
+      ).then((res) => {
+        const statistics = res.data.OrderStatistics || []
 
-      // 总计
-      const statistics = { complete, nopay, refund }
-      for (const key in statistics) {
-        if (Object.keys(statistics).includes(key)) {
-          const item = statistics[key]
-          total.count += item.count
-          total.bear += item.bear
-          total.gem += item.gem
-        }
-      }
-      Object.assign(statistics, { total })
-      console.log(statistics)
-
-      this.$emit('statistics', statistics)
+        console.log('statistics', statistics)
+        this.$emit('statistics', statistics)
+      })
       // 统计结束
     },
 

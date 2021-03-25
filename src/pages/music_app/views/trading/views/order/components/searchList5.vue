@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-07-01 11:08:23
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-20 10:53:02
+ * @LastEditTime: 2021-03-24 16:09:36
  -->
 <template>
   <el-card
@@ -366,8 +366,9 @@ export default {
             invoice_status_text: '开票状态',
             invoice_type_text: '开票类型',
             invoice_code: '发票号码',
-            'user_coupon.coupon_rest_amount': '剩余金额',
+            'user_coupon.coupon_used_amount': '使用金额',
             'user_coupon.coupon_refund_amount': '退费金额',
+            'user_coupon.coupon_rest_amount': '剩余金额',
           },
           fileName: `预付款优惠券订单导出-${fileTitleTime}`, // 文件名称
           query: JSON.stringify(query),
