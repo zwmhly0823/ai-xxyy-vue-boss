@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2021-01-27 13:48:33
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-25 17:34:16
+ * @LastEditTime: 2021-03-25 18:19:24
 -->
 <template>
   <el-dialog
@@ -46,6 +46,42 @@
           autocomplete="off"
         ></el-input>
       </el-form-item>
+       <el-form-item label="升级类型" required :label-width="formLabelWidth">
+        <el-select v-model="form.type" placeholder="请输入升级类型">
+          <el-option
+            v-for="item in options1"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="系统类型" required :label-width="formLabelWidth">
+        <el-select v-model="form.ostype" placeholder="请输入系统类型">
+          <el-option
+            v-for="item in options2"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="状态" required :label-width="formLabelWidth">
+        <el-select
+          v-model="form.upgradeStatus"
+          placeholder="请输入状态"
+        >
+          <el-option
+            v-for="item in options3"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="升级标题" :label-width="formLabelWidth">
         <el-input
           v-model.trim="form.title"
@@ -83,42 +119,6 @@
           placeholder="请输入灰度数量，非必填"
           autocomplete="off"
         ></el-input>
-      </el-form-item>
-      <el-form-item label="升级类型" :label-width="formLabelWidth">
-        <el-select v-model="form.type" placeholder="请输入升级类型，非必填">
-          <el-option
-            v-for="item in options1"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          >
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="系统类型" :label-width="formLabelWidth">
-        <el-select v-model="form.ostype" placeholder="请输入系统类型，非必填">
-          <el-option
-            v-for="item in options2"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          >
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="状态" :label-width="formLabelWidth">
-        <el-select
-          v-model="form.upgradeStatus"
-          placeholder="请输入状态，非必填"
-        >
-          <el-option
-            v-for="item in options3"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          >
-          </el-option>
-        </el-select>
       </el-form-item>
       <el-form-item label="备注" :label-width="formLabelWidth">
         <el-input
@@ -228,21 +228,47 @@ export default {
         this.$message.error('请输入版本标识')
         return
       }
+       if (!this.form.type && this.form.type!=0) {
+        this.$message.error('请选择升级类型')
+        return
+      }
+       if (!this.form.ostype) {
+        this.$message.error('请选择系统类型')
+        return
+      }
+       if (!this.form.upgradeStatus) {
+        this.$message.error('请选择输入状态')
+        return
+      }
       this.loading = true
       // 新增
       this.form.type = Number(this.form.type)
-      let fn = this.current
-        ? this.$http.Teacher.updataUpgradeConfigList(this.form)
-        : this.$http.Teacher.createUpgradeConfigList(this.form)
       if (!this.current) {
-        fn(this.form)
+        this.$http.Teacher.createUpgradeConfigList(this.form)
           .then((res) => {
             if (res.code !== 0) {
               return
             }
             this.loading = false,
             this.visible = false,
-            this.$message.success(this.current ? '编辑成功' : '添加成功')
+            this.$message.success('添加成功')
+            setTimeout(() => {
+              this.onClose()
+              this.$emit('success')
+            }, 1000)
+          })
+          .finally(() => {
+            this.loading = false
+          })
+      }else {
+         this.$http.Teacher.updataUpgradeConfigList(this.form)
+          .then((res) => {
+            if (res.code !== 0) {
+              return
+            }
+            this.loading = false,
+            this.visible = false,
+            this.$message.success('编辑成功')
             setTimeout(() => {
               this.onClose()
               this.$emit('success')
@@ -252,6 +278,7 @@ export default {
             this.loading = false
           })
       }
+      
     },
 
     onClose() {

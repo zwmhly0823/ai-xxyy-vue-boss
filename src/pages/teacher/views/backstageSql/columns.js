@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2021-01-26 17:40:11
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-25 17:20:10
+ * @LastEditTime: 2021-03-25 18:26:10
  */
 import { formatData } from '@/utils'
 const status = {
@@ -43,20 +43,31 @@ export default [
   {
     prop: 'title',
     label: '升级标题',
-
+    render(h, data, row) {
+      return row.title ? row.title : '-'
+    }
   },
   {
     prop: 'buttonContent',
     label: '按钮文案',
+    render(h, data, row) {
+      return row.buttonContent ? row.buttonContent : '-'
+    }
   },
   {
     prop: 'content',
     label: '升级文案',
+    render(h, data, row) {
+      return row.content ? row.content : '-'
+    }
   },
   {
     prop: 'downloadUrl',
     label: '下载链接',
-    width: '300'
+    width: '300',
+    render(h, data, row) {
+      return row.downloadUrl ? row.downloadUrl: '-'
+    }
   },
   {
     prop: 'grayReleaseCount',

@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2021-01-26 16:56:54
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-25 17:25:14
+ * @LastEditTime: 2021-03-25 18:20:07
 -->
 <template>
   <div class="backstage d-flex column">
@@ -79,7 +79,7 @@ export default {
       table: { stripe: false, border: false },
       dataList: [],
       listQuery: {
-        currentPage: 0,
+        currentPage: 1,
         totalElements: 0,
         totalPages: 0,
         pageSize: 20,
@@ -94,7 +94,7 @@ export default {
   },
   methods: {
     handleReset() {
-      Object.assign(this.listQuery, { currentPage: 0 })
+      Object.assign(this.listQuery, { currentPage: 1 })
       this.getDataList()
     },
 

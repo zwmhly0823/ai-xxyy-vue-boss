@@ -396,7 +396,7 @@ export default {
 
   // 	查询升级配置列表
   getUpgradeConfigList(
-    pageNumber = 0,
+    pageNumber = 1,
     pageSize = 20,
     subject = "MUSIC_APP"
   ) {
