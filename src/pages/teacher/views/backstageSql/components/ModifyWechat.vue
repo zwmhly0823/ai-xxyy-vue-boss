@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2021-01-27 13:48:33
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-25 19:21:44
+ * @LastEditTime: 2021-03-25 19:51:56
 -->
 <template>
   <el-dialog
@@ -153,7 +153,8 @@ export default {
     current() {
       if (this.current) {
         this.form = this.current
-        this.title = "编辑数据"
+        this.title = "编辑数据",
+        this.form.type = this.form.type==0?'非强制升级':'强制升级'
       }
     },
   },
