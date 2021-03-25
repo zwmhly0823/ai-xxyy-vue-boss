@@ -508,7 +508,7 @@ let bearArt = [
     meta: {
       title: 'app升级管理',
       icon: 'iconxueyuanguanli',
-      module: module,
+      module: "teacher",
     },
   },
   {
