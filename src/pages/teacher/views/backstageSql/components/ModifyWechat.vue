@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2021-01-27 13:48:33
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-25 18:19:24
+ * @LastEditTime: 2021-03-25 19:21:44
 -->
 <template>
   <el-dialog
@@ -164,11 +164,11 @@ export default {
       options1: [
         {
           value: '0',
-          label: '0',
+          label: '非强制升级',
         },
         {
           value: '1',
-          label: '1',
+          label: '强制升级',
         },
       ],
       options2: [

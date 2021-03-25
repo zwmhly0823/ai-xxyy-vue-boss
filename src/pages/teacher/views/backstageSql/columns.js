@@ -4,11 +4,11 @@
  * @Author: YangJiyong
  * @Date: 2021-01-26 17:40:11
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-25 18:26:10
+ * @LastEditTime: 2021-03-25 19:22:32
  */
 import { formatData } from '@/utils'
 const status = {
-  0: '非强制',
+  0: '非强制升级',
   1: '强制升级'
 }
 const zqStatus = {
