@@ -9,7 +9,7 @@
 import axios from '../axiosConfig'
 
 export default {
-  
+
   /**
    * 组织机构列表
    * */
@@ -20,7 +20,7 @@ export default {
    * 新增、编辑组织结构
    * */
   createDepartment(params) {
-    Object.assign(params,{subject:"MUSIC_APP"})
+    Object.assign(params, { subject: "MUSIC_APP" })
     return axios.post(`/api/t/v1/department/createDepartment`, params)
   },
   /**
@@ -329,8 +329,8 @@ export default {
     return axios.post('/graphql/v1/toss', {
       query: `{
           TeacherDepartmentList(query:${JSON.stringify(
-            JSON.stringify(querys)
-          )},size:1000){
+        JSON.stringify(querys)
+      )},size:1000){
             id
             name
           }
@@ -390,6 +390,46 @@ export default {
     return axios.post(
       url,
       departmentIds && departmentIds.length > 0 ? departmentIds : null
+    )
+  },
+
+
+  // 	查询升级配置列表
+  getUpgradeConfigList(
+    pageNumber = 0,
+    pageSize = 20,
+    subject = "MUSIC_APP"
+  ) {
+    let url = `/api/s/v1/upgrade/getUpgradeConfigList?pageSize=${pageSize}&pageNumber=${pageNumber}&subject=${subject}`
+
+    return axios.post(
+      url,
+    )
+  },
+
+  // 	查询升级配置列表
+  createUpgradeConfigList(params = {}) {
+    let url = `/api/s/v1/upgrade/createUpgradeConfig`
+
+    return axios.post(
+      url,params
+    )
+  },
+
+
+  // 	更新升级配置列表
+  updataUpgradeConfigList(params = {}) {
+    let url = `/api/s/v1/upgrade/submitUpgradeConfig`
+    return axios.post(
+      url,params
+    )
+  },
+
+  // 		删除升级配置信息
+  deleteUpgradeConfigList(id) {
+    let url = `/api/s/v1/upgrade/deleteUpgradeConfig?id=${id}`
+    return axios.post(
+      url
     )
   }
 

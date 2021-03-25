@@ -4,17 +4,16 @@
  * @Author: YangJiyong
  * @Date: 2021-01-26 16:56:54
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-25 17:45:18
+ * @LastEditTime: 2021-03-25 17:25:14
 -->
 <template>
-  <div class="water-army d-flex column">
-    <div class="water-army-header d-flex align-center justify-between">
-      <search @search="getSearch" />
+  <div class="backstage d-flex column">
+    <div class="backstage-header d-flex align-center justify-between">
       <el-button type="primary" size="mini" @click="handleAddWechat"
-        >新增微信</el-button
+        >新增数据</el-button
       >
     </div>
-    <div class="water-army-container flex-1">
+    <div class="backstage-container flex-1">
       <basics-table
         ref="table"
         :table="table"
@@ -24,16 +23,11 @@
         :columns="columns"
         :list-query="listQuery"
       >
-        <template slot-scope="scope" slot="weixin">
-          <div class="d-flex align-center">
-            <div class="head">
-              <img :src="scope.row.headUrl || defaultHead" />
-            </div>
-            <div class="">{{ scope.row.weixinNo || '-' }}</div>
-          </div>
-        </template>
         <template slot-scope="scope" slot="handle">
           <el-button type="text" @click="handleEdit(scope.row)">编辑</el-button>
+          <el-button type="text" @click="handleDelete(scope.row)"
+            >删除</el-button
+          >
         </template>
       </basics-table>
     </div>
@@ -44,51 +38,63 @@
       @success="handleReset"
       @close="handleClose"
     />
+
+    <el-dialog
+      width="40%"
+      title="删除数据"
+      :visible="visible1"
+      :close-on-click-modal="false"
+      @close="onCloseDelete"
+    >
+      <div>确定要删除数据吗？</div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="visible1 = false" size="mini">取 消</el-button>
+        <el-button
+          :loading="loading"
+          type="primary"
+          @click="handleSaveDelete"
+          size="mini"
+          >确 定</el-button
+        >
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import defaultHead from './assets/touxiang.png'
 import BasicsTable from '@/components/BasicsTable'
-import Search from './components/Search.vue'
 import ModifyWechat from './components/ModifyWechat.vue'
 import columns from './columns'
 export default {
   components: {
     BasicsTable,
-    Search,
-    ModifyWechat
+    ModifyWechat,
   },
   data() {
     return {
-      defaultHead,
       loading: false,
+      visible1: false,
       columns,
+      deleteId: null,
       table: { stripe: false, border: false },
       dataList: [],
       listQuery: {
-        currentPage: 1,
+        currentPage: 0,
         totalElements: 0,
         totalPages: 0,
-        pageSize: 10,
-        pageSizeArr: [10, 50, 100, 200, 500]
+        pageSize: 20,
+        pageSizeArr: [20, 50, 100, 200, 500],
       },
       currentWechat: null,
-      searchParams: {},
-      showEdit: false
+      showEdit: false,
     }
   },
   created() {
     this.getDataList()
   },
   methods: {
-    getSearch(res) {
-      this.searchParams = res
-      this.handleReset()
-    },
-
     handleReset() {
-      Object.assign(this.listQuery, { currentPage: 1 })
+      Object.assign(this.listQuery, { currentPage: 0 })
       this.getDataList()
     },
 
@@ -98,18 +104,15 @@ export default {
     ) {
       Object.assign(this.listQuery, { currentPage, pageSize })
       this.loading = true
-      this.$http.Teacher.getWaterArmyPage(
-        this.searchParams,
-        currentPage,
-        pageSize
-      )
+      this.$http.Teacher.getUpgradeConfigList(currentPage, pageSize)
         .then((res) => {
-          const { content = [], totalElements = 0, totalPages = 1 } = res || {}
-          console.log(content)
-          this.dataList = content
+          const { payload = {} } = res && res
+          const { totalElements = 0, totalPages = 1 } = res && res.payload
+          console.log(payload, '列表数据')
+          this.dataList = payload.content
           Object.assign(this.listQuery, {
             totalPages: +totalPages,
-            totalElements: +totalElements
+            totalElements: +totalElements,
           })
         })
         .finally(() => {
@@ -129,16 +132,36 @@ export default {
       this.currentWechat = row
       this.$refs.modifyWechat.visible = true
     },
-
+    // 删除
+    handleDelete(row) {
+      ;(this.deleteId = row.id), (this.visible1 = true)
+    },
+    handleSaveDelete() {
+      this.$http.Teacher.deleteUpgradeConfigList(this.deleteId)
+        .then((res) => {
+          if (res.code !== 0) {
+            return
+          }
+          this.$message.success('删除成功')
+          this.getDataList()
+          this.visible1 = false
+        })
+        .finally(() => {
+          this.loading = false
+        })
+    },
     handleClose() {
       this.currentWechat = null
-    }
-  }
+    },
+    onCloseDelete() {
+      this.visible1 = false
+    },
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-.water-army {
+.backstage {
   padding: 10px 10px 0 10px;
   height: calc(100vh - 90px);
   overflow: auto;
@@ -177,5 +200,10 @@ export default {
       background-color: #fff;
     }
   }
+}
+</style>
+<style lang="scss">
+.el-table__row .cell {
+  white-space: pre-line;
 }
 </style>
