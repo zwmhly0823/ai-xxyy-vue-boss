@@ -193,6 +193,30 @@ let bearArt = [
     }]
   },
   {
+    path: '/commenting ',
+    name: 'commenting',
+    // hidden: true,
+    meta: {
+      title: '点评管理',
+      icon: 'el-icon-s-custom',
+      // module: 'operating',
+      module,
+      bottom: true
+    },
+    children: [
+      {
+        path: '/reviewManagement',
+        name: 'reviewManagement',
+        meta: {
+          title: '点评管理',
+          // module: 'operating'
+          module
+        }
+      },
+
+    ]
+  },
+  {
     path: '/operating',
     name: 'operating',
     // hidden: true,
@@ -222,97 +246,97 @@ let bearArt = [
           module
         }
       },
-    {
-      path: '/channelManagement',
-      name: 'channelManagement',
-      meta: {
-        title: '渠道管理',
-        // module: 'operating'
-        module
-      }
-    },
-    {
-      path: '/comment',
-      name: 'comment',
-      meta: {
-        title: '语音库',
-        // module: 'operating'
-        module
-      }
-    },
-    {
-      path: '/reviewManagement',
-      name: 'reviewManagement',
-      meta: {
-        title: '点评管理',
-        // module: 'operating'
-        module
-      }
-    },
-    {
-      path: '/verificationCode',
-      name: 'verificationCode',
-      meta: {
-        title: '验证码查询',
-        // module: 'operating'
-        module
-      }
-    },
-    {
-      path: '/labelManage',
-      name: 'labelManage',
-      meta: {
-        title: '标签管理',
-        // module: 'operating'
-        module
-      }
-    },
-    {
-      path: '/pushConfig',
-      name: 'pushConfig',
-      meta: {
-        title: '推送配置',
-        // module: 'operating'
-        module
-      }
-    },
-    {
-      path: '/problem',
-      name: 'problem',
-      meta: {
-        title: '问卷管理',
-        // module: 'operating'
-        module
-      }
-    },
-    {
-      path: '/issueBearCoins',
-      name: 'issueBearCoins',
-      meta: {
-        title: '发放小熊币',
-        // module: 'operating'
-        module
-      }
-    },
-    {
-      path: '/recommend',
-      name: 'recommend',
-      meta: {
-        title: '转介绍截图',
-        // module: 'operating'
-        module
-      }
-    },
-    // 投诉中心  经理和区长可以查看
-    {
-      path: '/complaint',
-      name: 'complaint',
-      // hidden: teacherInfo.dutyId !== '1',
-      meta: {
-        title: '投诉中心',
-        module
-      }
-    },
+      {
+        path: '/channelManagement',
+        name: 'channelManagement',
+        meta: {
+          title: '渠道管理',
+          // module: 'operating'
+          module
+        }
+      },
+      {
+        path: '/comment',
+        name: 'comment',
+        meta: {
+          title: '语音库',
+          // module: 'operating'
+          module
+        }
+      },
+      {
+        path: '/reviewManagement',
+        name: 'reviewManagement',
+        meta: {
+          title: '点评管理',
+          // module: 'operating'
+          module
+        }
+      },
+      {
+        path: '/verificationCode',
+        name: 'verificationCode',
+        meta: {
+          title: '验证码查询',
+          // module: 'operating'
+          module
+        }
+      },
+      {
+        path: '/labelManage',
+        name: 'labelManage',
+        meta: {
+          title: '标签管理',
+          // module: 'operating'
+          module
+        }
+      },
+      {
+        path: '/pushConfig',
+        name: 'pushConfig',
+        meta: {
+          title: '推送配置',
+          // module: 'operating'
+          module
+        }
+      },
+      {
+        path: '/problem',
+        name: 'problem',
+        meta: {
+          title: '问卷管理',
+          // module: 'operating'
+          module
+        }
+      },
+      {
+        path: '/issueBearCoins',
+        name: 'issueBearCoins',
+        meta: {
+          title: '发放小熊币',
+          // module: 'operating'
+          module
+        }
+      },
+      {
+        path: '/recommend',
+        name: 'recommend',
+        meta: {
+          title: '转介绍截图',
+          // module: 'operating'
+          module
+        }
+      },
+      // 投诉中心  经理和区长可以查看
+      {
+        path: '/complaint',
+        name: 'complaint',
+        // hidden: teacherInfo.dutyId !== '1',
+        meta: {
+          title: '投诉中心',
+          module
+        }
+      },
       {
         path: '/uploadFile',
         name: 'uploadFile',
@@ -515,223 +539,223 @@ let bearArt = [
 
 
 // bearArt = [
-  // 班级
+// 班级
 
-  // 用户。体验课老师只能查看体验课学员，系统课只系统课学员
+// 用户。体验课老师只能查看体验课学员，系统课只系统课学员
 
-  // 交易
+// 交易
 
-  // 社群工具
-  // {
-  //   path: '/community',
-  //   name: 'community',
-  //   meta: {
-  //     title: '社群工具',
-  //     icon: 'icongongju1',
-  //     // module: 'community'
-  //     module
-  //   },
-  //   children: [
-  //     {
-  //       path: '/groupSop',
-  //       name: 'groupSop',
-  //       meta: {
-  //         title: '群SOP',
-  //         // module: 'community',
-  //         module,
-  //         show: false
-  //       }
-  //     },
-  //     {
-  //       path:
-  //         'https://wgj.xiaoxiongmeishu.com/Site/AccuratePush/accuratePush.html',
-  //       meta: {
-  //         title: '群发消息',
-  //         show: false
-  //       }
-  //     },
-  //     {
-  //       path:
-  //         'https://wgj.xiaoxiongmeishu.com/Marketing/FriendsCircle/FriendsCircleList',
-  //       meta: {
-  //         title: '发朋友圈',
-  //         show: false
-  //       }
-  //     },
-  //     {
-  //       path:
-  //         'https://wgj.xiaoxiongmeishu.com/Equipment/QuickReply/QuickReplyList',
-  //       meta: {
-  //         title: '快捷回复',
-  //         show: false
-  //       }
-  //     },
-  //     {
-  //       path:
-  //         'https://wgj.xiaoxiongmeishu.com/Equipment/AutoCreateCluster/KeyClusterList',
-  //       meta: {
-  //         title: '自动拉群',
-  //         show: false
-  //       }
-  //     },
-  //     {
-  //       path: 'https://wgj.xiaoxiongmeishu.com/WeiXin/Tag/WeiXinTagList',
-  //       meta: {
-  //         title: '微信标签',
-  //         show: false
-  //       }
-  //     },
-  //     {
-  //       path: 'https://wgj.xiaoxiongmeishu.com/WeiXin/Cluster/ClusterList',
-  //       meta: {
-  //         title: '微信群',
-  //         show: false
-  //       }
-  //     },
-  //     {
-  //       path:
-  //         'https://wgj.xiaoxiongmeishu.com/Marketing/AutoPassFriend/AutoPassFriendList',
-  //       meta: {
-  //         title: '被动通过添加好友设置'
-  //       }
-  //     },
-  //     {
-  //       path:
-  //         'https://wgj.xiaoxiongmeishu.com/Equipment/MsgRule/UserAddRuleList',
-  //       meta: {
-  //         title: '通过好友自动回复设置'
-  //       }
-  //     },
-  //     {
-  //       path: 'https://wgj.xiaoxiongmeishu.com/Equipment/MsgRule/KeyRuleList',
-  //       meta: {
-  //         title: '单聊关键词自动回复设置'
-  //       }
-  //     },
-  //     {
-  //       path:
-  //         'https://wgj.xiaoxiongmeishu.com/Equipment/MsgRule/ClusterKeyRuleList?menuType=1',
-  //       meta: {
-  //         title: '群聊关键词自动回复设置'
-  //       }
-  //     }
-  //   ]
-  // },
-  // 物流管理new
+// 社群工具
+// {
+//   path: '/community',
+//   name: 'community',
+//   meta: {
+//     title: '社群工具',
+//     icon: 'icongongju1',
+//     // module: 'community'
+//     module
+//   },
+//   children: [
+//     {
+//       path: '/groupSop',
+//       name: 'groupSop',
+//       meta: {
+//         title: '群SOP',
+//         // module: 'community',
+//         module,
+//         show: false
+//       }
+//     },
+//     {
+//       path:
+//         'https://wgj.xiaoxiongmeishu.com/Site/AccuratePush/accuratePush.html',
+//       meta: {
+//         title: '群发消息',
+//         show: false
+//       }
+//     },
+//     {
+//       path:
+//         'https://wgj.xiaoxiongmeishu.com/Marketing/FriendsCircle/FriendsCircleList',
+//       meta: {
+//         title: '发朋友圈',
+//         show: false
+//       }
+//     },
+//     {
+//       path:
+//         'https://wgj.xiaoxiongmeishu.com/Equipment/QuickReply/QuickReplyList',
+//       meta: {
+//         title: '快捷回复',
+//         show: false
+//       }
+//     },
+//     {
+//       path:
+//         'https://wgj.xiaoxiongmeishu.com/Equipment/AutoCreateCluster/KeyClusterList',
+//       meta: {
+//         title: '自动拉群',
+//         show: false
+//       }
+//     },
+//     {
+//       path: 'https://wgj.xiaoxiongmeishu.com/WeiXin/Tag/WeiXinTagList',
+//       meta: {
+//         title: '微信标签',
+//         show: false
+//       }
+//     },
+//     {
+//       path: 'https://wgj.xiaoxiongmeishu.com/WeiXin/Cluster/ClusterList',
+//       meta: {
+//         title: '微信群',
+//         show: false
+//       }
+//     },
+//     {
+//       path:
+//         'https://wgj.xiaoxiongmeishu.com/Marketing/AutoPassFriend/AutoPassFriendList',
+//       meta: {
+//         title: '被动通过添加好友设置'
+//       }
+//     },
+//     {
+//       path:
+//         'https://wgj.xiaoxiongmeishu.com/Equipment/MsgRule/UserAddRuleList',
+//       meta: {
+//         title: '通过好友自动回复设置'
+//       }
+//     },
+//     {
+//       path: 'https://wgj.xiaoxiongmeishu.com/Equipment/MsgRule/KeyRuleList',
+//       meta: {
+//         title: '单聊关键词自动回复设置'
+//       }
+//     },
+//     {
+//       path:
+//         'https://wgj.xiaoxiongmeishu.com/Equipment/MsgRule/ClusterKeyRuleList?menuType=1',
+//       meta: {
+//         title: '群聊关键词自动回复设置'
+//       }
+//     }
+//   ]
+// },
+// 物流管理new
 
-  // 财务(该模块先隐藏,丹阳还会回来)
+// 财务(该模块先隐藏,丹阳还会回来)
 
 
-  // 运营中心
+// 运营中心
 
-  // 营销中心
+// 营销中心
 
-  // {
-  //   path: '/marketing',
-  //   name: 'marketing',
-  //   hidden: staff.roleId !== '7',
-  //   meta: {
-  //     title: '营销中心',
-  //     icon: 'iconyingxiaoguanli',
-  //     module: 'marketing'
-  //   }
-  // },
-  // 工具类路由
+// {
+//   path: '/marketing',
+//   name: 'marketing',
+//   hidden: staff.roleId !== '7',
+//   meta: {
+//     title: '营销中心',
+//     icon: 'iconyingxiaoguanli',
+//     module: 'marketing'
+//   }
+// },
+// 工具类路由
 
-  // {
-  //   path: '/outbound',
-  //   name: 'outbound',
-  //   meta: {
-  //     title: '呼叫中心',
-  //     icon: 'icondianhua',
-  //     // module: 'outbound'
-  //     module
-  //   },
-  //   children: [{
-  //       path: '/CallRecord',
-  //       name: 'CallRecord',
-  //       meta: {
-  //         title: '通话记录',
-  //         // module: 'outbound',
-  //         module,
-  //       }
-  //     },
-  //     {
-  //       path: '/CallCenter',
-  //       name: 'CallCenter',
-  //       meta: {
-  //         title: '席位配置',
-  //         // module: 'outbound',
-  //         module,
-  //       }
-  //     }
-  //   ]
-  // },
-  // 数据中心
-  // {
-  //   path: '/statistics',
-  //   name: 'statistics',
-  //   // hidden: true,
-  //   meta: {
-  //     title: '数据中心',
-  //     icon: 'icontongjifenxi',
-  //     // module: 'statistics'
-  //     module
-  //   },
-  //   children: [
-  //     {
-  //       path: '/priodPerformance',
-  //       name: 'priodPerformance',
-  //       meta: {
-  //         title: '按期汇总',
-  //         // module: 'statistics',
-  //         module,
-  //         style: 'line'
-  //       }
-  //     },
-  //     {
-  //       path: '/salesPerformance',
-  //       name: 'salesPerformance',
-  //       meta: {
-  //         title: '过程分析',
-  //         // module: 'statistics',
-  //         module,
-  //         style: 'line'
-  //       }
-  //     },
-  //     {
-  //       path: '/behavior',
-  //       name: 'behavior',
-  //       meta: {
-  //         title: '行为轨迹',
-  //         // module: 'statistics',
-  //         module,
-  //         style: 'line'
-  //       }
-  //     },
-  //     {
-  //       path: '/learnRecord',
-  //       name: 'learnRecord',
-  //       meta: {
-  //         title: '学习记录',
-  //         // module: 'statistics',
-  //         module,
-  //         style: 'line'
-  //       }
-  //     },
-  //     {
-  //       path: '/systemJoinCourseLog',
-  //       name: 'systemJoinCourseLog',
-  //       meta: {
-  //         title: '参课统计',
-  //         // module: 'statistics',,
-  //         module,
-  //         style: 'line'
-  //       }
-  //     }
-  //   ]
-  // },
-  // 设置 - 老师模块
+// {
+//   path: '/outbound',
+//   name: 'outbound',
+//   meta: {
+//     title: '呼叫中心',
+//     icon: 'icondianhua',
+//     // module: 'outbound'
+//     module
+//   },
+//   children: [{
+//       path: '/CallRecord',
+//       name: 'CallRecord',
+//       meta: {
+//         title: '通话记录',
+//         // module: 'outbound',
+//         module,
+//       }
+//     },
+//     {
+//       path: '/CallCenter',
+//       name: 'CallCenter',
+//       meta: {
+//         title: '席位配置',
+//         // module: 'outbound',
+//         module,
+//       }
+//     }
+//   ]
+// },
+// 数据中心
+// {
+//   path: '/statistics',
+//   name: 'statistics',
+//   // hidden: true,
+//   meta: {
+//     title: '数据中心',
+//     icon: 'icontongjifenxi',
+//     // module: 'statistics'
+//     module
+//   },
+//   children: [
+//     {
+//       path: '/priodPerformance',
+//       name: 'priodPerformance',
+//       meta: {
+//         title: '按期汇总',
+//         // module: 'statistics',
+//         module,
+//         style: 'line'
+//       }
+//     },
+//     {
+//       path: '/salesPerformance',
+//       name: 'salesPerformance',
+//       meta: {
+//         title: '过程分析',
+//         // module: 'statistics',
+//         module,
+//         style: 'line'
+//       }
+//     },
+//     {
+//       path: '/behavior',
+//       name: 'behavior',
+//       meta: {
+//         title: '行为轨迹',
+//         // module: 'statistics',
+//         module,
+//         style: 'line'
+//       }
+//     },
+//     {
+//       path: '/learnRecord',
+//       name: 'learnRecord',
+//       meta: {
+//         title: '学习记录',
+//         // module: 'statistics',
+//         module,
+//         style: 'line'
+//       }
+//     },
+//     {
+//       path: '/systemJoinCourseLog',
+//       name: 'systemJoinCourseLog',
+//       meta: {
+//         title: '参课统计',
+//         // module: 'statistics',,
+//         module,
+//         style: 'line'
+//       }
+//     }
+//   ]
+// },
+// 设置 - 老师模块
 
 // ]
 
