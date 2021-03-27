@@ -198,7 +198,7 @@ let bearArt = [
     // hidden: true,
     meta: {
       title: '点评管理',
-      icon: 'el-icon-s-custom',
+      icon: 'iconxueyuanguanli',
       // module: 'operating',
       module,
       bottom: true
@@ -210,10 +210,105 @@ let bearArt = [
         meta: {
           title: '点评管理',
           // module: 'operating'
-          module
+          module: 'review-manage',
         }
       },
+      {
+        path: '/schedule', // 体验课班级
+        name: 'parttimeScheduleList',
+        meta: {
+          title: '兼职老师分配',
+          module: 'review-manage',
+        },
+      },
+      // type: add, edit
+      {
+        path: '/scheduleSet/:type',
+        name: 'parttimeScheduleSet',
+        meta: {
+          title: '兼职老师分配',
+          module: 'review-manage',
+        },
 
+      },
+      // term:期数，type:add-新增，edit-编辑
+      {
+        path: '/scheduleTeacherSet/:term/:type',
+        name: 'parttimeScheduleTeacherSet',
+        meta: {
+          title: '兼职老师分配',
+          module: 'review-manage',
+        },
+
+      },
+      // 查看详情-班级配置
+      {
+        path: '/scheduleSetView/:term',
+        name: 'parttimeScheduleSetView',
+        meta: {
+          title: '兼职老师分配',
+          module: 'review-manage',
+        },
+
+      },
+      // 查看详情-兼职老师配置
+      {
+        path: '/scheduleTeacherSetView/:term',
+        name: 'parttimeScheduleTeacherSetView',
+        meta: {
+          title: '兼职老师分配',
+          module: 'review-manage',
+        },
+
+      },
+      {
+        path: '/dataprepare',
+        name: 'dataprepareList',
+        meta: {
+          title: '兼职老师数据看板',
+          module: 'review-manage',
+        },
+
+      },
+      {
+        path: '/parttimeHandover',
+        name: 'parttimeHandover',
+        meta: {
+          title: '兼职老师移交学员',
+          module: 'review-manage',
+        },
+      },
+      /**
+       * 真人点评配置
+       */
+      {
+        path: '/realReviewSchedule',
+        name: 'realReviewSchedule',
+        meta: {
+          title: '真人点评配置',
+          module: 'review-manage',
+        },
+      },
+      // 新增or编辑  type: add, edit
+      {
+        path: '/realReviewScheduleSet/:type',
+        name: 'realReviewScheduleSet/:type',
+        meta: {
+          title: '真人点评配置',
+          module: 'review-manage',
+        },
+
+      },
+      // 查看详情 term: 期数
+      {
+        path: '/realReviewScheduleView/:term',
+        name: 'realReviewScheduleView',
+        meta: {
+          title: '真人点评配置',
+          module: 'review-manage',
+        },
+
+      },
     ]
   },
   {
