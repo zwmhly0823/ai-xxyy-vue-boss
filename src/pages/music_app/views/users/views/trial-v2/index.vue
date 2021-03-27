@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-27 16:44:11
+ * @LastEditTime: 2021-03-27 17:16:16
 -->
 <template>
   <div class="user-list">
@@ -677,7 +677,7 @@
           <el-table-column label="微信标签" min-width="140">
             <template slot-scope="scope">
               <p>
-                 {{scope.row.teacher_wx?scope.row.teacher_wx:'-'}}
+                 {{scope.row.user_weixin_label?scope.row.user_weixin_label:'-'}}
               </p>
             </template>
           </el-table-column>

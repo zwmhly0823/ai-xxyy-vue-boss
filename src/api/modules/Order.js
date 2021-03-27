@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-27 16:47:23
+ * @LastEditTime: 2021-03-27 17:21:36
  */
 import axios from '../axiosConfig'
 import { injectSubject, getAppSubjectCode } from '@/utils/index'
@@ -56,7 +56,7 @@ export default {
             out_trade_no
             total_amount
             pay_teacher_duty_id
-            teacher_wx
+            user_weixin_label
             user{
               id
               username
