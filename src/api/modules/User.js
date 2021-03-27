@@ -4,8 +4,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-11-04 18:07:44
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-27 17:49:04
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -217,6 +217,7 @@ export default {
             added_group
             added_wechat
             follow
+            user_weixin_label
             user_status
             is_track
             today
