@@ -1,14 +1,14 @@
 /*
  * @Author: your name
  * @Date: 2021-03-23 11:38:58
- * @LastEditTime: 2021-03-24 15:25:47
+ * @LastEditTime: 2021-03-29 14:18:40
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /ai-xxyy-vue-boss/src/settings.js
  */
 module.exports = {
   title: '小熊音乐BOSS',
-  version: '1.2.7',
+  version: '1.2.8',
 
   /**
    * @type {boolean} true | false
