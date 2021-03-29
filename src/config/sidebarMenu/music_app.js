@@ -193,122 +193,34 @@ let bearArt = [
     }]
   },
   {
-    path: '/commenting ',
-    name: 'commenting',
+    path: '/operatingdian',
+    name: 'operatingdian',
     // hidden: true,
     meta: {
       title: '点评管理',
-      icon: 'iconxueyuanguanli',
+      icon: 'iconyunyingzhongxin',
       // module: 'operating',
       module,
       bottom: true
     },
     children: [
-      {
+     {
         path: '/reviewManagement',
-        name: 'reviewManagement',
+        name: '/reviewManagement',
         meta: {
-          title: '点评管理',
+          title: '作品点评',
           // module: 'operating'
-          module: 'review-manage',
+          module
         }
       },
       {
-        path: '/schedule', // 体验课班级
-        name: 'parttimeScheduleList',
+        path: '/schedule',
+        name: '/schedule',
         meta: {
           title: '兼职老师分配',
-          module: 'review-manage',
-        },
-      },
-      // type: add, edit
-      {
-        path: '/scheduleSet/:type',
-        name: 'parttimeScheduleSet',
-        meta: {
-          title: '兼职老师分配',
-          module: 'review-manage',
-        },
-
-      },
-      // term:期数，type:add-新增，edit-编辑
-      {
-        path: '/scheduleTeacherSet/:term/:type',
-        name: 'parttimeScheduleTeacherSet',
-        meta: {
-          title: '兼职老师分配',
-          module: 'review-manage',
-        },
-
-      },
-      // 查看详情-班级配置
-      {
-        path: '/scheduleSetView/:term',
-        name: 'parttimeScheduleSetView',
-        meta: {
-          title: '兼职老师分配',
-          module: 'review-manage',
-        },
-
-      },
-      // 查看详情-兼职老师配置
-      {
-        path: '/scheduleTeacherSetView/:term',
-        name: 'parttimeScheduleTeacherSetView',
-        meta: {
-          title: '兼职老师分配',
-          module: 'review-manage',
-        },
-
-      },
-      {
-        path: '/dataprepare',
-        name: 'dataprepareList',
-        meta: {
-          title: '兼职老师数据看板',
-          module: 'review-manage',
-        },
-
-      },
-      {
-        path: '/parttimeHandover',
-        name: 'parttimeHandover',
-        meta: {
-          title: '兼职老师移交学员',
-          module: 'review-manage',
-        },
-      },
-      /**
-       * 真人点评配置
-       */
-      {
-        path: '/realReviewSchedule',
-        name: 'realReviewSchedule',
-        meta: {
-          title: '真人点评配置',
-          module: 'review-manage',
-        },
-      },
-      // 新增or编辑  type: add, edit
-      {
-        path: '/realReviewScheduleSet/:type',
-        name: 'realReviewScheduleSet/:type',
-        meta: {
-          title: '真人点评配置',
-          module: 'review-manage',
-        },
-
-      },
-      // 查看详情 term: 期数
-      {
-        path: '/realReviewScheduleView/:term',
-        name: 'realReviewScheduleView',
-        meta: {
-          title: '真人点评配置',
-          module: 'review-manage',
-        },
-
-      },
+          module
+        }
+      }
     ]
   },
   {
@@ -619,6 +531,16 @@ let bearArt = [
         }
       },
     ],
+  },
+  {
+    path: '/backstageSql',
+    name: 'backstageSql',
+    // hidden: true,
+    meta: {
+      title: 'app升级管理',
+      icon: 'iconxueyuanguanli',
+      module: "teacher",
+    },
   },
   {
     path: '/active',

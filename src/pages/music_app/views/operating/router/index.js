@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
- * @LastEditors: Shentong
- * @LastEditTime: 2020-10-23 15:08:48
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-29 10:31:42
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 const operatingSchedule = [{
@@ -115,6 +115,15 @@ const operatingRoutes = [{
       keepAlive: false
     },
     component: () => import('../views/reviewManagement/components/audioAdd.vue')
+  },
+  {
+    path: '/schedule',
+    name: 'schedule',
+    meta: {
+      title: '兼职老师分配',
+      keepAlive: false
+    },
+    component: () => import('../views/parttimeSchedule/index.vue')
   },
   {
     path: '/verificationCode',
