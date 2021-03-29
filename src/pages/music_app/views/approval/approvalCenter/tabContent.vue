@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-27 00:10:22
- * @LastEditors: YangJiyong
- * @LastEditTime: 2021-01-01 14:57:44
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-24 18:47:49
  -->
 <template>
   <div class="container">
@@ -129,5 +129,11 @@ export default {
   height: calc(100vh - 100px);
   overflow: auto;
   background-color: #fff;
+}
+</style>
+
+<style lang="scss">
+  .el-image-viewer__wrapper {
+  z-index: 2888 !important;
 }
 </style>
