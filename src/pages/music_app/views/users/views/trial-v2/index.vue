@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-27 17:16:16
+ * @LastEditTime: 2021-03-29 10:41:07
 -->
 <template>
   <div class="user-list">
@@ -674,14 +674,7 @@
               </div>
             </template>
           </el-table-column> -->
-          <el-table-column label="微信标签" min-width="140">
-            <template slot-scope="scope">
-              <p>
-                 {{scope.row.user_weixin_label?scope.row.user_weixin_label:'-'}}
-              </p>
-            </template>
-          </el-table-column>
-          <el-table-column label="盒子物流" min-width="80">
+         <el-table-column label="盒子物流" min-width="80">
             <template slot-scope="scope">
               <div class="d-flex align-center space-between">
                 <p

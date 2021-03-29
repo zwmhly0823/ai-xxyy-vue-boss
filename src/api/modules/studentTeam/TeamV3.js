@@ -122,7 +122,6 @@ export default {
             is_track
             today
             tomorrow
-            user_weixin_label
             userInfo {
               id
               user_num_text
