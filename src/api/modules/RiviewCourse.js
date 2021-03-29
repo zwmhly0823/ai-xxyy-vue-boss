@@ -2,8 +2,8 @@
  * @Descripttion:
  * @Author: songyanan
  * @Date: 2020-05-11 17:35:28
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-16 21:45:49
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-29 10:49:40
  */
 import axios from '../axiosConfig'
 import { injectSubject } from '@/utils/index'
@@ -64,6 +64,9 @@ export default {
   getToViewInform(courseId) {
     return axios.get(`/api/b/v1/reviewVoice/courses?courseIds=${courseId}`)
   },
+
+
+  
   /**
    * 生成语音
    * */

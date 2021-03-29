@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-29 10:31:42
+ * @LastEditTime: 2021-03-29 11:19:57
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 const operatingSchedule = [{
@@ -102,7 +102,7 @@ const operatingRoutes = [{
     path: '/reviewManagement',
     name: 'reviewManagement',
     meta: {
-      title: '点评管理',
+      title: '作品点评',
       keepAlive: false
     },
     component: () => import('../views/reviewManagement/index.vue')
@@ -125,6 +125,59 @@ const operatingRoutes = [{
     },
     component: () => import('../views/parttimeSchedule/index.vue')
   },
+
+    // type: add, edit
+    {
+      path: '/scheduleSet/:type',
+      name: 'parttimeScheduleSet',
+      meta: {
+        title: '兼职老师分配',
+        keepAlive: true
+      },
+      hidden: true,
+      component: () =>
+        import(
+          /* webpackChunkName: "student" */ '../views/parttimeSchedule/add/teamSet.vue'
+        )
+    },
+    // term:期数，type:add-新增，edit-编辑
+    {
+      path: '/scheduleTeacherSet/:term/:type',
+      name: 'parttimeScheduleTeacherSet',
+      meta: {
+        title: '兼职老师分配',
+        keepAlive: false
+      },
+      hidden: true,
+      component: () =>
+        import(
+          /* webpackChunkName: "student" */ '../views/parttimeSchedule/add/teacherSet.vue'
+        )
+    },
+    {
+      path: '/parttimeHandover',
+      name: 'parttimeHandover',
+      meta: {
+        title: '兼职老师移交学员',
+        keepAlive: false
+      },
+      component: () => import('../views/parttimeHandover/index.vue')
+    },
+
+    {
+      path: '/dataprepare',
+      name: 'dataprepareList',
+      meta: {
+        title: '兼职老师数据看板',
+        keepAlive: true
+      },
+      hidden: true,
+      component: () =>
+        import(
+          /* webpackChunkName: "student" */ '../views/parttimeDataPrepare/index.vue'
+        )
+    },
+    
   {
     path: '/verificationCode',
     name: 'verificationCode',

@@ -220,6 +220,22 @@ let bearArt = [
           title: '兼职老师分配',
           module
         }
+      },
+      {
+        path: '/parttimeHandover',
+        name: '/parttimeHandover',
+        meta: {
+          title: '兼职老师移交学员',
+          module
+        }
+      },
+      {
+        path: '/dataprepare',
+        name: '/dataprepare',
+        meta: {
+          title: '兼职老师数据看板',
+          module
+        }
       }
     ]
   },

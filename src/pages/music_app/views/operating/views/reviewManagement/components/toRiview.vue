@@ -3,8 +3,8 @@
  * @Descripttion:
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-22 12:15:41
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-29 11:27:01
  */
  -->
 <template>
@@ -33,11 +33,11 @@
         >
           <div class="review-container">
             <div class="top-container">
-              <div
+              <!-- <div
                 v-for="(item, index) in Object.keys(scope.row.reviewDataList)"
                 :key="index"
-              >
-                <div
+              > -->
+                <!-- <div
                   class="title"
                   v-if="
                     scope.row.reviewDataList[item] !== undefined &&
@@ -61,32 +61,8 @@
                       <span>{{ scoreObj[_item.score] }}</span>
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="bottom-container"
-              v-if="Object.keys(scope.row.reviewDataList).length"
-            >
-              <el-button
-                type="success"
-                @click="syntheticSpeech(scope.$index, scope.row)"
-                >生成</el-button
-              >
-              <div class="audio-container">
-                <audio
-                  v-if="scope.row.showAudio"
-                  :src="scope.row.mp3Url"
-                  controls
-                  ref="audioRef"
-                ></audio>
-              </div>
-              <el-button
-                type="primary"
-                :disabled="!scope.row.mp3Url"
-                @click="generateSpeech(scope.row)"
-                >发送</el-button
-              >
+                </div> -->
+              <!-- </div> -->
             </div>
           </div>
         </template>
