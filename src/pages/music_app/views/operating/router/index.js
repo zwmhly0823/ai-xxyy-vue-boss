@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-29 11:49:24
+ * @LastEditTime: 2021-03-29 16:07:27
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 const operatingSchedule = [{
@@ -135,10 +135,7 @@ const operatingRoutes = [{
     keepAlive: true
   },
   hidden: true,
-  component: () =>
-    import(
-          /* webpackChunkName: "student" */ '../views/parttimeSchedule/add/teamSet.vue'
-    )
+  component: () => import('../views/parttimeSchedule/add/teamSet.vue')
 },
 // term:期数，type:add-新增，edit-编辑
 {
@@ -149,10 +146,7 @@ const operatingRoutes = [{
     keepAlive: false
   },
   hidden: true,
-  component: () =>
-    import(
-          /* webpackChunkName: "student" */ '../views/parttimeSchedule/add/teacherSet.vue'
-    )
+  component: () => import('../views/parttimeSchedule/add/teacherSet.vue')
 },
 {
   path: '/parttimeHandover',
