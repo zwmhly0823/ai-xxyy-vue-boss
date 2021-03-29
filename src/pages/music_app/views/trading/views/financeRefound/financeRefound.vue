@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: zhangjiawen
  * @Date: 2020-10-23 22:18:39
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-23 23:29:50
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-29 17:56:08
 -->
 <template>
   <section class="bianju10">
@@ -151,6 +151,10 @@
         </el-table-column>
         <el-table-column prop="tradeTypeStr" label="支付方式" align="center"></el-table-column>
         <el-table-column prop="buytime" label="订单支付时间" align="center" width="155"></el-table-column>
+
+        <el-table-column prop="buytime" label="关联订单类型及定单号" align="center" width="155">
+          <template slot-scope="scope">{{ scope.row.buytime }}</template>
+        </el-table-column>
         <el-table-column prop="statusStr" label="退款状态" align="center"></el-table-column>
         <el-table-column prop="refundStatusStr" label="退款支付状态" align="center" width="120"></el-table-column>
         <el-table-column prop="refundTypeStr" label="退款类型" align="center"></el-table-column>

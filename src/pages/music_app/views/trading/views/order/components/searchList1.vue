@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-21 21:36:53
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-29 17:40:12
  -->
 <template>
   <el-card
@@ -54,8 +54,19 @@
           ></simple-select>
         </div>
       </el-form-item>
+      <!-- 是否关联其他订单 -->
+      <el-form-item label="是否关联其他订单:" label-width="120px" :height="300">
+        <el-select v-model="isType" placeholder="请选择关联订单">
+          <el-option
+            v-for="item in options1"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+      </el-form-item>
       <br />
-
       <el-form-item :label="timeLabel" :class="{ [$style.marginer]: true }">
         <DatePicker
           :class="[$style.fourPoint, 'allmini']"
@@ -149,7 +160,7 @@
           <hardLevel
             :class="['margin_l10']"
             placeholder="全部体验课难度"
-            style="width:140px"
+            style="width: 140px"
             name="trial_team_id"
             :courseType="false"
             @result="supCallBackTrial"
@@ -174,7 +185,7 @@
       <el-form-item label="系统课:" :class="{ [$style.marginer]: true }">
         <div class="row_colum">
           <systemCourseType
-            style="width:140px"
+            style="width: 140px"
             teamType="1"
             @result="getSystemCourseType"
             name="packages_type"
@@ -197,7 +208,7 @@
           <hardLevel
             :class="['margin_l10']"
             placeholder="全部系统课难度"
-            style="width:140px"
+            style="width: 140px"
             name="sup"
             @result="supCallBack"
           />
@@ -234,7 +245,7 @@
             placement="top"
             ><i
               class="el-icon-question"
-              style="padding-left:5px;"
+              style="padding-left: 5px"
             ></i></el-tooltip
         ></el-radio>
         <el-radio label="2"
@@ -246,7 +257,7 @@
             placement="top"
             ><i
               class="el-icon-question"
-              style="padding-left:5px;"
+              style="padding-left: 5px"
             ></i></el-tooltip
         ></el-radio>
       </el-radio-group>
@@ -280,13 +291,13 @@ export default {
   props: {
     searchProp: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     // 订单支付状态 3-已完成
     payStatus: {
       type: String,
-      default: '3'
-    }
+      default: '3',
+    },
   },
   components: {
     hardLevel,
@@ -301,11 +312,26 @@ export default {
     SearchStage,
     orderAttr,
     SearchPhoneAndUsername,
-    SimpleSelect
+    SimpleSelect,
   },
 
   data() {
     return {
+      isType: null,
+      options1: [
+        {
+          value: '0',
+          label: '全部',
+        },
+        {
+          value: '1',
+          label: '已关联',
+        },
+        {
+          value: '2',
+          label: '无关联',
+        },
+      ],
       cur0: false,
       cur1: false,
       cur2: false,
@@ -334,36 +360,36 @@ export default {
         // },
         {
           id: '1',
-          text: '有推荐人'
+          text: '有推荐人',
         },
         {
           id: '0',
-          text: '无推荐人'
-        }
+          text: '无推荐人',
+        },
       ],
       orderTypeList: [
         {
           id: '2',
-          text: '首单'
+          text: '首单',
         },
         {
           id: '3',
-          text: '续费'
-        }
+          text: '续费',
+        },
       ],
       expChangeList: [
         {
           id: '1',
-          text: '是'
+          text: '是',
         },
         {
           id: '2',
-          text: '否'
-        }
+          text: '否',
+        },
       ],
       hasSendId: true,
       showChooseDialog: false,
-      chooseExport: '1'
+      chooseExport: '1',
     }
   },
   computed: {
@@ -372,7 +398,7 @@ export default {
     },
     timeName() {
       return this.payStatus === '3' ? 'buytime' : 'ctime'
-    }
+    },
   },
   watch: {
     packages_type(val, old) {
@@ -405,7 +431,7 @@ export default {
           }
         }
       })
-    }
+    },
   },
   methods: {
     // 切换手机/订单清空筛选项
@@ -540,7 +566,7 @@ export default {
         this.teacherscope_trial = null
         if (this.teacherscope && this.teacherscope.length > 0) {
           res = {
-            pay_teacher_id: this.teacherscope
+            pay_teacher_id: this.teacherscope,
           }
         } else {
           res = ''
@@ -569,7 +595,7 @@ export default {
           }
         })
         return this.setSeachParmas({ packages_course_week: '72' }, [
-          'packages_course_week'
+          'packages_course_week',
         ])
       }
       if (res && res.packages_type === '5') {
@@ -579,7 +605,7 @@ export default {
           }
         })
         return this.setSeachParmas({ packages_course_week: '96' }, [
-          'packages_course_week'
+          'packages_course_week',
         ])
       }
       if (res && res.packages_type === '4') {
@@ -589,7 +615,7 @@ export default {
           }
         })
         return this.setSeachParmas({ packages_course_week: '48' }, [
-          'packages_course_week'
+          'packages_course_week',
         ])
       }
       if (res && res.packages_type === '3') {
@@ -599,7 +625,7 @@ export default {
           }
         })
         return this.setSeachParmas({ packages_course_week: '24' }, [
-          'packages_course_week'
+          'packages_course_week',
         ])
       }
       if (res) {
@@ -639,7 +665,7 @@ export default {
       if (res && res.is_first_order_send_id === '0') {
         this.$refs.phoneName.handleEmpty()
         this.setSeachParmas({ is_first_order_send_id: '' }, [
-          'is_first_order_send_id'
+          'is_first_order_send_id',
         ])
         this.hasSendId = false
       } else {
@@ -651,7 +677,7 @@ export default {
         }
         this.setSeachParmas('', ['first_order_send_id'], 'terms')
         this.setSeachParmas({ is_first_order_send_id: '' }, [
-          'is_first_order_send_id'
+          'is_first_order_send_id',
         ])
       } else {
         this.getSendUser(res, ['is_first_order_send_id'])
@@ -700,7 +726,7 @@ export default {
         if (res) {
           temp.push({
             // [`${extraKey}`]: `${JSON.stringify(res)}`
-            [extraKey]: res
+            [extraKey]: res,
           })
           this.must = temp
         }
@@ -747,7 +773,7 @@ export default {
       // should
       if (res) {
         temp.push({
-          [`${extraKey}`]: `${JSON.stringify(res)}`
+          [`${extraKey}`]: `${JSON.stringify(res)}`,
         })
         this.should = temp
       }
@@ -776,7 +802,7 @@ export default {
       const loading = this.$loading({
         lock: true,
         text: '正在导出，请耐心等待……',
-        spinner: 'el-icon-loading'
+        spinner: 'el-icon-loading',
       })
       if (chooseExport === '1') {
         const params = {
@@ -812,7 +838,7 @@ export default {
             // 'team.type': '退费金额'
           },
           fileName: `系统课订单导出-${fileTitleTime}`, // 文件名称
-          query: JSON.stringify(query)
+          query: JSON.stringify(query),
           // query: '{"status":3}'
         }
         // console.log(exportExcel)
@@ -831,7 +857,7 @@ export default {
         const query = this.$parent.$children[1].finalParams
         const queryF = Object.assign({}, query, {
           trial_team_id: 0,
-          pay_teacher_id: { gt: 0 }
+          pay_teacher_id: { gt: 0 },
         })
         console.log(queryF)
         const params = {
@@ -848,10 +874,10 @@ export default {
             'enrolledInfo.department_name': '部门',
             'enrolledInfo.department_area_name': '区',
             'channelDetail.channel_class_name': '二级渠道',
-            'channelDetail.p_channel_class_name': '一级渠道'
+            'channelDetail.p_channel_class_name': '一级渠道',
           },
           fileName: `系统课订单薪资核算表-${fileTitleTime}`, // 文件名称
-          query: JSON.stringify(queryF)
+          query: JSON.stringify(queryF),
           // query: '{"status":3}'
         }
         // console.log(exportExcel)
@@ -867,7 +893,7 @@ export default {
           })
           .catch(() => loading.close())
       }
-    }
+    },
   },
   created() {
     for (let i = 0; i < 4; i++) {
@@ -877,7 +903,7 @@ export default {
     if (teacherId) {
       this.teacherId = teacherId
     }
-  }
+  },
 }
 </script>
 <style lang="scss" module>
@@ -920,9 +946,12 @@ export default {
     top: 14px;
   }
 }
+/deep/ .el-input--suffix .el-input__inner {
+   height: 30px !important;
+}
 </style>
-
-<style scoped>
+<style scoped> 
+ 
 .export-order {
   position: absolute;
   bottom: 25px;

@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-29 14:01:14
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-29 17:50:03
 -->
 <template>
   <section class="bianju10">
@@ -134,6 +134,13 @@
         <el-table-column
           prop="buytime"
           label="订单支付时间"
+          align="center"
+          width="155"
+        >
+        </el-table-column>
+         <el-table-column
+          prop="buytime"
+          label="关联订单类型及订单号"
           align="center"
           width="155"
         >

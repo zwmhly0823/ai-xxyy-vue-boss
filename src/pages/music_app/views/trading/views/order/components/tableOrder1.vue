@@ -192,7 +192,9 @@
           </p>
         </template>
       </el-table-column>
-
+      <el-table-column label="关联订单类型及订单号" min-width="80">
+        <template slot-scope="scope">{{ scope.row.order_status ? scope.row.order_status : '-' }}</template>
+      </el-table-column>
       <el-table-column label="订单状态" min-width="80">
         <template slot-scope="scope">{{ scope.row.order_status ? scope.row.order_status : '-' }}</template>
       </el-table-column>

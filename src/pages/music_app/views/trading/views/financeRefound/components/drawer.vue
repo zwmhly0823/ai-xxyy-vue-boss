@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-24 01:16:42
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-29 17:57:38
 -->
 <template>
   <div class="drawer-main">
@@ -61,6 +61,10 @@
           <el-table-column prop="discountAmount" label="优惠金额">
           </el-table-column>
           <el-table-column prop="tradeTypeDesc" label="支付方式">
+          </el-table-column>
+           <el-table-column prop="tradeTypeDesc" label="关联订单">
+          </el-table-column>
+           <el-table-column prop="tradeTypeDesc" label="关联金额">
           </el-table-column>
           <el-table-column prop="amount" label="实付金额"> </el-table-column>
           <el-table-column prop="periodAlready" label="已上周期">
