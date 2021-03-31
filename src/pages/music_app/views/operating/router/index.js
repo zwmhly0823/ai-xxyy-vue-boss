@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-29 16:07:27
+ * @LastEditTime: 2021-03-31 20:46:42
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 const operatingSchedule = [{
@@ -167,7 +167,29 @@ const operatingRoutes = [{
   component: () => import('../views/parttimeDataPrepare/index.vue'
   )
 },
-
+// 查看详情-班级配置
+{
+  path: '/scheduleSetView/:term',
+  name: 'parttimeScheduleSetView',
+  meta: {
+    title: '兼职老师分配',
+    keepAlive: true
+  },
+  hidden: true,
+  component: () => import('../views/parttimeSchedule/view/teamSet.vue')
+},
+// 查看详情-兼职老师配置
+{
+  path: '/scheduleTeacherSetView/:term',
+  name: 'parttimeScheduleTeacherSetView',
+  meta: {
+    title: '兼职老师分配',
+    keepAlive: false
+  },
+  hidden: true,
+  component: () =>
+    import('../views/parttimeSchedule/view/teacherSet.vue')
+},
 {
   path: '/verificationCode',
   name: 'verificationCode',

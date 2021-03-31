@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-11-02 15:20:06
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-11-30 18:05:56
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-31 19:53:39
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -118,7 +118,7 @@ export default {
   components: {
     SearchStage,
     Department,
-    HardLevel
+    HardLevel,
   },
   data() {
     return {
@@ -143,7 +143,7 @@ export default {
       loading: false,
       termInfo: {},
       // 不需要缓存的path
-      noAliveList: ['/schedule']
+      noAliveList: ['/schedule'],
     }
   },
 
@@ -185,7 +185,7 @@ export default {
           this.getManagementByPeriod()
         }
       }
-    }
+    },
   },
 
   methods: {
@@ -199,7 +199,7 @@ export default {
       // 新增时 判断是否已设置过指定期
       if (term && this.type === 'add') {
         const {
-          payload
+          payload,
         } = await this.$http.ReviewManage.dispatchTermConfigCheck(term)
         if (payload) {
           this.hasSetTerm = true
@@ -233,7 +233,7 @@ export default {
       const type = 'CONFIG' // this.type === 'add' ? 'CONFIG' : 'RESULT'
       const {
         payload = [],
-        code
+        code,
       } = await this.$http.ReviewManage.getTeamConfigListByTerm(term, type)
       if (code === 0) {
         // format data
@@ -243,6 +243,13 @@ export default {
           item.supText = SUP_LEVEL_UPPER[item.sup] || '-'
           return item
         })
+        if (result) {
+          for (let i = 0; i < result.length; i++) {
+            result[i].teamName =
+              result[i].teamName && result[i].teamName.replace(/S/g, 'M')
+            result[i].sup = result[i].sup && result[i].sup.replace(/S/g, 'M')
+          }
+        }
         this.teamList = result
         this.allTeamList = cloneDeep(result)
       }
@@ -267,7 +274,7 @@ export default {
       if (!this.currentTerm) return
       const params = {
         type: 1,
-        period: this.currentTerm
+        period: this.currentTerm,
       }
       this.$http.ReviewManage.getManagementByPeriod(params).then((res) => {
         console.log(res)
@@ -311,7 +318,7 @@ export default {
       const data = {
         term: this.currentTerm,
         onTeamIds,
-        offTeamIds
+        offTeamIds,
       }
       if (this.type === 'edit') {
         Object.assign(data, { action: 'ACTION_EDIT' })
@@ -325,8 +332,8 @@ export default {
           }?onTeamIds=${onTeamIds.join()}`
         )
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

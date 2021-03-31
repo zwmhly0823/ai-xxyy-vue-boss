@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-11-02 15:20:06
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-12-11 21:06:21
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-31 20:48:40
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -40,7 +40,7 @@
           <el-table-column
             :label="item.text + '班级'"
             min-width="130"
-            v-for="item in SUP_LEVEL_LIST_UPPER"
+            v-for="item in SUP_LEVEL_LIST_teacher"
             :key="item.id"
           >
             <template slot-scope="scope">
@@ -65,7 +65,7 @@
             <template slot-scope="scope">
               <div
                 class="d-flex teacher-set"
-                v-for="(item, index) in SUP_LEVEL_LIST_UPPER"
+                v-for="(item, index) in SUP_LEVEL_LIST_teacher"
                 :key="item.id"
               >
                 <p>{{ item.text }}</p>
@@ -126,7 +126,7 @@
 </template>
 
 <script>
-import { SUP_LEVEL_LIST_UPPER } from '@/utils/supList'
+import { SUP_LEVEL_LIST_teacher } from '@/utils/supList'
 import Department from '@/components/MSearch/searchItems/department'
 import GroupSell from '@/components/MSearch/searchItems/groupSell'
 export default {
@@ -136,7 +136,7 @@ export default {
   },
   data() {
     return {
-      SUP_LEVEL_LIST_UPPER,
+      SUP_LEVEL_LIST_teacher,
       type: '', // add, edit
       tableHeight: 0,
       loading: false,
@@ -261,7 +261,14 @@ export default {
       })
       this.teamList = totalTeamList
       console.log(result)
-
+       if(result) {
+        for(let i=0;i<result.length;i++) {
+         for(let n=0;n<result[i].teamList.length;n++) {
+           console.log(result[i].teamList[n].teamSummaryList[0].teamName);
+            result[i].teamList[n].teamSummaryList[0].teamName = result[i].teamList[n].teamSummaryList[0].teamName.replace(/S/g,'M')
+          }
+        }
+      }
       this.tableData = result
       this.loading = false
     },
@@ -282,7 +289,7 @@ export default {
         return
       }
       const data = []
-      const supArr = SUP_LEVEL_LIST_UPPER.map((item) => item.id)
+      const supArr = SUP_LEVEL_LIST_teacher.map((item) => item.id)
       this.tableData.forEach((item) => {
         supArr.forEach((sup) => {
           if (item[sup]) {

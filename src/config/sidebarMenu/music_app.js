@@ -198,13 +198,13 @@ let bearArt = [
     // hidden: true,
     meta: {
       title: '点评管理',
-      icon: 'iconyunyingzhongxin',
+      icon: 'iconshenpizhongxin',
       // module: 'operating',
       module,
       bottom: true
     },
     children: [
-     {
+      {
         path: '/reviewManagement',
         name: '/reviewManagement',
         meta: {
@@ -283,15 +283,6 @@ let bearArt = [
         name: 'comment',
         meta: {
           title: '语音库',
-          // module: 'operating'
-          module
-        }
-      },
-      {
-        path: '/reviewManagement',
-        name: 'reviewManagement',
-        meta: {
-          title: '点评管理',
           // module: 'operating'
           module
         }

@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-11-02 15:20:06
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-11-20 11:49:49
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-31 19:52:12
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -61,7 +61,7 @@
               <p>{{ scope.row.parentDepartmentName }}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="supText" label="难度"> </el-table-column>
+          <el-table-column prop="sup" label="难度"> </el-table-column>
         </el-table>
       </div>
 
@@ -86,7 +86,7 @@ import HardLevel from '@/components/MSearch/searchItems/hardLevel.vue'
 export default {
   components: {
     Department,
-    HardLevel
+    HardLevel,
   },
   data() {
     return {
@@ -108,7 +108,7 @@ export default {
       loading: false,
       termInfo: {},
       // 不需要缓存的path
-      noAliveList: ['/schedule']
+      noAliveList: ['/schedule'],
     }
   },
   created() {
@@ -137,7 +137,7 @@ export default {
         this.flagKey = Date.now()
         this.getTeamConfigListByTerm()
       }
-    }
+    },
   },
 
   methods: {
@@ -159,7 +159,7 @@ export default {
       if (!this.currentTerm) return
       const params = {
         type: 1,
-        period: this.currentTerm
+        period: this.currentTerm,
       }
       this.$http.ReviewManage.getManagementByPeriod(params).then((res) => {
         console.log(res)
@@ -174,7 +174,7 @@ export default {
       if (!term) return
       this.loading = true
       const {
-        payload = []
+        payload = [],
       } = await this.$http.ReviewManage.getTeamConfigListByTerm(term, 'RESULT')
       console.log(payload)
       //  仅展示已配置的数据
@@ -184,6 +184,13 @@ export default {
         item.supText = SUP_LEVEL_UPPER[item.sup] || '-'
         return item
       })
+      if (result) {
+        for (let i = 0; i < result.length; i++) {
+          result[i].teamName =
+            result[i].teamName && result[i].teamName.replace(/S/g, 'M')
+          result[i].sup = result[i].sup && result[i].sup.replace(/S/g, 'M')
+        }
+      }
       this.teamList = result
       this.allTeamList = cloneDeep(result)
       this.loading = false
@@ -231,8 +238,8 @@ export default {
           this.currentTerm
         }?onTeamIds=${onTeamIds.join()}`
       )
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-10-13 21:14:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-31 15:00:00
+ * @LastEditTime: 2021-03-31 20:18:11
  */
 // import { deepClone } from '@/utils'
 /**
@@ -32,12 +32,19 @@ export const SUP_LEVEL_UPPER = formatSup('S')
 // export const SUP_LEVEL_LIST_UPPER = formatSupList()
 
 export const SUP_LEVEL_LIST_LOWER = [
-  { id: 'S1', text: 'M1' },
-  { id: 'S2', text: 'M2' },
-  { id: 'S3', text: 'M3' },
-  { id: 'S4', text: 'M4' }
+  { id: 'M1', text: 'M1' },
+  { id: 'M2', text: 'M2' },
+  { id: 'M3', text: 'M3' },
+  { id: 'M4', text: 'M4' }
 ]
 export const SUP_LEVEL_LIST_UPPER = [
+  { id: 'M1', text: 'M1' },
+  { id: 'M2', text: 'M2' },
+  { id: 'M3', text: 'M3' },
+  { id: 'M4', text: 'M4' },
+]
+
+export const SUP_LEVEL_LIST_teacher = [
   { id: 'S1', text: 'M1' },
   { id: 'S2', text: 'M2' },
   { id: 'S3', text: 'M3' },

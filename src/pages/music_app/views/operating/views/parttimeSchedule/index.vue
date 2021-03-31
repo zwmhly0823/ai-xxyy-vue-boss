@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-10-29 22:35:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-31 15:02:30
+ * @LastEditTime: 2021-03-31 18:22:22
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -122,22 +122,22 @@ export default {
           children: [
             {
               label: SUP_LEVEL_UPPER.S4,
-              prop: 'S4',
-              width: 80,
-            },
-            {
-              label: SUP_LEVEL_UPPER.S1,
               prop: 'S1',
               width: 80,
             },
             {
-              label: SUP_LEVEL_UPPER.S2,
+              label: SUP_LEVEL_UPPER.S1,
               prop: 'S2',
               width: 80,
             },
             {
+              label: SUP_LEVEL_UPPER.S2,
+              prop: 'S3',
+              width: 80,
+            },
+            {
               label: SUP_LEVEL_UPPER.S5,
-              prop: 'S5',
+              prop: 'S4',
               width: 80,
             },
           ],
@@ -148,22 +148,22 @@ export default {
           children: [
             {
               label: SUP_LEVEL_UPPER.S4,
-              prop: 'S4',
-              width: 80,
-            },
-            {
-              label: SUP_LEVEL_UPPER.S1,
               prop: 'S1',
               width: 80,
             },
             {
-              label: SUP_LEVEL_UPPER.S2,
+              label: SUP_LEVEL_UPPER.S1,
               prop: 'S2',
               width: 80,
             },
             {
+              label: SUP_LEVEL_UPPER.S2,
+              prop: 'S3',
+              width: 80,
+            },
+            {
               label: SUP_LEVEL_UPPER.S5,
-              prop: 'S5',
+              prop: 'S4',
               width: 80,
             },
           ],
@@ -174,22 +174,22 @@ export default {
           children: [
             {
               label: SUP_LEVEL_UPPER.S4,
-              prop: 'S4',
-              width: 80,
-            },
-            {
-              label: SUP_LEVEL_UPPER.S1,
               prop: 'S1',
               width: 80,
             },
             {
-              label: SUP_LEVEL_UPPER.S2,
+              label: SUP_LEVEL_UPPER.S1,
               prop: 'S2',
               width: 80,
             },
             {
+              label: SUP_LEVEL_UPPER.S2,
+              prop: 'S3',
+              width: 80,
+            },
+            {
               label: SUP_LEVEL_UPPER.S5,
-              prop: 'S5',
+              prop: 'S4',
               width: 80,
             },
           ],
@@ -229,6 +229,7 @@ export default {
       } = await this.$http.ReviewManage.getDispatchConfigCount()
       console.log(payload)
       // format data
+      
       const result = payload.map((item) => {
         // const obj = {}
         const teamConfigCount = {}
@@ -257,7 +258,6 @@ export default {
         }
       })
       console.log(result)
-
       this.tableData = result
       this.loading = false
     },

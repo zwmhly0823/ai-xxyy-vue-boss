@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-11-02 15:20:06
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-11-24 13:42:12
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-31 20:46:04
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -40,7 +40,7 @@
           <el-table-column
             :label="item.text + '班级'"
             min-width="130"
-            v-for="item in SUP_LEVEL_LIST_UPPER"
+            v-for="item in SUP_LEVEL_LIST_teacher"
             :key="item.id"
           >
             <template slot-scope="scope">
@@ -65,7 +65,7 @@
             <template slot-scope="scope">
               <div
                 class="d-flex teacher-set"
-                v-for="(sup, key) in SUP_LEVEL_LIST_UPPER"
+                v-for="(sup, key) in SUP_LEVEL_LIST_teacher"
                 :key="key"
               >
                 <p>{{ sup.text }}：</p>
@@ -108,7 +108,7 @@
 
 <script>
 // import Department from '@/components/MSearch/searchItems/department'
-import { SUP_LEVEL_LIST_UPPER } from '@/utils/supList'
+import { SUP_LEVEL_LIST_teacher } from '@/utils/supList'
 export default {
   components: {
     // Department
@@ -121,7 +121,7 @@ export default {
       term: '',
       onTeamIds: '',
       departmentId: '',
-      SUP_LEVEL_LIST_UPPER
+      SUP_LEVEL_LIST_teacher
     }
   },
 
@@ -195,8 +195,15 @@ export default {
         })
         return item
       })
-      console.log(result)
-
+      console.log(result,"列表数据")
+      if(result) {
+        for(let i=0;i<result.length;i++) {
+         for(let n=0;n<result[i].teamList.length;n++) {
+           console.log(result[i].teamList[n].teamSummaryList[0].teamName);
+            result[i].teamList[n].teamSummaryList[0].teamName = result[i].teamList[n].teamSummaryList[0].teamName.replace(/S/g,'M')
+          }
+        }
+      }
       this.tableData = result
       this.loading = false
     },
