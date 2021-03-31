@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-10-13 21:14:38
- * @LastEditors: Shentong
- * @LastEditTime: 2020-10-24 17:13:07
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-31 15:00:00
  */
 // import { deepClone } from '@/utils'
 /**
@@ -12,11 +12,10 @@
  * ‘S1-基础’ 新增S4 ； ‘S1-进阶’ 原S1 ；‘S2-基础’ 原S2； 'S2-进阶' 新增S5； 'S3' 原S3 ；
  */
 export const SUP_LEVEL = {
-  4: 'S1-基础',
-  1: 'S1-进阶',
-  2: 'S2-基础',
-  5: 'S2-进阶',
-  3: 'S3'
+  4: 'M1',
+  1: 'M2',
+  2: 'M3',
+  5: 'M4',
 }
 
  

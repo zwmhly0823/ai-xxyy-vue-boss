@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-10-29 22:35:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-29 16:00:09
+ * @LastEditTime: 2021-03-31 15:02:30
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -109,12 +109,12 @@ export default {
           width: 80,
           render: (row, index, list = this.tableData) => {
             return list.length - index
-          }
+          },
         },
         {
           label: '期名',
           prop: 'periodName',
-          width: 120
+          width: 120,
         },
         {
           label: '配置班级',
@@ -123,29 +123,24 @@ export default {
             {
               label: SUP_LEVEL_UPPER.S4,
               prop: 'S4',
-              width: 80
+              width: 80,
             },
             {
               label: SUP_LEVEL_UPPER.S1,
               prop: 'S1',
-              width: 80
+              width: 80,
             },
             {
               label: SUP_LEVEL_UPPER.S2,
               prop: 'S2',
-              width: 80
+              width: 80,
             },
             {
               label: SUP_LEVEL_UPPER.S5,
               prop: 'S5',
-              width: 80
+              width: 80,
             },
-            {
-              label: SUP_LEVEL_UPPER.S3,
-              prop: 'S3',
-              width: 80
-            }
-          ]
+          ],
         },
         {
           label: '兼职老师',
@@ -154,29 +149,24 @@ export default {
             {
               label: SUP_LEVEL_UPPER.S4,
               prop: 'S4',
-              width: 80
+              width: 80,
             },
             {
               label: SUP_LEVEL_UPPER.S1,
               prop: 'S1',
-              width: 80
+              width: 80,
             },
             {
               label: SUP_LEVEL_UPPER.S2,
               prop: 'S2',
-              width: 80
+              width: 80,
             },
             {
               label: SUP_LEVEL_UPPER.S5,
               prop: 'S5',
-              width: 80
+              width: 80,
             },
-            {
-              label: SUP_LEVEL_UPPER.S3,
-              prop: 'S3',
-              width: 80
-            }
-          ]
+          ],
         },
         {
           label: '已分配学员',
@@ -185,31 +175,26 @@ export default {
             {
               label: SUP_LEVEL_UPPER.S4,
               prop: 'S4',
-              width: 80
+              width: 80,
             },
             {
               label: SUP_LEVEL_UPPER.S1,
               prop: 'S1',
-              width: 80
+              width: 80,
             },
             {
               label: SUP_LEVEL_UPPER.S2,
               prop: 'S2',
-              width: 80
+              width: 80,
             },
             {
               label: SUP_LEVEL_UPPER.S5,
               prop: 'S5',
-              width: 80
+              width: 80,
             },
-            {
-              label: SUP_LEVEL_UPPER.S3,
-              prop: 'S3',
-              width: 80
-            }
-          ]
-        }
-      ]
+          ],
+        },
+      ],
     }
   },
 
@@ -220,7 +205,7 @@ export default {
       if (from?.path.includes('/scheduleTeacherSet/')) {
         this.init()
       }
-    }
+    },
   },
 
   mounted() {
@@ -240,7 +225,7 @@ export default {
     async getDispatchConfigCount() {
       this.loading = true
       const {
-        payload = []
+        payload = [],
       } = await this.$http.ReviewManage.getDispatchConfigCount()
       console.log(payload)
       // format data
@@ -253,22 +238,22 @@ export default {
         countList.forEach((count) => {
           // 配置班级（班级数量）
           Object.assign(teamConfigCount, {
-            [`${count.sup}`]: count.teamConfigCount || 0
+            [`${count.sup}`]: count.teamConfigCount || 0,
           })
           // 配置老师（老师数量）
           Object.assign(teacherConfigCount, {
-            [`${count.sup}`]: count.teacherConfigCount || 0
+            [`${count.sup}`]: count.teacherConfigCount || 0,
           })
           // 配置学员（学员数量）
           Object.assign(dispatchedStudentCount, {
-            [`${count.sup}`]: count.dispatchedStudentCount || 0
+            [`${count.sup}`]: count.dispatchedStudentCount || 0,
           })
         })
         return {
           ...item,
           teamConfigCount,
           teacherConfigCount,
-          dispatchedStudentCount
+          dispatchedStudentCount,
         }
       })
       console.log(result)
@@ -292,8 +277,8 @@ export default {
     },
     handleStop(row) {
       console.log(row)
-    }
-  }
+    },
+  },
 }
 </script>
 

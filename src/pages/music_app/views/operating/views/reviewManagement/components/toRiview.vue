@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-29 11:27:01
+ * @LastEditTime: 2021-03-31 11:46:52
  */
  -->
 <template>
@@ -26,11 +26,12 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="点评" width="300" align="center">
+      <el-table-column label="点评" width="100" align="center">
         <template
           slot-scope="scope"
           v-if="scope.row.reviewDataList !== undefined"
         >
+          <p>-</p>
           <div class="review-container">
             <div class="top-container">
               <!-- <div

@@ -5,7 +5,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 10:48:18
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-29 14:11:35
+ * @LastEditTime: 2021-03-31 14:14:56
  */
  -->
 <template>
@@ -28,7 +28,7 @@
       </el-tab-pane>
         <el-tab-pane label="审核未通过">
         <div v-if="tabIndex === '3'">
-          <HaveRiview />
+          <ToRiview />
         </div>
       </el-tab-pane>
     </el-tabs>
