@@ -301,10 +301,10 @@ export default {
       packageProduct: {}, // 选中的商品套餐
       // TODO:指定的渠道, 先写死 ！！！  写字渠道待添加
       channelList: [
-        {
-          id: '2048',
-          text: 'vip学员'
-        },
+        // {
+        //   id: '2048',
+        //   text: 'vip学员'
+        // },
         {
           id: '2147',
           text: '兑换码'
