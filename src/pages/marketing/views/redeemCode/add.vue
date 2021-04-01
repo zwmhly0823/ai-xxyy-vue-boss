@@ -300,22 +300,14 @@ export default {
       },
       packageProduct: {}, // 选中的商品套餐
       // TODO:指定的渠道, 先写死 ！！！  写字渠道待添加
-      channelList: [
-        // {
-        //   id: '2048',
-        //   text: 'vip学员'
-        // },
-        {
-          id: '2147',
-          text: '兑换码'
-        }
-      ],
+      channelList: [],
       labelList: [{ id: '0', name: '无' }],
       loading: false
     }
   },
   created() {
     this.getMarketingLabel()
+    this.getChannelList()
   },
   watch: {
     radioDate(val) {
@@ -433,8 +425,33 @@ export default {
           this.labelList.push(...res.payload)
         }
       })
+    },
+
+    // 获取渠道id列表
+    getChannelList() {
+      const subject = { subject: this.$store.getters.subjects.subjectCode }
+      const obj = { ...subject, "channel_inner_name.keyword": "兑换码"}
+      let query = JSON.stringify(JSON.stringify(obj))
+      if (query) {
+        this.$http.Operating.ChannelDetailStatisticsPage(
+          query
+        ).then(({ data }) => {
+          if (data) {
+            console.log(data.ChannelDetailStatisticsPage)
+            data.ChannelDetailStatisticsPage.content.forEach(item => {
+              let obj = {}
+              obj.id = item.id
+              obj.text = item.channel_inner_name
+              if (obj) {
+                this.channelList.push(obj)
+              }
+            })
+          }
+        })
+      }
+      
     }
-  }
+  },
 }
 </script>
 
