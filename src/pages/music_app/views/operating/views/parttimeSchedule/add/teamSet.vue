@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-11-02 15:20:06
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-31 19:53:39
+ * @LastEditTime: 2021-04-01 11:18:03
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -78,7 +78,7 @@
               <p>{{ scope.row.parentDepartmentName }}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="supText" label="难度"> </el-table-column>
+          <el-table-column prop="sup" label="难度"> </el-table-column>
           <el-table-column prop="address" label="是否配置兼职老师">
             <template slot-scope="scope">
               <el-switch

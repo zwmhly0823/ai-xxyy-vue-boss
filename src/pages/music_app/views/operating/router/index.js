@@ -152,7 +152,7 @@ const operatingRoutes = [{
   path: '/parttimeHandover',
   name: 'parttimeHandover',
   meta: {
-    title: '兼职老师移交学员',
+    title: '兼职老师移交班级',
     keepAlive: false
   },
   component: () => import('../views/parttimeHandover/index.vue')

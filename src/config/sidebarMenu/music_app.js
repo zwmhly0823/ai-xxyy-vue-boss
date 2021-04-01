@@ -225,7 +225,7 @@ let bearArt = [
         path: '/parttimeHandover',
         name: '/parttimeHandover',
         meta: {
-          title: '兼职老师移交学员',
+          title: '兼职老师移交班级',
           module
         }
       },

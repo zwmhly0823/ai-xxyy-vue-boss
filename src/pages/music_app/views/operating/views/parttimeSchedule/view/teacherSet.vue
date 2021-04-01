@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-11-02 15:20:06
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-31 20:46:04
+ * @LastEditTime: 2021-04-01 11:30:16
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -196,11 +196,14 @@ export default {
         return item
       })
       console.log(result,"列表数据")
-      if(result) {
-        for(let i=0;i<result.length;i++) {
-         for(let n=0;n<result[i].teamList.length;n++) {
-           console.log(result[i].teamList[n].teamSummaryList[0].teamName);
-            result[i].teamList[n].teamSummaryList[0].teamName = result[i].teamList[n].teamSummaryList[0].teamName.replace(/S/g,'M')
+      if (result) {
+        for (let i = 0; i < result.length; i++) {
+          for (let n = 0; n < result[i].teamList.length; n++) {
+            for (let k = 0;k< result[i].teamList[n].teamSummaryList.length; k++) {
+              result[i].teamList[n].teamSummaryList[k].teamName = result[
+                i
+              ].teamList[n].teamSummaryList[k].teamName.replace(/S/g, 'M')
+            }
           }
         }
       }

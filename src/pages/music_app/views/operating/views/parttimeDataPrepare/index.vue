@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: shasen
  * @Date: 2020-11-02 22:35:09
- * @LastEditors: shasen
- * @LastEditTime: 2020-11-02 16:04:49
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-01 11:14:14
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -240,10 +240,10 @@ export default {
       const params = {
         team_state: [0, 1, 2],
         team_type: { gt: 0 },
-        subject: '0'
+        subject: '3'
       }
       const proidList = await this.getPriodByStatus(params)
-      this.proidList = proidList || []
+      this.proidList = proidList.data || []
 
       if (proidList.length) {
         this.priodTabs = proidList.slice(0, 4)
@@ -304,10 +304,10 @@ export default {
           data: { ManagementForTeacherList: proidList }
         } = await this.$http.User.ManagementForTeacherList(params)
         const newproidList = []
+        console.log(proidList,"proidList");
         proidList.forEach((item) => {
           if (item.management && item.management.subject === params.subject) {
             newproidList.push(item.management)
-            console.log(item)
           }
         })
         return newproidList

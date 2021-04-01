@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-11-02 15:20:06
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-31 20:48:40
+ * @LastEditTime: 2021-04-01 11:30:31
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -47,8 +47,8 @@
               <template
                 v-if="
                   scope.row[item.id] &&
-                    scope.row[item.id].teamSummaryList &&
-                    scope.row[item.id].teamSummaryList.length > 0
+                  scope.row[item.id].teamSummaryList &&
+                  scope.row[item.id].teamSummaryList.length > 0
                 "
               >
                 <p
@@ -81,13 +81,13 @@
                 <group-sell
                   :teacherscope="
                     (scope.row[item.id] && scope.row[item.id].teacherscope) ||
-                      []
+                    []
                   "
                   :value="
                     (type === 'edit' &&
                       scope.row[item.id] &&
                       scope.row[item.id].teacherList) ||
-                      null
+                    null
                   "
                   :department-id="
                     type === 'edit'
@@ -132,7 +132,7 @@ import GroupSell from '@/components/MSearch/searchItems/groupSell'
 export default {
   components: {
     Department,
-    GroupSell
+    GroupSell,
   },
   data() {
     return {
@@ -144,7 +144,7 @@ export default {
       teamList: [],
       term: '',
       onTeamIds: '',
-      departmentId: ''
+      departmentId: '',
     }
   },
 
@@ -178,7 +178,7 @@ export default {
         Object.assign(row[sup], {
           teacherscope: teacherId,
           departmentId: '',
-          teacherList: null
+          teacherList: null,
         })
       this.$set(this.tableData, $index, row)
     },
@@ -193,7 +193,7 @@ export default {
           Object.assign(row[sup], {
             // departmentId: '',
             teacherList: teacherIdList,
-            changed: true
+            changed: true,
           })
       }
       this.$set(this.tableData, $index, row)
@@ -216,10 +216,10 @@ export default {
       const params = {
         term,
         teamId: onTeamIds,
-        type: this.type === 'add' ? 'CONFIG' : 'RESULT'
+        type: this.type === 'add' ? 'CONFIG' : 'RESULT',
       }
       const {
-        payload = []
+        payload = [],
       } = await this.$http.ReviewManage.getTeacherConfigList(params)
       console.log(payload)
       const totalTeamList = []
@@ -232,13 +232,13 @@ export default {
             sup = '',
             groupId = null, // 如果设置过，会有 groupId
             teamSummaryList = [],
-            teacherSummaryList = []
+            teacherSummaryList = [],
           } = team
           if (sup) {
             const obj = {
               teamSummaryList: teamSummaryList || [],
               teacherSummaryList: teacherSummaryList || [],
-              groupId
+              groupId,
             }
             // 如果是编辑，回显部组和兼职老师
             if (this.type === 'edit') {
@@ -249,11 +249,11 @@ export default {
                 teacherSummaryList && teacherSummaryList[0]?.departmentId
               Object.assign(obj, {
                 teacherList,
-                departmentId
+                departmentId,
               })
             }
             Object.assign(item, {
-              [`${sup}`]: obj
+              [`${sup}`]: obj,
             })
           }
         })
@@ -261,11 +261,14 @@ export default {
       })
       this.teamList = totalTeamList
       console.log(result)
-       if(result) {
-        for(let i=0;i<result.length;i++) {
-         for(let n=0;n<result[i].teamList.length;n++) {
-           console.log(result[i].teamList[n].teamSummaryList[0].teamName);
-            result[i].teamList[n].teamSummaryList[0].teamName = result[i].teamList[n].teamSummaryList[0].teamName.replace(/S/g,'M')
+     if (result) {
+        for (let i = 0; i < result.length; i++) {
+          for (let n = 0; n < result[i].teamList.length; n++) {
+            for (let k = 0;k< result[i].teamList[n].teamSummaryList.length; k++) {
+              result[i].teamList[n].teamSummaryList[k].teamName = result[
+                i
+              ].teamList[n].teamSummaryList[k].teamName.replace(/S/g, 'M')
+            }
           }
         }
       }
@@ -297,13 +300,13 @@ export default {
               teacherIdList = [],
               teamSummaryList = [],
               groupId = null,
-              teacherList = null
+              teacherList = null,
             } = item[sup]
             const teamIdList = teamSummaryList.map((t) => t.teamId)
             const obj = {
               sup,
               // teacherIdList,
-              teamIdList
+              teamIdList,
             }
             if (groupId) {
               Object.assign(obj, { groupId })
@@ -327,13 +330,13 @@ export default {
       }
       const params = {
         term: this.term,
-        configs: data
+        configs: data,
       }
       const loading = this.$loading({
         lock: true,
         text: '正在保存……',
         spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.1)'
+        background: 'rgba(0, 0, 0, 0.1)',
       })
       this.$http.ReviewManage.dispatchTeacherConfig(params)
         .then((res) => {
@@ -348,8 +351,8 @@ export default {
         .finally(() => {
           loading.close()
         })
-    }
-  }
+    },
+  },
 }
 </script>
 
