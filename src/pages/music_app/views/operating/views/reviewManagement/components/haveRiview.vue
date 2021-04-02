@@ -4,12 +4,15 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-29 11:22:58
+ * @LastEditTime: 2021-04-02 17:52:20
  */
  -->
 <template>
   <div class="container">
-    <have-riview-search @result="getSearch"></have-riview-search>
+    <have-riview-search
+      v-if="tabIndex == 2"
+      @result="getSearch"
+    ></have-riview-search>
     <el-table
       v-loading="loading"
       element-loading-text="拼命加载中"
@@ -27,61 +30,44 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="点评" width="180" align="center">
+      <el-table-column label="审核状态" width="180" align="center">
         <template slot-scope="scope">
-          <p
-            v-if="
-              !scope.row.soundCommentlist ||
-                scope.row.soundCommentlist.length === 0
-            "
-          >
-            -
+          <p>
+            {{
+              scope.row.status == 1
+                ? '审核中'
+                : scope.row.status == 2
+                ? '发布成功'
+                : scope.row.status == 3
+                ? '已被禁'
+                : '审核未通过'
+            }}
           </p>
-          <div
-            class="audio-container"
-            v-for="(audio, idx) in scope.row.soundCommentlist"
-            :key="idx"
-            v-else
-          >
-            <audio
-              :src="audio.sound_comment"
-              style="height: 47px"
-              controls
-            ></audio>
-          </div>
-          <!-- <div class="audio-container">
-            <audio
-              :src="scope.row.sound_comment"
-              style="height: 47px"
-              controls
-            ></audio>
-          </div> -->
         </template>
       </el-table-column>
-      <el-table-column label="点评分类" align="center" width="180">
+      <el-table-column label="审核未通过原因" align="center" width="180">
         <template slot-scope="scope">
-          <p
-            v-if="
-              !scope.row.soundCommentlist ||
-                scope.row.soundCommentlist.length === 0
-            "
-          >
-            -
+          <p>
+            {{
+              scope.row.status == 1
+                ? '-'
+                : scope.row.status == 2
+                ? '-'
+                : scope.row.status == 3
+                ? '内容违规'
+                : '内容违规'
+            }}
           </p>
-          <div
-            v-else
-            v-for="(item, index) in scope.row.soundCommentlist"
-            :key="index"
-            class="review-type"
-          >
-            {{ item.type === 0 ? '手动点评' : '智能点评' }}
-          </div>
-          <!-- <div class="review-type">
-            {{ scope.row.type === 0 ? '手动点评' : '智能点评' }}
-          </div> -->
         </template>
       </el-table-column>
-      <el-table-column label="用户信息" align="center" width="180">
+      <el-table-column label="点评状态" align="center" width="180">
+        <template slot-scope="scope">
+          <p>
+            {{scope.row.comment_status==0?'未点评':'点评'}}
+          </p>
+        </template>
+      </el-table-column>
+      <el-table-column label="点评内容" align="center" width="180">
         <template slot-scope="scope">
           <p>
             {{ (scope.row.userExtends && scope.row.userExtends.mobile) || '-' }}
@@ -90,9 +76,15 @@
             {{
               (scope.row.userExtends &&
                 scope.row.userExtends.wechat_nikename) ||
-                '-'
+              '-'
             }}
           </p>
+        </template>
+      </el-table-column>
+      <el-table-column label="用户信息" align="center" width="180">
+        <template slot-scope="scope">
+          <div>{{ scope.row.userExtends.mobile }}</div>
+          <div>{{ scope.row.userExtends.wechat_nikename }}</div>
         </template>
       </el-table-column>
       <el-table-column label="班级" align="center" width="180">
@@ -116,7 +108,7 @@
             {{
               (scope.row.assistantTeacherInfo &&
                 scope.row.assistantTeacherInfo.realname) ||
-                '-'
+              '-'
             }}
           </div>
         </template>
@@ -127,7 +119,7 @@
             {{
               (scope.row.parttimeTeacherInfo &&
                 scope.row.parttimeTeacherInfo.realname) ||
-                '-'
+              '-'
             }}
           </div>
         </template>
@@ -138,7 +130,7 @@
             {{
               (scope.row.commentTeacherInfo &&
                 scope.row.commentTeacherInfo.realname) ||
-                '-'
+              '-'
             }}
           </div>
         </template>
@@ -171,7 +163,7 @@
               (scope.row.flagRecord &&
                 scope.row.flagRecord.ctime &&
                 timestamp(scope.row.flagRecord.ctime, 's')) ||
-                '未听点评'
+              '未听点评'
             }}
           </div>
         </template>
@@ -193,10 +185,16 @@
 import { formatData } from '@/utils/index'
 import { courseLevelReplace } from '@/utils/supList'
 export default {
+  props: {
+    tabIndex: {
+      type: String,
+      default: '0',
+    },
+  },
   components: {
     MPagination: () => import('@/components/MPagination/index.vue'),
     HaveRiviewSearch: () =>
-      import('../../../components/search/haveRiviewSearch.vue')
+      import('../../../components/search/haveRiviewSearch.vue'),
   },
   data() {
     return {
@@ -204,13 +202,13 @@ export default {
       list: [],
       query: {
         size: 10,
-        pageNum: 1
+        pageNum: 1,
       },
       totalElements: 0,
       radio: '',
       timestamp: formatData,
       loading: true,
-      searchParams: {}
+      searchParams: {},
     }
   },
   mounted() {
@@ -219,7 +217,17 @@ export default {
   methods: {
     async initList(params = this.searchParams, number = this.query.pageNum) {
       // 增加 已点评 状态
-      const query = Object.assign({}, params, { comment_time: { gt: 0 } })
+
+      let query
+      if (this.tabIndex == 0) {
+        query = Object.assign({}, params)
+      } else if (this.tabIndex == 1) {
+        query = Object.assign({}, params, { comment_time: 0 })
+      } else if (this.tabIndex == 3) {
+        query = Object.assign({}, params, { comment_time: { gt: 0 } })
+      } else {
+        query = Object.assign({}, params, { status: '3' })
+      }
       try {
         const res = await this.$http.RiviewCourse.getHaveRiviewV2(query, number)
         if (res?.data?.StudentTaskRelationCommentDetailPage) {
@@ -278,8 +286,8 @@ export default {
       this.query.pageNum = page
       await this.initList(page)
       document.body.scrollTop = document.documentElement.scrollTop = 0
-    }
-  }
+    },
+  },
 }
 </script>
 

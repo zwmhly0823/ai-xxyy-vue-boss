@@ -5,7 +5,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 10:48:18
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-31 14:14:56
+ * @LastEditTime: 2021-04-02 16:51:21
  */
  -->
 <template>
@@ -13,22 +13,22 @@
     <el-tabs type="border-card" @tab-click="handleClick">
         <el-tab-pane label="全部">
         <div v-if="tabIndex === '0'">
-          <ToRiview />
+          <HaveRiview :tabIndex="tabIndex" />
         </div>
       </el-tab-pane>
       <el-tab-pane label="已审核待点评">
         <div v-if="tabIndex === '1'">
-          <ToRiview />
+          <HaveRiview  :tabIndex="tabIndex" />
         </div>
       </el-tab-pane>
       <el-tab-pane label="已审核已点评">
         <div v-if="tabIndex === '2'">
-          <HaveRiview />
+          <HaveRiview :tabIndex="tabIndex" />
         </div>
       </el-tab-pane>
         <el-tab-pane label="审核未通过">
         <div v-if="tabIndex === '3'">
-          <ToRiview />
+          <HaveRiview :tabIndex="tabIndex" />
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -48,7 +48,7 @@ export default {
     }
   },
   components: {
-    ToRiview: () => import('./toRiview'),
+    // ToRiview: () => import('./toRiview'),
     HaveRiview: () => import('./haveRiview')
   }
 }

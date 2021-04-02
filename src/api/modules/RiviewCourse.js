@@ -3,7 +3,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 17:35:28
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-29 10:49:40
+ * @LastEditTime: 2021-04-02 17:58:07
  */
 import axios from '../axiosConfig'
 import { injectSubject } from '@/utils/index'
@@ -107,6 +107,10 @@ export default {
             task_image
             sound_comment
             type
+            status
+            rank_status
+            listen_comment_time
+            comment_status
             student_id
             course_id
             team_id
@@ -118,12 +122,6 @@ export default {
             comment_time
             comment_id
             subject
-            soundCommentlist{
-              id
-              sound_comment
-              sound_comment_second
-              type
-            }
             userExtends{
               id
               mobile
@@ -150,10 +148,7 @@ export default {
             commentTeacherInfo{
               realname
             }
-            flagRecord{
-              id
-              ctime
-            }
+           
           }
         }
       }`
