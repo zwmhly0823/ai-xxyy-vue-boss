@@ -3,8 +3,8 @@
  * @version: 2.0.0
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-11-04 18:12:58
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-29 10:41:07
 -->
 <template>
   <div class="user-list">
@@ -101,8 +101,8 @@
               <template
                 v-if="
                   scope.row.userInfo &&
-                    scope.row.userInfo.jluserInfo &&
-                    scope.row.userInfo.jluserInfo.remark
+                  scope.row.userInfo.jluserInfo &&
+                  scope.row.userInfo.jluserInfo.remark
                 "
               >
                 <div class="d-flex">
@@ -158,7 +158,7 @@
                     class="sys-v2-head"
                     :src="
                       scope.row.userExtends &&
-                        scope.row.userExtends.wechat_avatar
+                      scope.row.userExtends.wechat_avatar
                     "
                     alt=""
                   />
@@ -213,8 +213,8 @@
             min-width="80"
             v-if="
               showMode === 'trialUserListMode' ||
-                showMode === 'classesOngoingListMode' ||
-                showMode === 'classesCompleteListMode'
+              showMode === 'classesOngoingListMode' ||
+              showMode === 'classesCompleteListMode'
             "
           >
             <template slot="header">
@@ -235,7 +235,7 @@
                           (sortKeys['join_course_count'] != 'asc' &&
                             sortActive == 'join_course_count') ||
                           (sortKeys['last_join_time'] != 'asc' &&
-                            sortActive == 'last_join_time')
+                            sortActive == 'last_join_time'),
                       }"
                     ></i>
                     <i
@@ -245,7 +245,7 @@
                           (sortKeys['join_course_count'] == 'asc' &&
                             sortActive == 'join_course_count') ||
                           (sortKeys['last_join_time'] == 'asc' &&
-                            sortActive == 'last_join_time')
+                            sortActive == 'last_join_time'),
                       }"
                     ></i>
                   </div>
@@ -260,7 +260,7 @@
                           :class="{
                             active:
                               sortKeys['join_course_count'] != 'asc' &&
-                              sortActive == 'join_course_count'
+                              sortActive == 'join_course_count',
                           }"
                         ></i>
                         <i
@@ -268,7 +268,7 @@
                           :class="{
                             active:
                               sortKeys['join_course_count'] == 'asc' &&
-                              sortActive == 'join_course_count'
+                              sortActive == 'join_course_count',
                           }"
                         ></i>
                       </div>
@@ -283,7 +283,7 @@
                           :class="{
                             active:
                               sortKeys['last_join_time'] != 'asc' &&
-                              sortActive == 'last_join_time'
+                              sortActive == 'last_join_time',
                           }"
                         ></i>
                         <i
@@ -291,7 +291,7 @@
                           :class="{
                             active:
                               sortKeys['last_join_time'] == 'asc' &&
-                              sortActive == 'last_join_time'
+                              sortActive == 'last_join_time',
                           }"
                         ></i>
                       </div>
@@ -319,8 +319,8 @@
             min-width="80"
             v-if="
               showMode === 'trialUserListMode' ||
-                showMode === 'classesOngoingListMode' ||
-                showMode === 'classesCompleteListMode'
+              showMode === 'classesOngoingListMode' ||
+              showMode === 'classesCompleteListMode'
             "
           >
             <template slot="header">
@@ -341,7 +341,7 @@
                           (sortKeys['complete_course_count'] != 'asc' &&
                             sortActive == 'complete_course_count') ||
                           (sortKeys['last_complete_time'] != 'asc' &&
-                            sortActive == 'last_complete_time')
+                            sortActive == 'last_complete_time'),
                       }"
                     ></i>
                     <i
@@ -351,7 +351,7 @@
                           (sortKeys['complete_course_count'] == 'asc' &&
                             sortActive == 'complete_course_count') ||
                           (sortKeys['last_complete_time'] == 'asc' &&
-                            sortActive == 'last_complete_time')
+                            sortActive == 'last_complete_time'),
                       }"
                     ></i>
                   </div>
@@ -366,7 +366,7 @@
                           :class="{
                             active:
                               sortKeys['complete_course_count'] != 'asc' &&
-                              sortActive == 'complete_course_count'
+                              sortActive == 'complete_course_count',
                           }"
                         ></i>
                         <i
@@ -374,7 +374,7 @@
                           :class="{
                             active:
                               sortKeys['complete_course_count'] == 'asc' &&
-                              sortActive == 'complete_course_count'
+                              sortActive == 'complete_course_count',
                           }"
                         ></i>
                       </div>
@@ -389,7 +389,7 @@
                           :class="{
                             active:
                               sortKeys['last_complete_time'] != 'asc' &&
-                              sortActive == 'last_complete_time'
+                              sortActive == 'last_complete_time',
                           }"
                         ></i>
                         <i
@@ -397,7 +397,7 @@
                           :class="{
                             active:
                               sortKeys['last_complete_time'] == 'asc' &&
-                              sortActive == 'last_complete_time'
+                              sortActive == 'last_complete_time',
                           }"
                         ></i>
                       </div>
@@ -427,7 +427,7 @@
               <template
                 v-if="
                   !scope.row.userIntention ||
-                    +scope.row.userIntention.type === 0
+                  +scope.row.userIntention.type === 0
                 "
               >
                 <i
@@ -447,8 +447,8 @@
                       'intent-select-high': +scope.row.userIntention.type === 3,
                       'intent-select-middle':
                         +scope.row.userIntention.type === 2,
-                      'intent-select-low': +scope.row.userIntention.type === 1
-                    }
+                      'intent-select-low': +scope.row.userIntention.type === 1,
+                    },
                   ]"
                   popper-class="intent-option"
                 >
@@ -465,7 +465,7 @@
               <template
                 v-if="
                   !scope.row.userIntention ||
-                    +scope.row.userIntention.type === 0
+                  +scope.row.userIntention.type === 0
                 "
               >
                 <i
@@ -476,7 +476,7 @@
               <template
                 v-else-if="
                   !scope.row.userIntention.describe &&
-                    +scope.row.userIntention.is_track === 0
+                  +scope.row.userIntention.is_track === 0
                 "
               >
                 <i
@@ -491,7 +491,7 @@
                       class="time-icon-text"
                       v-if="
                         +scope.row.userIntention.today === today &&
-                          +scope.row.userIntention.is_track === 1
+                        +scope.row.userIntention.is_track === 1
                       "
                       ><span class="time-icon-text-t red-color">今</span
                       ><svg class="iconfont" aria-hidden="true">
@@ -501,7 +501,7 @@
                       class="time-icon-text"
                       v-if="
                         +scope.row.userIntention.today === tomorrow &&
-                          +scope.row.userIntention.is_track === 1
+                        +scope.row.userIntention.is_track === 1
                       "
                       ><span class="time-icon-text-t red-color">明</span
                       ><svg class="iconfont" aria-hidden="true">
@@ -541,7 +541,7 @@
                     <div
                       v-if="!tagPopoverData"
                       v-loading="true"
-                      style="width: 200px;height: 200px"
+                      style="width: 200px; height: 200px"
                     ></div>
                     <tags-popover
                       ref="tagPopover"
@@ -565,8 +565,8 @@
             min-width="60"
             v-if="
               showMode === 'trialUserListMode' ||
-                showMode === 'classesOngoingListMode' ||
-                showMode === 'classesCompleteListMode'
+              showMode === 'classesOngoingListMode' ||
+              showMode === 'classesCompleteListMode'
             "
           >
             <template slot="header">
@@ -578,7 +578,7 @@
                     :class="{
                       active:
                         sortKeys['task_count'] != 'asc' &&
-                        sortActive == 'task_count'
+                        sortActive == 'task_count',
                     }"
                   ></i>
                   <i
@@ -586,7 +586,7 @@
                     :class="{
                       active:
                         sortKeys['task_count'] == 'asc' &&
-                        sortActive == 'task_count'
+                        sortActive == 'task_count',
                     }"
                   ></i>
                 </div>
@@ -606,8 +606,8 @@
             min-width="60"
             v-if="
               showMode === 'trialUserListMode' ||
-                showMode === 'classesOngoingListMode' ||
-                showMode === 'classesCompleteListMode'
+              showMode === 'classesOngoingListMode' ||
+              showMode === 'classesCompleteListMode'
             "
           >
             <template slot="header">
@@ -622,7 +622,7 @@
                     :class="{
                       active:
                         sortKeys['listen_comment_count'] != 'asc' &&
-                        sortActive == 'listen_comment_count'
+                        sortActive == 'listen_comment_count',
                     }"
                   ></i>
                   <i
@@ -630,7 +630,7 @@
                     :class="{
                       active:
                         sortKeys['listen_comment_count'] == 'asc' &&
-                        sortActive == 'listen_comment_count'
+                        sortActive == 'listen_comment_count',
                     }"
                   ></i>
                 </div>
@@ -674,14 +674,14 @@
               </div>
             </template>
           </el-table-column> -->
-          <el-table-column label="盒子物流" min-width="80">
+         <el-table-column label="盒子物流" min-width="80">
             <template slot-scope="scope">
               <div class="d-flex align-center space-between">
                 <p
                   :class="{
                     'red-color':
                       scope.row.expressInfo &&
-                      +scope.row.expressInfo.express_status === 0
+                      +scope.row.expressInfo.express_status === 0,
                   }"
                 >
                   {{
@@ -697,7 +697,7 @@
                   class="el-icon-edit"
                   v-if="
                     scope.row.expressInfo &&
-                      +scope.row.expressInfo.express_status === 0
+                    +scope.row.expressInfo.express_status === 0
                   "
                   @click="modifyAddress(scope.row)"
                 ></i>
@@ -713,8 +713,8 @@
               <p
                 v-if="
                   scope.row.userInfo &&
-                    scope.row.userInfo.mobile_province &&
-                    scope.row.userInfo.mobile_city
+                  scope.row.userInfo.mobile_province &&
+                  scope.row.userInfo.mobile_city
                 "
               >
                 {{ scope.row.userInfo.mobile_province }} ·
@@ -723,12 +723,12 @@
               <p
                 v-else-if="
                   (scope.row.userInfo && scope.row.userInfo.mobile_province) ||
-                    (scope.row.userInfo && scope.row.userInfo.mobile_city)
+                  (scope.row.userInfo && scope.row.userInfo.mobile_city)
                 "
               >
                 {{
                   scope.row.userInfo.mobile_province ||
-                    scope.row.userInfo.mobile_city
+                  scope.row.userInfo.mobile_city
                 }}
               </p>
               <p v-else>-</p>
@@ -768,7 +768,7 @@
                     :class="{
                       active:
                         sortKeys['questionnaire_count'] != 'asc' &&
-                        sortActive == 'questionnaire_count'
+                        sortActive == 'questionnaire_count',
                     }"
                   ></i>
                   <i
@@ -776,16 +776,14 @@
                     :class="{
                       active:
                         sortKeys['questionnaire_count'] == 'asc' &&
-                        sortActive == 'questionnaire_count'
+                        sortActive == 'questionnaire_count',
                     }"
                   ></i>
                 </div>
               </div>
             </template>
             <template slot-scope="scope">
-              <span v-if="!scope.row.questionnaire_count">
-                0
-              </span>
+              <span v-if="!scope.row.questionnaire_count"> 0 </span>
               <el-button
                 v-else
                 type="text"
@@ -812,10 +810,12 @@
                   @click="openTeam(scope.row)"
                   v-if="
                     scope.row.teamInfo &&
-                      scope.row.teamInfo.team_name &&
-                      scope.row.teamInfo.team_name !== '-'
+                    scope.row.teamInfo.team_name &&
+                    scope.row.teamInfo.team_name !== '-'
                   "
-                  >({{ courseLevelReplace(scope.row.teamInfo.team_name) }})</span
+                  >({{
+                    courseLevelReplace(scope.row.teamInfo.team_name)
+                  }})</span
                 >
                 <span v-else>-</span>
               </p>
@@ -848,8 +848,8 @@
             min-width="60"
             v-if="
               showMode === 'classesPerpareListMode' ||
-                showMode === 'classesOngoingListMode' ||
-                showMode === 'classesCompleteListMode'
+              showMode === 'classesOngoingListMode' ||
+              showMode === 'classesCompleteListMode'
             "
           >
           </el-table-column>
@@ -873,7 +873,7 @@
                     :class="{
                       active:
                         sortKeys['bi_label.keyword'] != 'asc' &&
-                        sortActive == 'bi_label.keyword'
+                        sortActive == 'bi_label.keyword',
                     }"
                   ></i>
                   <i
@@ -881,7 +881,7 @@
                     :class="{
                       active:
                         sortKeys['bi_label.keyword'] == 'asc' &&
-                        sortActive == 'bi_label.keyword'
+                        sortActive == 'bi_label.keyword',
                     }"
                   ></i>
                 </div>
@@ -891,26 +891,26 @@
               <span
                 :class="[
                   {
-                    'red-color': scope.row.user_status_name === '未转化'
-                  }
+                    'red-color': scope.row.user_status_name === '未转化',
+                  },
                 ]"
               >
                 {{ scope.row.user_status_name }}
               </span>
               <i
                 class="el-icon-bottom"
-                style="color: #C60D00;"
+                style="color: #c60d00"
                 v-if="
                   scope.row.user_status_name === '未转化' &&
-                    +scope.row.bi_label === 0
+                  +scope.row.bi_label === 0
                 "
               ></i>
               <i
                 class="el-icon-top top-arrow"
-                style="color: #4A975A;"
+                style="color: #4a975a"
                 v-else-if="
                   scope.row.user_status_name === '未转化' &&
-                    +scope.row.bi_label === 1
+                  +scope.row.bi_label === 1
                 "
               ></i>
             </template>
@@ -932,7 +932,7 @@
                     command="2"
                     v-if="
                       scope.row.expressInfo &&
-                        +scope.row.expressInfo.express_status === 0
+                      +scope.row.expressInfo.express_status === 0
                     "
                     >催发地址短信</el-dropdown-item
                   >
