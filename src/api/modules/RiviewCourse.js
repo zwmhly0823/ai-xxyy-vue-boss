@@ -3,7 +3,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 17:35:28
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-02 17:58:07
+ * @LastEditTime: 2021-04-02 19:39:39
  */
 import axios from '../axiosConfig'
 import { injectSubject } from '@/utils/index'
@@ -89,7 +89,11 @@ export default {
       `/api/tm/v1/teacher/manager/courseTask/all/commentTask?pageNumber=${number}&pageSize=${size}`
     )
   },
-
+  getWorksAuditWorks(params) {
+    return axios.post(
+      `/api/wk/v1/works/auditWorks`,params
+    )
+  },
   /**
    * 作品点评 - 已听点评数 重写
    */
@@ -107,6 +111,7 @@ export default {
             task_image
             sound_comment
             type
+            id
             status
             rank_status
             listen_comment_time

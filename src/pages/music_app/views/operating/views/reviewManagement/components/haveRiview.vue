@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-02 17:52:20
+ * @LastEditTime: 2021-04-02 19:50:54
  */
  -->
 <template>
@@ -63,22 +63,32 @@
       <el-table-column label="点评状态" align="center" width="180">
         <template slot-scope="scope">
           <p>
-            {{scope.row.comment_status==0?'未点评':'点评'}}
+            {{ scope.row.comment_status == 0 ? '未点评' : '点评' }}
           </p>
         </template>
       </el-table-column>
       <el-table-column label="点评内容" align="center" width="180">
         <template slot-scope="scope">
-          <p>
-            {{ (scope.row.userExtends && scope.row.userExtends.mobile) || '-' }}
+          <p
+            v-if="
+              !scope.row.soundCommentlist ||
+              scope.row.soundCommentlist.length === 0
+            "
+          >
+            -
           </p>
-          <p>
-            {{
-              (scope.row.userExtends &&
-                scope.row.userExtends.wechat_nikename) ||
-              '-'
-            }}
-          </p>
+          <div
+            class="audio-container"
+            v-for="(audio, idx) in scope.row.soundCommentlist"
+            :key="idx"
+            v-else
+          >
+            <audio
+              :src="audio.sound_comment"
+              style="height: 47px"
+              controls
+            ></audio>
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="用户信息" align="center" width="180">
@@ -144,13 +154,6 @@
       </el-table-column>
       <el-table-column label="点评日期" align="center" width="180">
         <template slot-scope="scope">
-          <!-- <div
-            v-for="(item, index) in scope.row.taskComments"
-            :key="index"
-            class="review-type"
-          >
-            {{ timestamp(item.ctime. 's') || '-' }}
-          </div> -->
           <div class="review-type">
             {{ timestamp(scope.row.comment_time, 's') || '-' }}
           </div>
@@ -168,7 +171,41 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column
+        label="操作"
+        align="center"
+        fixed="right"
+        width="180"
+        class-name="small-padding fixed-width"
+      >
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            @click="scope.row.status!=1 && tabIndex!=0?handleUpdate(scope.row):''"
+            >{{scope.row.status==2 && tabIndex!=0?'置为审核不通过':scope.row.status>=3 && tabIndex!=0?'置为审核通过':'-'}}</el-button
+          >
+        </template>
+      </el-table-column>
     </el-table>
+    <el-dialog
+      width="30%"
+      title="提示:"
+      :visible.sync="visible1"
+      :close-on-click-modal="false"
+    >
+      <div>{{checkStatus==2?'确认将该作品状态更改为审核不通过吗？':checkStatus>=3?'确认将该作品状态更改为审核通过吗？':''}}</div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="visible1 = false" size="mini">取 消</el-button>
+        <el-button
+          :loading="loading"
+          type="primary"
+          @click="handleSaveDelete"
+          size="mini"
+          >确 定</el-button
+        >
+      </div>
+    </el-dialog>
     <m-pagination
       :current-page="query.pageNum"
       :page-size="query.size"
@@ -200,6 +237,9 @@ export default {
     return {
       number: 1,
       list: [],
+      visible1:false,
+      checkStatus:null,
+      course_id:null,
       query: {
         size: 10,
         pageNum: 1,
@@ -223,7 +263,7 @@ export default {
         query = Object.assign({}, params)
       } else if (this.tabIndex == 1) {
         query = Object.assign({}, params, { comment_time: 0 })
-      } else if (this.tabIndex == 3) {
+      } else if (this.tabIndex == 2) {
         query = Object.assign({}, params, { comment_time: { gt: 0 } })
       } else {
         query = Object.assign({}, params, { status: '3' })
@@ -264,7 +304,23 @@ export default {
       }
       return arr
     },
-
+    // 通过和不通过按钮
+    handleUpdate(row) {
+      this.visible1 = true
+      this.checkStatus = row.status
+      this.course_id = row.id
+    },
+    async handleSaveDelete() {
+       let obj = {
+         status:this.checkStatus==2?4:this.checkStatus>=3?1:'',
+         workIds:[this.course_id]
+       }
+       const res = await this.$http.RiviewCourse.getWorksAuditWorks(obj)
+       if(res.status=='OK') {
+         this.visible1 = false
+         this.initList()
+       }
+    },
     /**
      * 搜索
      */
