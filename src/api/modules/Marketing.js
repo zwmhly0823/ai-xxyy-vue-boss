@@ -89,6 +89,8 @@ export default {
             customerSignInfo{
               name
             }
+            send_express
+            course_level
           }
         }
       }`
