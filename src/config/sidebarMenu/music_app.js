@@ -198,7 +198,7 @@ let bearArt = [
     // hidden: true,
     meta: {
       title: '点评管理',
-      icon: 'iconshenpizhongxin',
+      icon: 'icon-dianping',
       // module: 'operating',
       module,
       bottom: true
@@ -545,7 +545,7 @@ let bearArt = [
     // hidden: true,
     meta: {
       title: 'app升级管理',
-      icon: 'iconxueyuanguanli',
+      icon: 'icon-APPshengji',
       module: "teacher",
     },
   },
