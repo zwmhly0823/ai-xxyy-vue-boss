@@ -145,7 +145,7 @@ export default {
               item.end_date_text = formatData(item.end_date, 'm')
               item.status_text = item.status ? '有效' : '失效'
               item.send_express = item.send_express === 0 ?  '否' : item.send_express === 1 ? '是' : '-' 
-              item.course_level = item.course_level == null || item.course_level == 0 ? '全部' : 'M' + item.course_level
+              item.course_level = item.course_level == null || item.course_level == 0 ? '-' : 'M' + item.course_level
               if (item.packageInfo?.name) {
                 item.package_name = item.packageInfo.name
               }
