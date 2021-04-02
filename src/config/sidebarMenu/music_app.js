@@ -245,7 +245,7 @@ let bearArt = [
     // hidden: true,
     meta: {
       title: '运营管理',
-      icon: 'iconyunyingzhongxin',
+      icon: 'icon-yunyingguanli2',
       // module: 'operating',
       module,
       bottom: true
@@ -489,7 +489,7 @@ let bearArt = [
     // hidden: true,
     meta: {
       title: 'boss权限',
-      icon: 'iconiconset',
+      icon: 'icon-quanxian',
       module: 'bossAuth',
     },
     children: [
@@ -525,7 +525,7 @@ let bearArt = [
     // hidden: true,
     meta: {
       title: 'toss权限',
-      icon: 'iconiconset',
+      icon: 'icon-quanxian',
       module: 'tossAuth',
     },
     children: [
@@ -555,7 +555,7 @@ let bearArt = [
     // hidden: true,
     meta: {
       title: '活动',
-      icon: 'iconiconset',
+      icon: 'icon-tubiao-',
       module: module,
     },
   },
