@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-06 10:52:31
+ * @LastEditTime: 2021-04-06 12:03:29
  */
  -->
 <template>
@@ -264,7 +264,7 @@ export default {
       } else if (this.tabIndex == 1) {
         query = Object.assign({}, params, { comment_time: 0 },{ status: '2' })
       } else if (this.tabIndex == 2) {
-        query = Object.assign({}, params, { comment_time: { gt: 0 } })
+        query = Object.assign({}, params, { comment_time: { gt: 0 } },{ status: '2' })
       } else {
         query = Object.assign({}, params, { status: '4' })
       }

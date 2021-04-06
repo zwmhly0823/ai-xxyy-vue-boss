@@ -43,48 +43,7 @@
           </div>
         </template>
         <template v-else>
-          <div class="module-search d-flex align-center">
-            <el-select
-              class="term-select-class"
-              v-model="termValue"
-              placeholder="选择期"
-              size="mini"
-              clearable
-              @change="termSelectChange"
-            >
-              <el-option
-                v-for="item in termOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
-            <!-- <search-phone-and-username
-              name="uid"
-              type="1"
-              placeholder="学员手机号"
-              @result="getSearchData"
-            /> -->
-            <el-select
-              class="term-select-class"
-              v-model="phoneValue"
-              placeholder="学员手机号"
-              size="mini"
-              clearable
-              filterable
-              @change="phoneSelectChange"
-            >
-              <el-option
-                v-for="item in phoneOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
-          </div>
-          <el-checkbox
+        <el-checkbox
             :indeterminate="isIndeterminate"
             v-model="checkAll"
             @change="checkAllChange"
@@ -98,9 +57,9 @@
               :key="key"
               :label="item"
             >
-              <span class="checkbox-text">{{ item.username }}</span>
-              <span class="checkbox-text">{{ item.mobile }}</span>
-              <span class="checkbox-text">{{ item.teamName }}</span>
+              <!-- <span class="checkbox-text">{{ item.username }}</span>
+              <span class="checkbox-text">{{ item.mobile }}</span> -->
+              <span class="checkbox-text">{{ item.teamInfo.team_name }}</span>
             </el-checkbox>
           </el-checkbox-group>
         </template>
@@ -152,9 +111,9 @@
       </div>
     </div>
     <div class="bottom-text" v-show="!showHandler">
-      目标交接学员数
+      目标交接班级数
       <span class="prominent"> {{ listData.length }}</span>
-      个， 实际接收学员数
+      个， 实际接收班级数
       <span class="prominent">{{ checkList.length }} </span>
       个
     </div>
@@ -193,7 +152,7 @@ export default {
       receiveTeacherScope: null,
       receiveTeacherName: '',
       receiveTeamName: '',
-      receiveTeacherID: '',
+      receiveTeacherID:null,
       termValue: '',
       termOptions: [],
       stuList: '',
@@ -235,24 +194,27 @@ export default {
         }
       }
       this.showHandler = false
-      // 根据老师id获取学员列表
-      const listRes = await this.getDispatchStudentList(res.pay_teacher_id)
-      if (!listRes) {
+      // 根据老师id获取班级列表
+      const listRes = await this.$http.Teacher.StudentTaskDispatchConfigList("1450442949990420566")
+      let list = [];
+      list = listRes.data.StudentTaskDispatchConfigList
+      if (!list) {
         return
       }
-      if (!listRes?.length) {
+      if (!list?.length) {
         return
       }
-      this.stuList = listRes.map((item) => {
-        item.teamName = formatTeamNameSup(item.teamName)
+     this.stuList = list.map((item) => {
+        item.teamInfo.team_name = formatTeamNameSup(item.teamInfo.team_name)
         return item
       })
+      console.log(this.stuList,"this.stuList");
       // copy一份listRes
-      this.listData = cloneDeep(listRes)
+      this.listData = cloneDeep(list)
       this.termOptions = []
       const termMap = new Map()
       const phoneMap = new Map()
-      listRes.forEach((item) => {
+      list.forEach((item) => {
         // 期数列表
         if (!termMap.get(item.period)) {
           termMap.set(item.period, item.periodName)
@@ -406,21 +368,24 @@ export default {
     dispatchAjax() {
       let userStr = ''
       this.checkList.forEach((item) => {
-        userStr += `&userIdList=${item.userId}`
+        userStr += `&userIdList=${item.team_id}`
       })
       const query = {
         teacherId: this.showTeacherID,
-        // newTeacherId: this.receiveTeacherID,
+        newTeacherId:'',
         userIdList: userStr
       }
       /**
        * 移交班主任点评，不需要传 newTeacherId; 移交兼职老师时需要传 newTeacherId
        */
+      debugger
       if (this.receiveType === '2') {
         Object.assign(query, {
-          newTeacherId: this.receiveTeacherID
+          newTeacherId: this.receiveTeacherID?this.receiveTeacherID:''
         })
       }
+
+
       return this.$http.WorkerHandover.dispatchAjax(query)
         .then((res) => {
           return res

@@ -200,6 +200,8 @@ export default {
       `
     })
   },
+ 
+
   // 新增老师 添加微信
   WeChatTeacherList() {
     const query = `{"teacher_id":{"lte":0}}`
@@ -209,6 +211,22 @@ export default {
             id
             wechat_no
             teacher_id
+          }
+        }`
+    })
+  },
+
+  // 兼职老师交接班级列表
+  StudentTaskDispatchConfigList(teacher_id) {
+    const query = `{"teacher_id":"${teacher_id}","subject":3}`
+    return axios.post(`/graphql/v1/toss`, {
+      query: `{
+          StudentTaskDispatchConfigList(query: ${JSON.stringify(query)}) {
+            term
+            team_id
+            teamInfo{
+              team_name
+            }
           }
         }`
     })
