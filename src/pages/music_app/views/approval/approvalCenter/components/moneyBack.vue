@@ -4,7 +4,7 @@
  * @Author: huzhifu
  * @Date: 2020-05-07 10:50:45
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-20 15:46:53
+ * @LastEditTime: 2021-04-06 16:57:14
  -->
 <template>
   <div class="adjustModule">
@@ -116,8 +116,16 @@
             <el-radio :label="0" v-show="refundForm.businessType === '系统课'"
               >优惠券退款</el-radio
             >
-            <el-radio :label="1" v-show="this.refundForm.businessType!=='预付款优惠券'">课程退款</el-radio>
-            <el-radio :label="6" v-show="this.refundForm.businessType==='预付款优惠券'">系统课预付款优惠券退款</el-radio>
+            <el-radio
+              :label="1"
+              v-show="this.refundForm.businessType !== '预付款优惠券'"
+              >课程退款</el-radio
+            >
+            <el-radio
+              :label="6"
+              v-show="this.refundForm.businessType === '预付款优惠券'"
+              >系统课预付款优惠券退款</el-radio
+            >
             <!-- <el-radio
               :label="2"
               v-show="
@@ -141,8 +149,17 @@
             >-->
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="关联订单：" v-show="this.refundForm.businessType==='预付款优惠券'">
-          无关联
+        <el-form-item label="关联订单：">
+          <div
+            v-if="relationList[0] && relationList[0].associatedOrderOutTradeNo"
+          >
+            <span
+              >预付款优惠券，金额{{
+                relationList[0].associatedOrderAmout
+              }}，订单号{{ relationList[0].associatedOrderOutTradeNo }}</span
+            >
+          </div>
+          <div v-else>无关联</div>
         </el-form-item>
         <!-- 关单赠品-次月课程-随材盒子(出现条件系统课+选中课程退款) -->
         <template
@@ -452,6 +469,11 @@ export default {
         const targetItem = this.orderOptions.filter((item) => {
           return item.outTradeNo === newValue
         })[0]
+        this.relationList = this.orderOptions.filter((item) => {
+          if (item.outTradeNo === newValue) {
+            return item
+          }
+        })
         // primary->存起来方便公用
         this.selectOrder = targetItem
         console.info('选择关联订单是我,大家快来公用--', targetItem)
@@ -513,17 +535,17 @@ export default {
               return
             }
 
-            if(targetItem.regtype === 'TICKET500') {
+            if (targetItem.regtype === 'TICKET500') {
               const {
                 code,
               } = await this.$http.RefundApproval.checkCouponOrderStatus({
                 orderId: targetItem.id,
               })
-              if(code !== 0) {
+              if (code !== 0) {
                 setTimeout(() => {
                   location.reload()
-                }, 1000);
-                return;
+                }, 1000)
+                return
               }
             }
           }
@@ -618,7 +640,12 @@ export default {
         }
         // 显示订单金额
         if (targetItem && targetItem.amount) {
-          this.refundForm.orderAmount = targetItem.amount
+          if (isNaN(targetItem.associatedOrderAmout)) {
+            this.refundForm.orderAmount = targetItem.amount
+          } else {
+            this.refundForm.orderAmount =
+              targetItem.amount + targetItem.associatedOrderAmout
+          }
         }
         // 拿到选中订单的id,取支付渠道
         if (targetItem && targetItem.id) {
@@ -878,11 +905,10 @@ export default {
                 location.reload()
               }, 4000)
             }
-          }
-          else if(newValue === 6) {
+          } else if (newValue === 6) {
             this.refundForm.refundAmount = this.refundForm.residueFee
           }
-           // 补偿
+          // 补偿
           // else if (newValue === 3) {
           //   this.refundForm.refundAmount = '' // 退款额
           //   this.refundForm.refundMonths = ''
@@ -1047,6 +1073,7 @@ export default {
         ],
         reason: [{ required: true, message: '请输入说明', trigger: 'blur' }],
       },
+      relationList: [], // 关联订单
       refundForm: {
         isRules: '', // 该订单是否符合规则
         name: '', // 用户uid
