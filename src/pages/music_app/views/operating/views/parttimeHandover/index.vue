@@ -36,7 +36,7 @@
 
       <!-- 选择学员 -->
       <div class="container-middle module">
-        <h2>选择学员</h2>
+        <h2>选择班级</h2>
         <template v-if="showHandler">
           <div class="empty-mask">
             <p>暂无数据</p>
