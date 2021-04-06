@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-29 17:57:38
+ * @LastEditTime: 2021-04-06 17:54:49
 -->
 <template>
   <div class="drawer-main">
@@ -62,9 +62,29 @@
           </el-table-column>
           <el-table-column prop="tradeTypeDesc" label="支付方式">
           </el-table-column>
-           <el-table-column prop="tradeTypeDesc" label="关联订单">
+           <el-table-column prop="associatedOrderRegtype" width="200" label="关联订单">
+              <template slot-scope="scope">
+            <p>
+              {{
+                scope.row.associatedOrderRegtype == 0
+                  ? '体验课'
+                  : scope.row.associatedOrderRegtype == 1
+                  ? '系统课'
+                  : scope.row.associatedOrderRegtype == 2
+                  ? '优惠券商品'
+                  : ''
+              }}
+            </p>
+            <p>
+              {{
+                scope.row.associatedOrderOutTradeNo
+                  ? scope.row.associatedOrderOutTradeNo
+                  : '-'
+              }}
+            </p>
+          </template>
           </el-table-column>
-           <el-table-column prop="tradeTypeDesc" label="关联金额">
+           <el-table-column prop="associatedOrderAmount" label="关联金额">
           </el-table-column>
           <el-table-column prop="amount" label="实付金额"> </el-table-column>
           <el-table-column prop="periodAlready" label="已上周期">

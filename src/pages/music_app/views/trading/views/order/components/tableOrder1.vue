@@ -192,9 +192,33 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="关联订单类型及订单号" min-width="80">
-        <template slot-scope="scope">{{ scope.row.order_status ? scope.row.order_status : '-' }}</template>
-      </el-table-column>
+     <!-- <el-table-column
+          prop="buytime"
+          label="关联订单类型及定单号"
+          align="center"
+          width="160"
+        >
+          <template slot-scope="scope">
+            <p>
+              {{
+                scope.row.associatedOrderRegtype == 0
+                  ? '体验课'
+                  : scope.row.associatedOrderRegtype == 1
+                  ? '系统课'
+                  : scope.row.associatedOrderRegtype == 2
+                  ? '优惠券商品'
+                  : ''
+              }}
+            </p>
+            <p>
+              {{
+                scope.row.associatedOrderOutTradeNo
+                  ? scope.row.associatedOrderOutTradeNo
+                  : '-'
+              }}
+            </p>
+          </template>
+        </el-table-column> -->
       <el-table-column label="订单状态" min-width="80">
         <template slot-scope="scope">{{ scope.row.order_status ? scope.row.order_status : '-' }}</template>
       </el-table-column>
