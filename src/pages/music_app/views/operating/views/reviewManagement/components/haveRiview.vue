@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-02 19:50:54
+ * @LastEditTime: 2021-04-06 10:52:31
  */
  -->
 <template>
@@ -22,9 +22,9 @@
         <template slot-scope="scope">
           <el-image
             class="works-img"
-            :src="`${scope.row.task_image}?x-oss-process=image/resize,l_100`"
+            :src="`https://xxyy-kczzht.oss-cn-hangzhou.aliyuncs.com/${scope.row.task_image}?x-oss-process=image/resize,l_100`"
             :lazy="true"
-            :preview-src-list="[scope.row.task_image]"
+            :preview-src-list="['https://xxyy-kczzht.oss-cn-hangzhou.aliyuncs.com/'+scope.row.task_image]"
             :z-index="1001"
           >
           </el-image>
@@ -262,11 +262,11 @@ export default {
       if (this.tabIndex == 0) {
         query = Object.assign({}, params)
       } else if (this.tabIndex == 1) {
-        query = Object.assign({}, params, { comment_time: 0 })
+        query = Object.assign({}, params, { comment_time: 0 },{ status: '2' })
       } else if (this.tabIndex == 2) {
         query = Object.assign({}, params, { comment_time: { gt: 0 } })
       } else {
-        query = Object.assign({}, params, { status: '3' })
+        query = Object.assign({}, params, { status: '4' })
       }
       try {
         const res = await this.$http.RiviewCourse.getHaveRiviewV2(query, number)
