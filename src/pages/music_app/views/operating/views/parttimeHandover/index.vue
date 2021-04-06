@@ -43,7 +43,7 @@
           </div>
         </template>
         <template v-else>
-        <el-checkbox
+          <el-checkbox
             :indeterminate="isIndeterminate"
             v-model="checkAll"
             @change="checkAllChange"
@@ -74,9 +74,6 @@
 
         <!-- receiveType -->
         <div class="receive-type">
-          <p>
-            <el-radio v-model="receiveType" label="1">交还班主任点评</el-radio>
-          </p>
           <p>
             <el-radio v-model="receiveType" label="2">移交兼职老师</el-radio>
           </p>
@@ -137,7 +134,7 @@ export default {
   name: 'partTeacher',
   components: {
     Department,
-    GroupSell
+    GroupSell,
     // SearchPhoneAndUsername
   },
   data() {
@@ -152,7 +149,7 @@ export default {
       receiveTeacherScope: null,
       receiveTeacherName: '',
       receiveTeamName: '',
-      receiveTeacherID:null,
+      receiveTeacherID: null,
       termValue: '',
       termOptions: [],
       stuList: '',
@@ -162,7 +159,7 @@ export default {
       checkAll: false,
       phoneOptions: [],
       phoneValue: '',
-      receiveType: ''
+      receiveType: '',
     }
   },
   watch: {
@@ -170,7 +167,7 @@ export default {
       if (val !== oldVal && val) {
         this.receiveToChoose()
       }
-    }
+    },
   },
   methods: {
     // 交出方选择部门
@@ -193,22 +190,23 @@ export default {
           }
         }
       }
-      this.showHandler = false
       // 根据老师id获取班级列表
-      const listRes = await this.$http.Teacher.StudentTaskDispatchConfigList("1450442949990420566")
-      let list = [];
+      const listRes = await this.$http.Teacher.StudentTaskDispatchConfigList(
+        res.pay_teacher_id
+      )
+      let list = []
       list = listRes.data.StudentTaskDispatchConfigList
-      if (!list) {
-        return
+      if (list && list.length > 0) {
+        this.showHandler = false
+      } else {
+        return false
       }
-      if (!list?.length) {
-        return
-      }
-     this.stuList = list.map((item) => {
+
+      this.stuList = list.map((item) => {
         item.teamInfo.team_name = formatTeamNameSup(item.teamInfo.team_name)
         return item
       })
-      console.log(this.stuList,"this.stuList");
+      console.log(this.stuList, 'this.stuList')
       // copy一份listRes
       this.listData = cloneDeep(list)
       this.termOptions = []
@@ -220,7 +218,7 @@ export default {
           termMap.set(item.period, item.periodName)
           this.termOptions.push({
             label: item.periodName,
-            value: item.period
+            value: item.period,
           })
         }
         // 手机号及uid
@@ -228,7 +226,7 @@ export default {
           phoneMap.set(item.userId, item.mobile)
           this.phoneOptions.push({
             label: item.mobile,
-            value: item.userId
+            value: item.userId,
           })
         }
       })
@@ -253,7 +251,7 @@ export default {
           if (this.termOptions[j].value < this.termOptions[j - 1].value) {
             ;[this.termOptions[j], this.termOptions[j - 1]] = [
               this.termOptions[j - 1],
-              this.termOptions[j]
+              this.termOptions[j],
             ]
             flag = true
           }
@@ -359,21 +357,21 @@ export default {
       }
       this.$message({
         type: 'success',
-        message: '交接成功'
+        message: '交接成功',
       })
       setTimeout(() => {
         location.reload()
       }, 1000)
     },
     dispatchAjax() {
-      let userStr = ''
+      let userStr = []
       this.checkList.forEach((item) => {
-        userStr += `&userIdList=${item.team_id}`
+        userStr.push(item.team_id)
       })
       const query = {
         teacherId: this.showTeacherID,
-        newTeacherId:'',
-        userIdList: userStr
+        newTeacherId: '',
+        teamIdList: userStr,
       }
       /**
        * 移交班主任点评，不需要传 newTeacherId; 移交兼职老师时需要传 newTeacherId
@@ -381,10 +379,9 @@ export default {
       debugger
       if (this.receiveType === '2') {
         Object.assign(query, {
-          newTeacherId: this.receiveTeacherID?this.receiveTeacherID:''
+          newTeacherId: this.receiveTeacherID ? this.receiveTeacherID : '',
         })
       }
-
 
       return this.$http.WorkerHandover.dispatchAjax(query)
         .then((res) => {
@@ -400,8 +397,8 @@ export default {
       this.receiveType = ''
       this.checkList = []
       this.stuList = []
-    }
-  }
+    },
+  },
 }
 </script>
 

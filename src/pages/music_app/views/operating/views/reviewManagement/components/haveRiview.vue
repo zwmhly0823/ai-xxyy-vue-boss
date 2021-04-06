@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-06 12:03:29
+ * @LastEditTime: 2021-04-06 20:07:13
  */
  -->
 <template>
@@ -20,14 +20,23 @@
     >
       <el-table-column label="作品" width="100" align="center">
         <template slot-scope="scope">
-          <el-image
-            class="works-img"
-            :src="`https://xxyy-kczzht.oss-cn-hangzhou.aliyuncs.com/${scope.row.task_image}?x-oss-process=image/resize,l_100`"
-            :lazy="true"
-            :preview-src-list="['https://xxyy-kczzht.oss-cn-hangzhou.aliyuncs.com/'+scope.row.task_image]"
-            :z-index="1001"
-          >
-          </el-image>
+          <div class="task-image-container" v-if="scope.row.task_image">
+            <div
+              class="task-image"
+              @click="
+                handleViewLarge(
+                  `https://xxyy-kczzht.oss-cn-hangzhou.aliyuncs.com/` +
+                    scope.row.task_video
+                )
+              "
+            >
+              <img
+                :src="`https://xxyy-kczzht.oss-cn-hangzhou.aliyuncs.com/${scope.row.task_image}?x-oss-process=image/resize,l_100`"
+              />
+              <!-- 视频-播放按钮 -->
+              <i class="el-icon-video-play" v-if="scope.row.task_video"></i>
+            </div>
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="审核状态" width="180" align="center">
@@ -89,6 +98,7 @@
               controls
             ></audio>
           </div>
+          <p>{{scope.row.rank_status==0?'未上榜':scope.row.rank_status>0?'已上榜':'-'}}</p>
         </template>
       </el-table-column>
       <el-table-column label="用户信息" align="center" width="180">
@@ -182,8 +192,18 @@
           <el-button
             size="mini"
             type="text"
-            @click="scope.row.status!=1 && tabIndex!=0?handleUpdate(scope.row):''"
-            >{{scope.row.status==2 && tabIndex!=0?'置为审核不通过':scope.row.status>=3 && tabIndex!=0?'置为审核通过':'-'}}</el-button
+            @click="
+              scope.row.status != 1 && tabIndex != 0
+                ? handleUpdate(scope.row)
+                : ''
+            "
+            >{{
+              scope.row.status == 2 && tabIndex != 0
+                ? '置为审核不通过'
+                : scope.row.status >= 3 && tabIndex != 0
+                ? '置为审核通过'
+                : '-'
+            }}</el-button
           >
         </template>
       </el-table-column>
@@ -194,7 +214,15 @@
       :visible.sync="visible1"
       :close-on-click-modal="false"
     >
-      <div>{{checkStatus==2?'确认将该作品状态更改为审核不通过吗？':checkStatus>=3?'确认将该作品状态更改为审核通过吗？':''}}</div>
+      <div>
+        {{
+          checkStatus == 2
+            ? '确认将该作品状态更改为审核不通过吗？'
+            : checkStatus >= 3
+            ? '确认将该作品状态更改为审核通过吗？'
+            : ''
+        }}
+      </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="visible1 = false" size="mini">取 消</el-button>
         <el-button
@@ -215,6 +243,24 @@
       open="calc(100vw - 95px - 100px)"
       close="calc(100vw - 23px - 50px)"
     />
+    <!-- 查看作品 -->
+    <el-dialog
+      :visible.sync="taskDialogVisible"
+      width="450px"
+      center
+      custom-class="enlarge-box"
+      @close="closeTaskDialog"
+    >
+      <!-- 作品-视频播放 -->
+      <video
+        v-if="currentVideo"
+        :src="currentVideo"
+        controls
+        autoplay
+        class="video"
+        width="100%"
+      ></video>
+    </el-dialog>
   </div>
 </template>
 
@@ -237,9 +283,10 @@ export default {
     return {
       number: 1,
       list: [],
-      visible1:false,
-      checkStatus:null,
-      course_id:null,
+      visible1: false,
+      checkStatus: null,
+      course_id: null,
+      taskDialogVisible: false,
       query: {
         size: 10,
         pageNum: 1,
@@ -249,6 +296,7 @@ export default {
       timestamp: formatData,
       loading: true,
       searchParams: {},
+      currentVideo: '',
     }
   },
   mounted() {
@@ -262,9 +310,14 @@ export default {
       if (this.tabIndex == 0) {
         query = Object.assign({}, params)
       } else if (this.tabIndex == 1) {
-        query = Object.assign({}, params, { comment_time: 0 },{ status: '2' })
+        query = Object.assign({}, params, { comment_time: 0 }, { status: '2' })
       } else if (this.tabIndex == 2) {
-        query = Object.assign({}, params, { comment_time: { gt: 0 } },{ status: '2' })
+        query = Object.assign(
+          {},
+          params,
+          { comment_time: { gt: 0 } },
+          { status: '2' }
+        )
       } else {
         query = Object.assign({}, params, { status: '4' })
       }
@@ -311,15 +364,15 @@ export default {
       this.course_id = row.id
     },
     async handleSaveDelete() {
-       let obj = {
-         status:this.checkStatus==2?4:this.checkStatus>=3?1:'',
-         workIds:[this.course_id]
-       }
-       const res = await this.$http.RiviewCourse.getWorksAuditWorks(obj)
-       if(res.status=='OK') {
-         this.visible1 = false
-         this.initList()
-       }
+      let obj = {
+        status: this.checkStatus == 2 ? 4 : this.checkStatus >= 3 ? 1 : '',
+        workIds: [this.course_id],
+      }
+      const res = await this.$http.RiviewCourse.getWorksAuditWorks(obj)
+      if (res.status == 'OK') {
+        this.visible1 = false
+        this.initList()
+      }
     },
     /**
      * 搜索
@@ -330,7 +383,16 @@ export default {
       this.query.pageNum = 1
       this.initList()
     },
-
+    // 查看大图
+    handleViewLarge(task) {
+      this.currentVideo = task
+      this.taskDialogVisible = true
+    },
+    // 关闭查看作品dialog
+    closeTaskDialog() {
+      this.taskDialogVisible = false
+      this.currentVideo = ''
+    },
     // T2S3L1U2Lesson1 -> S3L1U2
     formatCourse(course) {
       if (!course) return
@@ -356,6 +418,27 @@ export default {
     border-radius: 100%;
     height: 47px;
     margin: 0 auto 20px;
+  }
+  .task-image-container {
+    width: 60px;
+    text-align: center;
+  }
+  .task-image {
+    position: relative;
+    height: 40px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+    i {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      color: white;
+      transform: translate(-50%, -50%);
+      font-size: 16px;
+      font-weight: bold;
+    }
   }
   .review-type {
     margin: 0 0 20px 0;

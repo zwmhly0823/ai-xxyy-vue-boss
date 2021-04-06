@@ -159,6 +159,14 @@ export default {
         this.assistantTeacherScope = val
         Object.assign(this.searchParams, { comment_teacher_id: val })
       }
+      if(key ==='rank_status') {
+        if(data ==0) {
+          Object.assign(this.searchParams, { rank_status:val});
+        }else if(data ==1) {
+          Object.assign(this.searchParams, { rank_status:{gt:0} })
+        }
+        
+      }
       if (key === 'term') {
         this.tkey = Date.now()
         this.termScope = val

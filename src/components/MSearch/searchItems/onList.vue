@@ -45,11 +45,11 @@ export default {
           text: '全部',
         },
         {
-          id: '1',
+          id: '0',
           text: '未上榜',
         },
          {
-          id: '2',
+          id: '1',
           text: '已上榜',
         },
       ],

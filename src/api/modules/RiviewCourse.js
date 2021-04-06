@@ -3,7 +3,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 17:35:28
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-02 19:39:39
+ * @LastEditTime: 2021-04-06 18:48:49
  */
 import axios from '../axiosConfig'
 import { injectSubject } from '@/utils/index'
@@ -109,6 +109,7 @@ export default {
           content{
             comment_id
             task_image
+            task_video
             sound_comment
             type
             id
