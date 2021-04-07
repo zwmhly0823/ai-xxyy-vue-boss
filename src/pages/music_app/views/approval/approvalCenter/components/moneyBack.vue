@@ -4,7 +4,7 @@
  * @Author: huzhifu
  * @Date: 2020-05-07 10:50:45
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-07 17:28:28
+ * @LastEditTime: 2021-04-07 18:02:22
  -->
 <template>
   <div class="adjustModule">
@@ -154,7 +154,7 @@
             v-if="relationList[0] && relationList[0].associatedOrderOutTradeNo"
           >
             <span
-              >{{relationList[0].associatedPackagesName}}，金额{{
+              >{{ relationList[0].associatedPackagesName }}，金额{{
                 relationList[0].associatedOrderAmout
               }}，订单号{{ relationList[0].associatedOrderOutTradeNo }}</span
             >
@@ -470,7 +470,7 @@ export default {
           return item.outTradeNo === newValue
         })[0]
         this.targetList = targetItem
-        console.log(targetItem,"关联订单拿到的数据");
+        console.log(targetItem, '关联订单拿到的数据')
         this.relationList = this.orderOptions.filter((item) => {
           if (item.outTradeNo === newValue) {
             return item
@@ -694,15 +694,18 @@ export default {
       immediate: true,
       deep: true,
       async handler(newValue) {
-          // 初始就触发,执行前确认关联订单已选择
+        // 初始就触发,执行前确认关联订单已选择
         if (this.selectOrder && Object.keys(this.selectOrder).length) {
           // newValue:0 选中优惠券时-获取优惠券列表
-          if(newValue !=6) {
+          if (newValue != 6) {
             this.refundForm.refundAmount = '' // 退款额
             this.refundForm.refundAmount = this.refundForm.residueFee
-            console.log(this.refundForm.refundAmount,"this.refundForm.refundAmount");
+            console.log(
+              this.refundForm.refundAmount,
+              'this.refundForm.refundAmount'
+            )
           }
-          
+
           if (newValue === 0) {
             this.refundForm.refundMonths = ''
             this.jsonDate3.deductMonth = 0
@@ -778,11 +781,10 @@ export default {
                   const interfaceTy = (this.pureWeekS + this.pureWeekY) / 4
 
                   const priceTre = this.refundForm.residueFee / interfaceTy // 单价
-                  this.onePrice = priceTre
-                  this.refundForm.refundAmount = Math.round(
-                    this.refundForm.residueFee - (priceTre * yiYue).toFixed(2)
-                  )
-                  this.refundForm.refundMonths = shengYue // 退了几个月的课
+                  this.onePrice = priceTre;
+                  this.refundForm.refundAmount =
+                    this.refundForm.residueFee - (priceTre * yiYue).toFixed(2);
+                  this.refundForm.refundMonths = shengYue ;// 退了几个月的课
                 }
               } else {
                 // 课程剩余总课时或已上课时未能获取,怎么计算系统课退费呀
@@ -1012,7 +1014,7 @@ export default {
       // 是否扣除赠品
       giftsFlag: 0,
       giftsPrice: 0,
-      targetList:null,
+      targetList: null,
       rules: {
         deductMonth: [
           { required: true, validator: deductMonth, trigger: 'change' },
