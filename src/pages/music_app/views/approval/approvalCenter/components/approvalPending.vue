@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-24 18:01:39
+ * @LastEditTime: 2021-04-07 10:45:03
  -->
 <template>
   <div class="container" v-loading="vLoading">
@@ -27,22 +27,32 @@
           :value="value"
         ></el-option>
       </el-select>
-      <searchPhone name="userTel" @result_lk="getPhone" style="margin-right:20px" />
-      <courseTeam @result="getTeamId" style="margin-left:0px;margin-right:20px" />
+      <searchPhone
+        name="userTel"
+        @result_lk="getPhone"
+        style="margin-right: 20px"
+      />
+      <courseTeam
+        @result="getTeamId"
+        style="margin-left: 0px; margin-right: 20px"
+      />
       <department
-        style="margin-right:20px"
+        style="margin-right: 20px"
         name="DepartmentIds"
         placeholder="全部部门"
         :onlyDept="1"
         @result="getSearchData1"
       />
       <group-sell
-        style="margin-right:20px"
+        style="margin-right: 20px"
         @result="getSearchData2"
         :name="'groupSell'"
         tip="请选择老师"
       />
-      <tabTimeSelect style="margin-left:0; margin-right:20px" @result="getSeacherTime" />
+      <tabTimeSelect
+        style="margin-left: 0; margin-right: 20px"
+        @result="getSeacherTime"
+      />
       <ActivityName
         v-if="checkTypeAssert !== 'REISSUE'"
         @result="getActivityName"
@@ -62,7 +72,7 @@
             '销售/班主任': 'TEACHER',
             经理: 'MANAGER',
             挽单组: 'WDZ',
-            财务: 'FINANCE'
+            财务: 'FINANCE',
           }"
           :key="value"
           :label="key"
@@ -84,7 +94,7 @@
             物流退回中: 'EXPRESS_NOT_RETURN',
             未联系上家长: 'CANT_CONTACT_PARENT',
             挽单试听1V1: 'WD_TRIAL_1V1',
-            挽单试听小班课: 'WD_TRIAL_SMALL'
+            挽单试听小班课: 'WD_TRIAL_SMALL',
           }"
           :key="value"
           :label="key"
@@ -108,10 +118,11 @@
       <el-button
         type="primary"
         size="mini"
-        style="margin-left:100px;"
+        style="margin-left: 100px"
         v-if="flowApprovalIdList && flowApprovalIdList.length"
         @click="batchApproval"
-      >批量审核通过</el-button>
+        >批量审核通过</el-button
+      >
     </div>
     <!-- dom -->
     <div class="tableInner" ref="tableInner"></div>
@@ -129,7 +140,10 @@
       <!-- 该条申请单的申请人(applyId)是登录人-只有自己才能撤销自己的申请单 -->
       <el-table-column width="40">
         <template slot-scope="scope">
-          <el-dropdown placement="bottom-start" v-if="scope.row.applyId == staffId">
+          <el-dropdown
+            placement="bottom-start"
+            v-if="scope.row.applyId == staffId"
+          >
             <div :class="scope.row.id === current.id ? 'three-dot' : 'disnone'">
               <img src="@/assets/images/icon/icon-three-dot.jpg" />
             </div>
@@ -155,7 +169,9 @@
         <template slot-scope="scope">
           <div v-show="scope.row.type === 'REISSUE'">补发货</div>
           <div v-show="scope.row.type === 'REFUND'">退款</div>
-          <div v-show="scope.row.type === 'ADJUSTMENT_SUP_TRIAL'">体验课调级</div>
+          <div v-show="scope.row.type === 'ADJUSTMENT_SUP_TRIAL'">
+            体验课调级
+          </div>
           <div v-if="scope.row.type === 'ADJUSTMENT_STAGE'">调期申请</div>
           <div v-else-if="scope.row.type === 'ADJUSTMENT_CLASS'">调班申请</div>
           <div v-if="scope.row.type === 'ADJUSTMENT_SUP'">调级申请</div>
@@ -164,7 +180,11 @@
           <div v-if="scope.row.type === 'PROMOTIONS'">赠品</div>
         </template>
       </el-table-column>
-      <el-table-column label="用户电话" width="180" prop="userTel"></el-table-column>
+      <el-table-column
+        label="用户电话"
+        width="180"
+        prop="userTel"
+      ></el-table-column>
       <el-table-column label="开课日期" width="120">
         <template slot-scope="scope">
           <div v-if="scope.row.subType !== 99">
@@ -182,18 +202,14 @@
           <div>{{ scope.row.receptContent }}</div>-->
           <div>
             <span v-if="scope.row.type === 'ADJUSTMENT_SUP'">
-              {{
-              courseLevelReplace(scope.row.period)
-              }}
+              {{ courseLevelReplace(scope.row.period) }}
             </span>
             <span v-else>{{ scope.row.period }}</span>
           </div>
           <div>
             <!-- 调级 -->
             <span v-if="scope.row.type === 'ADJUSTMENT_SUP'">
-              {{
-              courseLevelReplace(scope.row.receptContent) || '-'
-              }}
+              {{ courseLevelReplace(scope.row.receptContent) || '-' }}
             </span>
             <span v-else>{{ scope.row.receptContent }}</span>
           </div>
@@ -220,7 +236,9 @@
             "
             v-show="scope.row.status === 'PENDING'"
             class="wait-pending"
-          >待审批</div>
+          >
+            待审批
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -235,9 +253,9 @@
       @close="handleCloseDraw"
     >
       <template v-slot:title>
-        <h2
-          v-if="currentType !== 'UNCREDITED'"
-        >{{ drawerApprovalDeatail.addressId ? '补发货审批' : '退款审批' }}</h2>
+        <h2 v-if="currentType !== 'UNCREDITED'">
+          {{ drawerApprovalDeatail.addressId ? '补发货审批' : '退款审批' }}
+        </h2>
         <h2 v-else>{{ '无归属订单审批' }}</h2>
       </template>
       <!-- 1-1补发货全套 -->
@@ -245,17 +263,13 @@
         <el-row>
           <el-col :span="3">申请人:</el-col>
           <el-col :span="20" :offset="1">
-            {{
-            drawerApprovalDeatail.applyUserName
-            }}
+            {{ drawerApprovalDeatail.applyUserName }}
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="3">申请部门:</el-col>
           <el-col :span="20" :offset="1">
-            {{
-            drawerApprovalDeatail.applyUserDeapartmentName
-            }}
+            {{ drawerApprovalDeatail.applyUserDeapartmentName }}
           </el-col>
         </el-row>
         <el-row>
@@ -265,47 +279,47 @@
               type="primary"
               :href="'/music_app/#/details/' + drawerApprovalDeatail.userId"
               target="_blank"
-            >{{ drawerApprovalDeatail.userTel }}</el-link>
+              >{{ drawerApprovalDeatail.userTel }}</el-link
+            >
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="3">补发商品:</el-col>
           <el-col :span="20" :offset="1">
-            {{
-            drawerApprovalDeatail.productInfo
-            }}
+            {{ drawerApprovalDeatail.productInfo }}
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="3">收货信息:</el-col>
           <el-col :span="20" :offset="1">
             {{
-            `${drawerApprovalDeatail.receiptName +
-            '' +
-            drawerApprovalDeatail.receiptTel}~~${drawerApprovalDeatail.receiptAddressProvince +
-            '' +
-            drawerApprovalDeatail.receiptAddressCity +
-            '' +
-            drawerApprovalDeatail.receiptAddressArea +
-            '' +
-            drawerApprovalDeatail.receiptAddressDetail}`
+              `${
+                drawerApprovalDeatail.receiptName +
+                '' +
+                drawerApprovalDeatail.receiptTel
+              }~~${
+                drawerApprovalDeatail.receiptAddressProvince +
+                '' +
+                drawerApprovalDeatail.receiptAddressCity +
+                '' +
+                drawerApprovalDeatail.receiptAddressArea +
+                '' +
+                drawerApprovalDeatail.receiptAddressDetail
+              }`
             }}
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="3">订单号:</el-col>
           <el-col :span="20" :offset="1">
-            {{
-            drawerApprovalDeatail.outTradeNo
-            }}
+            {{ drawerApprovalDeatail.outTradeNo }}
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="3">课程进度:</el-col>
-          <el-col
-            :span="20"
-            :offset="1"
-          >{{ courseLevelReplace(drawerApprovalDeatail.currentLesson) }}</el-col>
+          <el-col :span="20" :offset="1">{{
+            courseLevelReplace(drawerApprovalDeatail.currentLesson)
+          }}</el-col>
         </el-row>
         <el-row>
           <el-col :span="3">商品信息:</el-col>
@@ -313,19 +327,20 @@
             <span
               v-for="item of drawerApprovalDeatail.productdetails"
               :key="item.id"
-            >{{ `${courseLevelReplace(item.name)}(${item.count})` }}</span>
+              >{{ `${courseLevelReplace(item.name)}(${item.count})` }}</span
+            >
             <span
               v-if="
                 drawerApprovalDeatail.mode === 'SINGLE' &&
-                  (drawerApprovalDeatail.productInfo.includes('体验') ||
-                    drawerApprovalDeatail.productInfo.includes('系统'))
+                (drawerApprovalDeatail.productInfo.includes('体验') ||
+                  drawerApprovalDeatail.productInfo.includes('系统'))
               "
             >
               【
               {{
-              drawerApprovalDeatail.productInfo.includes('体验')
-              ? '体验课'
-              : '系统课'
+                drawerApprovalDeatail.productInfo.includes('体验')
+                  ? '体验课'
+                  : '系统课'
               }}
               {{ courseLevelReplace(drawerApprovalDeatail.sup) }}
               {{ drawerApprovalDeatail.level }}
@@ -334,26 +349,25 @@
             <mark
               v-if="
                 drawerApprovalDeatail.productdetails &&
-                  drawerApprovalDeatail.productdetails.length
+                drawerApprovalDeatail.productdetails.length
               "
               @click="dialogFormVisibleCount = true"
-            >修改数量</mark>
+              >修改数量</mark
+            >
           </el-col>
         </el-row>
         <el-row v-show="+drawerApprovalDeatail.stage !== 0">
           <el-col :span="3">开课期数:</el-col>
           <el-col :span="20" :offset="1">
-            {{
-            drawerApprovalDeatail.periodName
-            }}
+            {{ drawerApprovalDeatail.periodName }}
           </el-col>
         </el-row>
         <el-row
           v-if="
             isStaffId &&
-              drawerApprovalDeatail.mode === 'DEFAULT' &&
-              (drawerApprovalDeatail.type === 'EXPERIENCE_MATERIALS' ||
-                drawerApprovalDeatail.type === 'SYSTEM_MATERIALS')
+            drawerApprovalDeatail.mode === 'DEFAULT' &&
+            (drawerApprovalDeatail.type === 'EXPERIENCE_MATERIALS' ||
+              drawerApprovalDeatail.type === 'SYSTEM_MATERIALS')
           "
         >
           <el-col :span="3">版本信息:</el-col>
@@ -363,25 +377,26 @@
         </el-row>
         <el-row>
           <el-col :span="3">补发原因:</el-col>
-          <el-col :span="20" :offset="1">{{ reasonList[drawerApprovalDeatail.reason] }}</el-col>
+          <el-col :span="20" :offset="1">{{
+            reasonList[drawerApprovalDeatail.reason]
+          }}</el-col>
         </el-row>
         <el-row>
           <el-col :span="3">发起时间:</el-col>
-          <el-col :span="20" :offset="1">{{ drawerApprovalDeatail.ctimeFormdate }}</el-col>
+          <el-col :span="20" :offset="1">{{
+            drawerApprovalDeatail.ctimeFormdate
+          }}</el-col>
         </el-row>
         <el-row>
           <el-col :span="3">状态:</el-col>
-          <el-col
-            :span="20"
-            :offset="1"
-          >{{ drawerApprovalDeatail.status == 'PENDING' ? '待审批' : '-' }}</el-col>
+          <el-col :span="20" :offset="1">{{
+            drawerApprovalDeatail.status == 'PENDING' ? '待审批' : '-'
+          }}</el-col>
         </el-row>
         <el-row>
           <el-col :span="3">补货说明:</el-col>
           <el-col :span="18" :offset="1">
-            {{
-            drawerApprovalDeatail.reissueMsg
-            }}
+            {{ drawerApprovalDeatail.reissueMsg }}
           </el-col>
         </el-row>
         <el-row v-if="drawerApprovalDeatail.attsUrl.indexOf('mp4') == -1">
@@ -391,7 +406,7 @@
               <span
                 v-if="
                   drawerApprovalDeatail.attsUrl &&
-                    drawerApprovalDeatail.attsUrl.split(',').length
+                  drawerApprovalDeatail.attsUrl.split(',').length
                 "
               >
                 <el-image
@@ -399,7 +414,7 @@
                     ','
                   )"
                   :key="index"
-                  style="width: 120px; height: 120px;padding:3px"
+                  style="width: 120px; height: 120px; padding: 3px"
                   :src="item"
                   fit="contain"
                   :preview-src-list="[item]"
@@ -421,7 +436,9 @@
         </el-row>
         <el-row class="BOTTOM" v-if="isStaffId">
           <el-col :span="20" :offset="1">
-            <el-button type="button" @click="dialogFormVisible_checkbox = true">拒 绝</el-button>
+            <el-button type="button" @click="dialogFormVisible_checkbox = true"
+              >拒 绝</el-button
+            >
             <el-button type="button" @click="ensureReplenish">同 意</el-button>
           </el-col>
         </el-row>
@@ -435,17 +452,13 @@
           </el-col>
           <el-col :span="5">申请人:</el-col>
           <el-col :span="18" :offset="1">
-            {{
-            drawerApprovalDeatail.applyUserName
-            }}
+            {{ drawerApprovalDeatail.applyUserName }}
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="5">申请部门:</el-col>
           <el-col :span="18" :offset="1">
-            {{
-            drawerApprovalDeatail.applyUserDeapartmentName
-            }}
+            {{ drawerApprovalDeatail.applyUserDeapartmentName }}
           </el-col>
         </el-row>
         <el-row>
@@ -455,26 +468,23 @@
               type="primary"
               :href="'/music_app/#/details/' + drawerApprovalDeatail.userId"
               target="_blank"
-            >{{ drawerApprovalDeatail.customerPhone }}</el-link>
+              >{{ drawerApprovalDeatail.customerPhone }}</el-link
+            >
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="5">订单号:</el-col>
           <el-col :span="18" :offset="1">
-            {{ drawerApprovalDeatail.outTradeNo
-            }}
-            <span
-              style="color:red"
-              v-if="drawerApprovalDeatail.isImport"
-            >(此为第三方导入订单)</span>
+            {{ drawerApprovalDeatail.outTradeNo }}
+            <span style="color: red" v-if="drawerApprovalDeatail.isImport"
+              >(此为第三方导入订单)</span
+            >
           </el-col>
         </el-row>
         <el-row v-if="drawerApprovalDeatail.channelOuterName">
           <el-col :span="5">订单来源:</el-col>
           <el-col :span="18" :offset="1">
-            {{
-            drawerApprovalDeatail.channelOuterName
-            }}
+            {{ drawerApprovalDeatail.channelOuterName }}
           </el-col>
         </el-row>
         <!-- 1-2-2退款特有展示项 -->
@@ -482,80 +492,64 @@
           <el-row>
             <el-col :span="5">业务类型:</el-col>
             <el-col :span="18" :offset="1">
-              {{
-              drawerApprovalDeatail.regType
-              }}
+              {{ drawerApprovalDeatail.regType }}
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="5">商品信息:</el-col>
             <el-col :span="18" :offset="1">
-              {{
-              drawerApprovalDeatail.productMsg
-              }}
+              {{ drawerApprovalDeatail.productMsg }}
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="5">交易金额:</el-col>
             <el-col :span="18" :offset="1">
-              {{
-              drawerApprovalDeatail.orderFee
-              }}
+              {{ drawerApprovalDeatail.orderFee }}
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="5">剩余金额:</el-col>
             <el-col :span="18" :offset="1">
-              {{
-              drawerApprovalDeatail.residueFee
-              }}
+              {{ drawerApprovalDeatail.residueFee }}
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="5">退款规则:</el-col>
             <el-col :span="18" :offset="1">
-              {{
-              drawerApprovalDeatail.refundRule ? '不符合' : '符合'
-              }}
+              {{ drawerApprovalDeatail.refundRule ? '不符合' : '符合' }}
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="5">支付渠道:</el-col>
             <el-col :span="18" :offset="1">
-              {{
-              drawerApprovalDeatail.channel
-              }}
+              {{ drawerApprovalDeatail.channel }}
             </el-col>
           </el-row>
           <el-row v-if="drawerApprovalDeatail.payeeName">
             <el-col :span="5">收款人姓名:</el-col>
             <el-col :span="18" :offset="1">
-              {{
-              drawerApprovalDeatail.payeeName
-              }}
+              {{ drawerApprovalDeatail.payeeName }}
             </el-col>
           </el-row>
           <el-row v-if="drawerApprovalDeatail.payeeAccount">
             <el-col :span="5">支付宝账号:</el-col>
             <el-col :span="18" :offset="1">
-              {{
-              drawerApprovalDeatail.payeeAccount
-              }}
+              {{ drawerApprovalDeatail.payeeAccount }}
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="5">退款类型:</el-col>
             <el-col :span="18" :offset="1">
               {{
-              {
-              0: '优惠券退款',
-              1: '课程退款',
-              2: '降半年包',
-              3: '补偿',
-              4: '降1年包',
-              5: '降1年半包',
-              6: '系统课预付款优惠券退款',
-              }[drawerApprovalDeatail.refundType]
+                {
+                  0: '优惠券退款',
+                  1: '课程退款',
+                  2: '降半年包',
+                  3: '补偿',
+                  4: '降1年包',
+                  5: '降1年半包',
+                  6: '系统课预付款优惠券退款',
+                }[drawerApprovalDeatail.refundType]
               }}
             </el-col>
           </el-row>
@@ -563,13 +557,18 @@
             <el-col :span="5">已上课周期:</el-col>
             <el-col :span="18" :offset="1">
               {{
-              `
-              ${Math.floor(
-              drawerApprovalDeatail.periodAlready / 4
-              )}月${drawerApprovalDeatail.periodAlready % 4}周
+                `
+              ${Math.floor(drawerApprovalDeatail.periodAlready / 4)}月${
+                  drawerApprovalDeatail.periodAlready % 4
+                }周
               `
               }}
             </el-col>
+          </el-row>
+
+          <el-row>
+            <el-col :span="5">关联订单:</el-col>
+            <el-col :span="18" :offset="1">{{drawerApprovalDeatail.associatedOrderOutTradeNo && drawerApprovalDeatail.associatedOrderOutTradeNo!=0?`${drawerApprovalDeatail.associatedPackagesName},金额${drawerApprovalDeatail.associatedOrderAmout},订单号${drawerApprovalDeatail.associatedOrderOutTradeNo}`:'无关联'}}</el-col>
           </el-row>
           <el-row>
             <el-col :span="5">关单赠品:</el-col>
@@ -581,7 +580,8 @@
                     drawerApprovalDeatail.productList.length
                   )
                 "
-              >不扣除赠品费用</span>
+                >不扣除赠品费用</span
+              >
               <el-table
                 ref="multipleTable"
                 :data="drawerApprovalDeatail.productList"
@@ -590,48 +590,53 @@
                 style="width: 50%"
                 v-if="
                   drawerApprovalDeatail.productList &&
-                    drawerApprovalDeatail.productList.length
+                  drawerApprovalDeatail.productList.length
                 "
               >
-                <el-table-column label="赠品信息" prop="name" min-width="120" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="price" label="赠品价格" min-width="120"></el-table-column>
+                <el-table-column
+                  label="赠品信息"
+                  prop="name"
+                  min-width="120"
+                  show-overflow-tooltip
+                ></el-table-column>
+                <el-table-column
+                  prop="price"
+                  label="赠品价格"
+                  min-width="120"
+                ></el-table-column>
               </el-table>
             </el-col>
           </el-row>
           <el-row
             v-if="
               drawerApprovalDeatail.deductMonth === 1 ||
-                drawerApprovalDeatail.deductMonth === 0
+              drawerApprovalDeatail.deductMonth === 0
             "
           >
             <el-col :span="5">次月课程:</el-col>
             <el-col :span="18" :offset="1">
-              {{
-              drawerApprovalDeatail.deductMonth === 1 ? '保留' : '不保留'
-              }}
+              {{ drawerApprovalDeatail.deductMonth === 1 ? '保留' : '不保留' }}
             </el-col>
           </el-row>
           <el-row
             v-if="
               drawerApprovalDeatail.deductMaterial === 1 ||
-                drawerApprovalDeatail.deductMaterial === 0
+              drawerApprovalDeatail.deductMaterial === 0
             "
           >
             <el-col :span="5">随材盒子:</el-col>
             <el-col :span="18" :offset="1">
               {{
-              drawerApprovalDeatail.deductMaterial === 1
-              ? '扣除随材盒子费用'
-              : '不扣除随材盒子费用'
+                drawerApprovalDeatail.deductMaterial === 1
+                  ? '扣除随材盒子费用'
+                  : '不扣除随材盒子费用'
               }}
             </el-col>
           </el-row>
           <el-row :class="$style.align_items">
             <el-col :span="5">退款金额:</el-col>
             <el-col :span="4" :offset="1">
-              {{
-              drawerApprovalDeatail.refundFee
-              }}
+              {{ drawerApprovalDeatail.refundFee }}
             </el-col>
             <el-col v-if="isStaffId" :span="13" :offset="1">
               <mark @click="dialogFormVisible = true">修改金额</mark>
@@ -640,17 +645,13 @@
           <el-row>
             <el-col :span="5">退款原因:</el-col>
             <el-col :span="18" :offset="1">
-              {{
-              drawerApprovalDeatail.refundReason
-              }}
+              {{ drawerApprovalDeatail.refundReason }}
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="5">退款说明:</el-col>
             <el-col :span="18" :offset="1">
-              {{
-              drawerApprovalDeatail.refundMsg
-              }}
+              {{ drawerApprovalDeatail.refundMsg }}
             </el-col>
           </el-row>
           <el-row>
@@ -672,7 +673,7 @@
             <el-col :offset="1" :span="23">
               <h3>审批节点</h3>
             </el-col>
-            <el-col :offset="1" :span="23" style="margin-bottom:10px">
+            <el-col :offset="1" :span="23" style="margin-bottom: 10px">
               <mark>当前类别(可更改):</mark>
               <el-select
                 :style="{ 'margin-left': '10px', width: '140px' }"
@@ -687,7 +688,7 @@
                     物流退回中: 'EXPRESS_NOT_RETURN',
                     未联系上家长: 'CANT_CONTACT_PARENT',
                     挽单试听1V1: 'WD_TRIAL_1V1',
-                    挽单试听小班课: 'WD_TRIAL_SMALL'
+                    挽单试听小班课: 'WD_TRIAL_SMALL',
                   }"
                   :key="value"
                   :label="key"
@@ -700,14 +701,28 @@
                 :data="tableDataNode"
                 :header-cell-style="{
                   background: 'rgba(31,116,249,.7)',
-                  color: '#fff'
+                  color: '#fff',
                 }"
               >
-                <el-table-column prop="approvalName" label="发起人/审核人" align="center"></el-table-column>
-                <el-table-column prop="statusStr" label="审批状态" align="center"></el-table-column>
-                <el-table-column prop="approvalRemark" label="审批意见" align="center"></el-table-column>
+                <el-table-column
+                  prop="approvalName"
+                  label="发起人/审核人"
+                  align="center"
+                ></el-table-column>
+                <el-table-column
+                  prop="statusStr"
+                  label="审批状态"
+                  align="center"
+                ></el-table-column>
+                <el-table-column
+                  prop="approvalRemark"
+                  label="审批意见"
+                  align="center"
+                ></el-table-column>
                 <el-table-column label="操作时间" align="center">
-                  <template slot-scope="scope">{{ formatDate(scope.row.utime) }}</template>
+                  <template slot-scope="scope">{{
+                    formatDate(scope.row.utime)
+                  }}</template>
                 </el-table-column>
               </el-table>
             </el-col>
@@ -718,33 +733,25 @@
           <el-row>
             <el-col :span="5">购买课程:</el-col>
             <el-col :span="18" :offset="1">
-              {{
-              drawerApprovalDeatail.productMsg
-              }}
+              {{ drawerApprovalDeatail.productMsg }}
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="5">实付金额:</el-col>
             <el-col :span="18" :offset="1">
-              {{
-              drawerApprovalDeatail.orderFee
-              }}
+              {{ drawerApprovalDeatail.orderFee }}
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="5">购买渠道:</el-col>
             <el-col :span="18" :offset="1">
-              {{
-              drawerApprovalDeatail.channelName
-              }}
+              {{ drawerApprovalDeatail.channelName }}
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="5">购课时间:</el-col>
             <el-col :span="18" :offset="1">
-              {{
-              drawerApprovalDeatail.orderTime
-              }}
+              {{ drawerApprovalDeatail.orderTime }}
             </el-col>
           </el-row>
           <el-row>
@@ -757,16 +764,15 @@
                 target="_blank"
               >
                 {{
-                (JSON.parse(drawerApprovalDeatail.sendInfo).mobile || '-') +
-                '*' +
-                (JSON.parse(drawerApprovalDeatail.sendInfo).teamName ||
-                '-') +
-                '*' +
-                (JSON.parse(drawerApprovalDeatail.sendInfo)
-                .departmentName || '-') +
-                '*' +
-                (JSON.parse(drawerApprovalDeatail.sendInfo)
-                .teacherNickname || '-')
+                  (JSON.parse(drawerApprovalDeatail.sendInfo).mobile || '-') +
+                  '*' +
+                  (JSON.parse(drawerApprovalDeatail.sendInfo).teamName || '-') +
+                  '*' +
+                  (JSON.parse(drawerApprovalDeatail.sendInfo).departmentName ||
+                    '-') +
+                  '*' +
+                  (JSON.parse(drawerApprovalDeatail.sendInfo).teacherNickname ||
+                    '-')
                 }}
               </el-link>
             </el-col>
@@ -801,13 +807,23 @@
               <a
                 :href="'/music_app/#/details/' + drawerApprovalDeatail.userId"
                 target="_blank"
-                style="margin-right:5px"
+                style="margin-right: 5px"
               >
                 <el-button type="button">查看挽单记录</el-button>
               </a>
-              <el-button type="button" @click="$refs.wandan.dialogFormVisible = true">新建挽单记录</el-button>
-              <el-button type="button" @click="dialogFormVisible_checkbox = true">拒 绝</el-button>
-              <el-button type="button" @click="ensureReplenish">同 意</el-button>
+              <el-button
+                type="button"
+                @click="$refs.wandan.dialogFormVisible = true"
+                >新建挽单记录</el-button
+              >
+              <el-button
+                type="button"
+                @click="dialogFormVisible_checkbox = true"
+                >拒 绝</el-button
+              >
+              <el-button type="button" @click="ensureReplenish"
+                >同 意</el-button
+              >
             </el-col>
           </el-row>
         </div>
@@ -815,13 +831,19 @@
         <div
           v-if="
             currentType === 'UNCREDITED' &&
-              (roleIdList.indexOf(resetParams.staffId)>=0)
+            roleIdList.indexOf(resetParams.staffId) >= 0
           "
         >
           <el-row class="BOTTOM">
             <el-col :span="20" :offset="1">
-              <el-button type="button" @click="dialogFormVisible_checkbox = true">拒 绝</el-button>
-              <el-button type="primary" @click="ensureReplenish">同 意</el-button>
+              <el-button
+                type="button"
+                @click="dialogFormVisible_checkbox = true"
+                >拒 绝</el-button
+              >
+              <el-button type="primary" @click="ensureReplenish"
+                >同 意</el-button
+              >
             </el-col>
           </el-row>
         </div>
@@ -865,24 +887,24 @@
           : ''
       "
       @close="
-            adjustDrawerData.checkSuggestion = ''
-            adjustResultDialogShow = false
-            adjustDialogErrShow = false
-          "
+        adjustDrawerData.checkSuggestion = ''
+        adjustResultDialogShow = false
+        adjustDialogErrShow = false
+      "
       :visible.sync="adjustResultDialogShow"
     >
       <p class="adjust-dialog-p">
         请确认是否{{
-        adjustDialogType === 'reject'
-        ? '拒绝'
-        : adjustDialogType === 'pass'
-        ? '同意'
-        : ''
+          adjustDialogType === 'reject'
+            ? '拒绝'
+            : adjustDialogType === 'pass'
+            ? '同意'
+            : ''
         }}此条申请
       </p>
-      <p style="font-size: 14px;">
+      <p style="font-size: 14px">
         备注
-        <span style="color:red;font-size: 12px;">必填</span>
+        <span style="color: red; font-size: 12px">必填</span>
       </p>
       <el-input
         class="adjust-dialog-input"
@@ -894,7 +916,9 @@
         show-word-limit
         @input="adjustDialogErrShow = false"
       ></el-input>
-      <div v-show="adjustDialogErrShow" class="adjust-dialog-err-p">请输入审批意见</div>
+      <div v-show="adjustDialogErrShow" class="adjust-dialog-err-p">
+        请输入审批意见
+      </div>
       <div class="adjust-dialog-button-box">
         <el-button
           @click="
@@ -902,12 +926,20 @@
             adjustResultDialogShow = false
             adjustDialogErrShow = false
           "
-        >取消</el-button>
-        <el-button type="primary" @click="adjustResultDialogConfirm">确定</el-button>
+          >取消</el-button
+        >
+        <el-button type="primary" @click="adjustResultDialogConfirm"
+          >确定</el-button
+        >
       </div>
     </el-dialog>
     <!-- 数据table里首个展示的三个点用来撤销自己的申请-弹窗 -->
-    <el-dialog title="撤销申请" :visible.sync="endback" width="30%" :before-close="closeEndBack">
+    <el-dialog
+      title="撤销申请"
+      :visible.sync="endback"
+      width="30%"
+      :before-close="closeEndBack"
+    >
       <span>你确定要撤销申请嘛！</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="endback = false">取 消</el-button>
@@ -933,8 +965,8 @@
         <el-form-item
           v-if="
             !drawerApprovalDeatail.addressId &&
-              currentType !== 'UNCREDITED' &&
-              currentType !== 'PROMOTIONS'
+            currentType !== 'UNCREDITED' &&
+            currentType !== 'PROMOTIONS'
           "
           label="恢复学生放课与随材物流"
           prop="isRecover"
@@ -961,10 +993,18 @@
       :destroy-on-close="true"
     >
       <el-table :data="giftList" width="100%" align="center">
-        <el-table-column prop="name" label="商品名称" align="center"></el-table-column>
+        <el-table-column
+          prop="name"
+          label="商品名称"
+          align="center"
+        ></el-table-column>
         <el-table-column align="center" label="数量">
           <template slot-scope="scope">
-            <el-input-number :min="1" size="small" v-model="scope.row.count"></el-input-number>
+            <el-input-number
+              :min="1"
+              size="small"
+              v-model="scope.row.count"
+            ></el-input-number>
           </template>
         </el-table-column>
       </el-table>
@@ -980,7 +1020,12 @@
       :destroy-on-close="true"
       :before-close="destroylk"
     >
-      <el-form :model="form" label-position="top" :rules="rules" ref="refundForm">
+      <el-form
+        :model="form"
+        label-position="top"
+        :rules="rules"
+        ref="refundForm"
+      >
         <el-form-item label="键入修改金额" prop="cash">
           <el-input
             type="number"
@@ -990,7 +1035,12 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="特殊说明" prop="explain">
-          <el-input type="textarea" :rows="4" placeholder="请输入修改金额的理由" v-model="form.explain"></el-input>
+          <el-input
+            type="textarea"
+            :rows="4"
+            placeholder="请输入修改金额的理由"
+            v-model="form.explain"
+          ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer">
@@ -1037,12 +1087,13 @@ export default {
   computed: {
     formatDate: () => formatDate,
     positionIdlk() {
-      const departmentList = JSON.parse(localStorage.getItem('staff')).departmentList;
-      if(departmentList && departmentList.length > 0) {
-        return departmentList [0];
+      const departmentList = JSON.parse(localStorage.getItem('staff'))
+        .departmentList
+      if (departmentList && departmentList.length > 0) {
+        return departmentList[0]
       }
       return ''
-    }
+    },
   },
   props: ['typeTime', 'activeName'],
   watch: {
@@ -1050,7 +1101,7 @@ export default {
       if (val === 'second') {
         this.checkPending(this.params)
       }
-    }
+    },
   },
   components: {
     trialChangeLevel,
@@ -1066,7 +1117,7 @@ export default {
     adjustDrawer,
     courseTeam,
     ApprovalGiftDetail,
-    addNew
+    addNew,
   },
   data() {
     var validateName = (rule, value, callback) => {
@@ -1082,7 +1133,7 @@ export default {
       }
     }
     return {
-      roleIdList:[],
+      roleIdList: [],
       tableHeight: 0,
       forSonDataApprovalPersonId: '',
       forSonDataApprovalId: '',
@@ -1095,21 +1146,21 @@ export default {
       rules: {
         cash: [{ required: true, validator: validateName, trigger: 'blur' }],
         explain: [
-          { required: true, message: '不能闷声改金额', trigger: 'change' }
-        ]
+          { required: true, message: '不能闷声改金额', trigger: 'change' },
+        ],
       },
       form: {
         cash: '',
-        explain: ''
+        explain: '',
       },
       userId_wandan: '', // 挽救单子
       rules_checkbox: {
         reason: [{ required: true, message: '请填写原因', trigger: 'blur' }],
-        isRecover: [{ required: true, message: '是否恢复', trigger: 'change' }]
+        isRecover: [{ required: true, message: '是否恢复', trigger: 'change' }],
       },
       form_checkbox: {
         reason: '',
-        isRecover: true
+        isRecover: true,
       },
       SUP_LEVEL_ALL,
       courseLevelReplace,
@@ -1141,7 +1192,7 @@ export default {
       adjustDrawerData: {
         width: '130px',
         checkSuggestion: '', // 调期调级调班的dialog数据
-        loading: false
+        loading: false,
       },
       adjustResultDialogShow: false, // drawer同意后的弹窗
       adjustDialogType: null, // dialog的类型
@@ -1161,14 +1212,14 @@ export default {
       currentType: '',
       type_lk: '',
       changeVersionList: [],
-      roleId: ''
+      roleId: '',
     }
   },
   created() {
     // 身份类型，4是财务，具体见wiki
-    const roleList = JSON.parse(localStorage.getItem('staff')).roleList;
-    let roleId = roleList ? roleList[0] : '';
-    this.roleId = roleId;
+    const roleList = JSON.parse(localStorage.getItem('staff')).roleList
+    let roleId = roleList ? roleList[0] : ''
+    this.roleId = roleId
     this.getRoleIdList()
   },
   mounted() {
@@ -1189,7 +1240,7 @@ export default {
       departmentIds: '', // 新添部门
       teacherIds: '', // 新添老师
       page: 1,
-      size: 20
+      size: 20,
     }
     this.params.isOperation = this.isStaffId ? this.isStaffId : false
     // lk 为3,4 初始拿数据就得带上_课程类型参数保证看到的搜索条件与结果一致↓↓
@@ -1207,9 +1258,9 @@ export default {
   },
 
   methods: {
-    getRoleIdList(){
-      this.$http.Backend.getStaffIds().then(res=>{
-        this.roleIdList = res.payload.approvalIdSet;
+    getRoleIdList() {
+      this.$http.Backend.getStaffIds().then((res) => {
+        this.roleIdList = res.payload.approvalIdSet
       })
     },
     getSearchData1(val) {
@@ -1236,7 +1287,7 @@ export default {
         Object.assign(this.params, {
           managementType: val.managementType,
           period: val.period,
-          page: 1
+          page: 1,
         })
         this.checkPending(this.params)
       } else {
@@ -1273,12 +1324,12 @@ export default {
     async confirm$count() {
       const { code } = await this.$http.Backend.changeCount({
         flowApprovalId: this.drawerApprovalDeatail.flowApprovalId,
-        productdetails: this.giftList
+        productdetails: this.giftList,
       })
         .catch((err) => {
           this.$message({
             message: '商品数量修改失败',
-            type: 'error'
+            type: 'error',
           })
           console.info(err)
         })
@@ -1293,13 +1344,13 @@ export default {
       if (code === 0) {
         this.$message({
           message: '商品数量修改成功',
-          type: 'success'
+          type: 'success',
         })
         this.dialogFormVisibleCount = false
       } else {
         this.$message({
           message: '商品数量修改失败',
-          type: 'warning'
+          type: 'warning',
         })
       }
     },
@@ -1310,25 +1361,25 @@ export default {
           const { code } = await this.$http.Backend.changeCash({
             flowApprovalId: this.drawerApprovalDeatail.flowApprovalId,
             refundFee: this.form.cash,
-            refundMsg: this.form.explain
+            refundMsg: this.form.explain,
           }).catch((err) => {
             this.$message({
               message: '修改金额失败',
-              type: 'error'
+              type: 'error',
             })
             console.info(err)
           })
           if (code === 0) {
             this.$message({
               message: '修改金额成功',
-              type: 'success'
+              type: 'success',
             })
             this.drawerApprovalDeatail.refundFee = this.form.cash // 退款金额更新
             this.dialogFormVisible = false
           } else {
             this.$message({
               message: '修改金额失败',
-              type: 'warning'
+              type: 'warning',
             })
           }
         } else {
@@ -1349,7 +1400,7 @@ export default {
             isConfirm: false,
             version: this.version,
             staffId: this.staffId,
-            staffName: this.staffName
+            staffName: this.staffName,
           }
           if (this.drawerApprovalDeatail.addressId) {
             delete params.isRecover
@@ -1363,7 +1414,7 @@ export default {
               this.handleCloseDraw()
               this.$message({
                 message: '拒绝审核通过',
-                type: 'success'
+                type: 'success',
               })
             }
           })
@@ -1474,7 +1525,7 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         inputPattern: /\S[\u4E00-\uFA29]|[\uE7C7-\uE7F3]|[a-zA-Z0-9_，。-]/,
-        inputErrorMessage: '内容不能为空,且只能输入中文、英文、数字、"，""。"'
+        inputErrorMessage: '内容不能为空,且只能输入中文、英文、数字、"，""。"',
       })
         .then(({ value }) => {
           const params = {
@@ -1483,7 +1534,7 @@ export default {
             isConfirm: false,
             version: this.version,
             staffId: this.staffId,
-            staffName: this.staffName
+            staffName: this.staffName,
           }
           this.$http.Backend.isAggrePass(params).then((res) => {
             this.checkPending(this.params)
@@ -1491,7 +1542,7 @@ export default {
             this.handleCloseDraw()
             this.$message({
               message: '拒绝审核通过',
-              type: 'success'
+              type: 'success',
             })
 
             this.$emit('result', 'third')
@@ -1525,7 +1576,8 @@ export default {
         cancelButtonText: '取消',
         inputPattern: /^([\u4E00-\uFA29]|[\，\。\,\.]|[\uE7C7-\uE7F3]|[a-zA-Z0-9_-]){1,225}$/,
         inputValue: '同意',
-        inputErrorMessage: "仅支持长度小于225的中文/英文/数字/'-'/'_'/','/'.'/'，'/'。'"
+        inputErrorMessage:
+          "仅支持长度小于225的中文/英文/数字/'-'/'_'/','/'.'/'，'/'。'",
       })
         .then(({ value }) => {
           const params = {
@@ -1534,7 +1586,7 @@ export default {
             isConfirm: true,
             version: this.version,
             staffId: this.staffId,
-            staffName: this.staffName
+            staffName: this.staffName,
           }
           this.$http.Backend.isAggrePass(params)
             .then((res) => {
@@ -1544,7 +1596,7 @@ export default {
                 this.$root.$emit('lk', '')
                 this.$message({
                   message: '同意审核通过',
-                  type: 'success'
+                  type: 'success',
                 })
               } else {
                 this.$root.$emit('lk', '')
@@ -1585,12 +1637,12 @@ export default {
       if (val) {
         Object.assign(this.params, {
           startTime: val.ctime.gte,
-          endTime: val.ctime.lte
+          endTime: val.ctime.lte,
         })
       } else {
         Object.assign(this.params, {
           startTime: '',
-          endTime: ''
+          endTime: '',
         })
       }
       this.checkPending(this.params)
@@ -1660,7 +1712,6 @@ export default {
       }
       // 无归属订单详情
       if (type === 'UNCREDITED') {
-
         this.$http.Backend.getNoAttributionDetail(id).then((res) => {
           if (res && res.payload) {
             res.payload.orderTime = timestamp(res.payload.orderTime, 2)
@@ -1670,7 +1721,6 @@ export default {
             this.drawerApprovalDeatail.chat_url = res.payload.chatUrl[0]
             this.drawerApprovalDeatail.pay_url = res.payload.paymentUrl[0]
             this.drawerApproval = true
-
           }
         })
       }
@@ -1688,7 +1738,7 @@ export default {
       const ADJUST_TYPE = [
         'ADJUSTMENT_CLASS',
         'ADJUSTMENT_STAGE',
-        'ADJUSTMENT_SUP'
+        'ADJUSTMENT_SUP',
       ]
       if (ADJUST_TYPE.includes(type)) {
         this.openAdjustDetail(type, id)
@@ -1728,26 +1778,26 @@ export default {
               content: [
                 {
                   label: '申请人',
-                  value: payData.applyUserName
+                  value: payData.applyUserName,
                 },
                 {
                   label: '申请人部门',
-                  value: payData.applyUserDeapartmentName
+                  value: payData.applyUserDeapartmentName,
                 },
                 {
                   label: '用户电话',
                   value: payData.userTel,
-                  valueId: payData.userId
+                  valueId: payData.userId,
                 },
                 {
                   label: '订单号',
-                  value: payData.outTradeNo
+                  value: payData.outTradeNo,
                 },
                 {
                   label: '审批类型',
-                  value: typeText
-                }
-              ]
+                  value: typeText,
+                },
+              ],
             })
             // 调期
             if (type === 'ADJUSTMENT_STAGE') {
@@ -1755,12 +1805,12 @@ export default {
                 [
                   {
                     label: '当前开课时间',
-                    value: payData.currentStartClassDate
+                    value: payData.currentStartClassDate,
                   },
                   {
                     label: '申请开课时间',
-                    value: payData.targetStage
-                  }
+                    value: payData.targetStage,
+                  },
                 ]
               )
             }
@@ -1770,12 +1820,13 @@ export default {
                 [
                   {
                     label: '已上课周期',
-                    value: this.courseLevelReplace(payData.currentPeriod) || '-'
+                    value:
+                      this.courseLevelReplace(payData.currentPeriod) || '-',
                   },
                   {
                     label: '调级级别',
-                    value: SUP_LEVEL_ALL[payData.targetSup] || '-'
-                  }
+                    value: SUP_LEVEL_ALL[payData.targetSup] || '-',
+                  },
                 ]
               )
             }
@@ -1785,8 +1836,8 @@ export default {
                 [
                   {
                     label: '当前班级',
-                    value: payData.currentClassName
-                  }
+                    value: payData.currentClassName,
+                  },
                 ]
               )
             }
@@ -1795,20 +1846,20 @@ export default {
               [
                 {
                   label: '选择班级',
-                  value: courseLevelReplace(payData.targetClassName)
+                  value: courseLevelReplace(payData.targetClassName),
                 },
                 {
                   label: '调级理由',
-                  value: payData.adjustReason
+                  value: payData.adjustReason,
                 },
                 {
                   label: '发起时间',
-                  value: timestamp(payData.applyTime, 2)
+                  value: timestamp(payData.applyTime, 2),
                 },
                 {
                   label: '状态',
-                  value: '待审批'
-                }
+                  value: '待审批',
+                },
               ]
             )
           }
@@ -1825,7 +1876,7 @@ export default {
         '15027913263',
         '18210545323',
         '18801298408',
-        '15754365939'
+        '15754365939',
       ]
       this.adjustDrawerData.loading = true
       this.$http.Approval.getPackageInfo(id)
@@ -1844,39 +1895,39 @@ export default {
               content: [
                 {
                   label: '申请人',
-                  value: payData.applyName
+                  value: payData.applyName,
                 },
                 {
                   label: '申请人部门',
-                  value: payData.applyDepartment
+                  value: payData.applyDepartment,
                 },
                 {
                   label: '用户电话',
                   value: payData.userTel,
-                  valueId: payData.userId
+                  valueId: payData.userId,
                 },
                 {
                   label: '订单号',
-                  value: payData.outTradeNo
+                  value: payData.outTradeNo,
                 },
                 {
                   label: '当前物流状态',
-                  value: payData.currentExpress
+                  value: payData.currentExpress,
                 },
                 {
                   label: '打包数量',
-                  value: payData.packageCount
+                  value: payData.packageCount,
                 },
                 {
                   label: '商品信息',
                   type: 'arrayInfo',
-                  value: JSON.parse(payData.packageProduct)
+                  value: JSON.parse(payData.packageProduct),
                 },
                 {
                   label: '申请理由',
-                  value: payData.applyReason
-                }
-              ]
+                  value: payData.applyReason,
+                },
+              ],
             })
             // 打开随材打包详情
             this.$refs.adjustDrawerCom.handleDrawerOpen()
@@ -1909,7 +1960,7 @@ export default {
         this.$confirm('确认选中项全部审批吗?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning'
+          type: 'warning',
         })
           .then(() => {
             this.refundFlows()
@@ -1921,7 +1972,7 @@ export default {
         flowApprovalIdList: this.flowApprovalIdList,
         staffId: this.staffId,
         staffName: this.staffName,
-        approvalRemark: '批量审核通过'
+        approvalRemark: '批量审核通过',
       }
       this.$http.Backend.batchApproval(params)
         .then((res) => {
@@ -1929,7 +1980,7 @@ export default {
           if (res.code === 0) {
             this.$message({
               message: '批量审批通过',
-              type: 'success'
+              type: 'success',
             })
             this.checkPending(this.params)
           }
@@ -1947,7 +1998,7 @@ export default {
         staffName: this.staffName,
         approvalRemark: '批量审核通过',
         isRecover: 0,
-        isConfirm: true
+        isConfirm: true,
       }
       this.vLoading = true
       const resData = await this.refundFlowsRequest(params)
@@ -1958,13 +2009,13 @@ export default {
       if (resData === '') {
         this.$message({
           message: '批量审批通过',
-          type: 'success'
+          type: 'success',
         })
       } else {
         this.$message({
           message: resData,
           type: 'error',
-          duration: 5000
+          duration: 5000,
         })
       }
       this.checkPending(this.params)
@@ -2086,7 +2137,7 @@ export default {
         flowApprovalId: this.adjustDrawerData.flowApprovalId - 0,
         isConfirm: isConfirm,
         staffId: this.staffId,
-        staffName: this.staffName
+        staffName: this.staffName,
       }
       // 特殊字符
       const reg = new RegExp('[&%#$*^<>]')
@@ -2111,7 +2162,7 @@ export default {
     diologRefundTagChange(val) {
       this.$http.Approval.diologRefundTagChange({
         id: this.diologRefundTagId,
-        tag: this.diologRefundTag
+        tag: this.diologRefundTag,
       }).then(({ code }) => {
         !code && this.$message.success('标签类型修改成功')
       })
@@ -2132,7 +2183,7 @@ export default {
       }
       const params = {
         flowApprovalId: this.adjustDrawerData.flowApprovalId - 0,
-        productInfoUpdates: this.changeVersionList
+        productInfoUpdates: this.changeVersionList,
       }
       return this.$http.Approval.packageBoxProduct(params)
         .then((res) => {
@@ -2144,8 +2195,8 @@ export default {
         .catch(() => {
           return false
         })
-    }
-  }
+    },
+  },
 }
 </script>
 

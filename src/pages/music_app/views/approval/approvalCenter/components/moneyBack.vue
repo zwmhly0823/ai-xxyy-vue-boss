@@ -4,7 +4,7 @@
  * @Author: huzhifu
  * @Date: 2020-05-07 10:50:45
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-06 16:57:14
+ * @LastEditTime: 2021-04-07 10:56:05
  -->
 <template>
   <div class="adjustModule">
@@ -154,7 +154,7 @@
             v-if="relationList[0] && relationList[0].associatedOrderOutTradeNo"
           >
             <span
-              >预付款优惠券，金额{{
+              >{{relationList[0].associatedPackagesName}}，金额{{
                 relationList[0].associatedOrderAmout
               }}，订单号{{ relationList[0].associatedOrderOutTradeNo }}</span
             >
