@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-08 20:10:59
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-08 16:38:05
  -->
 <template>
   <div id="channel-box" class="channel-box">
@@ -435,10 +435,11 @@ export default {
         endCtime: this.endTime
       }
       this.$http.Operating.countsByTrialChannel(params).then((res) => {
-        const _data = res.content
+        const _data =res.data && res.data.ChannelManagementStatisticsPage.content
         if (!_data) return
-        this.totalNumber = res.number
-        this.totalElements = res.totalElements
+        let data = res.data.ChannelManagementStatisticsPage
+        this.totalNumber = data.number
+        this.totalElements = data.totalElements
         _data.forEach((res) => {
           // 渠道地址
           var qudaourl = new RegExp('[0-9]').test(location.origin.split('/')[2])
@@ -488,9 +489,9 @@ export default {
         })
         this.onGetChannelList(_data)
       })
-      this.$http.Operating.countsByTrialChannelOfTotal(paramsM).then((ele) => {
+      this.$http.Operating.ChannelManagementStatisticsTotal(paramsM).then((ele) => {
         // 模块数据
-        const _datas = ele.payload
+        const _datas =ele.data && ele.data.ChannelManagementStatisticsTotal;
         if (!_datas) return
         // 累计成单金额
         if (_datas.system_user_amounts !== 'null') {
