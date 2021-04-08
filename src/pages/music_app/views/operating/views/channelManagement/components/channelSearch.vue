@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-08 16:38:05
+ * @LastEditTime: 2021-04-08 20:54:20
  -->
 <template>
   <div id="channel-box" class="channel-box">
@@ -38,7 +38,7 @@
           <div class="grid-content bg-purple">
             <p>累计转化率/系统课成单人数</p>
             <span>
-              {{ conversionRate }}
+              {{ isNaN(conversionRate) ? '0' : conversionRate }}
               <em>/</em>
               {{ allSystemUser }}
             </span>
@@ -47,37 +47,45 @@
         <el-col :span="12">
           <div class="grid-content bg-purple">
             <el-row :gutter="20">
-              <el-col :span="6" style="text-align:center;">
+              <el-col :span="6" style="text-align: center">
                 <p class="bg-purple-text">添加微信</p>
                 <span class="bg-purple-num">{{ allWechatAddNums }}</span>
               </el-col>
-              <el-col :span="6" style="text-align:center;">
+              <el-col :span="6" style="text-align: center">
                 <p class="bg-purple-text">未支付</p>
                 <span class="bg-purple-num">{{ unpaid }}</span>
               </el-col>
-              <el-col :span="6" style="text-align:center;">
+              <el-col :span="6" style="text-align: center">
                 <p class="bg-purple-text">参课数</p>
                 <span class="bg-purple-num">{{ allJoinUserNums }}</span>
               </el-col>
-              <el-col :span="6" style="text-align:center;">
+              <el-col :span="6" style="text-align: center">
                 <p class="bg-purple-text">完课数</p>
                 <span class="bg-purple-num">{{ allCompleteUserNums }}</span>
               </el-col>
-              <el-col :span="6" style="text-align:center;">
+              <el-col :span="6" style="text-align: center">
                 <p class="bg-purple-text">体验课成单数</p>
                 <span class="bg-purple-num">{{ allPayUserNums }}</span>
               </el-col>
-              <el-col :span="6" style="text-align:center;">
+              <el-col :span="6" style="text-align: center">
                 <p class="bg-purple-text">线索数</p>
                 <span class="bg-purple-num">{{ allUserNums }}</span>
               </el-col>
-              <el-col :span="6" style="text-align:center;">
+              <el-col :span="6" style="text-align: center">
                 <p class="bg-purple-text">参课率</p>
-                <span class="bg-purple-num">{{ allJoinUserNumsPercent }}</span>
+                <span class="bg-purple-num">{{
+                  isNaN(allJoinUserNumsPercent) ? '0' : allJoinUserNumsPercent
+                }}</span>
               </el-col>
-              <el-col :span="6" style="text-align:center;">
+              <el-col :span="6" style="text-align: center">
                 <p class="bg-purple-text">完课率</p>
-                <span class="bg-purple-num">{{ allCompleteUserNumsPercent }}</span>
+                <span class="bg-purple-num">
+                  {{
+                    isNaN(allCompleteUserNumsPercent)
+                      ? '0'
+                      : allCompleteUserNumsPercent
+                  }}
+                </span>
               </el-col>
             </el-row>
           </div>
@@ -110,8 +118,7 @@
             <el-tooltip placement="top">
               <div slot="content">
                 参课数：此渠道下所有购买体验课的学员且参课的学员
-                <br />参课率：参课数
-                / 已购体验课数
+                <br />参课率：参课数 / 已购体验课数
               </div>
               <span class="bottom-tips">?</span>
             </el-tooltip>
@@ -123,8 +130,7 @@
             <el-tooltip placement="top">
               <div slot="content">
                 完课数：此渠道下已购体验课且完成一次体验课即为完课
-                <br />完课率：完课数
-                / 已购体验课学员数
+                <br />完课率：完课数 / 已购体验课学员数
               </div>
               <span class="bottom-tips">?</span>
             </el-tooltip>
@@ -136,8 +142,7 @@
             <el-tooltip placement="top">
               <div slot="content">
                 成单数：已购体验课且转化系统课数量
-                <br />转化率：当前系统课成单数
-                / 当前体验课成单数
+                <br />转化率：当前系统课成单数 / 当前体验课成单数
               </div>
               <span class="bottom-tips">?</span>
             </el-tooltip>
@@ -147,7 +152,9 @@
           <div>
             <span>成单金额</span>
             <el-tooltip placement="top">
-              <div slot="content">成单金额： 当前渠道购买系统课的订单总金额</div>
+              <div slot="content">
+                成单金额： 当前渠道购买系统课的订单总金额
+              </div>
               <span class="bottom-tips">?</span>
             </el-tooltip>
           </div>
@@ -159,14 +166,16 @@
     </div>
     <div class="channel-box-bottom">
       <template>
-        <el-table :header-cell-style="headerCss" :data="tableData" style="width: 100%;">
+        <el-table
+          :header-cell-style="headerCss"
+          :data="tableData"
+          style="width: 100%"
+        >
           <el-table-column label="渠道分类" width="200" align="center">
             <template slot-scope="scope">
               <span>{{ scope.row.p_channel_class_name || '-' }}</span>
-              <span style="margin-left:10px;">
-                {{
-                scope.row.channel_class_name || '-'
-                }}
+              <span style="margin-left: 10px">
+                {{ scope.row.channel_class_name || '-' }}
               </span>
             </template>
           </el-table-column>
@@ -174,26 +183,37 @@
             <template slot-scope="scope">
               <a
                 v-if="scope.row.channel_inner_name"
-                style="color: #2a75ed;"
+                style="color: #2a75ed"
                 :href="scope.row.channelNameLink"
                 target="_blank"
-              >{{ scope.row.channel_inner_name }}</a>
+                >{{ scope.row.channel_inner_name }}</a
+              >
               <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column prop="pay_channel" label="渠道ID"></el-table-column>
-          <el-table-column prop="trial_user_num" label="体验课成单数"></el-table-column>
-          <el-table-column prop="order_user_no_pay_nums" label="体验课未支付"></el-table-column>
+          <el-table-column
+            prop="trial_user_num"
+            label="体验课成单数"
+          ></el-table-column>
+          <el-table-column
+            prop="order_user_no_pay_nums"
+            label="体验课未支付"
+          ></el-table-column>
           <el-table-column prop="wet_nums" label="添加微信数"></el-table-column>
-          <el-table-column prop="address" width="130px" align="conent" label="参课数/参课率">
+          <el-table-column
+            prop="address"
+            width="130px"
+            align="conent"
+            label="参课数/参课率"
+          >
             <template slot="header">
               <div>
                 <span>参课数/参课率</span>
                 <el-tooltip placement="top">
                   <div slot="content">
                     参课数：此渠道下所有购买体验课的学员且参课的学员
-                    <br />参课率：参课数
-                    / 已购体验课数
+                    <br />参课率：参课数 / 已购体验课数
                   </div>
                   <span class="bottom-tips">?</span>
                 </el-tooltip>
@@ -211,8 +231,7 @@
                 <el-tooltip placement="top">
                   <div slot="content">
                     完课数：此渠道下已购体验课且完成一次体验课即为完课
-                    <br />完课率：完课数
-                    / 已购体验课学员数
+                    <br />完课率：完课数 / 已购体验课学员数
                   </div>
                   <span class="bottom-tips">?</span>
                 </el-tooltip>
@@ -230,8 +249,7 @@
                 <el-tooltip placement="top">
                   <div slot="content">
                     成单数：已购体验课且转化系统课数量
-                    <br />转化率：当前系统课成单数
-                    / 当前体验课成单数
+                    <br />转化率：当前系统课成单数 / 当前体验课成单数
                   </div>
                   <span class="bottom-tips">?</span>
                 </el-tooltip>
@@ -242,12 +260,18 @@
               <div>{{ scope.row.systemOrderNumsPercent }}</div>
             </template>
           </el-table-column>
-          <el-table-column prop="system_user_amounts" width="100" label="成单金额">
+          <el-table-column
+            prop="system_user_amounts"
+            width="100"
+            label="成单金额"
+          >
             <template slot="header">
               <div>
                 <span>成单金额</span>
                 <el-tooltip placement="top">
-                  <div slot="content">成单金额： 当前渠道购买系统课的订单总金额</div>
+                  <div slot="content">
+                    成单金额： 当前渠道购买系统课的订单总金额
+                  </div>
                   <span class="bottom-tips">?</span>
                 </el-tooltip>
               </div>
@@ -305,12 +329,12 @@ export default {
   props: {
     tabIndex: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
   components: {
     MPagination,
-    channelSearch
+    channelSearch,
   },
   data() {
     return {
@@ -363,7 +387,7 @@ export default {
       // 二级渠道emit数据
 
       // 参数渠道id
-      channelValueList: []
+      channelValueList: [],
     }
   },
   watch: {
@@ -379,7 +403,7 @@ export default {
         this.channelSearchValList = ''
         this.channelValueList = []
       }
-    }
+    },
   },
   created() {
     this.getChannelDetailPage()
@@ -390,7 +414,7 @@ export default {
   methods: {
     initScrollTop() {
       this.timer = null
-      this.timer = setTimeout(function() {
+      this.timer = setTimeout(function () {
         if (document.getElementById('channel-box')) {
           window.addEventListener('scroll', this.handleScroll, true)
           clearTimeout(this.timer)
@@ -425,17 +449,18 @@ export default {
         startCtime: this.stateTime,
         endCtime: this.endTime,
         page: this.totalNumber,
-        pageSzie: '60'
+        pageSzie: '60',
       }
       const paramsM = {
         trialChannels: this.channelIds,
         trialChannelClassIds: this.channelSearchValList,
         stage: this.querySearchTrialStage,
         startCtime: this.stateTime,
-        endCtime: this.endTime
+        endCtime: this.endTime,
       }
       this.$http.Operating.countsByTrialChannel(params).then((res) => {
-        const _data =res.data && res.data.ChannelManagementStatisticsPage.content
+        const _data =
+          res.data && res.data.ChannelManagementStatisticsPage.content
         if (!_data) return
         let data = res.data.ChannelManagementStatisticsPage
         this.totalNumber = data.number
@@ -489,79 +514,84 @@ export default {
         })
         this.onGetChannelList(_data)
       })
-      this.$http.Operating.ChannelManagementStatisticsTotal(paramsM).then((ele) => {
-        // 模块数据
-        const _datas =ele.data && ele.data.ChannelManagementStatisticsTotal;
-        if (!_datas) return
-        // 累计成单金额
-        if (_datas.system_user_amounts !== 'null') {
-          const allSystemUserAmountsNums = +_datas.system_user_amounts
-          this.allSystemUserAmounts = `${allSystemUserAmountsNums.toFixed(2)}`
-        } else {
-          this.allSystemUserAmounts = '0'
+      this.$http.Operating.ChannelManagementStatisticsTotal(paramsM).then(
+        (ele) => {
+          // 模块数据
+          const _datas = ele.data && ele.data.ChannelManagementStatisticsTotal
+          if (!_datas) return
+          // 累计成单金额
+          if (_datas.system_user_amounts !== 'null') {
+            const allSystemUserAmountsNums = +_datas.system_user_amounts
+            this.allSystemUserAmounts = `${allSystemUserAmountsNums.toFixed(2)}`
+          } else {
+            this.allSystemUserAmounts = '0'
+          }
+          // 累计转化率
+          if (
+            +_datas.system_user_num === 0 &&
+            _datas.trial_user_num === 'null'
+          ) {
+            this.conversionRate = `0%`
+          } else {
+            const conversionRatePercentNums =
+              (_datas.system_user_num / _datas.trial_user_num) * 100
+            this.conversionRate = `${conversionRatePercentNums.toFixed(2)}%`
+          }
+          // 系统课成单人数
+          this.allSystemUser = _datas.system_user_num
+          // 添加微信
+          if (_datas.wet_nums !== 'null') {
+            this.allWechatAddNums = _datas.wet_nums
+          } else {
+            this.allWechatAddNums = '0'
+          }
+          // 未支付
+          this.unpaid = _datas.order_user_no_pay_nums
+          // 参课数
+          this.allJoinUserNums = _datas.join_user_num
+          // 参课率
+          if (+_datas.join_user_num === 0 && _datas.trial_user_num === 'null') {
+            this.allJoinUserNumsPercent = `0%`
+          } else {
+            const allJoinUserNumsPercentNums =
+              (_datas.join_user_num / _datas.trial_user_num) * 100
+            this.allJoinUserNumsPercent = `${allJoinUserNumsPercentNums.toFixed(
+              2
+            )}%`
+          }
+          // 完课数
+          this.allCompleteUserNums = _datas.complete_user_num
+          // 完课率
+          if (
+            +_datas.complete_user_num === 0 &&
+            _datas.trial_user_num === 'null'
+          ) {
+            this.allCompleteUserNumsPercent = `0%`
+          } else {
+            const allCompleteUserNumsPercentNums =
+              (_datas.complete_user_num / _datas.trial_user_num) * 100
+            this.allCompleteUserNumsPercent = `${allCompleteUserNumsPercentNums.toFixed(
+              2
+            )}%`
+          }
+          // 成单数
+          if (_datas.trial_user_num !== 'null') {
+            this.allPayUserNums = _datas.trial_user_num
+          } else {
+            this.allPayUserNums = '0'
+          }
+          // 线索数
+          if (
+            _datas.trial_user_num !== 'null' &&
+            +_datas.order_user_no_pay_nums !== 0
+          ) {
+            this.allUserNums =
+              +_datas.trial_user_num + +_datas.order_user_no_pay_nums
+          } else {
+            this.allUserNums = '0'
+          }
         }
-        // 累计转化率
-        if (+_datas.system_user_num === 0 && _datas.trial_user_num === 'null') {
-          this.conversionRate = `0%`
-        } else {
-          const conversionRatePercentNums =
-            (_datas.system_user_num / _datas.trial_user_num) * 100
-          this.conversionRate = `${conversionRatePercentNums.toFixed(2)}%`
-        }
-        // 系统课成单人数
-        this.allSystemUser = _datas.system_user_num
-        // 添加微信
-        if (_datas.wet_nums !== 'null') {
-          this.allWechatAddNums = _datas.wet_nums
-        } else {
-          this.allWechatAddNums = '0'
-        }
-        // 未支付
-        this.unpaid = _datas.order_user_no_pay_nums
-        // 参课数
-        this.allJoinUserNums = _datas.join_user_num
-        // 参课率
-        if (+_datas.join_user_num === 0 && _datas.trial_user_num === 'null') {
-          this.allJoinUserNumsPercent = `0%`
-        } else {
-          const allJoinUserNumsPercentNums =
-            (_datas.join_user_num / _datas.trial_user_num) * 100
-          this.allJoinUserNumsPercent = `${allJoinUserNumsPercentNums.toFixed(
-            2
-          )}%`
-        }
-        // 完课数
-        this.allCompleteUserNums = _datas.complete_user_num
-        // 完课率
-        if (
-          +_datas.complete_user_num === 0 &&
-          _datas.trial_user_num === 'null'
-        ) {
-          this.allCompleteUserNumsPercent = `0%`
-        } else {
-          const allCompleteUserNumsPercentNums =
-            (_datas.complete_user_num / _datas.trial_user_num) * 100
-          this.allCompleteUserNumsPercent = `${allCompleteUserNumsPercentNums.toFixed(
-            2
-          )}%`
-        }
-        // 成单数
-        if (_datas.trial_user_num !== 'null') {
-          this.allPayUserNums = _datas.trial_user_num
-        } else {
-          this.allPayUserNums = '0'
-        }
-        // 线索数
-        if (
-          _datas.trial_user_num !== 'null' &&
-          +_datas.order_user_no_pay_nums !== 0
-        ) {
-          this.allUserNums =
-            +_datas.trial_user_num + +_datas.order_user_no_pay_nums
-        } else {
-          this.allUserNums = '0'
-        }
-      })
+      )
 
       //   this.tableData = _data.content
       // })
@@ -578,6 +608,7 @@ export default {
           const __data = ele?.data?.ChannelDetailStatisticsList
           if (!__data) return
           _data.forEach((val) => {
+            val.system_user_amounts = val.system_user_amounts.toFixed(2)
             __data.forEach((item) => {
               if (+item.id === +val.pay_channel) {
                 val.channel_class_id = item.channel_class_id
@@ -638,8 +669,8 @@ export default {
     // 表头回调样式
     headerCss({ row, column, rowIndex, columnIndex }) {
       return 'font-size:12px;color:#666;font-weight:normal;'
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>
