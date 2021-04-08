@@ -371,25 +371,8 @@ export default {
         //   }
         // })
       }
-
-      const topicRelation = await this.$http.Product.topicRelationId(
-        `${JSON.stringify({
-          topic_id: this.topicArr
-        })}`
-      )
-      let relationIds = []
-      if (
-        topicRelation.data.PackagesTopicList &&
-        topicRelation.data.PackagesTopicList.length > 0
-      )
-        relationIds = topicRelation.data.PackagesTopicList.map(
-          (item) => item.relation_id
-        )
-      // relationIds = [...relationIds, '500','501']
-
-      console.log(this.searchIn)
-
-      // 组合搜索条件
+     console.log(this.searchIn)
+     // 组合搜索条件
       this.searchIn.forEach((item) => {
         const subObj =
           item && (item.term || item.terms || item.range || item.wildcard)
@@ -407,7 +390,7 @@ export default {
        * 体验课(4),系统课(5)去 p_packages_topic表找relation_id
        */
       if (this.topic === '4' || this.topic === '5') {
-        Object.assign(queryObj, { packages_id: relationIds })
+        Object.assign(queryObj, { topic_id: this.topic })
 
         // !!! 如果系统课类型选择 半年系统课 - packages，则packages_id = 10
         if (
