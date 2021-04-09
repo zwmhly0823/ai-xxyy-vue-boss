@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-10 14:52:56
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-09 15:51:58
  -->
 <template>
   <el-card
@@ -22,14 +22,22 @@
         />
       </el-form-item>
 
-      <el-form-item label="订单来源:" :class="{ [$style.marginer]: true }" v-if="false">
+      <el-form-item
+        label="订单来源:"
+        :class="{ [$style.marginer]: true }"
+        v-if="false"
+      >
         <ChannelSelect @result="getChannel" name="pay_channel" />
       </el-form-item>
 
       <!-- <el-form-item label="物流状态:" :class="{ [$style.marginer]: true }">
         <orderStatus @result="getExpressStatus" />
       </el-form-item> -->
-      <el-form-item label="推荐人信息:" :class="{ [$style.marginer]: true }" v-if="false">
+      <el-form-item
+        label="推荐人信息:"
+        :class="{ [$style.marginer]: true }"
+        v-if="false"
+      >
         <div class="row_colum">
           <simple-select
             name="is_first_order_send_id"
@@ -106,7 +114,7 @@
             @result="selectPayTeacher"
             name="last_teacher_id"
             class="margin_l10"
-            style="width:140px"
+            style="width: 140px"
           />
           <search-stage
             :teacher-id="teacherscope_trial || teacherscope"
@@ -119,7 +127,7 @@
           <hardLevel
             :class="['margin_l10']"
             placeholder="体验课难度"
-            style="width:140px"
+            style="width: 140px"
             name="sup"
             @result="supCallBackTrial"
           />
@@ -130,7 +138,7 @@
             @result="getTrialTeamName"
             name="team_id"
             :class="['margin_l10']"
-            style="width:140px"
+            style="width: 140px"
           />
           <!-- BOSS 显示单双周选择 -->
           <!-- <trial-course-type
@@ -142,9 +150,35 @@
         </div>
       </el-form-item>
     </el-form>
+    <div class="export-order">
+      <el-button size="mini" type="primary" @click="showChooseDialog = true"
+        >订单导出</el-button
+      >
+    </div>
+    <el-dialog title="导出订单" :visible.sync="showChooseDialog" width="30%">
+      <el-radio-group v-model="chooseExport" class="chooseExpBox">
+        <el-radio label="1"
+          ><span>财务订单导出</span
+          ><el-tooltip
+            class="item"
+            effect="dark"
+            content="财务人员核对小熊业务流水专用"
+            placement="top"
+            ><i
+              class="el-icon-question"
+              style="padding-left: 5px"
+            ></i></el-tooltip
+        ></el-radio>
+      </el-radio-group>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="showChooseDialog = false">取 消</el-button>
+        <el-button type="primary" @click="exportOrderHandle">确 定</el-button>
+      </span>
+    </el-dialog>
   </el-card>
 </template>
 <script>
+import dayjs from 'dayjs'
 import hardLevel from '@/components/MSearch/searchItems/hardLevel.vue' // add
 import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // add
 // import orderStatus from '@/components/MSearch/searchItems/orderStatus.vue' // add
@@ -158,14 +192,14 @@ import SearchStage from '@/components/MSearch/searchItems/searchStage'
 import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
 import { isToss } from '@/utils/index'
-
+import { downloadHandle } from '@/utils/download'
 export default {
   props: {
     // 订单支付状态 3-已完成
     payStatus: {
       type: String,
-      default: '3'
-    }
+      default: '3',
+    },
   },
   components: {
     // orderStatus,
@@ -179,13 +213,14 @@ export default {
     SearchStage,
     // TrialCourseType,
     SearchPhoneAndUsername,
-    SimpleSelect
+    SimpleSelect,
   },
 
   data() {
     return {
       cur0: false,
       cur1: false,
+      showChooseDialog: false,
       cur2: false,
       cur3: false,
       currentBtn: null,
@@ -203,14 +238,15 @@ export default {
       firstOrderList: [
         {
           id: '1',
-          text: '有推荐人'
+          text: '有推荐人',
         },
         {
           id: '0',
-          text: '无推荐人'
-        }
+          text: '无推荐人',
+        },
       ],
-      hasSendId: true
+      hasSendId: true,
+      chooseExport: '1',
     }
   },
   computed: {
@@ -219,7 +255,7 @@ export default {
     },
     timeName() {
       return this.payStatus === '3' ? 'buytime' : 'ctime'
-    }
+    },
   },
   watch: {
     payStatus(val) {
@@ -237,7 +273,7 @@ export default {
           }
         }
       })
-    }
+    },
   },
   methods: {
     // 切换手机/订单清空筛选项
@@ -342,7 +378,7 @@ export default {
         this.teacherscope_trial = null
         if (this.teacherscope && this.teacherscope.length > 0) {
           res = {
-            last_teacher_id: this.teacherscope
+            last_teacher_id: this.teacherscope,
           }
         } else {
           res = ''
@@ -390,7 +426,7 @@ export default {
           this.$refs.phoneName.handleEmpty()
         }
         this.setSeachParmas({ is_first_order_send_id: '' }, [
-          'is_first_order_send_id'
+          'is_first_order_send_id',
         ])
         this.setSeachParmas('', ['first_order_send_id'], 'terms')
       } else {
@@ -423,7 +459,7 @@ export default {
         if (res) {
           temp.push({
             // [`${extraKey}`]: `${JSON.stringify(res)}`
-            [extraKey]: res
+            [extraKey]: res,
           })
           this.must = temp
         }
@@ -450,20 +486,77 @@ export default {
       // should
       if (res) {
         temp.push({
-          [`${extraKey}`]: `${JSON.stringify(res)}`
+          [`${extraKey}`]: `${JSON.stringify(res)}`,
         })
         this.searchParams = temp
         this.should = temp
       }
       this.$emit('searchShould', temp)
-    }
+    },
+    // 导出
+    exportOrderHandle() {
+      console.log(this.searchParams)
+      console.log('exportOrderHandle', this.$parent.$children[1])
+      const chooseExport = this.chooseExport
+      if (this.searchParams.length === 0) {
+        this.$message.error('请选择筛选条件')
+        return
+      }
+
+      // 获取查询条件
+      const query = this.$parent.$children[1].finalParams
+      query.subject = 3
+      console.log('query======')
+      console.log(query)
+
+      const fileTitle = dayjs(new Date()).format('YYYY-MM-DD')
+      const fileTitleTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
+
+      const loading = this.$loading({
+        lock: true,
+        text: '正在导出，请耐心等待……',
+        spinner: 'el-icon-loading',
+      })
+      if (chooseExport === '1') {
+        const params = {
+          apiName: 'OrderPage',
+          header: {
+            buydate: '兑换时间',
+            out_trade_no: '订单号',
+            uid: '用户ID',
+            'user.username': '用户昵称',
+            exchange_type_text: '购课方式',
+            exchange_code: '兑换码',
+            'exchange_code_log.library.title': '兑换码标题',
+            'packagesType.name': '套餐类型',
+            'stageInfo.period_name': '期数',
+            'channel.channel_outer_name': '线索渠道',
+            sup_text: '课程难度',
+            class_start_text: '开课时间',
+          },
+          fileName: `兑换码订单-${fileTitleTime}`, // 文件名称
+          query: JSON.stringify(query),
+          // query: '{"status":3}'
+        }
+        this.$http.DownloadExcel.exportOrder(params)
+          .then((res) => {
+            console.log(res,"导出数据")
+            downloadHandle(res, `兑换码订单导出-${fileTitle}`, () => {
+              loading.close()
+              this.showChooseDialog = false
+              this.$message.success('导出成功')
+            })
+          })
+          .catch(() => loading.close())
+      } 
+    },
   },
   created() {
     const teacherId = isToss()
     if (teacherId) {
       this.teacherId = teacherId
     }
-  }
+  },
 }
 </script>
 <style lang="scss" module>
@@ -506,6 +599,11 @@ export default {
 }
 </style>
 <style scoped>
+.export-order {
+  position: absolute;
+  right: 20px;
+  z-index: 6;
+}
 .el-select-dropdown.is-multiple .el-select-dropdown__item.selected:after {
   right: 5px;
 }

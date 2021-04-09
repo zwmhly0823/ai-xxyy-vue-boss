@@ -4,7 +4,11 @@
     <el-table :data="orderList" v-loading="loading">
       <el-table-column label="用户信息" prop="user" min-width="180" fixed>
         <template slot-scope="scope">
-          <user courseType='system' :user="scope.row.user" :singleData="scope.row" />
+          <user
+            courseType="system"
+            :user="scope.row.user"
+            :singleData="scope.row"
+          />
         </template>
       </el-table-column>
       <el-table-column label="归属地" prop="QCellCore" min-width="120">
@@ -19,13 +23,13 @@
         <template slot-scope="scope">
           <p>
             {{
-            scope.row.regtype
-            ? +scope.row.regtype === 2
-            ? '首单'
-            : +scope.row.regtype === 3
-            ? '续费'
-            : '-'
-            : '-'
+              scope.row.regtype
+                ? +scope.row.regtype === 2
+                  ? '首单'
+                  : +scope.row.regtype === 3
+                  ? '续费'
+                  : '-'
+                : '-'
             }}
           </p>
         </template>
@@ -34,20 +38,20 @@
         <template slot-scope="scope">
           <p>
             {{
-            scope.row.packages_name
-            ? scope.row.packages_name || '-'
-            : scope.row.product_name || '-'
+              scope.row.packages_name
+                ? scope.row.packages_name || '-'
+                : scope.row.product_name || '-'
             }}
           </p>
           <!-- 人民币 ， 宝石，小熊币 -->
           <p>
             {{ scope.row.currency ? scope.row.currency : '人民币 ' }}
             {{
-            scope.row.amount
-            ? scope.row.amount
-            : scope.row.regtype === 6
-            ? ''
-            : '-'
+              scope.row.amount
+                ? scope.row.amount
+                : scope.row.regtype === 6
+                ? ''
+                : '-'
             }}
           </p>
         </template>
@@ -61,25 +65,28 @@
               <span
                 v-if="trialTeamUid[scope.row.uid]"
                 :class="{
-                  'primary-text': trialTeamUid[scope.row.uid].team_name
+                  'primary-text': trialTeamUid[scope.row.uid].team_name,
                 }"
                 @click="
                   openDetail(trialTeamUid[scope.row.uid].id, scope.row, 0)
                 "
-              >（{{ courseLevelReplace(trialTeamUid[scope.row.uid].team_name) }}）</span>
+                >（{{
+                  courseLevelReplace(trialTeamUid[scope.row.uid].team_name)
+                }}）</span
+              >
               <span v-else>-</span>
             </p>
             <p>
               {{
-              scope.row.salesman
-              ? scope.row.salesman.area_name ||
-              scope.row.salesman.department_name ||
-              scope.row.salesman.group_name
-              ? scope.row.salesman.group_name ||
-              scope.row.salesman.department_name ||
-              scope.row.salesman.area_name
-              : '-'
-              : '-'
+                scope.row.salesman
+                  ? scope.row.salesman.area_name ||
+                    scope.row.salesman.department_name ||
+                    scope.row.salesman.group_name
+                    ? scope.row.salesman.group_name ||
+                      scope.row.salesman.department_name ||
+                      scope.row.salesman.area_name
+                    : '-'
+                  : '-'
               }}
             </p>
           </div>
@@ -98,19 +105,24 @@
               <span
                 :class="{ 'primary-text': scope.row.team }"
                 @click="openDetail(scope.row.team.id, scope.row, 2)"
-              >({{ scope.row.team ? courseLevelReplace(scope.row.team.team_name) : '-' }})</span>
+                >({{
+                  scope.row.team
+                    ? courseLevelReplace(scope.row.team.team_name)
+                    : '-'
+                }})</span
+              >
             </p>
             <p>
               {{
-              scope.row.teacher
-              ? scope.row.teacher.area_name ||
-              scope.row.teacher.department_name ||
-              scope.row.teacher.group_name
-              ? scope.row.teacher.group_name ||
-              scope.row.teacher.department_name ||
-              scope.row.teacher.area_name
-              : '-'
-              : '-'
+                scope.row.teacher
+                  ? scope.row.teacher.area_name ||
+                    scope.row.teacher.department_name ||
+                    scope.row.teacher.group_name
+                    ? scope.row.teacher.group_name ||
+                      scope.row.teacher.department_name ||
+                      scope.row.teacher.area_name
+                    : '-'
+                  : '-'
               }}
             </p>
           </div>
@@ -153,7 +165,7 @@
           <p>体验课:{{ scope.row.trial_pay_channel_text || '-' }}</p>
           <p>
             系统课:{{
-            scope.row.channel ? scope.row.channel.channel_outer_name : '-'
+              scope.row.channel ? scope.row.channel.channel_outer_name : '-'
             }}
           </p>
         </template>
@@ -167,32 +179,34 @@
             @click="openUserDetail(scope.row.first_send_user.id)"
           >
             {{
-            scope.row.first_send_user
-            ? scope.row.first_send_user.username
-            : '-'
+              scope.row.first_send_user
+                ? scope.row.first_send_user.username
+                : '-'
             }}
           </p>
           <p>
             {{
-            scope.row.first_send_user ? scope.row.first_send_user.mobile : '-'
+              scope.row.first_send_user ? scope.row.first_send_user.mobile : '-'
             }}
           </p>
         </template>
       </el-table-column>
       <el-table-column :label="orderTimeLabel" min-width="180">
         <template slot-scope="scope">
-          <p v-if="status === '3'">{{ scope.row.buytime ? scope.row.buytime : '-' }}</p>
+          <p v-if="status === '3'">
+            {{ scope.row.buytime ? scope.row.buytime : '-' }}
+          </p>
           <p v-else>{{ scope.row.ctime ? scope.row.ctime : '-' }}</p>
           <p>
             {{
-            scope.row.out_trade_no
-            ? scope.row.out_trade_no.replace('xiong', '')
-            : '-'
+              scope.row.out_trade_no
+                ? scope.row.out_trade_no.replace('xiong', '')
+                : '-'
             }}
           </p>
         </template>
       </el-table-column>
-     <!-- <el-table-column
+      <!-- <el-table-column
           prop="buytime"
           label="关联订单类型及定单号"
           align="center"
@@ -220,12 +234,24 @@
           </template>
         </el-table-column> -->
       <el-table-column label="订单状态" min-width="80">
-        <template slot-scope="scope">{{ scope.row.order_status ? scope.row.order_status : '-' }}</template>
+        <template slot-scope="scope">{{
+          scope.row.order_status ? scope.row.order_status : '-'
+        }}</template>
       </el-table-column>
       <el-table-column label="关联订单类型及订单号" min-width="180">
         <template slot-scope="scope">
-          <p>{{ scope.row.associated_order_regtype === 1 ? '预付款优惠券' : '-' }}</p>
-          <p>{{ scope.row.associated_order_out_trade_no ? scope.row.associated_order_out_trade_no : '-' }}</p>
+          <p>
+            {{
+              scope.row.associated_order_regtype === 1 ? '预付款优惠券' : '-'
+            }}
+          </p>
+          <p>
+            {{
+              scope.row.associated_order_out_trade_no
+                ? scope.row.associated_order_out_trade_no
+                : '-'
+            }}
+          </p>
         </template>
       </el-table-column>
       <el-table-column label="关联物流" min-width="170">
@@ -235,15 +261,17 @@
             @click="
               showExpressDetail(scope.row.id, scope.row.express.express_total)
             "
-          >{{ scope.row.express ? scope.row.express.express_total || 0 : '-' }}</p>
+          >
+            {{ scope.row.express ? scope.row.express.express_total || 0 : '-' }}
+          </p>
           <!-- 体验课不显示最后一次物流状态 -->
           <p>
             {{
-            scope.row.express
-            ? scope.row.express.last_express_status
-            ? `最后一次${scope.row.express.last_express_status}`
-            : '-'
-            : '-'
+              scope.row.express
+                ? scope.row.express.last_express_status
+                  ? `最后一次${scope.row.express.last_express_status}`
+                  : '-'
+                : '-'
             }}
           </p>
         </template>
@@ -275,25 +303,25 @@ export default {
   components: {
     MPagination,
     ExpressDetail,
-    User
+    User,
   },
   props: {
     // 商品主题
     topic: {
       type: String,
-      default: ''
+      default: '',
     },
     // 支付状态
     status: {
       type: String,
-      default: ''
+      default: '',
     },
     search: {
       type: Array,
       default: () => {
         return []
-      }
-    }
+      },
+    },
   },
   computed: {
     topicArr() {
@@ -306,7 +334,7 @@ export default {
     },
     orderTimeLabel() {
       return this.status === '3' ? '支付时间·订单号' : '下单时间·订单号'
-    }
+    },
   },
   data() {
     return {
@@ -331,7 +359,7 @@ export default {
       orderStatisticsResult: [], // 统计结果
       trialTeam: {}, // 学员的体验课班级名称
       trialTeamUid: {},
-      courseLevelReplace:courseLevelReplace
+      courseLevelReplace: courseLevelReplace,
     }
   },
   created() {
@@ -361,13 +389,13 @@ export default {
       this.searchIn = val
       // this.statisticsQuery = val
       this.getOrderList()
-    }
+    },
   },
   methods: {
     // 老师权限
     getTeacherPermission() {
       this.$http.Permission.getAllTeacherByRole({
-        teacherId: this.teacherId
+        teacherId: this.teacherId,
       }).then((res) => {
         this.teacherGroup = res || []
         // 订单列表接口
@@ -391,7 +419,7 @@ export default {
       if (this.teacherId) {
         Object.assign(queryObj, {
           pay_teacher_id:
-            this.teacherGroup.length > 0 ? this.teacherGroup : [this.teacherId]
+            this.teacherGroup.length > 0 ? this.teacherGroup : [this.teacherId],
         })
         // statisticsQuery.push({
         //   terms: {
@@ -402,13 +430,13 @@ export default {
         //   }
         // })
       }
-     console.log(this.searchIn)
-     // 组合搜索条件
+      console.log(this.searchIn)
+      // 组合搜索条件
       this.searchIn.forEach((item) => {
-        if(item.terms.associated_order_id==2) {
+        if (item.terms && item.terms.associated_order_id == 2) {
           delete item.terms.associated_order_id
-        }else if(item.terms.associated_order_id==1) {
-          item.terms.associated_order_id = {gt:0}
+        } else if (item.terms && item.terms.associated_order_id == 1) {
+          item.terms.associated_order_id = { gt: 0 }
         }
         const subObj =
           item && (item.term || item.terms || item.range || item.wildcard)
@@ -452,7 +480,7 @@ export default {
           queryObj.is_first_order_send_id === '0'
         ) {
           Object.assign(queryObj, {
-            first_order_send_id: '0'
+            first_order_send_id: '0',
           })
         }
         if (
@@ -461,12 +489,10 @@ export default {
           !queryObj.first_order_send_id
         ) {
           Object.assign(queryObj, {
-            first_order_send_id: { gt: '0' }
+            first_order_send_id: { gt: '0' },
           })
         }
 
-
-        
         delete queryObj.is_first_order_send_id
         this.orderData(queryObj, this.currentPage)
 
@@ -508,8 +534,6 @@ export default {
     orderData(queryObj = {}, page = 1) {
       // 最终搜索条件
       this.$emit('get-params', queryObj)
-      // console.log(queryObj)
-
       this.$http.Order.orderPage(`${JSON.stringify(queryObj)}`, page)
         .then((res) => {
           if (!res.data.OrderPage) {
@@ -591,14 +615,14 @@ export default {
     openDetail(id, row, type) {
       // type 0体验课 2系统课
       row && console.log(row)
-      let str = type==0?'teamTrialDetail':'teamDetail';
+      let str = type == 0 ? 'teamTrialDetail' : 'teamDetail'
       id && openBrowserTab(`/music_app/#/${str}/${id}/${type}`)
     },
     // 用户详情
     openUserDetail(id) {
       id && openBrowserTab(`/music_app/#/details/${id}`)
-    }
-  }
+    },
+  },
 }
 </script>
 <style scoped lang="scss">

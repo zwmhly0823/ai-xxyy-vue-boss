@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-09 13:51:34
+ * @LastEditTime: 2021-04-09 15:34:33
  -->
 <template>
   <el-card
@@ -56,7 +56,11 @@
       </el-form-item>
       <!-- 是否关联其他订单 -->
       <el-form-item label="是否关联其他订单:" label-width="120px" :height="300">
-        <el-select @change="selectOrder" v-model="associated_order_id" placeholder="请选择关联订单">
+        <el-select
+          @change="selectOrder"
+          v-model="associated_order_id"
+          placeholder="请选择关联订单"
+        >
           <el-option
             v-for="item in options1"
             :key="item.value"
@@ -317,7 +321,7 @@ export default {
 
   data() {
     return {
-      associated_order_id:"全部",
+      associated_order_id: '全部',
       options1: [
         {
           value: 2,
@@ -463,8 +467,8 @@ export default {
     },
     // 是否关联订单
     selectOrder(val) {
-      let res = {associated_order_id:val}
-      this.setSeachParmas(res, ['associated_order_id'], 'terms') 
+      let res = { associated_order_id: val }
+      this.setSeachParmas(res, ['associated_order_id'], 'terms')
     },
     // 选择渠道
     getChannel(res) {
@@ -819,28 +823,25 @@ export default {
             'user.username': '用户昵称',
             'paymentPay.transaction_id': '交易流水号',
             'paymentPay.trade_type_text': '支付方式',
+            total_amount: '商品价格',
+            discount_type_text: '优惠类型',
+            discount_value_text: '折扣力度',
+            discount_amount: '优惠金额',
             amount: '交易金额',
             'packagesType.name': '套餐类型',
             'stageInfo.period_name': '期数',
             'channel.channel_outer_name': '线索渠道',
             sup_text: '课程难度',
+            is_associated_coupon: '是否关联预付款优惠券',
+            associated_order_out_trade_no: '关联订单号',
+            associated_order_amout: '关联订单交易金额',
             invoice_status_text: '开票状态',
             invoice_type_text: '开票类型',
             invoice_code: '发票号码',
+            order_total_amount: '订单总金额',
+            refund_amount: '累计退费金额',
+            remaining_amount: '剩余金额',
             class_start_text: '开课时间',
-            // paymentPayOut 退款流水
-            // 'team.team_name': '班级',
-            // 'team.team_type': '课程类型',
-            // // 'salesman.realname': '社群销售',
-            // // 'department.department.name': '社群战队',
-            // // 'teacher.realname': '后端服务老师',
-            // 'express.product_type': '商品类型',
-            // 'express.product_name': '商品信息',
-            // total_amount: '商品总额',
-            // // 'express.address_detail': '详细地址',
-            // // 'express.last_express_status': '物流状态',
-            // order_status: '状态'
-            // 'team.type': '退费金额'
           },
           fileName: `系统课订单导出-${fileTitleTime}`, // 文件名称
           query: JSON.stringify(query),
@@ -952,11 +953,10 @@ export default {
   }
 }
 /deep/ .el-input--suffix .el-input__inner {
-   height: 30px !important;
+  height: 30px !important;
 }
 </style>
-<style scoped> 
- 
+<style scoped>
 .export-order {
   position: absolute;
   bottom: 25px;
