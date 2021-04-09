@@ -110,7 +110,7 @@
       <el-table-column label="兑换码标题·兑换码" min-width="220">
         <template slot-scope="scope">
           <p>
-            {{scope.row.exchange_code_log.library.title ? scope.row.exchange_code_log.library.title : '-'}}
+            {{scope.row.exchange_code_log && scope.row.exchange_code_log.library.title ? scope.row.exchange_code_log.library.title : '-'}}
           </p>
           <p>
             {{
@@ -203,20 +203,7 @@ export default {
       },
     },
   },
-  computed: {
-    topicArr() {
-      if (this.topic === '4' || this.topic === '5') {
-        return [this.topic]
-      } else if (this.topic === '1,2,6') {
-        return this.topic.split(',')
-      }
-      return []
-    },
-    // orderTimeLabel() {
-    //   return this.status === '3' ? '支付时间·订单号' : '下单时间·订单号'
-    // },
-  },
-  data() {
+ data() {
     return {
       loading: false,
       // 给物流详情组件传递的订单id
@@ -299,31 +286,9 @@ export default {
           last_teacher_id:
             this.teacherGroup.length > 0 ? this.teacherGroup : [this.teacherId],
         })
-        // statisticsQuery.push({
-        //   terms: {
-        //     last_teacher_id:
-        //       this.teacherGroup.length > 0
-        //         ? this.teacherGroup
-        //         : [this.teacherId]
-        //   }
-        // })
-      }
-
-      // const topicRelation = await this.$http.Product.topicRelationId(
-      //   `${JSON.stringify({
-      //     topic_id: this.topicArr,
-      //   })}`
-      // )
-      // let relationIds = []
-      // if (
-      //   topicRelation.data.PackagesTopicList &&
-      //   topicRelation.data.PackagesTopicList.length > 0
-      // )
-      //   relationIds = topicRelation.data.PackagesTopicList.map(
-      //     (item) => item.relation_id
-      //   )
-
-      // 组合搜索条件
+      
+}
+     // 组合搜索条件
       this.searchIn.forEach((item) => {
         const subObj =
           item && (item.term || item.terms || item.range || item.wildcard)
@@ -412,7 +377,7 @@ export default {
             this.orderList = []
             return
           }
-          if (this.topic === '4' || this.topic === '5') {
+          if (this.topic === '13') {
             this.totalElements = +res.data.OrderPage.totalElements
             this.currentPage = +res.data.OrderPage.number
           }
