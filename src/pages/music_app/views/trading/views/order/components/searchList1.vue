@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-29 17:40:12
+ * @LastEditTime: 2021-04-09 11:17:43
  -->
 <template>
   <el-card
@@ -56,7 +56,7 @@
       </el-form-item>
       <!-- 是否关联其他订单 -->
       <el-form-item label="是否关联其他订单:" label-width="120px" :height="300">
-        <el-select v-model="isType" placeholder="请选择关联订单">
+        <el-select v-model="associated_order_id" placeholder="请选择关联订单">
           <el-option
             v-for="item in options1"
             :key="item.value"
@@ -317,10 +317,10 @@ export default {
 
   data() {
     return {
-      isType: null,
+      associated_order_id: null,
       options1: [
         {
-          value: '0',
+          value: '',
           label: '全部',
         },
         {
@@ -328,7 +328,7 @@ export default {
           label: '已关联',
         },
         {
-          value: '2',
+          value: '0',
           label: '无关联',
         },
       ],
