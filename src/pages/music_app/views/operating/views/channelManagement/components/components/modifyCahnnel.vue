@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-05-07 10:48:30
- * @LastEditors: panjian
- * @LastEditTime: 2020-05-11 20:55:33
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-09 10:34:37
  -->
 <template>
   <div class="drawer-box">
@@ -70,6 +70,18 @@
           <el-option label="B" :value="0">B</el-option>
         </el-select>
       </el-form-item>
+        <el-form-item label="体验课模版" prop="channel_link">
+        <el-select v-model="ruleForm.experience" placeholder="请选择" clearable>
+          <el-option
+            label="29元体验课模版"
+            :value="'/channel29/index?channelId= '"
+            >29元体验课模版</el-option
+          >
+          <el-option label="49元体验课模版" :value="'/channel/index?channelId='"
+            >49元体验课模版</el-option
+          >
+        </el-select>
+      </el-form-item>
       <el-form-item label="渠道备注" prop="desc">
         <el-input
           placeholder="请输入备注"
@@ -130,7 +142,8 @@ export default {
         sort: '',
         desc: '',
         status: '1',
-        channelLevel: ''
+        channelLevel: '',
+        experience:''
       },
       rules: {
         channelOne: [
@@ -174,6 +187,7 @@ export default {
             this.ruleForm.channelThree = item.channel_inner_name
             this.ruleForm.sort = item.channel_sort
             this.ruleForm.desc = item.remarks
+            this.ruleForm.experience = item.channel_link.includes('29')?'29元体验课模版':'49元体验课模版',
             this.ruleForm.status = item.status.toString()
             this.ruleForm.channelLevel = item.channel_level
           })
@@ -247,6 +261,7 @@ export default {
               channelSort: this.ruleForm.sort, // 渠道排序
               status: this.ruleForm.status, // 1开启0禁用
               remarks: this.ruleForm.desc,
+              channelLink: this.ruleForm.experience,
               channelLevel: this.getLevel(this.ruleForm.channelLevel) // 渠道等级
             }
           } else {
@@ -258,6 +273,7 @@ export default {
               channelSort: this.ruleForm.sort, // 渠道排序
               status: this.ruleForm.status, // 1开启0禁用
               remarks: this.ruleForm.desc,
+              channelLink: this.ruleForm.experience,
               channelLevel: this.getLevel(this.ruleForm.channelLevel) // 渠道等级
             }
           }
