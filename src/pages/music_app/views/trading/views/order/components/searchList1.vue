@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-09 11:44:42
+ * @LastEditTime: 2021-04-09 13:51:34
  -->
 <template>
   <el-card
@@ -317,18 +317,18 @@ export default {
 
   data() {
     return {
-      associated_order_id: null,
+      associated_order_id:"全部",
       options1: [
         {
-          value: '',
+          value: 2,
           label: '全部',
         },
         {
-          value: '{gt:0}',
+          value: 1,
           label: '已关联',
         },
         {
-          value: '0',
+          value: 0,
           label: '无关联',
         },
       ],
@@ -464,7 +464,7 @@ export default {
     // 是否关联订单
     selectOrder(val) {
       let res = {associated_order_id:val}
-      this.setSeachParmas(res, ['associated_order_id'], 'terms')
+      this.setSeachParmas(res, ['associated_order_id'], 'terms') 
     },
     // 选择渠道
     getChannel(res) {

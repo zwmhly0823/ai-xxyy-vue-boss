@@ -222,7 +222,12 @@
       <el-table-column label="订单状态" min-width="80">
         <template slot-scope="scope">{{ scope.row.order_status ? scope.row.order_status : '-' }}</template>
       </el-table-column>
-
+      <el-table-column label="关联订单类型及订单号" min-width="180">
+        <template slot-scope="scope">
+          <p>{{ scope.row.associated_order_regtype === 1 ? '预付款优惠券' : '-' }}</p>
+          <p>{{ scope.row.associated_order_out_trade_no ? scope.row.associated_order_out_trade_no : '-' }}</p>
+        </template>
+      </el-table-column>
       <el-table-column label="关联物流" min-width="170">
         <template slot-scope="scope">
           <p
@@ -413,10 +418,15 @@ export default {
         )
       // relationIds = [...relationIds, '500','501']
 
-      console.log(this.searchIn)
+      console.log(this.searchIn,"搜索数据")
 
       // 组合搜索条件
       this.searchIn.forEach((item) => {
+        if(item.terms.associated_order_id==2) {
+          delete item.terms.associated_order_id
+        }else if(item.terms.associated_order_id==1) {
+          item.terms.associated_order_id = {gt:0}
+        }
         const subObj =
           item && (item.term || item.terms || item.range || item.wildcard)
         Object.assign(queryObj, subObj || {})
@@ -471,6 +481,9 @@ export default {
             first_order_send_id: { gt: '0' }
           })
         }
+
+
+        
         delete queryObj.is_first_order_send_id
         this.orderData(queryObj, this.currentPage)
 
