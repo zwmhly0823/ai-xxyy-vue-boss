@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-08 16:47:41
+ * @LastEditTime: 2021-04-09 18:45:17
  */
 import axios from '../axiosConfig'
 import { injectSubject, getAppSubjectCode } from '@/utils/index'
@@ -224,6 +224,7 @@ export default {
             complete_user_num,
             system_user_num,
             system_user_amounts
+            trial_channel_class_id
             },
             numberOfElements,
             totalElements,

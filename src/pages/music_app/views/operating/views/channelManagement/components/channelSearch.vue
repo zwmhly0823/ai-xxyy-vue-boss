@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-08 20:54:20
+ * @LastEditTime: 2021-04-09 18:29:13
  -->
 <template>
   <div id="channel-box" class="channel-box">
@@ -450,6 +450,7 @@ export default {
         endCtime: this.endTime,
         page: this.totalNumber,
         pageSzie: '60',
+        termCondition: 'trialchannel',
       }
       const paramsM = {
         trialChannels: this.channelIds,
