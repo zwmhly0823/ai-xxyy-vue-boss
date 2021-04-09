@@ -22,6 +22,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="package_name" label="套餐商品"></el-table-column>
+          <el-table-column prop="course_level" label="绑定课程级别"></el-table-column>
           <el-table-column prop="customer_sign_name" label="标签">
             <template slot-scope="scope">
               {{
@@ -35,6 +36,8 @@
               scope.row.channel_name || '--'
               }}
             </template>
+          </el-table-column>
+          <el-table-column prop="send_express" label="是否发物流">
           </el-table-column>
           <el-table-column prop="start_date" label="有效期" min-width="120">
             <template slot-scope="scope">
@@ -128,7 +131,7 @@ export default {
       })
       this.$http.Marketing.getRedeemCodeList({}, page, sort)
         .then((res) => {
-          console.log(res, 'list')
+          console.log(res.data.ExchangeCodeConfigPage.content, 'list')
           if (res?.data?.ExchangeCodeConfigPage) {
             const {
               content = [],
@@ -141,6 +144,8 @@ export default {
               item.start_date_text = formatData(item.start_date, 'm')
               item.end_date_text = formatData(item.end_date, 'm')
               item.status_text = item.status ? '有效' : '失效'
+              item.send_express = item.send_express === 0 ?  '否' : item.send_express === 1 ? '是' : '-' 
+              item.course_level = item.course_level == null || item.course_level == 0 ? '-' : 'M' + item.course_level
               if (item.packageInfo?.name) {
                 item.package_name = item.packageInfo.name
               }

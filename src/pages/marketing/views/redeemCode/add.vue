@@ -57,14 +57,14 @@
             </el-date-picker
           ></el-radio>
           <!-- 自定义时间 -->
-          <el-radio v-model="radioDate" label="2" style="margin-top: 10px">
+          <!-- <el-radio v-model="radioDate" label="2" style="margin-top: 10px">
             兑换当日起<el-input
               :disabled="radioDate === '1'"
               v-model="form.expire"
               maxlength="4"
               style="width: 80px; margin: 0 10px;"
             />天内可使用
-          </el-radio>
+          </el-radio> -->
         </el-form-item>
         <el-form-item label="兑换商品套餐" prop="packageId">
           <el-input v-model="form.packageId" style="display: none;" />
@@ -87,6 +87,16 @@
               >
                 课时：{{ packageProduct.course_week }}周
               </p>
+              <el-form-item label="绑定课程级别" prop="levelId" label-width="84" class="level-select">
+                <el-select v-model="form.courseLevel">
+                  <el-option
+                    v-for="item in levelList"
+                    :key="item.id"
+                    :label="item.text"
+                    :value="item.id"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
             </div>
             <el-button size="mini" @click="dialogPackageVisible = true"
               >更换商品</el-button
@@ -112,6 +122,12 @@
               :value="item.id"
             ></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="是否生成物流" prop="isCardNo">
+          <el-radio-group v-model="form.sendExpress">
+            <el-radio :label="1">是</el-radio>
+            <el-radio :label="0">否</el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="是否生成卡号" prop="isCardNo">
           <el-radio-group v-model="form.isCardNo">
@@ -245,8 +261,32 @@ export default {
         channelId: '',
         customerSignId: '', // 标签
         // 是否生成卡号  0 不生成 1生成
-        isCardNo: 1
+        isCardNo: 1,
+        sendExpress: 1,
+        courseLevel: 'N'
       },
+      levelList: [
+        {
+            id: 'N',
+            text: '不绑定'
+          },
+          {
+            id: 'S1',
+            text: 'M1'
+          },
+          {
+            id: 'S2',
+            text: 'M2'
+          },
+          {
+            id: 'S3',
+            text: 'M3'
+          },
+          {
+            id: 'S4',
+            text: 'M4'
+          },
+        ],
       formLabelWidth: '120px',
       // 设置禁用时间，小于当前日期不可用
       pickerOptions: {
@@ -260,22 +300,14 @@ export default {
       },
       packageProduct: {}, // 选中的商品套餐
       // TODO:指定的渠道, 先写死 ！！！  写字渠道待添加
-      channelList: [
-        {
-          id: '2048',
-          text: 'vip学员'
-        },
-        {
-          id: '2147',
-          text: '兑换码'
-        }
-      ],
+      channelList: [],
       labelList: [{ id: '0', name: '无' }],
       loading: false
     }
   },
   created() {
     this.getMarketingLabel()
+    this.getChannelList()
   },
   watch: {
     radioDate(val) {
@@ -393,8 +425,33 @@ export default {
           this.labelList.push(...res.payload)
         }
       })
+    },
+
+    // 获取渠道id列表
+    getChannelList() {
+      const subject = { subject: this.$store.getters.subjects.subjectCode }
+      const obj = { ...subject, "channel_inner_name.keyword": "兑换码"}
+      let query = JSON.stringify(JSON.stringify(obj))
+      if (query) {
+        this.$http.Operating.ChannelDetailStatisticsPage(
+          query
+        ).then(({ data }) => {
+          if (data) {
+            console.log(data.ChannelDetailStatisticsPage)
+            data.ChannelDetailStatisticsPage.content.forEach(item => {
+              let obj = {}
+              obj.id = item.id
+              obj.text = item.channel_inner_name
+              if (obj) {
+                this.channelList.push(obj)
+              }
+            })
+          }
+        })
+      }
+      
     }
-  }
+  },
 }
 </script>
 
@@ -439,5 +496,20 @@ export default {
 }
 .dialog-footer {
   text-align: center;
+}
+</style>
+<style lang="scss">
+.level-select {
+  .el-form-item__label {
+    font-weight: normal;
+  }
+  .el-select {
+    .el-input {
+      .el-input__inner {
+        height: 25px;
+        width: 100px;
+      }
+    } 
+  }
 }
 </style>

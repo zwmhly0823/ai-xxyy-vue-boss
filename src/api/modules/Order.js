@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-09 13:44:01
+ * @LastEditTime: 2021-04-09 13:55:08
  */
 import axios from '../axiosConfig'
 import { injectSubject, getAppSubjectCode } from '@/utils/index'
@@ -117,6 +117,13 @@ export default {
             trial_pay_channel_text
             isrefund
             topic_id
+            exchange_type_text 
+            exchange_code 
+            exchange_code_log{
+              library{
+                title
+              }
+            }
           }
         }
       }`

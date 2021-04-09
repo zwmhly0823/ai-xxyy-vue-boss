@@ -314,23 +314,7 @@ export default {
         //   }
         // })
       }
-
-      const topicRelation = await this.$http.Product.topicRelationId(
-        `${JSON.stringify({
-          topic_id: this.topicArr
-        })}`
-      )
-      let relationIds = []
-      if (
-        topicRelation.data.PackagesTopicList &&
-        topicRelation.data.PackagesTopicList.length > 0
-      )
-        relationIds = topicRelation.data.PackagesTopicList.map(
-          (item) => item.relation_id
-        )
-      // relationIds = [...relationIds,'500','501']
-
-      // 组合搜索条件
+     // 组合搜索条件
       this.searchIn.forEach((item) => {
         const subObj =
           item && (item.term || item.terms || item.range || item.wildcard)
@@ -349,7 +333,7 @@ export default {
       if (this.topic === '4') {
         // 如果选择了筛选单双周体验课类型，则不需要packages_id
         if (!Object.keys(queryObj).includes('packages_id'))
-          Object.assign(queryObj, { packages_id: relationIds })
+          Object.assign(queryObj, { topic_id: this.topic })
 
         // 如果有推荐人搜索条件
         if (
