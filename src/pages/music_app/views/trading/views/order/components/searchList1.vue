@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-09 15:34:33
+ * @LastEditTime: 2021-04-10 19:58:36
  -->
 <template>
   <el-card
@@ -467,12 +467,20 @@ export default {
     },
     // 是否关联订单
     selectOrder(val) {
+      this.searchParams.forEach((item, index) => {
+        if (
+          item.terms.associated_order_id ||
+          item.terms.associated_order_id == 0
+        ) {
+          this.searchParams.splice(index, 1)
+        }
+      })
       let res = { associated_order_id: val }
       this.setSeachParmas(res, ['associated_order_id'], 'terms')
+      console.log(this.searchParams, 'this.searchParams')
     },
     // 选择渠道
     getChannel(res) {
-      console.log(res)
       this.setSeachParmas(res, ['pay_channel'], 'terms')
     },
     getTrialChannel(res) {

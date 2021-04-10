@@ -13,6 +13,7 @@
       size="mini"
       placeholder="商品状态"
       @change="onChange"
+      clearable
       class="item-style"
     >
       <el-option
