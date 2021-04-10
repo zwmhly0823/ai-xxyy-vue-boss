@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-07 10:48:30
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-09 10:24:40
+ * @LastEditTime: 2021-04-10 16:23:13
  -->
 <template>
   <div class="drawer-box">
@@ -76,7 +76,7 @@
         <el-select v-model="ruleForm.experience" placeholder="请选择" clearable>
           <el-option
             label="29元体验课模版"
-            :value="'/channel29/index?channelId= '"
+            :value="'/channel29/index?channelId='"
             >29元体验课模版</el-option
           >
           <el-option label="49元体验课模版" :value="'/channel/index?channelId='"
