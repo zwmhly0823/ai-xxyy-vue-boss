@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-07 10:45:03
+ * @LastEditTime: 2021-04-10 19:18:52
  -->
 <template>
   <div class="container" v-loading="vLoading">
@@ -1218,13 +1218,15 @@ export default {
   created() {
     // 身份类型，4是财务，具体见wiki
     const roleList = JSON.parse(localStorage.getItem('staff')).roleList
+
+    console.log(roleList,"roleList");
     let roleId = roleList ? roleList[0] : ''
     this.roleId = roleId
     this.getRoleIdList()
   },
   mounted() {
     const staff = getStaffInfo()
-
+    console.log(staff,"staff");
     this.resetParams = staff
     this.staffId = staff.staffId // storage体验或系统课老师id
     this.isStaffId = staff.isStaffId // 只有boss且position==='1' 为true

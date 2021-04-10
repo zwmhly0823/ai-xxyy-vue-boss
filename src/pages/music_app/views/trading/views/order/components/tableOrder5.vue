@@ -253,17 +253,17 @@ export default {
       this.$emit('get-params', queryObj)
 
       console.log(queryObj, '123123123123')
-      this.$http.Order.orderPage(`${JSON.stringify(queryObj)}`, page)
+      this.$http.Order.CouponOrderStatisticsPage(`${JSON.stringify(queryObj)}`, page)
         .then((res) => {
-          if (!res.data.OrderPage) {
+          if (!res.data.CouponOrderStatisticsPage) {
             this.totalElements = 0
             this.currentPage = 1
             this.orderList = []
             return
           }
-          this.totalElements = +res.data.OrderPage.totalElements
-          this.currentPage = +res.data.OrderPage.number
-          const _data = res.data.OrderPage.content
+          this.totalElements = +res.data.CouponOrderStatisticsPage.totalElements
+          this.currentPage = +res.data.CouponOrderStatisticsPage.number
+          const _data = res.data.CouponOrderStatisticsPage.content
           _data.forEach((item, index) => {
             // 下单时间格式化
             item.ctime = formatData(item.ctime, 's')

@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-07-01 11:08:23
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-24 16:09:36
+ * @LastEditTime: 2021-04-10 17:53:44
  -->
 <template>
   <el-card
@@ -22,9 +22,9 @@
         />
       </el-form-item>
       <!-- 商品状态 -->
-      <!-- <el-form-item label="商品状态:" :class="{ [$style.marginer]: true }">
-        <productStatus @result="getStatus" name="pay_channel" />
-      </el-form-item> -->
+      <el-form-item label="商品状态:" :class="{ [$style.marginer]: true }">
+        <productStatus @result="getStatus" name="coupon_status" />
+      </el-form-item>
 
       <br />
 
@@ -101,13 +101,13 @@
 import dayjs from 'dayjs'
 import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // add
 import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'
-// import productStatus from '@/components/MSearch/searchItems/productStatus.vue'
+import productStatus from '@/components/MSearch/searchItems/productStatus.vue'
 import { downloadHandle } from '@/utils/download'
 
 export default {
   components: {
     orderSearch,
-    // productStatus,
+    productStatus,
     DatePicker,
   },
 
@@ -157,6 +157,7 @@ export default {
     },
     // 选择状态
     getStatus(res) {
+      console.log(res, '选择状态')
       this.setSeachParmas(res, ['coupon_status'], 'terms')
     },
     // 难度
@@ -352,7 +353,7 @@ export default {
       })
       if (chooseExport === '1') {
         const params = {
-          apiName: 'OrderPage',
+          apiName: 'CouponOrderStatistics',
           header: {
             buydate: '缴费时间',
             out_trade_no: '订单号',

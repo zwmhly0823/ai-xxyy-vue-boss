@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-09 13:55:08
+ * @LastEditTime: 2021-04-10 17:55:45
  */
 import axios from '../axiosConfig'
 import { injectSubject, getAppSubjectCode } from '@/utils/index'
@@ -124,6 +124,100 @@ export default {
                 title
               }
             }
+          }
+        }
+      }`
+    })
+  },
+  /**
+   * 预付款优惠券列表  v1
+   * */
+   CouponOrderStatisticsPage(query, page = 1) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        CouponOrderStatisticsPage(query: ${JSON.stringify(
+          injectSubject(query)
+        )}, page: ${page}) {
+          totalPages
+          totalElements
+          number
+          content {
+            id
+            uid
+            ctime
+            buytime
+            packages_name
+            sup
+            stage
+            regtype
+            amount
+            status
+            order_status
+            bear_integral
+            gem_integral
+            product_name
+            out_trade_no
+            total_amount
+            pay_teacher_duty_id
+            user{
+              id
+              username
+              nickname
+              mobile
+              mobile_province
+              mobile_city
+              birthday
+            }
+            user_coupon{
+              status
+              oid
+              status_text
+            }
+            channel {
+              channel_outer_name
+            }
+            team {
+              id
+              team_name
+            }
+            last_teacher_id
+            trial_team_id
+            teacher{
+              realname
+              area_name
+              department_name
+              group_name 
+            }
+            salesman{
+              realname
+              area_name
+              department_name
+              group_name
+            }
+            express{
+              express_total
+              last_express_status
+              address_detail
+              province
+              city
+              area
+              product_name
+              product_type
+            }
+            trial_course{
+              team_category
+            }
+            first_order_send_id
+            first_send_user{
+              id
+              username
+              nickname
+              mobile
+            }
+            trial_pay_channel
+            trial_pay_channel_text
+            isrefund
+            topic_id
           }
         }
       }`
