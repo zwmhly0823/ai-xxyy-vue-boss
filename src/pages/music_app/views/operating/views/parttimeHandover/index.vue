@@ -376,7 +376,6 @@ export default {
       /**
        * 移交班主任点评，不需要传 newTeacherId; 移交兼职老师时需要传 newTeacherId
        */
-      debugger
       if (this.receiveType === '2') {
         Object.assign(query, {
           newTeacherId: this.receiveTeacherID ? this.receiveTeacherID : '',
