@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-12 10:14:31
+ * @LastEditTime: 2021-04-12 14:03:06
  */
 import axios from '../axiosConfig'
 import { injectSubject, getAppSubjectCode } from '@/utils/index'
@@ -258,6 +258,24 @@ export default {
    * 更新：求和接口 sum 支持最新的对象传参 05-25 YangJiyong
    */
   orderStatistics(must = {}, sumField, termField) {
+    // bool 表达式
+    // const queryObj = { bool: { must } }
+    const queryStr = `${JSON.stringify(must)}`
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        OrderStatistics(query: ${JSON.stringify(
+          injectSubject(queryStr)
+        )}, sumField:"${sumField}", termField:"${termField}"){
+          code
+          type
+          count
+          value
+        }
+      }`
+    })
+  },
+  // 预付款优惠券
+  CouponOrderSumStatistics(must = {}, sumField, termField) {
     // bool 表达式
     // const queryObj = { bool: { must } }
     const queryStr = `${JSON.stringify(must)}`

@@ -290,12 +290,12 @@ export default {
 
     // 订单统计数据
     async orderStatistics(statisticsQuery = '') {
-      this.$http.Order.orderStatistics(
+      this.$http.Order.CouponOrderSumStatistics(
         statisticsQuery,
         'amount',
         'status'
       ).then((res) => {
-        const statistics = res.data.OrderStatistics || []
+        const statistics = res.data.CouponOrderSumStatistics || []
 
         console.log('statistics', statistics)
         this.$emit('statistics', statistics)
