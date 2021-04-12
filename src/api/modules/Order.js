@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-10 17:55:45
+ * @LastEditTime: 2021-04-12 10:14:31
  */
 import axios from '../axiosConfig'
 import { injectSubject, getAppSubjectCode } from '@/utils/index'
@@ -263,7 +263,7 @@ export default {
     const queryStr = `${JSON.stringify(must)}`
     return axios.post('/graphql/v1/toss', {
       query: `{
-        OrderStatistics(query: ${JSON.stringify(
+        CouponOrderSumStatistics(query: ${JSON.stringify(
           injectSubject(queryStr)
         )}, sumField:"${sumField}", termField:"${termField}"){
           code
