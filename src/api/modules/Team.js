@@ -237,13 +237,14 @@ export default {
       teacherIdArr = [],
       sup = [],
       teamName = '',
+      type='',
       teamState = '0',
       courseDay = '',
       page = 1,
       size = '20',
       sort = `{"ctime":"desc"}`
     } = params
-    const query = { team_state: teamState.split(','), subject: '3' }
+    const query = { team_state: teamState.split(','), subject: '3',type:params.type }
     teamName &&
       Object.assign(query, {
         'team_name.like': { 'team_name.keyword': `*${teamName}*` }

@@ -18,8 +18,8 @@
       class="item-style"
     >
       <el-option
-        v-for="item in typeList"
-        :key="item.id"
+        v-for="(item,index) in typeList"
+        :key="index"
         :value="item.id"
         :label="item.text"
       ></el-option>
@@ -42,47 +42,47 @@ export default {
   data() {
     return {
       type: null,
-      typeList: [
+      typeList:[],
+      typeList1: [
         {
-          id: '',
+          id: ["0","6"],
           text: '全部',
         },
         {
-          id: '6',
+          id: 6,
           text: '单周体验课',
         },
         {
-          id: '0',
+          id: 0,
+          text: '双周体验课',
+        },
+      ],
+       typeList2: [
+        {
+          id: ['0','2'],
+          text: '全部',
+        },
+        {
+          id: 2,
+          text: '单周体验课',
+        },
+        {
+          id: 0,
           text: '双周体验课',
         },
       ],
     }
   },
+  mounted() {
+    if(this.name == "type") {
+      this.typeList = this.typeList2
+    }else if(this.name == 'packages_type') {
+      this.typeLis = this.typeList1
+    }
+  },
   methods: {
-    onChange(type) {
-      console.log(type)
-      let item = ['1', '5', '6', '11']
-      // 通过tg_student_trial_course, team_category: 0-双周  3-单周
-      // if (type) {
-      //   const query = JSON.stringify({ team_category: type })
-      //   this.$http.Team.getTrialCourseList(query, 500).then((res) => {
-      //     const data =
-      //       (res && res.data && res.data.StudentTrialCourseList) || []
-      //     item = data.map((c) => c.order_no)
-      //     console.log(item)
-      //     this.$emit('result', { [this.name]: item })
-      //   })
-      //   return
-      // }
-      // this.$emit('result', '')
-
-      // 通过 o_order 表 packages_id 关联
-      if (type === '11') {
-        item = ['11']
-      } else if (type === '5,6') {
-        item = ['5', '6']
-      }
-      this.$emit('result', { [this.name]: item })
+    onChange(item) {
+     this.$emit('result', item ? { [this.name]: item } : '')
     },
   },
 }

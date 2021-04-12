@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-12 11:38:59
+ * @LastEditTime: 2021-04-12 14:16:26
  -->
 <template>
   <el-card
@@ -138,7 +138,7 @@
           <!-- BOSS 显示单双周选择 -->
           <trial-course-type
             class="margin_l10"
-            name="packages_id"
+            name="packages_type"
             @result="getTrialCourseType"
           />
         </div>
@@ -416,7 +416,7 @@ export default {
 
     // 体验课类型
     getTrialCourseType(res) {
-      this.setSeachParmas(res, ['packages_id'], 'terms')
+      this.setSeachParmas(res, ['packages_type'], 'terms')
     },
 
     async getSendUser(res) {
