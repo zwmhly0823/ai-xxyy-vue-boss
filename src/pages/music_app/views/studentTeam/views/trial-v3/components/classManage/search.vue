@@ -1,16 +1,6 @@
 <template>
   <div class="component-search">
     <div class="search-part">
-      <span>体验课排期：</span>
-      <search-stage
-        class="inline-block"
-        @result="stageRes"
-        name="stage"
-        type="0"
-        placeholder="体验课排期"
-      />
-    </div>
-    <div class="search-part">
       <span>销售组：</span>
       <department
         class="inline-block"
@@ -49,13 +39,23 @@
       >
       </el-input>
     </div>
-     <div class="search-part">
+    <div class="search-part">
       <span>体验课类型：</span>
-       <trial-course-type
-            class="inline-block"
-            name="type"
-            @result="getTrialCourseType"
-          />
+      <trial-course-type
+        class="inline-block"
+        name="category"
+        @result="getTrialCourseType"
+      />
+    </div>
+    <div class="search-part">
+      <search-stage
+        class="inline-block"
+        :category="categoryType"
+        @result="stageRes"
+        name="stage"
+        type="0"
+        placeholder="体验课排期"
+      />
     </div>
   </div>
 </template>
@@ -75,18 +75,19 @@ export default {
     Department,
     GroupSell,
     StageSupLevels,
-    TrialCourseType
+    TrialCourseType,
   },
   data() {
     return {
       teamName: '',
-      searchParams: {}
+      categoryType: [0, 2],
+      searchParams: {},
     }
   },
   computed: {
     handleDebounce() {
       return debounce(this.inputHandler, 500)
-    }
+    },
   },
   methods: {
     stageRes(val) {
@@ -107,12 +108,17 @@ export default {
 
     // 体验课类型
     getTrialCourseType(val) {
-      console.log(val,"体验课类型");
-       let type = ''
-       if(val) {
-         type = val.type
-       }
-       this.searchRes(type, 'type')
+      console.log(val, '体验课类型')
+      let category = ''
+      if (val) {
+         this.categoryType = val.category
+        if (val.category.length == 2) {
+          category = val.category
+        } else {
+          category = val.category.join('')
+        }
+      }
+      this.searchRes(category, 'category')
     },
     teacherRes(val) {
       let teacherId = ''
@@ -138,8 +144,8 @@ export default {
     searchRes(val, name) {
       this.searchParams[name] = val
       this.$emit('searchParams', this.searchParams)
-    }
-  }
+    },
+  },
 }
 </script>
 

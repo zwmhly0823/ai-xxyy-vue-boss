@@ -43,6 +43,10 @@ export default {
       type: String,
       default: ''
     },
+     category: {
+      type: Array,
+      default:() => []
+    },
     // 1-系统课，0-体验课
     type: {
       type: String,
@@ -151,7 +155,14 @@ export default {
       if (this.type) {
         queryParams.bool.must.push({ term: { type: `${this.type}` } })
       }
-      if (this.record.length > 0) {
+
+      // if(this.category.length ==2) {
+      //   queryParams.bool.must.push({ term: { type: `${this.category}` } })
+      // }
+      // else {
+      //   queryParams.bool.must.push({ term: { type: `${this.category.join('')}` } })
+      // }
+     if (this.record.length > 0) {
         console.log(this.period)
         this.period.push(...this.record)
       }

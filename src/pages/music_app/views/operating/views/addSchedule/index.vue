@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
- * @LastEditors: Shentong
- * @LastEditTime: 2020-07-27 16:41:08
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-12 17:30:03
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -114,7 +114,7 @@ export default {
   created() {
     const { courseType = '0' } = this.$route.params
     this.courseType = courseType
-    this.courseName = courseType === '0' ? '体验课' : '系统课'
+    this.courseName = courseType === '0' ? '单周体验课' :courseType === '1'?'双周体验课':'系统课'
     let staff = JSON.parse(localStorage.getItem('staff'))
     if (staff.stepStatus) {
       this.stepStatus = staff.stepStatus

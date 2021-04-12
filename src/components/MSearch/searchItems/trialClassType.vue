@@ -63,18 +63,18 @@ export default {
           text: '全部',
         },
         {
-          id: 2,
+          id:["2"],
           text: '单周体验课',
         },
         {
-          id: 0,
+          id: ["0"],
           text: '双周体验课',
         },
       ],
     }
   },
   mounted() {
-    if(this.name == "type") {
+    if(this.name == "category") {
       this.typeList = this.typeList2
     }else if(this.name == 'packages_type') {
       this.typeLis = this.typeList1

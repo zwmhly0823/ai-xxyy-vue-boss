@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-15 17:31:21
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-12 17:25:37
  -->
 <template>
   <div>
@@ -140,7 +140,7 @@ export default {
       canClick: true,
       query: '',
       tabIndex: 0,
-      tabs: ['体验课', '系统课'],
+      tabs: ['单周体验课','上周周体验课', '系统课'],
       totalElements: 0,
       flags: {
         loading: false
@@ -232,7 +232,7 @@ export default {
     // 新增、编辑
     addEditSchedule(row) {
       const { period = 0 } = row // TODO:
-
+      
       var staff = JSON.parse(localStorage.getItem('staff'))
       staff.stepStatus = 1
       localStorage.setItem('staff', JSON.stringify(staff))
@@ -268,7 +268,7 @@ export default {
       this.tabQuery = {
         ...this.tabQuery,
         // page: --this.tabQuery.page,
-        courseType: this.tabIndex
+        courseType: this.tabIndex==0?2:this.tabIndex==1?0:this.tabIndex==2?1:0
       }
       // TODO:
       try {
