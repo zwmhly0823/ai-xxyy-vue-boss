@@ -32,26 +32,30 @@ export default {
   props: {
     name: {
       type: String,
-      default: ''
+      default: '',
     },
     placeholder: {
       type: String,
-      default: '体验课类型'
-    }
+      default: '体验课类型',
+    },
   },
   data() {
     return {
       type: null,
       typeList: [
         {
-          id: '5,6',
-          text: '双周'
+          id: '',
+          text: '全部',
         },
         {
-          id: '11',
-          text: '单周'
-        }
-      ]
+          id: '6',
+          text: '单周体验课',
+        },
+        {
+          id: '0',
+          text: '双周体验课',
+        },
+      ],
     }
   },
   methods: {
@@ -79,8 +83,8 @@ export default {
         item = ['5', '6']
       }
       this.$emit('result', { [this.name]: item })
-    }
-  }
+    },
+  },
 }
 </script>
 
