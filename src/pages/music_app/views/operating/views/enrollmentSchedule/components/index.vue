@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-12 17:25:37
+ * @LastEditTime: 2021-04-12 18:38:30
  -->
 <template>
   <div>
@@ -140,7 +140,7 @@ export default {
       canClick: true,
       query: '',
       tabIndex: 0,
-      tabs: ['单周体验课','上周周体验课', '系统课'],
+      tabs: ['单周体验课','双周体验课', '系统课'],
       totalElements: 0,
       flags: {
         loading: false
