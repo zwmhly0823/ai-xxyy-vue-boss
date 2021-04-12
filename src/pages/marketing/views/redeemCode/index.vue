@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-06 17:15:04
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-07 18:34:46
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-12 14:11:24
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -175,7 +175,6 @@ export default {
     },
     // 查看码库
     handleOpenLibrary(row) {
-      alert('sss')
       const { id, status } = row
       // 区分科目 TODO:新增其他科目时再优化
       const subject = this.$store.getters.subjects.subjectCode
