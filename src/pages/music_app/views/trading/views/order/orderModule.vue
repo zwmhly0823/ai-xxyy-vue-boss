@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 15:16:26
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-20 20:10:02
+ * @LastEditTime: 2021-04-08 17:27:58
  -->
 <template>
   <el-row type="flex" class="orderModule app-main height">
@@ -79,6 +79,17 @@
                   v-if="activeTopic === '7'"
                 />
               </el-tab-pane> -->
+              <el-tab-pane label="兑换码订单" name="13">
+                 <search-list6
+                  @search="handleSearch"
+                  v-if="activeTopic === '13'"
+                />
+                <all-order6
+                  :topic="activeTopic"
+                  :search="search"
+                  v-if="activeTopic === '13'"
+                /> 
+              </el-tab-pane>
             </el-tabs>
           </div>
         </el-scrollbar>
@@ -92,11 +103,13 @@ import allOrder1 from './components/allOrder1'
 import allOrder2 from './components/allOrder2'
 import allOrder3 from './components/allOrder3'
 import allOrder5 from './components/allOrder5'
+import allOrder6 from './components/allOrder6'
 // import allOrder4 from './components/allOrder4'
 import searchList1 from './components/searchList1.vue'
 import searchList2 from './components/searchList2.vue'
 import searchList3 from './components/searchList3.vue'
 import searchList5 from './components/searchList5.vue'
+import searchList6 from './components/searchList6.vue'
 // import searchList4 from './components/searchList4.vue'
 export default {
   name: 'orderModule',
@@ -107,11 +120,13 @@ export default {
     allOrder3,
     // allOrder4,
     allOrder5,
+    allOrder6,
     searchList1,
     searchList2,
     searchList3,
     // searchList4,
     searchList5,
+    searchList6,
   },
   data() {
     return {

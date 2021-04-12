@@ -3,8 +3,8 @@
  * @Descripttion:
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-16 18:52:08
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-12 14:11:44
  */
  -->
 <template>
@@ -436,7 +436,6 @@ export default {
       } catch (error) {
         console.log(error)
         setTimeout(() => {
-          alert('1111')
           this.btnDisabled = false
         }, 3000)
       }

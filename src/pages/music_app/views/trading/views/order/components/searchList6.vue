@@ -1,10 +1,10 @@
 <!--
- * @Descripttion: 素质课搜索栏
+ * @Descripttion: 系统课搜索栏
  * @version: 1.0.0
- * @Author: songyanan
- * @Date: 2020-07-01 11:08:23
+ * @Author: liukun
+ * @Date: 2020-04-25 17:24:23
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-10 17:53:44
+ * @LastEditTime: 2021-04-09 15:51:58
  -->
 <template>
   <el-card
@@ -21,18 +21,50 @@
           @clear="clearNum()"
         />
       </el-form-item>
-      <!-- 商品状态 -->
-      <el-form-item label="商品状态:" :class="{ [$style.marginer]: true }">
-        <productStatus @result="getStatus" name="coupon_status" />
+
+      <el-form-item
+        label="订单来源:"
+        :class="{ [$style.marginer]: true }"
+        v-if="false"
+      >
+        <ChannelSelect @result="getChannel" name="pay_channel" />
       </el-form-item>
 
+      <!-- <el-form-item label="物流状态:" :class="{ [$style.marginer]: true }">
+        <orderStatus @result="getExpressStatus" />
+      </el-form-item> -->
+      <el-form-item
+        label="推荐人信息:"
+        :class="{ [$style.marginer]: true }"
+        v-if="false"
+      >
+        <div class="row_colum">
+          <simple-select
+            name="is_first_order_send_id"
+            @result="getFirstOrder"
+            :multiple="false"
+            :data-list="firstOrderList"
+            placeholder="全部"
+          ></simple-select>
+          <SearchPhoneAndUsername
+            ref="phoneName"
+            @result="getSendUser"
+            :custom-style="{ width: '200px' }"
+            placeholder="推荐人手机号/用户名称"
+            name="first_order_send_id"
+            type="2"
+            v-if="hasSendId"
+          />
+        </div>
+      </el-form-item>
       <br />
 
-      <el-form-item label="下单时间:" :class="{ [$style.marginer]: true }">
+      <el-form-item :label="timeLabel" :class="{ [$style.marginer]: true }">
         <DatePicker
           :class="[$style.fourPoint, 'allmini']"
+          :name="timeName"
+          :key="payStatus"
           @result="getDate"
-          name="ctime"
         >
           <template v-slot:buttons>
             <div class="row_colum margin_l10">
@@ -69,6 +101,54 @@
         </DatePicker>
       </el-form-item>
       <br />
+      <el-form-item label="体验课:" :class="{ [$style.marginer]: true }">
+        <div class="row_colum">
+          <department
+            name="last_teacher_id"
+            placeholder="全部销售组"
+            @result="getDepartment"
+          />
+          <group-sell
+            :teacherscope="teacherscope"
+            is-multiple
+            @result="selectPayTeacher"
+            name="last_teacher_id"
+            class="margin_l10"
+            style="width: 140px"
+          />
+          <search-stage
+            :teacher-id="teacherscope_trial || teacherscope"
+            class="margin_l10"
+            name="stage"
+            placeholder="全部体验课排期"
+            type="0"
+            @result="selectScheduleTrial"
+          />
+          <hardLevel
+            :class="['margin_l10']"
+            placeholder="体验课难度"
+            style="width: 140px"
+            name="sup"
+            @result="supCallBackTrial"
+          />
+          <search-team-name
+            teamnameType="0"
+            :term="term_trial"
+            :teacher-id="teacherscope_trial || teacherscope"
+            @result="getTrialTeamName"
+            name="team_id"
+            :class="['margin_l10']"
+            style="width: 140px"
+          />
+          <!-- BOSS 显示单双周选择 -->
+          <!-- <trial-course-type
+            v-if="!teacherId"
+            class="margin_l10"
+            name="packages_id"
+            @result="getTrialCourseType"
+          /> -->
+        </div>
+      </el-form-item>
     </el-form>
     <div class="export-order">
       <el-button size="mini" type="primary" @click="showChooseDialog = true"
@@ -99,33 +179,62 @@
 </template>
 <script>
 import dayjs from 'dayjs'
+import hardLevel from '@/components/MSearch/searchItems/hardLevel.vue' // add
 import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // add
+// import orderStatus from '@/components/MSearch/searchItems/orderStatus.vue' // add
 import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'
-import productStatus from '@/components/MSearch/searchItems/productStatus.vue'
+import ChannelSelect from '@/components/MSearch/searchItems/channel.vue'
+import GroupSell from '@/components/MSearch/searchItems/groupSell'
+import Department from '@/components/MSearch/searchItems/department'
+import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
+import SearchStage from '@/components/MSearch/searchItems/searchStage'
+// import TrialCourseType from '@/components/MSearch/searchItems/trialCourseType'
+import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
+import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
+import { isToss } from '@/utils/index'
 import { downloadHandle } from '@/utils/download'
-
 export default {
+  props: {
+    // 订单支付状态 3-已完成
+    payStatus: {
+      type: String,
+      default: '3',
+    },
+  },
   components: {
+    // orderStatus,
+    hardLevel,
     orderSearch,
-    productStatus,
+    ChannelSelect,
     DatePicker,
+    GroupSell,
+    Department,
+    SearchTeamName,
+    SearchStage,
+    // TrialCourseType,
+    SearchPhoneAndUsername,
+    SimpleSelect,
   },
 
   data() {
     return {
       cur0: false,
       cur1: false,
+      showChooseDialog: false,
       cur2: false,
       cur3: false,
       currentBtn: null,
+      teacherscope: null, // 当前选择的体验课老师范围（销售组查询）
+      teacherscope_trial: null, // 当前选择的体验课老师范围
       term_trial: null, // 当前选择体验课排期
       showErr: false,
       errTips: '搜索条件不能为空',
       must: [],
       should: [],
+      searchParams: [],
       selectTime: null, // 物流时间下拉列表_选中项
       oldTime: '', // 上次时间选择值
-      searchParams: [],
+      teacherId: '', // 判断是否是toss环境还是boss环境
       firstOrderList: [
         {
           id: '1',
@@ -137,11 +246,35 @@ export default {
         },
       ],
       hasSendId: true,
-      showChooseDialog: false,
       chooseExport: '1',
     }
   },
-  computed: {},
+  computed: {
+    timeLabel() {
+      return this.payStatus === '3' ? '支付时间:' : '下单时间:'
+    },
+    timeName() {
+      return this.payStatus === '3' ? 'buytime' : 'ctime'
+    },
+  },
+  watch: {
+    payStatus(val) {
+      /**
+       * 切换支付状态时，清空支付时间/下单时间搜索条件
+       */
+      this.searchParams.forEach((item) => {
+        if (item.range) {
+          const time = item.range?.ctime || item.range?.buytime
+          if (time) {
+            delete item.range
+            for (let i = 0; i < 4; i++) {
+              this['cur' + i] = false
+            }
+          }
+        }
+      })
+    },
+  },
   methods: {
     // 切换手机/订单清空筛选项
     clearNum() {
@@ -151,14 +284,14 @@ export default {
     },
     // 订单号、手机号
     getOrderSearch(res) {
+      console.log(res)
       const key = Object.keys(res || {})[0]
       const val = res[key] ? res : ''
       this.setSeachParmas(val, [key])
     },
-    // 选择状态
-    getStatus(res) {
-      console.log(res, '选择状态')
-      this.setSeachParmas(res, ['coupon_status'], 'terms')
+    // 选择渠道
+    getChannel(res) {
+      this.setSeachParmas(res, ['pay_channel'], 'terms')
     },
     // 难度
     supCallBack(res) {
@@ -173,7 +306,7 @@ export default {
       if (!res || !res.quick) this.currentBtn = null
       if (res.quick && this.currentBtn) this[`cur${this.currentBtn}`] = true
       delete res.quick
-      this.setSeachParmas(res, ['ctime'], 'range')
+      this.setSeachParmas(res, [this.timeName], 'range')
     },
     // 4点外移
     today() {
@@ -235,7 +368,51 @@ export default {
     getExpressStatus(res) {
       this.setSeachParmas(res, ['express_status'])
     },
-    async getSendUser(res) {
+    getDepartment(res) {
+      this.teacherscope = res.last_teacher_id || null
+      this.setSeachParmas(res, ['last_teacher_id'], 'terms')
+    },
+    // 选择社群销售
+    selectPayTeacher(res) {
+      if (!res.last_teacher_id || res.last_teacher_id.length === 0) {
+        this.teacherscope_trial = null
+        if (this.teacherscope && this.teacherscope.length > 0) {
+          res = {
+            last_teacher_id: this.teacherscope,
+          }
+        } else {
+          res = ''
+        }
+      } else {
+        this.teacherscope_trial = res.last_teacher_id
+      }
+      this.setSeachParmas(res, ['last_teacher_id'], 'terms')
+    },
+    // 体验课排期
+    selectScheduleTrial(res) {
+      if (res) {
+        // this.term_trial = res.trial_stage || ''
+        this.term_trial = res.stage || []
+      } else {
+        this.term_trial = []
+      }
+      this.setSeachParmas(res, ['stage'], 'terms')
+    },
+    // 体验课难度
+    supCallBackTrial(res) {
+      console.log(res, 'res')
+      this.setSeachParmas(res, ['sup'], 'terms')
+    },
+    getTrialTeamName(res) {
+      this.setSeachParmas(res, ['team_id'], 'terms')
+    },
+
+    // 体验课类型
+    getTrialCourseType(res) {
+      this.setSeachParmas(res, ['packages_id'], 'terms')
+    },
+
+    getSendUser(res) {
       this.setSeachParmas(res, ['first_order_send_id'], 'terms')
     },
     getFirstOrder(res) {
@@ -311,40 +488,29 @@ export default {
         temp.push({
           [`${extraKey}`]: `${JSON.stringify(res)}`,
         })
+        this.searchParams = temp
         this.should = temp
       }
       this.$emit('searchShould', temp)
     },
-
     // 导出
     exportOrderHandle() {
       console.log(this.searchParams)
-      console.log(this.$parent.$children[1].finalParams)
+      console.log('exportOrderHandle', this.$parent.$children[1])
       const chooseExport = this.chooseExport
       if (this.searchParams.length === 0) {
         this.$message.error('请选择筛选条件')
         return
       }
 
+      // 获取查询条件
       const query = this.$parent.$children[1].finalParams
       query.subject = 3
-      // delete query.packages_id
-      // delete query.regtype
-      // delete query.status
+      console.log('query======')
+      console.log(query)
+
       const fileTitle = dayjs(new Date()).format('YYYY-MM-DD')
       const fileTitleTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
-
-      // 导出条件为 v1 对象方式
-      // const query = {
-      //   status: 3
-      // }
-      // const search = this.searchParams[0]
-      // for (const key in search) {
-      //   if (Object.keys(search).includes(key)) {
-      //     const item = search[key]
-      //     Object.assign(query, item)
-      //   }
-      // }
 
       const loading = this.$loading({
         lock: true,
@@ -353,81 +519,43 @@ export default {
       })
       if (chooseExport === '1') {
         const params = {
-          apiName: 'CouponOrderStatistics',
+          apiName: 'OrderPage',
           header: {
-            buydate: '缴费时间',
+            buydate: '兑换时间',
             out_trade_no: '订单号',
             uid: '用户ID',
             'user.username': '用户昵称',
-            'paymentPay.transaction_id': '交易流水号',
-            'paymentPay.trade_type_text': '支付方式',
-            amount: '交易金额',
-            packages_name: '商品类型',
-            'user_coupon.status_text': '商品状态',
-            invoice_status_text: '开票状态',
-            invoice_type_text: '开票类型',
-            invoice_code: '发票号码',
-            'user_coupon.coupon_used_amount': '使用金额',
-            'user_coupon.coupon_refund_amount': '退费金额',
-            'user_coupon.coupon_rest_amount': '剩余金额',
-          },
-          fileName: `预付款优惠券订单导出-${fileTitleTime}`, // 文件名称
-          query: JSON.stringify(query),
-        }
-        // console.log(exportExcel)
-        this.$http.DownloadExcel.exportOrder(params)
-          .then((res) => {
-            console.log(res)
-            downloadHandle(res, `预付款优惠券订单导出-${fileTitle}`, () => {
-              loading.close()
-              this.$message.success('导出成功')
-            })
-          })
-          .catch(() => loading.close())
-      } else {
-        const params = {
-          apiName: 'OrderPage',
-          header: {
-            id: '订单ID',
-            uid: '学员ID',
+            exchange_type_text: '购课方式',
+            exchange_code: '兑换码',
+            'exchange_code_log.library.title': '兑换码标题',
+            'packagesType.name': '套餐类型',
             'stageInfo.period_name': '期数',
-            packages_name: '类型',
-            'stageInfo.course_day_text': '开课时间',
-            'team.team_name': '班级',
-            class_type: '班级类型',
+            'channel.channel_outer_name': '线索渠道',
             sup_text: '课程难度',
-            'before_teacher.realname': '真实姓名',
-            'before_teacher.ding_userid': '钉钉员工号',
-            'after_teacher.realname': '接班老师',
-            'after_teacher.ding_userid': '钉钉员工号',
-            'enrolledInfo.is_enrolled': '是否报名',
-            'enrolledInfo.enrolled_amount': '报名金额',
-            'enrolledInfo.enrolled_time': '报名时间',
-            'enrolledInfo.group_name': '战队',
-            'enrolledInfo.department_name': '部门',
-            'enrolledInfo.department_area_name': '区',
-            buydate: '体验课报名时间',
-            'channelDetail.channel_class_name': '二级渠道',
-            'channelDetail.p_channel_class_name': '一级渠道',
+            class_start_text: '开课时间',
           },
-          fileName: `体验课订单薪资核算表-${fileTitleTime}`, // 文件名称
+          fileName: `兑换码订单-${fileTitleTime}`, // 文件名称
           query: JSON.stringify(query),
           // query: '{"status":3}'
         }
-        // console.log(exportExcel)
-
         this.$http.DownloadExcel.exportOrder(params)
           .then((res) => {
-            console.log(res)
-            downloadHandle(res, `体验课订单薪资核算表-${fileTitle}`, () => {
+            console.log(res,"导出数据")
+            downloadHandle(res, `兑换码订单导出-${fileTitle}`, () => {
               loading.close()
               this.showChooseDialog = false
               this.$message.success('导出成功')
             })
           })
           .catch(() => loading.close())
-      }
+      } 
     },
+  },
+  created() {
+    const teacherId = isToss()
+    if (teacherId) {
+      this.teacherId = teacherId
+    }
   },
 }
 </script>
@@ -465,7 +593,6 @@ export default {
 </style>
 <style lang="scss" scoped>
 .search-section {
-  position: relative;
   ::v-deep .el-icon-search {
     top: 14px;
   }
@@ -474,8 +601,8 @@ export default {
 <style scoped>
 .export-order {
   position: absolute;
-  bottom: 25px;
   right: 20px;
+  z-index: 6;
 }
 .el-select-dropdown.is-multiple .el-select-dropdown__item.selected:after {
   right: 5px;

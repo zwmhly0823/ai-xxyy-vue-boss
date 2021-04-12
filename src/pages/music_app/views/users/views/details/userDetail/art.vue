@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-08-17 19:37:24
- * @LastEditors: Shentong
- * @LastEditTime: 2021-02-05 21:08:35
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-12 14:11:54
 -->
 <template>
   <div class="system-details">
@@ -493,7 +493,6 @@ export default {
           }
         })
         .catch((err) => {
-          alert(err)
         })
     },
     /**
