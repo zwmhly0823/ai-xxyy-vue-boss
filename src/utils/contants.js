@@ -1,6 +1,14 @@
+/*
+ * @Author: your name
+ * @Date: 2021-03-29 16:39:28
+ * @LastEditTime: 2021-04-12 17:51:47
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /ai-xxyy-vue-boss/src/utils/contants.js
+ */
 let originUrl = location.origin
 let ossImgUrl = ''
-if (originUrl.indexOf('prod') > 0 || originUrl.indexOf('live') > 0) {
+if (originUrl.indexOf('prod') > -1 || originUrl.indexOf('live') > -1 || originUrl.indexOf('boss.xiaoxiongyinyue.com')) {
   // ossImgUrl = 'https://ai-xxyy-backend-online.oss-cn-hangzhou.aliyuncs.com' //oss域名
   ossImgUrl = 'https://ai-xxyy-backend-online-oss.xiaoxiongyinyue.com'   //cdn域名
 } else {
