@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-10-23 22:18:39
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-06 17:40:34
+ * @LastEditTime: 2021-04-12 15:59:18
 -->
 <template>
   <section class="bianju10">
@@ -92,6 +92,7 @@
                 { label: '补偿' },
                 { label: '降一年包' },
                 { label: '降一年半包' },
+                { label: '预付款优惠券退款' },
               ]"
               :label="item.label"
               :value="index"
