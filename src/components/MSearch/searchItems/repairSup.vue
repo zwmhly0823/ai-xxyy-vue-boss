@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-29 18:47:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-12 19:18:50
+ * @LastEditTime: 2021-04-12 20:18:02
  -->
 <template>
   <div class="container">
@@ -19,7 +19,7 @@
       <el-option
         v-for="item in supList"
         :key="item.id"
-        :label="item.id"
+        :label="item.text"
         :value="item.id"
       >
       </el-option>
