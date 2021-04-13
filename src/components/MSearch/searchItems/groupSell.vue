@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-24 00:50:50
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-13 15:43:16
  -->
 <template>
   <div class="search-item small" :style="myStyle">
@@ -82,7 +82,7 @@ export default {
     }
   },
   created() {
-    this.getTeacher()
+    // this.getTeacher()
   },
   watch: {
     teacherscope(val, old) {
