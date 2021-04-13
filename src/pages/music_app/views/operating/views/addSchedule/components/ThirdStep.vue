@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
- * @LastEditors: Shentong
- * @LastEditTime: 2020-10-24 15:38:26
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-13 20:24:40
  -->
 <template>
   <div class="third-step">
@@ -292,7 +292,7 @@ export default {
       this.params.courseDifficulty = 'S1'
     }
     Object.assign(this.params, {
-      courseType,
+      courseType:courseType==0?2:courseType==1?0:courseType==2?1:'',
       period: this.schedulePeriod,
       ids: this.scheduleTeacherId
     })
@@ -529,7 +529,7 @@ export default {
       this.validateTableForm(tableData)
       if (this.isValidate) {
         const params = {
-          courseType,
+          courseType:3,
           period: this.schedulePeriod,
           body: tableData
         }
