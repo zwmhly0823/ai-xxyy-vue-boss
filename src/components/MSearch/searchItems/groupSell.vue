@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-13 15:43:16
+ * @LastEditTime: 2021-04-13 21:00:59
  -->
 <template>
   <div class="search-item small" :style="myStyle">
@@ -82,7 +82,7 @@ export default {
     }
   },
   created() {
-    // this.getTeacher()
+    this.getTeacher()
   },
   watch: {
     teacherscope(val, old) {
@@ -133,7 +133,7 @@ export default {
       getDepartmentTeacherEx(JSON.stringify(q))
         .then((res) => {
           this.teacherList = res.data.TeacherListEx || []
-          this.loading = false
+           this.loading = false
         })
         .catch(() => {
           this.loading = false

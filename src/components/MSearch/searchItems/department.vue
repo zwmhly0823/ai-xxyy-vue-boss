@@ -105,22 +105,22 @@ export default {
       const allNodes = this.$refs.dept.getCheckedNodes()
       const allNodesId = allNodes.map((item) => item.value)
       const ids = { department_id: allNodesId || [] }
-      // if (this.onlyDept === 1) {
-      //   this.$emit('result', { [this.name]: allNodesId })
-      //   // this.$emit('result', { [this.name]: data })
-      // } else {
-      //   const teacher = await this.$http.Department.getDepartmentTeacher(
-      //     JSON.stringify(ids),
-      //     300,
-      //     this.isParttimeTeacher
-      //   )
-      //   const teacherIds = this.departmentList.map((item) => item.id)
-      //   this.$emit(
-      //     'result',
-      //     data === null || data.length > 0 ? { [this.name]: teacherIds } : ''
-      //   )
-      // }
-      this.$emit('result', { [this.name]: allNodesId })
+      if (this.onlyDept === 1) {
+        this.$emit('result', { [this.name]: allNodesId })
+        // this.$emit('result', { [this.name]: data })
+      } else {
+        const teacher = await this.$http.Department.getDepartmentTeacher(
+          JSON.stringify(ids),
+          300,
+          this.isParttimeTeacher
+        )
+        
+        const teacherIds = teacher.data.TeacherList.map((item) => item.id)
+       this.$emit(
+          'result',
+          data === null || data.length > 0 ? { [this.name]: teacherIds } : ''
+        )
+      }
     },
     handle(property) {
       return function (a, b) {
