@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-14 10:38:15
+ * @LastEditTime: 2021-04-14 14:40:36
  -->
 <template>
   <div class="first-step">
@@ -569,14 +569,7 @@ export default {
         endCourseDay,
         robinNum: this.formInfo.robinNum,
         sellCycle: this.setSellTimeForm,
-        type: (this.courseType =
-          this.courseType == 0
-            ? 2
-            : this.courseType == 1
-            ? 0
-            : this.courseType == 2
-            ? 1
-            : ''),
+        type: this.courseType,
         period: +this.period || '',
       })
 
