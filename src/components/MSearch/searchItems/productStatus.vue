@@ -11,10 +11,9 @@
     <el-select
       v-model="result"
       size="mini"
-      clearable
-      :multiple="isMultipe"
       placeholder="商品状态"
       @change="onChange"
+      clearable
       class="item-style"
     >
       <el-option
@@ -34,11 +33,6 @@ export default {
       type: String,
       default: ''
     },
-   
-    isMultipe: {
-      type: Boolean,
-      default: true
-    }
   },
   data() {
     return {
@@ -47,11 +41,11 @@ export default {
       typeList: [
       
         {
-          id: '1',
+          id: '2',
           text: '已使用'
         },
         {
-          id: '0',
+          id: '1',
           text: '未使用'
         },
       

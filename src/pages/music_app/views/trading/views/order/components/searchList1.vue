@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-21 21:36:53
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-14 14:07:45
  -->
 <template>
   <el-card
@@ -54,8 +54,23 @@
           ></simple-select>
         </div>
       </el-form-item>
+      <!-- 是否关联其他订单 -->
+      <el-form-item label="是否关联其他订单:" label-width="120px" :height="300">
+        <el-select
+          @change="selectOrder"
+          v-model="associated_order_id"
+          placeholder="请选择关联订单"
+        >
+          <el-option
+            v-for="item in options1"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+      </el-form-item>
       <br />
-
       <el-form-item :label="timeLabel" :class="{ [$style.marginer]: true }">
         <DatePicker
           :class="[$style.fourPoint, 'allmini']"
@@ -149,7 +164,7 @@
           <hardLevel
             :class="['margin_l10']"
             placeholder="全部体验课难度"
-            style="width:140px"
+            style="width: 140px"
             name="trial_team_id"
             :courseType="false"
             @result="supCallBackTrial"
@@ -174,7 +189,7 @@
       <el-form-item label="系统课:" :class="{ [$style.marginer]: true }">
         <div class="row_colum">
           <systemCourseType
-            style="width:140px"
+            style="width: 140px"
             teamType="1"
             @result="getSystemCourseType"
             name="packages_type"
@@ -197,7 +212,7 @@
           <hardLevel
             :class="['margin_l10']"
             placeholder="全部系统课难度"
-            style="width:140px"
+            style="width: 140px"
             name="sup"
             @result="supCallBack"
           />
@@ -219,7 +234,7 @@
       </el-form-item>
     </el-form>
     <div class="export-order">
-      <el-button size="mini" type="primary" @click="showChooseDialog = true"
+      <el-button size="mini" type="primary" @click="showChooseDialogClick"
         >订单导出</el-button
       >
     </div>
@@ -234,7 +249,7 @@
             placement="top"
             ><i
               class="el-icon-question"
-              style="padding-left:5px;"
+              style="padding-left: 5px"
             ></i></el-tooltip
         ></el-radio>
         <el-radio label="2"
@@ -246,7 +261,7 @@
             placement="top"
             ><i
               class="el-icon-question"
-              style="padding-left:5px;"
+              style="padding-left: 5px"
             ></i></el-tooltip
         ></el-radio>
       </el-radio-group>
@@ -280,13 +295,13 @@ export default {
   props: {
     searchProp: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     // 订单支付状态 3-已完成
     payStatus: {
       type: String,
-      default: '3'
-    }
+      default: '3',
+    },
   },
   components: {
     hardLevel,
@@ -301,11 +316,26 @@ export default {
     SearchStage,
     orderAttr,
     SearchPhoneAndUsername,
-    SimpleSelect
+    SimpleSelect,
   },
 
   data() {
     return {
+      associated_order_id: '全部',
+      options1: [
+        {
+          value: 2,
+          label: '全部',
+        },
+        {
+          value: 1,
+          label: '已关联',
+        },
+        {
+          value: 0,
+          label: '无关联',
+        },
+      ],
       cur0: false,
       cur1: false,
       cur2: false,
@@ -334,36 +364,36 @@ export default {
         // },
         {
           id: '1',
-          text: '有推荐人'
+          text: '有推荐人',
         },
         {
           id: '0',
-          text: '无推荐人'
-        }
+          text: '无推荐人',
+        },
       ],
       orderTypeList: [
         {
           id: '2',
-          text: '首单'
+          text: '首单',
         },
         {
           id: '3',
-          text: '续费'
-        }
+          text: '续费',
+        },
       ],
       expChangeList: [
         {
           id: '1',
-          text: '是'
+          text: '是',
         },
         {
           id: '2',
-          text: '否'
-        }
+          text: '否',
+        },
       ],
       hasSendId: true,
       showChooseDialog: false,
-      chooseExport: '1'
+      chooseExport: '1',
     }
   },
   computed: {
@@ -372,7 +402,7 @@ export default {
     },
     timeName() {
       return this.payStatus === '3' ? 'buytime' : 'ctime'
-    }
+    },
   },
   watch: {
     packages_type(val, old) {
@@ -405,7 +435,7 @@ export default {
           }
         }
       })
-    }
+    },
   },
   methods: {
     // 切换手机/订单清空筛选项
@@ -435,9 +465,22 @@ export default {
         )
       }
     },
+    // 是否关联订单
+    selectOrder(val) {
+      this.searchParams.forEach((item, index) => {
+        if (
+          item.terms.associated_order_id ||
+          item.terms.associated_order_id == 0
+        ) {
+          this.searchParams.splice(index, 1)
+        }
+      })
+      let res = { associated_order_id: val }
+      this.setSeachParmas(res, ['associated_order_id'], 'terms')
+      console.log(this.searchParams, 'this.searchParams')
+    },
     // 选择渠道
     getChannel(res) {
-      console.log(res)
       this.setSeachParmas(res, ['pay_channel'], 'terms')
     },
     getTrialChannel(res) {
@@ -540,7 +583,7 @@ export default {
         this.teacherscope_trial = null
         if (this.teacherscope && this.teacherscope.length > 0) {
           res = {
-            pay_teacher_id: this.teacherscope
+            pay_teacher_id: this.teacherscope,
           }
         } else {
           res = ''
@@ -569,7 +612,7 @@ export default {
           }
         })
         return this.setSeachParmas({ packages_course_week: '72' }, [
-          'packages_course_week'
+          'packages_course_week',
         ])
       }
       if (res && res.packages_type === '5') {
@@ -579,7 +622,7 @@ export default {
           }
         })
         return this.setSeachParmas({ packages_course_week: '96' }, [
-          'packages_course_week'
+          'packages_course_week',
         ])
       }
       if (res && res.packages_type === '4') {
@@ -589,7 +632,7 @@ export default {
           }
         })
         return this.setSeachParmas({ packages_course_week: '48' }, [
-          'packages_course_week'
+          'packages_course_week',
         ])
       }
       if (res && res.packages_type === '3') {
@@ -599,7 +642,7 @@ export default {
           }
         })
         return this.setSeachParmas({ packages_course_week: '24' }, [
-          'packages_course_week'
+          'packages_course_week',
         ])
       }
       if (res) {
@@ -639,7 +682,7 @@ export default {
       if (res && res.is_first_order_send_id === '0') {
         this.$refs.phoneName.handleEmpty()
         this.setSeachParmas({ is_first_order_send_id: '' }, [
-          'is_first_order_send_id'
+          'is_first_order_send_id',
         ])
         this.hasSendId = false
       } else {
@@ -651,7 +694,7 @@ export default {
         }
         this.setSeachParmas('', ['first_order_send_id'], 'terms')
         this.setSeachParmas({ is_first_order_send_id: '' }, [
-          'is_first_order_send_id'
+          'is_first_order_send_id',
         ])
       } else {
         this.getSendUser(res, ['is_first_order_send_id'])
@@ -700,7 +743,7 @@ export default {
         if (res) {
           temp.push({
             // [`${extraKey}`]: `${JSON.stringify(res)}`
-            [extraKey]: res
+            [extraKey]: res,
           })
           this.must = temp
         }
@@ -747,13 +790,23 @@ export default {
       // should
       if (res) {
         temp.push({
-          [`${extraKey}`]: `${JSON.stringify(res)}`
+          [`${extraKey}`]: `${JSON.stringify(res)}`,
         })
         this.should = temp
       }
       this.$emit('searchShould', temp)
     },
-
+    showChooseDialogClick() {
+      // 获取查询条件
+      const query = this.$parent.$children[1].finalParams
+      // 限制导出全部订单
+     if (!query.status || query.status[0] != 3) {
+        this.$message.error('只能导出已完成的订单，请重新选择')
+        return
+      } else {
+        this.showChooseDialog = true
+      }
+    },
     // 导出
     exportOrderHandle() {
       console.log(this.searchParams)
@@ -768,7 +821,6 @@ export default {
       const query = this.$parent.$children[1].finalParams
       query.subject = 3
       console.log('query======')
-      console.log(query)
 
       const fileTitle = dayjs(new Date()).format('YYYY-MM-DD')
       const fileTitleTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
@@ -776,7 +828,7 @@ export default {
       const loading = this.$loading({
         lock: true,
         text: '正在导出，请耐心等待……',
-        spinner: 'el-icon-loading'
+        spinner: 'el-icon-loading',
       })
       if (chooseExport === '1') {
         const params = {
@@ -788,31 +840,28 @@ export default {
             'user.username': '用户昵称',
             'paymentPay.transaction_id': '交易流水号',
             'paymentPay.trade_type_text': '支付方式',
+            total_amount: '商品价格',
+            discount_type_text: '优惠类型',
+            discount_value_text: '折扣力度',
+            discount_amount: '优惠金额',
             amount: '交易金额',
             'packagesType.name': '套餐类型',
             'stageInfo.period_name': '期数',
             'channel.channel_outer_name': '线索渠道',
             sup_text: '课程难度',
+            is_associated_coupon: '是否关联预付款优惠券',
+            associated_order_out_trade_no: '关联订单号',
+            associated_order_amout: '关联订单交易金额',
             invoice_status_text: '开票状态',
             invoice_type_text: '开票类型',
             invoice_code: '发票号码',
+            order_total_amount: '订单总金额',
+            refund_amount: '累计退费金额',
+            remaining_amount: '剩余金额',
             class_start_text: '开课时间',
-            // paymentPayOut 退款流水
-            // 'team.team_name': '班级',
-            // 'team.team_type': '课程类型',
-            // // 'salesman.realname': '社群销售',
-            // // 'department.department.name': '社群战队',
-            // // 'teacher.realname': '后端服务老师',
-            // 'express.product_type': '商品类型',
-            // 'express.product_name': '商品信息',
-            // total_amount: '商品总额',
-            // // 'express.address_detail': '详细地址',
-            // // 'express.last_express_status': '物流状态',
-            // order_status: '状态'
-            // 'team.type': '退费金额'
           },
           fileName: `系统课订单导出-${fileTitleTime}`, // 文件名称
-          query: JSON.stringify(query)
+          query: JSON.stringify(query),
           // query: '{"status":3}'
         }
         // console.log(exportExcel)
@@ -831,7 +880,7 @@ export default {
         const query = this.$parent.$children[1].finalParams
         const queryF = Object.assign({}, query, {
           trial_team_id: 0,
-          pay_teacher_id: { gt: 0 }
+          pay_teacher_id: { gt: 0 },
         })
         console.log(queryF)
         const params = {
@@ -848,10 +897,10 @@ export default {
             'enrolledInfo.department_name': '部门',
             'enrolledInfo.department_area_name': '区',
             'channelDetail.channel_class_name': '二级渠道',
-            'channelDetail.p_channel_class_name': '一级渠道'
+            'channelDetail.p_channel_class_name': '一级渠道',
           },
           fileName: `系统课订单薪资核算表-${fileTitleTime}`, // 文件名称
-          query: JSON.stringify(queryF)
+          query: JSON.stringify(queryF),
           // query: '{"status":3}'
         }
         // console.log(exportExcel)
@@ -867,7 +916,7 @@ export default {
           })
           .catch(() => loading.close())
       }
-    }
+    },
   },
   created() {
     for (let i = 0; i < 4; i++) {
@@ -877,7 +926,7 @@ export default {
     if (teacherId) {
       this.teacherId = teacherId
     }
-  }
+  },
 }
 </script>
 <style lang="scss" module>
@@ -920,8 +969,10 @@ export default {
     top: 14px;
   }
 }
+/deep/ .el-input--suffix .el-input__inner {
+  height: 30px !important;
+}
 </style>
-
 <style scoped>
 .export-order {
   position: absolute;

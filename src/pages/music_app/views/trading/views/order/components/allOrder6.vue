@@ -1,17 +1,22 @@
 <!--
- * @Author: songyanan
- * @Email: songyanan@meishubao.com
- * @Date: 2020-07-01 11:16:27
- * @Last Modified by:   songyanan
- * @Last Modified time: 2020-07-01 15:24:00
+ * @Author: YangJiyong
+ * @Email: yangjiyong@meishubao.com
+ * @Date: 2020-04-14 16:36:27
+ * @Last Modified by:   YangJiyong
+ * @Last Modified time: 2020-04-14 16:36:27
+ * @Description: 统计区域
  -->
+
 <template>
   <div class="order-call">
     <!-- 4大块 -->
     <article class="top-box">
       <el-row :gutter="20" type="flex" justify="flex-start">
         <!-- 已完成 3 -->
-       <el-col :span="5">
+        <el-col :span="1.5">
+          <span class="text_style">兑换状态:</span>
+        </el-col>
+        <el-col :span="5">
           <div
             class="grid-content"
             :class="{ current: status === '3' }"
@@ -22,28 +27,20 @@
               <em>{{ +statisticsObj.payed.value.toFixed(2) || 0 }}</em
               >元 {{ statisticsObj.payed.count || 0 }}笔
             </div>
-            <!-- <div class="oride-bottom">
-              {{ +statisticsObj.payed.value.toFixed(2) || 0 }}元
-            </div> -->
           </div>
         </el-col>
         <!-- 未支付 0，1 -->
-          <el-col :span="5">
-         <div
+        <el-col :span="5" v-if="false">
+          <div
             class="grid-content"
             :class="{ current: status === '0,1' }"
             @click="chnageStatus('0,1')"
           >
             <div class="oride-top">未支付</div>
             <div class="oride-middle">
-              <!-- <em>{{ statisticsObj.topay.count }}</em
-              >笔 -->
               <em>{{ +statisticsObj.topay.value.toFixed(2) }}</em
               >元 {{ statisticsObj.topay.count }}笔
             </div>
-            <!-- <div class="oride-bottom">
-              {{ +statisticsObj.topay.value.toFixed(2) }}元
-            </div> -->
           </div>
         </el-col>
         <!-- 退费： 退费中 5，已退费 6，7 -->
@@ -61,24 +58,17 @@
           </div>
         </el-col> -->
         <!-- 全部订单 -->
-       <el-col :span="5">
-           <div
+        <el-col :span="5" v-if="false">
+          <div
             class="grid-content"
             :class="{ current: !status }"
             @click="chnageStatus('')"
           >
             <div class="oride-top">全部订单</div>
             <div class="oride-middle">
-              <em>{{ +statisticsObj.total.value.toFixed(2) }}</em
-              >元 {{ statisticsObj.total.count }}笔
+              <em>{{ +statisticsObj.total.value.toFixed(2) }}元</em>
+              {{ statisticsObj.total.count }}笔
             </div>
-            <!-- <div class="oride-middle">
-              <em>{{ statisticsObj.total.count }}</em
-              >笔
-            </div>
-            <div class="oride-bottom">
-              <span>{{ +statisticsObj.total.value.toFixed(2) }}元</span>
-            </div> -->
           </div>
         </el-col>
       </el-row>
@@ -87,7 +77,7 @@
     <el-divider></el-divider>
     <!-- tab列表 -->
     <article class="bottom-box">
-      <table-order5
+      <table-order6
         :topic="topic"
         :status="status"
         :search="searchIn"
@@ -98,11 +88,11 @@
   </div>
 </template>
 <script>
-import tableOrder5 from './tableOrder5'
+import tableOrder6 from './tableOrder6'
 import { isToss } from '@/utils/index'
 export default {
   components: {
-    tableOrder5
+    tableOrder6
   },
   props: {
     // 当前tab - 商品主题
@@ -126,7 +116,7 @@ export default {
       status: '3',
       // 搜索
       searchIn: [],
-     statistics: {
+      statistics: {
         '0': { count: 0, value: 0 },
         '1': { count: 0, value: 0 },
         '3': { count: 0, value: 0 },
@@ -137,12 +127,9 @@ export default {
       finalParams: {}
     }
   },
-  
   computed: {
     // statistics format
-    
     statisticsObj: {
-      
       get() {
         const { statistics } = this
         const obj = {}
@@ -194,7 +181,7 @@ export default {
     }
   },
   methods: {
-     // 获取订单统计
+    // 获取订单统计
     getStatistics(res) {
       const obj = {}
       if (res && res.length > 0) {
@@ -214,18 +201,15 @@ export default {
         this.reset()
       }
     },
-
     getParams(res) {
       this.finalParams = res
     },
-
     /**
      * 切换
      */
     chnageStatus(status) {
       this.status = status
       // emit status, 用于搜索组件判断条件
-      console.log(status)
       this.$emit('pay-status', status)
     },
 
@@ -233,7 +217,6 @@ export default {
       this.statistics = {
         '0': { count: 0, value: 0 },
         '1': { count: 0, value: 0 },
-        '2': { count: 0, value: 0 },
         '3': { count: 0, value: 0 },
         '5': { count: 0, value: 0 },
         '6': { count: 0, value: 0 },
@@ -245,4 +228,12 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import './statistics.scss';
+.top-box {
+  padding-left:47px;
+  .text_style {
+    color: #606266;
+    font-weight: 700;
+    font-size: 12px;
+  }
+}
 </style>

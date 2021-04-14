@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-06 19:52:15
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-09 15:24:51
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-12 20:35:11
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -312,12 +312,12 @@ export default {
       const params = {
         apiName: 'ExchangeCodeLogPage',
         header: {
-          'library.packageInfo.name': '套餐名称',
+          'library.package_name': '套餐名称',
           code: '兑换码',
           card_no: '卡号',
           'userInfo.mobile': '用户手机号',
           'userInfo.username': '用户昵称',
-          'library.customerSignInfo.name': '用户标签',
+          'library.customer_sign_name': '用户标签',
           status_text: '使用状态',
           use_date_text: '使用时间',
           converted_date_text: '兑换时间',

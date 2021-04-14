@@ -3,8 +3,8 @@
  * @version:
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
- * @LastEditors: liukun
- * @LastEditTime: 2021-02-02 21:20:27
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-07 10:44:34
  -->
 <template>
   <div class="container">
@@ -453,6 +453,10 @@
            )}月${drawerApprovalDeatail.periodAlready % 4}周
            `
             }}</el-col>
+          </el-row>
+            <el-row>
+            <el-col :span="5">关联订单:</el-col>
+            <el-col :span="18" :offset="1">{{drawerApprovalDeatail.associatedOrderOutTradeNo && drawerApprovalDeatail.associatedOrderOutTradeNo!=0?`${drawerApprovalDeatail.associatedPackagesName},金额${drawerApprovalDeatail.associatedOrderAmout},订单号${drawerApprovalDeatail.associatedOrderOutTradeNo}`:'无关联'}}</el-col>
           </el-row>
           <el-row>
             <el-col :span="5">关单赠品:</el-col>

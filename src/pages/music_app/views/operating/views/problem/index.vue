@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-06-24 17:01:54
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-30 14:11:44
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-13 14:37:31
 -->
 <template>
   <div class="problem-box">
@@ -152,7 +152,9 @@ export default {
       ? 'https://ai-xxyy-test.yinyuebao.com/question'
       : location.origin.includes('prod')
       ? 'https://ai-xxyy-prod.yinyuebao.com/question'
-      : 'https://ai-xxyy-live.yinyuebao.com/question'
+      : location.origin.includes('live')
+      ? 'https://ai-xxyy-live.yinyuebao.com/question'
+      : 'https://ai-xxyy-live.xiaoxiongyinyue.com/question'
   },
   methods: {
     handLeCopy(index, row) {

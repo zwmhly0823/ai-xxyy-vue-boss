@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: zhangjiawen
  * @Date: 2020-10-23 22:18:39
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-23 23:29:50
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-12 15:59:18
 -->
 <template>
   <section class="bianju10">
@@ -12,28 +12,53 @@
       <el-form :inline="true" size="mini">
         <el-form-item label="订单搜索:">
           <div class="concat">
-            <el-select clearable v-model="num1" placeholder="请选择" @change="chooseOrder">
+            <el-select
+              clearable
+              v-model="num1"
+              placeholder="请选择"
+              @change="chooseOrder"
+            >
               <el-option label="用户手机号" value="2"></el-option>
               <el-option label="订单号" value="0"></el-option>
               <el-option label="交易流水号" value="1"></el-option>
             </el-select>
-            <el-input clearable v-model="num1_" placeholder="请键入编号" @change="intoNumber"></el-input>
+            <el-input
+              clearable
+              v-model="num1_"
+              placeholder="请键入编号"
+              @change="intoNumber"
+            ></el-input>
           </div>
         </el-form-item>
         <el-form-item label="业务类型:">
-          <el-select clearable placeholder="请键入" v-model="fordisplay1" @change="businessType">
+          <el-select
+            clearable
+            placeholder="请键入"
+            v-model="fordisplay1"
+            @change="businessType"
+          >
             <el-option label="体验课" value="1"></el-option>
             <el-option label="系统课" value="2"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="支付方式:">
-          <el-select clearable placeholder="请键入" v-model="fordisplay2" @change="payMethod">
+          <el-select
+            clearable
+            placeholder="请键入"
+            v-model="fordisplay2"
+            @change="payMethod"
+          >
             <el-option label="微信" value="1"></el-option>
             <el-option label="支付宝" value="2"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="退款状态:">
-          <el-select clearable placeholder="请键入" v-model="fordisplay3" @change="refundStatus">
+          <el-select
+            clearable
+            placeholder="请键入"
+            v-model="fordisplay3"
+            @change="refundStatus"
+          >
             <el-option label="退款驳回" value="7"></el-option>
             <el-option label="退款中" value="4"></el-option>
             <el-option label="退款成功" value="5"></el-option>
@@ -41,14 +66,24 @@
         </el-form-item>
 
         <el-form-item label="退款规则:">
-          <el-select clearable placeholder="请键入" v-model="fordisplay6" @change="refundRule">
+          <el-select
+            clearable
+            placeholder="请键入"
+            v-model="fordisplay6"
+            @change="refundRule"
+          >
             <el-option label="不符合" value="1"></el-option>
             <el-option label="符合" value="0"></el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="退款类型:">
-          <el-select clearable placeholder="请键入" v-model="fordisplay5" @change="refundType">
+          <el-select
+            clearable
+            placeholder="请键入"
+            v-model="fordisplay5"
+            @change="refundType"
+          >
             <el-option
               v-for="(item, index) of [
                 { label: '优惠券退款' },
@@ -56,7 +91,8 @@
                 { label: '降半年包' },
                 { label: '补偿' },
                 { label: '降一年包' },
-                { label: '降一年半包' }
+                { label: '降一年半包' },
+                { label: '预付款优惠券退款' },
               ]"
               :label="item.label"
               :value="index"
@@ -75,7 +111,12 @@
           </div>
         </el-form-item>
         <el-form-item label="退款支付状态:">
-          <el-select clearable placeholder="请键入" v-model="payStatu" @change="refundPay">
+          <el-select
+            clearable
+            placeholder="请键入"
+            v-model="payStatu"
+            @change="refundPay"
+          >
             <el-option label="未发起" value="0"></el-option>
             <el-option label="支付中" value="1"></el-option>
             <el-option label="成功" value="2"></el-option>
@@ -84,7 +125,12 @@
         </el-form-item>
         <el-form-item label="时间查询:">
           <div class="concat">
-            <el-select clearable v-model="num2" placeholder="请键入" @change="whichTime">
+            <el-select
+              clearable
+              v-model="num2"
+              placeholder="请键入"
+              @change="whichTime"
+            >
               <el-option label="订单支付时间" value="0"></el-option>
               <el-option label="申请退款时间" value="1"></el-option>
               <el-option label="完成退款时间" value="2"></el-option>
@@ -106,7 +152,9 @@
         </el-form-item>
       </el-form>
       <div>
-        <el-button type="primary" @click.stop="BatchRefund">批量发起退款支付</el-button>
+        <el-button type="primary" @click.stop="BatchRefund"
+          >批量发起退款支付</el-button
+        >
       </div>
     </div>
     <el-divider></el-divider>
@@ -123,18 +171,18 @@
             <div class="usertext" @click="userHandle(scope.row)">
               {{ scope.row.userName ? scope.row.userName : '-' }}
               <br />
-              {{
-              scope.row.mobile
-              }}
+              {{ scope.row.mobile }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="订单编号-订单交易流水号" width="220" fixed="left">
+        <el-table-column
+          label="订单编号-订单交易流水号"
+          width="220"
+          fixed="left"
+        >
           <template slot-scope="scope">
             <div>
-              {{
-              scope.row.outTradeNo
-              }}
+              {{ scope.row.outTradeNo }}
               <br />
               {{ scope.row.transactionId }}
             </div>
@@ -142,34 +190,114 @@
         </el-table-column>
         <!-- <el-table-column prop="uid" label="用户ID" align="center" width="180">
         </el-table-column>-->
-        <el-table-column prop="regtypeStr" label="业务类型" align="center"></el-table-column>
-        <el-table-column prop="applyName" label="申请人-部门" width="120" align="center">
+        <el-table-column
+          prop="regtypeStr"
+          label="业务类型"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="applyName"
+          label="申请人-部门"
+          width="120"
+          align="center"
+        >
           <template slot-scope="scope">
             <p>{{ scope.row.applyName }}</p>
             <p>{{ scope.row.applierDepartment }}</p>
           </template>
         </el-table-column>
-        <el-table-column prop="tradeTypeStr" label="支付方式" align="center"></el-table-column>
-        <el-table-column prop="buytime" label="订单支付时间" align="center" width="155"></el-table-column>
-        <el-table-column prop="statusStr" label="退款状态" align="center"></el-table-column>
-        <el-table-column prop="refundStatusStr" label="退款支付状态" align="center" width="120"></el-table-column>
-        <el-table-column prop="refundTypeStr" label="退款类型" align="center"></el-table-column>
+        <el-table-column
+          prop="tradeTypeStr"
+          label="支付方式"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="buytime"
+          label="订单支付时间"
+          align="center"
+          width="155"
+        ></el-table-column>
 
-        <el-table-column prop="refundFee" label="退款金额" align="center"></el-table-column>
-        <el-table-column prop="totoalFee" label="交易金额" align="center"></el-table-column>
-        <el-table-column prop="refundRuleStr" label="退款规则" align="center"></el-table-column>
+        <el-table-column
+          prop="buytime"
+          label="关联订单类型及定单号"
+          align="center"
+          width="160"
+        >
+          <template slot-scope="scope">
+            <p>
+              {{
+                scope.row.associatedOrderRegtype == 0
+                  ? '体验课'
+                  : scope.row.associatedOrderRegtype == 1
+                  ? '系统课'
+                  : scope.row.associatedOrderRegtype == 2
+                  ? '优惠券商品'
+                  : ''
+              }}
+            </p>
+            <p>
+              {{
+                scope.row.associatedOrderOutTradeNo
+                  ? scope.row.associatedOrderOutTradeNo
+                  : '-'
+              }}
+            </p>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="statusStr"
+          label="退款状态"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="refundStatusStr"
+          label="退款支付状态"
+          align="center"
+          width="120"
+        ></el-table-column>
+        <el-table-column
+          prop="refundTypeStr"
+          label="退款类型"
+          align="center"
+        ></el-table-column>
+
+        <el-table-column
+          prop="refundFee"
+          label="退款金额"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="totoalFee"
+          label="交易金额"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="refundRuleStr"
+          label="退款规则"
+          align="center"
+        ></el-table-column>
         <el-table-column label="订单支付时间" align="center" width="155">
           <template slot-scope="scope">{{ scope.row.buytime }}</template>
         </el-table-column>
         <el-table-column label="申请退款时间" align="center" width="155">
           <template slot-scope="scope">{{ scope.row.applyTime }}</template>
         </el-table-column>
-        <el-table-column prop="refundTime" label="完成退款时间" align="center" width="155">
-          <template slot-scope="scope">{{ scope.row.refundTime || '--' }}</template>
+        <el-table-column
+          prop="refundTime"
+          label="完成退款时间"
+          align="center"
+          width="155"
+        >
+          <template slot-scope="scope">{{
+            scope.row.refundTime || '--'
+          }}</template>
         </el-table-column>
         <el-table-column label="操作" align="center" fixed="right">
           <template slot-scope="scope">
-            <el-button type="text" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
+            <el-button type="text" @click="handleEdit(scope.$index, scope.row)"
+              >详情</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -186,11 +314,20 @@
       ></el-pagination>
     </div>
 
-    <el-drawer ref="drawerLk" :visible.sync="drawer" size="60%" :destroy-on-close="true">
+    <el-drawer
+      ref="drawerLk"
+      :visible.sync="drawer"
+      size="60%"
+      :destroy-on-close="true"
+    >
       <template v-slot:title>
         <h1 class="rawer-title">退费订单详情</h1>
       </template>
-      <drawer @closeDrawer="closeDrawer" :orderData="choutidata" :approveData="approveData" />
+      <drawer
+        @closeDrawer="closeDrawer"
+        :orderData="choutidata"
+        :approveData="approveData"
+      />
     </el-drawer>
   </section>
 </template>
@@ -202,12 +339,12 @@ import drawer from './components/drawer.vue'
 export default {
   components: {
     applicant,
-    drawer
+    drawer,
   },
   created() {
-    const roleList = JSON.parse(localStorage.getItem('staff')).roleList;
-    let roleId = roleList ? roleList[0] : '';
-    this.roleId = roleId;
+    const roleList = JSON.parse(localStorage.getItem('staff')).roleList
+    let roleId = roleList ? roleList[0] : ''
+    this.roleId = roleId
     // init全量数据展示
     this.arrangeParams()
   },
@@ -233,7 +370,7 @@ export default {
         ectime: '', // 申请退款-结束时间
         srefundTime: '', // 申请完成-开始时间
         erefundTime: '', // 申请完成-结束时间
-        applyName: ''
+        applyName: '',
       },
       // 被动关联事件_断值(用于赋值↑下半段)
       num1: '2',
@@ -260,7 +397,7 @@ export default {
       // 抽屉
       drawer: false,
       choutidata: {},
-      statusStr: '' // 该条订单退款状态 显示抽屉按钮用
+      statusStr: '', // 该条订单退款状态 显示抽屉按钮用
     }
   },
   provide() {
@@ -358,7 +495,7 @@ export default {
         } else {
           this.$message({
             message: '别忘记键入编号,才能给你数据',
-            type: 'warning'
+            type: 'warning',
           })
         }
       } else if (val === '1') {
@@ -371,7 +508,7 @@ export default {
         } else {
           this.$message({
             message: '别忘记键入编号,才能给你数据',
-            type: 'warning'
+            type: 'warning',
           })
         }
       } else if (val === '2') {
@@ -383,7 +520,7 @@ export default {
         } else {
           this.$message({
             message: '别忘记键入编号,才能给你数据',
-            type: 'warning'
+            type: 'warning',
           })
         }
         // 用户手机号
@@ -428,7 +565,7 @@ export default {
         this.searchJson.mobile = ' '
         this.$message({
           message: '请先选择订单搜索类型,我再给你数据',
-          type: 'error'
+          type: 'error',
         })
       }
     },
@@ -448,7 +585,7 @@ export default {
         } else {
           this.$message({
             message: '别忘记选择时间,才能给你数据',
-            type: 'warning'
+            type: 'warning',
           })
         }
       } else if (val === '1') {
@@ -465,7 +602,7 @@ export default {
         } else {
           this.$message({
             message: '别忘记选择时间,才能给你数据',
-            type: 'warning'
+            type: 'warning',
           })
         }
       } else if (val === '2') {
@@ -482,7 +619,7 @@ export default {
         } else {
           this.$message({
             message: '别忘记选择时间,才能给你数据',
-            type: 'warning'
+            type: 'warning',
           })
         }
       } else {
@@ -531,7 +668,7 @@ export default {
       } else {
         this.$message({
           message: '请先选择查询时间类型,我再给你数据',
-          type: 'error'
+          type: 'error',
         })
       }
     },
@@ -554,7 +691,7 @@ export default {
         console.info('取数据接口报错,', err)
         this.$message({
           message: 'table数据接口失败',
-          type: 'error'
+          type: 'error',
         })
         return 1 // 停止↓赋值
       })
@@ -581,7 +718,7 @@ export default {
         console.info('取数据接口报错,', err)
         this.$message({
           message: '导出数据接口失败',
-          type: 'error'
+          type: 'error',
         })
       })
       // 下载去吧
@@ -629,7 +766,7 @@ export default {
       if (this.selectData && this.selectData.length <= 0) {
         this.$message({
           message: '请选择订单',
-          type: 'error'
+          type: 'error',
         })
       }
       // const data =  this.selectData.filter((item)=>{
@@ -647,7 +784,7 @@ export default {
       if (payIds.length === 0) {
         return this.$message({
           message: '无可退款订单',
-          type: 'error'
+          type: 'error',
         })
       }
       this.$confirm(
@@ -656,27 +793,27 @@ export default {
         {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning'
+          type: 'warning',
         }
       )
         .then(() => {
           this.$http.Finance.toAgreeAll({
             refundUid: JSON.parse(localStorage.getItem('staff')).id,
-            paymentId: payIds
+            paymentId: payIds,
           }).catch((err) => {
             console.log(err)
           })
           this.arrangeParams() // 刷新列表数据
           this.$message({
             type: 'success',
-            message: '退款发起成功!'
+            message: '退款发起成功!',
           })
           this.toggleSelection()
         })
         .catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消退款'
+            message: '已取消退款',
           })
           this.toggleSelection()
         })
@@ -687,16 +824,16 @@ export default {
       console.info('index:', arguments[0])
       console.info('row:', arguments[1])
       this.approveData = await this.$http.Finance.getApprov({
-        flowApprovalId: arguments[1].approvalId
+        flowApprovalId: arguments[1].approvalId,
       })
       console.log(this.approveData)
       const { code, payload } = await this.$http.Finance.getDetail({
-        paymentId: arguments[1].id
+        paymentId: arguments[1].id,
       }).catch((err) => {
         console.info('抽屉接口数据boom', err)
         this.$message({
           message: '详情数据请求错误',
-          type: 'error'
+          type: 'error',
         })
       })
       this.statusStr = arguments[1].statusStr // 该条订单退款状态 显示抽屉按钮用
@@ -705,7 +842,7 @@ export default {
         Object.assign(this.choutidata, payload)
         this.drawer = true
       }
-    }
+    },
 
     // async comfirmRefund() {
     //   const { code } = await this.$http.Finance.toAgree({
@@ -775,16 +912,16 @@ export default {
   computed: {
     isOpen() {
       return this.$store.getters.sidebar.opened
-    }
+    },
   },
   mounted() {},
   render(h) {
     return h()
   },
   filters: {
-    fnName: function(value) {
+    fnName: function (value) {
       return value
-    }
+    },
   },
   // 验证watch可行性(优秀啊,集中处理;但还是选择事件处理)
   watch: {
@@ -793,9 +930,9 @@ export default {
       deep: true,
       handler(newValue, oldValue) {
         // console.count('searchJson变动,触发watch')
-      }
-    }
-  }
+      },
+    },
+  },
 }
 </script>
 
