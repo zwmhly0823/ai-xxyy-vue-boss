@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-06-20 20:23:28
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-09 16:59:36
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-14 17:18:12
  @ApiModel(description = "用户跟进状态")
     public enum STATUS {
 
@@ -255,6 +255,19 @@
             </div>
           </el-form-item>
           <el-form-item label="课程难度:">
+            <div class="search-group">
+              <simple-select
+                name="sup"
+                placeholder="请选择"
+                :my-style="{ width: '100px' }"
+                :multiple="false"
+                :data-list="supList"
+                @result="getSearchData('sup', arguments)"
+              />
+            </div>
+          </el-form-item>
+           <!-- 体验课类型 -->
+           <el-form-item label="体验课类型">
             <div class="search-group">
               <simple-select
                 name="sup"

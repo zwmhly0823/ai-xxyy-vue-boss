@@ -71,13 +71,32 @@ export default {
           text: '双周体验课',
         },
       ],
+      // 物流 
+       typeList3: [
+        {
+          id: ['500','502'],
+          text: '全部',
+        },
+        {
+          id:["502"],
+          text: '单周体验课',
+        },
+        {
+          id: ["500"],
+          text: '双周体验课',
+        },
+      ],
     }
   },
   mounted() {
+
+    console.log("搜索数据",this.name);
     if(this.name == "category") {
       this.typeList = this.typeList2
     }else if(this.name == 'packages_type') {
-      this.typeLis = this.typeList1
+      this.typeList = this.typeList1
+    }else if(this.name == 'packages_id') {
+      this.typeList = this.typeList3
     }
   },
   methods: {
