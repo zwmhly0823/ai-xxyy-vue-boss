@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-14 12:35:12
+ * @LastEditTime: 2021-04-14 14:07:45
  -->
 <template>
   <el-card
@@ -658,14 +658,7 @@ export default {
       this.setSeachParmas(res, ['packages_type'])
     },
     getDepartment(res) {
-      // this.teacherscope = res.pay_teacher_id || null
-      if (window.localStorage.getItem('department')) {
-        this.teacherscope = [
-          JSON.parse(window.localStorage.getItem('department')).department_id,
-        ]
-      }
-
-      console.log(this.teacherscope, 'this.teacherscope')
+      this.teacherscope = res.pay_teacher_id || null
       this.setSeachParmas(res, ['pay_teacher_id'], 'terms')
     },
     getTeamName(res) {

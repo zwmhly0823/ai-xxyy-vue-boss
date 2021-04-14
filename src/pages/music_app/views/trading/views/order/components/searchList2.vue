@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-14 12:36:40
+ * @LastEditTime: 2021-04-14 14:07:22
  -->
 <template>
   <el-card
@@ -374,12 +374,7 @@ export default {
       this.setSeachParmas(res, ['express_status'])
     },
     getDepartment(res) {
-      // this.teacherscope = res.last_teacher_id || null
-       if (window.localStorage.getItem('department')) {
-        this.teacherscope = [
-          JSON.parse(window.localStorage.getItem('department')).department_id,
-        ]
-      }
+      this.teacherscope = res.last_teacher_id || null
       this.setSeachParmas(res, ['last_teacher_id'], 'terms')
     },
     // 选择社群销售
