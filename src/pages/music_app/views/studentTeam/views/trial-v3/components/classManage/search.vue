@@ -110,6 +110,7 @@ export default {
     getTrialCourseType(val) {
       console.log(val, '体验课类型')
       let category = ''
+      // 当数组为全部的时候直接赋值
       if (val) {
          this.categoryType = val.category
         if (val.category.length == 2) {

@@ -86,6 +86,21 @@ export default {
           text: '双周体验课',
         },
       ],
+      // 体验课学员
+       typeList4: [
+        {
+          id: ['0','3'],
+          text: '全部',
+        },
+        {
+          id:["3"],
+          text: '单周体验课',
+        },
+        {
+          id: ["0"],
+          text: '双周体验课',
+        },
+      ],
     }
   },
   mounted() {
@@ -97,11 +112,19 @@ export default {
       this.typeList = this.typeList1
     }else if(this.name == 'packages_id') {
       this.typeList = this.typeList3
+    }else if(this.name == 'team_category') {
+      this.typeList = this.typeList4
     }
   },
   methods: {
     onChange(item) {
-     this.$emit('result', item ? { [this.name]: item } : '')
+      console.log(item,"选择的值");
+      if(this.name == 'team_category') {
+        this.$emit('result','team_category', item ? [{ [this.name]: item[0] }] : '')
+      }else {
+        this.$emit('result', item ? { [this.name]: item } : '')
+      }
+     
     },
   },
 }
