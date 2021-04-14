@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-09 15:51:58
+ * @LastEditTime: 2021-04-14 12:37:07
  -->
 <template>
   <el-card
@@ -151,7 +151,7 @@
       </el-form-item>
     </el-form>
     <div class="export-order">
-      <el-button size="mini" type="primary" @click="showChooseDialog = true"
+      <el-button size="mini" type="primary" @click="showChooseDialogClick"
         >订单导出</el-button
       >
     </div>
@@ -369,7 +369,12 @@ export default {
       this.setSeachParmas(res, ['express_status'])
     },
     getDepartment(res) {
-      this.teacherscope = res.last_teacher_id || null
+      // this.teacherscope = res.last_teacher_id || null
+       if (window.localStorage.getItem('department')) {
+        this.teacherscope = [
+          JSON.parse(window.localStorage.getItem('department')).department_id,
+        ]
+      }
       this.setSeachParmas(res, ['last_teacher_id'], 'terms')
     },
     // 选择社群销售
@@ -492,6 +497,17 @@ export default {
         this.should = temp
       }
       this.$emit('searchShould', temp)
+    },
+    showChooseDialogClick() {
+      // 获取查询条件
+      const query = this.$parent.$children[1].finalParams
+      // 限制导出全部订单
+     if (!query.status || query.status[0] != 3) {
+        this.$message.error('只能导出已完成的订单，请重新选择')
+        return
+      } else {
+        this.showChooseDialog = true
+      }
     },
     // 导出
     exportOrderHandle() {

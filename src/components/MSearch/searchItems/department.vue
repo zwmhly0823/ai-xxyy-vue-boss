@@ -105,6 +105,7 @@ export default {
       const allNodes = this.$refs.dept.getCheckedNodes()
       const allNodesId = allNodes.map((item) => item.value)
       const ids = { department_id: allNodesId || [] }
+      window.localStorage.setItem("department",JSON.stringify(ids))
       if (this.onlyDept === 1) {
         this.$emit('result', { [this.name]: allNodesId })
         // this.$emit('result', { [this.name]: data })
