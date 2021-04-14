@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-13 09:59:52
+ * @LastEditTime: 2021-04-14 10:38:15
  -->
 <template>
   <div class="first-step">
@@ -47,11 +47,19 @@
                   value-format="timestamp"
                   :picker-options="pickerBeginDateBefore"
                   @change="startClassChange"
-                  :default-value="this.sellCycleObj.endDate?this.sellCycleObj.endDate:new Date()"
+                  :default-value="
+                    this.sellCycleObj.endDate
+                      ? this.sellCycleObj.endDate
+                      : new Date()
+                  "
                 ></el-date-picker>
               </el-form-item>
-              <span class="time-space" v-if="courseType == '0'">至</span>
-              <el-form-item label prop="attendClassTimeEnd" v-if="courseType == '0'">
+              <span class="time-space" v-if="courseType == '0' || courseType == '2'">至</span>
+              <el-form-item
+                label
+                prop="attendClassTimeEnd"
+                v-if="courseType == '0' || courseType == '2'"
+              >
                 <el-date-picker
                   size="small"
                   v-model="formInfo.attendClassTimeEnd"
@@ -90,7 +98,11 @@
             <el-col v-if="courseType == '1'" :span="4">
               <h4>接速设置</h4>
               <el-form-item label prop="robinNum">
-                <el-input size="small" v-model.number="formInfo.robinNum" placeholder="请输入学生数"></el-input>
+                <el-input
+                  size="small"
+                  v-model.number="formInfo.robinNum"
+                  placeholder="请输入学生数"
+                ></el-input>
               </el-form-item>
               <h6>轮询分配的学生数设置</h6>
             </el-col>
@@ -235,8 +247,12 @@
       </el-form>
       <!-- 取消、下一步 -->
       <div class="operate-btn">
-        <el-button size="small" type="warning" plain @click="cancel">取消</el-button>
-        <el-button size="small" type="primary" @click="nextStep">下一步</el-button>
+        <el-button size="small" type="warning" plain @click="cancel"
+          >取消</el-button
+        >
+        <el-button size="small" type="primary" @click="nextStep"
+          >下一步</el-button
+        >
       </div>
     </div>
   </div>
@@ -264,17 +280,17 @@ export default {
         attendClassTimeStart: '',
         attendClassTimeEnd: '',
         // attendClassTime: '',
-        robinNum: '' // 接速设置
+        robinNum: '', // 接速设置
       },
       setSellTimeForm: [],
       attendClassObj: {
         // 上课周期
         courseDay: '',
-        endCourseDay: ''
+        endCourseDay: '',
       },
       sellCycleObj: {
         startDate: '',
-        endDate: ''
+        endDate: '',
       },
       diffDay: '',
       rules: {
@@ -282,22 +298,22 @@ export default {
           {
             required: true,
             message: '请选择售卖日期',
-            trigger: 'change'
-          }
+            trigger: 'change',
+          },
         ],
         attendClassTimeStart: [
           {
             required: true,
             message: '请选择开课时期',
-            trigger: 'change'
-          }
+            trigger: 'change',
+          },
         ],
         attendClassTimeEnd: [
           {
             required: true,
             message: '请选择结课时期',
-            trigger: 'change'
-          }
+            trigger: 'change',
+          },
         ],
         // attendClassTime: [
         //   {
@@ -306,10 +322,10 @@ export default {
         //     trigger: 'change'
         //   }
         // ],
-        robinNum: [{ validator: checkNumber, required: true, trigger: 'blur' }]
+        robinNum: [{ validator: checkNumber, required: true, trigger: 'blur' }],
       },
       pickerBefore: {
-        disabledDate: (time) => {}
+        disabledDate: (time) => {},
       },
       pickerBeginDateBefore: {
         disabledDate: (time) => {
@@ -331,7 +347,7 @@ export default {
               return true
             }
           }
-        }
+        },
       },
       pickerBeginDateAfter: {
         disabledDate: (time) => {
@@ -339,8 +355,8 @@ export default {
           if (endDateVal) {
             return time.getTime() < endDateVal
           }
-        }
-      }
+        },
+      },
     }
   },
   activated() {},
@@ -348,19 +364,20 @@ export default {
   watch: {
     ['sellCycleObj.endDate']: (res) => {
       // this.pickerBeginDateBefore.disabledDate()
-    }
+    },
   },
   async created() {
     let { period = '', courseType = 0 } = this.$route.params
     this.period = period
-
+    courseType =
+      courseType == 0 ? 2 : courseType == 1 ? 0 : courseType == 2 ? 1 : ''
     this.courseType = courseType
-    courseType = courseType==0?2:courseType==1?0:courseType==2?1:''
+
     // 双周体验课  5,6,0,1
     // 系统课  3,6
     this.courseType == 0 || this.courseType == 2
       ? (this.passWeek = [5, 6, 0, 1])
-      : (this.passWeek = [3, 6])
+      : (this.passWeek = [2, 6])
 
     if (+period) {
       // 编辑页面 TODO:
@@ -372,12 +389,12 @@ export default {
           startDate = '',
           endDate = '',
           robinNum = '',
-          sellCycle = []
+          sellCycle = [],
         } = _data.payload
 
         const sellCycleTime = [
           new Date(Number(`${startDate}`)),
-          new Date(Number(`${endDate}`))
+          new Date(Number(`${endDate}`)),
         ]
 
         this.formInfo = {
@@ -389,7 +406,7 @@ export default {
           //   new Date(Number(`${endCourseDay}`))
           // ],
           sellCycle,
-          robinNum // 接速设置
+          robinNum, // 接速设置
         }
         // this.startClassChange()
         this.sellCycleTimeChange(sellCycleTime)
@@ -433,7 +450,7 @@ export default {
       ) {
         this.$message({
           message: '售卖结束时间不能晚于开课时间',
-          type: 'warning'
+          type: 'warning',
         })
         this.formInfo.attendClassTimeStart = ''
       }
@@ -474,7 +491,7 @@ export default {
       this.sellCycleObj = {
         ...this.sellCycleObj,
         startDate: startDate.length != 0 ? startDate.getTime() : '',
-        endDate: endDate.length != 0 ? endDate.getTime() : ''
+        endDate: endDate.length != 0 ? endDate.getTime() : '',
       }
     },
     // 计算售卖设置里的 ’售卖日期‘
@@ -500,7 +517,7 @@ export default {
         target: '.app-main',
         lock: true,
         text: '正在保存...',
-        fullscreen: true
+        fullscreen: true,
       })
       try {
         const _res = await this.$http.Operating.addScheduleFirstStep(params)
@@ -509,7 +526,7 @@ export default {
       } catch (err) {
         this.$message({
           message: '获取数据出错',
-          type: 'warning'
+          type: 'warning',
         })
       } finally {
         // 以服务的方式调用的 Loading 需要异步关闭
@@ -524,7 +541,7 @@ export default {
       } catch (err) {
         this.$message({
           message: '获取列表出错',
-          type: 'warning'
+          type: 'warning',
         })
         return Promise.reject(err)
       }
@@ -537,7 +554,7 @@ export default {
           sellDate: new Date(this.formInfo[`sellDate_${i}`]).getTime(),
           limit: this.formInfo[`limit_${i}`],
           fakeLimit: this.formInfo[`fakeLimit_${i}`],
-          fakeSales: this.formInfo[`fakeSales_${i}`]
+          fakeSales: this.formInfo[`fakeSales_${i}`],
         }
         this.setSellTimeForm.push(obj)
       }
@@ -552,8 +569,15 @@ export default {
         endCourseDay,
         robinNum: this.formInfo.robinNum,
         sellCycle: this.setSellTimeForm,
-        type:this.courseType = this.courseType==0?2:this.courseType==1?0:this.courseType==2?1:'',
-        period: +this.period || ''
+        type: (this.courseType =
+          this.courseType == 0
+            ? 2
+            : this.courseType == 1
+            ? 0
+            : this.courseType == 2
+            ? 1
+            : ''),
+        period: +this.period || '',
       })
 
       return sendFrom
@@ -566,7 +590,7 @@ export default {
         if (valid) {
           const cb = (_res) => {
             const {
-              payload: { period }
+              payload: { period },
             } = _res
 
             this.period = period
@@ -589,8 +613,8 @@ export default {
     },
     cancel() {
       this.$router.push({ path: '/operatingSchedule' })
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>
