@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-14 14:40:36
+ * @LastEditTime: 2021-04-14 15:42:15
  -->
 <template>
   <div class="first-step">
@@ -420,9 +420,13 @@ export default {
     // 开课时期
     startClassChange(courseDay) {
       this.formInfo.attendClassTimeStart = courseDay || ''
+       console.log(courseDay,"courseDay",this.courseType);
+      if (this.courseType == '0') {
+        this.endClassChange(courseDay + 13 * 24 * 3600 * 1000)
+      }
 
-      if (courseDay && this.courseType === '0') {
-        courseDay && this.endClassChange(courseDay + 13 * 24 * 3600 * 1000)
+       if (this.courseType == '2') {
+        this.endClassChange(courseDay + 6 * 24 * 3600 * 1000)
       }
     },
     // 节课时期
