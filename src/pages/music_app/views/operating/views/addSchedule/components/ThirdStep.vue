@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-14 10:29:44
+ * @LastEditTime: 2021-04-15 18:29:43
  -->
 <template>
   <div class="third-step">
@@ -292,7 +292,7 @@ export default {
       this.params.courseDifficulty = 'S1'
     }
     Object.assign(this.params, {
-      courseType,
+      courseType:courseType==0?3:courseType==1?0:courseType==2?2:0,
       period: this.schedulePeriod,
       ids: this.scheduleTeacherId
     })
