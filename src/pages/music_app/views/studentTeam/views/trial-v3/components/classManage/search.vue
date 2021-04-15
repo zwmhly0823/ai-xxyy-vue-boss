@@ -51,6 +51,7 @@
       <search-stage
         class="inline-block"
         :category="categoryType"
+        :isDisabled="isDisabled"
         @result="stageRes"
         name="stage"
         type="0"
@@ -82,6 +83,7 @@ export default {
       teamName: '',
       categoryType: [0, 2],
       searchParams: {},
+      isDisabled:false,
     }
   },
   computed: {
@@ -114,9 +116,11 @@ export default {
       if (val) {
          this.categoryType = val.category
         if (val.category.length == 2) {
-          category = val.category
+          category = val.category;
+          this.isDisabled = true
         } else {
-          category = val.category.join('')
+          category = val.category.join('');
+          this.isDisabled = false
         }
       }
       this.searchRes(category, 'category')
