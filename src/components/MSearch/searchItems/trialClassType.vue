@@ -59,11 +59,11 @@ export default {
       ],
        typeList2: [
         {
-          id: ['0','2'],
+          id: ['0','3'],
           text: '全部',
         },
         {
-          id:["2"],
+          id:["3"],
           text: '单周体验课',
         },
         {
