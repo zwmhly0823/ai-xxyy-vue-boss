@@ -20,7 +20,7 @@
       <el-table-column label="购课方式" min-width="160">
         <template slot-scope="scope">
           <p>
-            {{scope.row.exchange_type_text}}
+            {{ scope.row.exchange_type_text }}
           </p>
         </template>
       </el-table-column>
@@ -37,7 +37,7 @@
           <p>
             {{ scope.row.currency ? scope.row.currency : '人民币 ' }}
             {{
-              scope.row.amount
+              scope.row.amount || scope.row.amount == 0
                 ? scope.row.amount
                 : scope.row.regtype === 6
                 ? ''
@@ -50,18 +50,7 @@
         <template slot-scope="scope">
           <p>
             {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
-            <span
-              v-if="trialTeam[scope.row.id]"
-              :class="{ 'primary-text': trialTeam[scope.row.id] }"
-              @click="
-                openDetail(
-                  trialTeam[scope.row.id] && trialTeam[scope.row.id].id
-                )
-              "
-            >
-              （{{ trialTeam[scope.row.id].team_name }}）
-            </span>
-            <span v-else>-</span>
+            <span> （{{ scope.row.team?scope.row.team.team_name:'-' }}） </span>
           </p>
           <p>
             {{
@@ -93,12 +82,15 @@
       <el-table-column label="兑换码标题·兑换码" min-width="220">
         <template slot-scope="scope">
           <p>
-            {{scope.row.exchange_code_log && scope.row.exchange_code_log.library.title ? scope.row.exchange_code_log.library.title : '-'}}
+            {{
+              scope.row.exchange_code_log &&
+              scope.row.exchange_code_log.library.title
+                ? scope.row.exchange_code_log.library.title
+                : '-'
+            }}
           </p>
           <p>
-            {{
-              scope.row.exchange_code ? scope.row.exchange_code : '-'
-            }}
+            {{ scope.row.exchange_code ? scope.row.exchange_code : '-' }}
           </p>
         </template>
       </el-table-column>
@@ -186,7 +178,7 @@ export default {
       },
     },
   },
- data() {
+  data() {
     return {
       loading: false,
       // 给物流详情组件传递的订单id
@@ -269,9 +261,8 @@ export default {
           last_teacher_id:
             this.teacherGroup.length > 0 ? this.teacherGroup : [this.teacherId],
         })
-      
-}
-     // 组合搜索条件
+      }
+      // 组合搜索条件
       this.searchIn.forEach((item) => {
         const subObj =
           item && (item.term || item.terms || item.range || item.wildcard)
@@ -350,7 +341,7 @@ export default {
 
     // 订单列表数据
     orderData(queryObj = {}, page = 1) {
-       // 最终搜索条件
+      // 最终搜索条件
       this.$emit('get-params', queryObj)
       this.$http.Order.orderPage(`${JSON.stringify(queryObj)}`, page)
         .then((res) => {
