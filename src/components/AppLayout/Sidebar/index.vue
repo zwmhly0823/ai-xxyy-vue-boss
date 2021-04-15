@@ -18,6 +18,7 @@
           :item="route"
           :index="index"
           :base-path="route.path"
+          @menuClick="getMenuData"
           :opened="defaultOpendIndex"
         />
       </el-menu>
@@ -106,16 +107,28 @@ export default {
       return false
     },
     // 默认全部展开
-    defaultOpendIndex() {
-      const ids = routes.map((_, index) => index.toString())
-      console.log(ids)
-      return ids
-    }
+    // defaultOpendIndex() {
+    //   const ids = routes.map((_, index) => index.toString())
+    //   console.log(ids)
+    //   return ids
+    // }
   },
   data() {
     return {
       currentMenu: null,
-      activeMenu: '0'
+      activeMenu: '0',
+      defaultOpendIndex:[],
+      // 让每一项传过来的数据进行对比
+      menuList:{
+        0:"0",
+        1:"1",
+        2:"2",
+        4:"4",
+        5:"5",
+        7:"7",
+        8:"8",
+        9:"9",
+      }
     }
   },
   created() {
@@ -128,6 +141,9 @@ export default {
     getActive() {
       let active = localStorage.getItem('menuActive')
       this.activeMenu = active==null?'':active;
+    },
+    getMenuData(data) {
+       this.defaultOpendIndex.push(data.toString())
     },
     handleLeave() {
       // this.$store.dispatch('app/resetSidebar')
