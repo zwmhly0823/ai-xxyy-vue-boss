@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-07 10:44:34
+ * @LastEditTime: 2021-04-15 17:40:14
  -->
 <template>
   <div class="container">
@@ -737,7 +737,7 @@ export default {
         SINGLE_QUALITY: '产品质量问题',
         // SINGLE_PIGMENT_LEAKAGE: '颜料撒漏'
       },
-      courseOptions: { TESTCOURSE: '体验课', SYSTEMCOURSE: '系统课' },
+      courseOptions: { TESTCOURSE: '体验课', SYSTEMCOURSE: '系统课', TESTCOURSE_SINGLE:'体验课'},
       currentType: ''
     }
   },
