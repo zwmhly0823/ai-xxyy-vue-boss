@@ -3,8 +3,8 @@
  * @version:
  * @Author: Lukun
  * @Date: 2020-04-28 13:50:45
- * @LastEditors: liukun
- * @LastEditTime: 2021-01-09 16:12:34
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-13 10:35:07
  -->
 <template>
   <div class="container-content">
@@ -753,8 +753,9 @@ export default {
       console.log(val)
       if (val.id) {
         this.$http.Express.getExpressByOrderId(val.id).then((res) => {
+          let medium;
           if (res && res.payload) {
-            const medium = res.payload
+            medium = res.payload
             // 回显bug无法提交_丹阳&伟霞
             if (
               medium.addressId === '0' ||

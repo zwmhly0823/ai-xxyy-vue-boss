@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-10 19:58:36
+ * @LastEditTime: 2021-04-14 14:07:45
  -->
 <template>
   <el-card
@@ -234,7 +234,7 @@
       </el-form-item>
     </el-form>
     <div class="export-order">
-      <el-button size="mini" type="primary" @click="showChooseDialog = true"
+      <el-button size="mini" type="primary" @click="showChooseDialogClick"
         >订单导出</el-button
       >
     </div>
@@ -796,7 +796,17 @@ export default {
       }
       this.$emit('searchShould', temp)
     },
-
+    showChooseDialogClick() {
+      // 获取查询条件
+      const query = this.$parent.$children[1].finalParams
+      // 限制导出全部订单
+     if (!query.status || query.status[0] != 3) {
+        this.$message.error('只能导出已完成的订单，请重新选择')
+        return
+      } else {
+        this.showChooseDialog = true
+      }
+    },
     // 导出
     exportOrderHandle() {
       console.log(this.searchParams)
@@ -811,7 +821,6 @@ export default {
       const query = this.$parent.$children[1].finalParams
       query.subject = 3
       console.log('query======')
-      console.log(query)
 
       const fileTitle = dayjs(new Date()).format('YYYY-MM-DD')
       const fileTitleTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
