@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-10-13 21:14:38
- * @LastEditors: Shentong
- * @LastEditTime: 2020-10-24 17:13:07
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-15 21:21:11
  */
 // import { deepClone } from '@/utils'
 /**
@@ -31,7 +31,18 @@ export const SUP_LEVEL_UPPER = formatSup('S')
  * 系统课里面  显示 MA MB   传值  对应  S8 S9
  * */
 // export const SUP_LEVEL_LIST_UPPER = formatSupList()
-
+// 招生排期点索引传的值
+export const Sup_scheduleIndex = {
+  0:2,
+  1:0,
+  2:1
+}
+//招生排期点提交传的值
+export const Sup_scheduleSubmit = {
+  0:3,
+  1:0,
+  2:2
+}
 export const SUP_LEVEL_LIST_LOWER = [
   { id: 'S1', text: 'M1' },
   { id: 'S2', text: 'M2' },

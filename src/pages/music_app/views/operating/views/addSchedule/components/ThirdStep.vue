@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-15 18:29:43
+ * @LastEditTime: 2021-04-15 18:52:32
  -->
 <template>
   <div class="third-step">
@@ -209,7 +209,7 @@ import _ from 'lodash'
 import EleTable from '@/components/Table/EleTable'
 // import TableSearch from '../../../components/tableSearch/index'
 import { mapGetters } from 'vuex'
-import { SUP_LEVEL_ALL } from '@/utils/supList'
+import { SUP_LEVEL_ALL,Sup_scheduleSubmit } from '@/utils/supList'
 export default {
   props: ['stepStatus'],
   data() {
@@ -292,7 +292,7 @@ export default {
       this.params.courseDifficulty = 'S1'
     }
     Object.assign(this.params, {
-      courseType:courseType==0?3:courseType==1?0:courseType==2?2:0,
+      courseType:Sup_scheduleSubmit[courseType],
       period: this.schedulePeriod,
       ids: this.scheduleTeacherId
     })
@@ -529,7 +529,7 @@ export default {
       this.validateTableForm(tableData)
       if (this.isValidate) {
         const params = {
-          courseType:courseType==0?3:courseType==1?0:courseType==2?2:'',
+          courseType:Sup_scheduleSubmit[courseType],
           period: this.schedulePeriod,
           body: tableData
         }

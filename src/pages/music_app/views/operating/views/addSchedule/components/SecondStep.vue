@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-14 10:24:26
+ * @LastEditTime: 2021-04-15 18:48:12
  -->
 <template>
   <div class="second-step">
@@ -45,6 +45,7 @@
 </template>
 <script>
 import OrgDept from './OrgDept'
+import { Sup_scheduleIndex } from '@/utils/supList'
 export default {
   props: ['stepStatus'],
   data() {
@@ -74,7 +75,7 @@ export default {
   watch: {},
   async created() {
     let { period = 0, courseType = '0' } = this.$route.params
-    courseType = courseType==0?2:courseType==1?0:courseType==2?1:''
+    courseType = Sup_scheduleIndex[courseType]
     Object.assign(this.params, { period, courseType })
     await this.getTeacherByDept()
     if (+period) {

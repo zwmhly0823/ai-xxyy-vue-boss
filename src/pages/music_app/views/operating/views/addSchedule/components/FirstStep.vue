@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-14 15:42:15
+ * @LastEditTime: 2021-04-15 18:46:45
  -->
 <template>
   <div class="first-step">
@@ -259,6 +259,7 @@
 </template>
 <script>
 import { Loading } from 'element-ui'
+import { Sup_scheduleIndex } from '@/utils/supList'
 export default {
   props: ['stepStatus'],
   data() {
@@ -369,11 +370,9 @@ export default {
   async created() {
     let { period = '', courseType = 0 } = this.$route.params
     this.period = period
-    courseType =
-      courseType == 0 ? 2 : courseType == 1 ? 0 : courseType == 2 ? 1 : ''
+    courseType = Sup_scheduleIndex[courseType]
     this.courseType = courseType
-
-    // 双周体验课  5,6,0,1
+   // 双周体验课  5,6,0,1
     // 系统课  3,6
     this.courseType == 0 || this.courseType == 2
       ? (this.passWeek = [5, 6, 0, 1])
