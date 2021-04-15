@@ -146,7 +146,7 @@ export default {
       this.getOrderList(this.currentPage, true)
     },
     topic(val) {
-      if (val === '1,2,6,10,11') {
+      if (val === '14') {
         this.currentPage = 1
         this.getOrderList()
       }
@@ -214,7 +214,7 @@ export default {
        * 宝石兑换=推荐有礼
        * 赠送=邀请有奖
        * */
-      if (this.topic === '1,2,6,10,11') {
+      if (this.topic === '14') {
         // 订单列表
         this.orderData(queryObj, page)
 
