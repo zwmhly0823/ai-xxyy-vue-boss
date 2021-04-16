@@ -35,43 +35,19 @@
         <template slot-scope="scope">
           <p>
             {{
-              scope.row.packages_name
-                ? scope.row.packages_name || '-'
-                : scope.row.product_name || '-'
+              scope.row.product_type
+                ? scope.row.product_type || '-'
+                : scope.row.product_type || '-'
             }}
           </p>
           <!-- 人民币 ， 宝石，小熊币 -->
           <p>
             {{ scope.row.currency ? scope.row.currency : '人民币 ' }}
             {{
-              scope.row.amount
-                ? scope.row.amount
-                : scope.row.regtype === 6
-                ? ''
-                : '-'
-            }}
-          </p>
-          <p>
-            {{
-              scope.row.course_product_name
-                ? scope.row.course_product_name
-                : '-'
-            }}
-            {{
-              scope.row.course_order_total_amount
-                ? scope.row.course_order_total_amount
-                : '-'
-            }}
-          </p>
-          <p>
-            {{
-              scope.row.instrument_product_name
-                ? scope.row.instrument_product_name
-                : '-'
-            }}
-            {{
               scope.row.instrument_order_total_amount
                 ? scope.row.instrument_order_total_amount
+                : scope.row.regtype === 2
+                ? ''
                 : '-'
             }}
           </p>
