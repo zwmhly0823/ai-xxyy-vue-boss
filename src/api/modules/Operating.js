@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
- * @LastEditors: liukun
- * @LastEditTime: 2020-11-04 17:54:42
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-16 15:39:45
  */
 import axios from '../axiosConfig'
 import { injectSubject, getAppSubjectCode } from '@/utils/index'
@@ -581,7 +581,7 @@ export default {
   // 招生排期切换状态
   updateStatusByPeriod(params) {
     return axios.get(
-      `/api/t/v1/enroll/updateStatusByPeriod?period=${params.period}&status=${params.status}`
+      `/api/t/v1/enroll/updateStatusByPeriod?period=${params.period}&status=${params.status}&courseType=${params.courseType}`
     )
   },
   // 转介绍招生数

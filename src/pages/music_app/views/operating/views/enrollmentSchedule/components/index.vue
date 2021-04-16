@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-12 18:38:30
+ * @LastEditTime: 2021-04-16 15:37:11
  -->
 <template>
   <div>
@@ -96,7 +96,7 @@
               <span style="margin-right:15px" @click="addEditSchedule(scope.row)">编辑</span>
               <span style="margin-right:15px" @click="go_detail(scope.row)">详细</span>
               <span
-                v-if="tabIndex === 0"
+                v-if="tabIndex === 0 || tabIndex === 1"
                 :class="[
                   {
                     'cant-click-button':
@@ -123,7 +123,7 @@
 // import MSearch from '@/components/MSearch/index.vue' TODO:
 import EleTable from '@/components/Table/EleTable'
 import { formatData } from '@/utils'
-import { SUP_LEVEL_TRIAL,SUP_LEVEL_ALL, SUP_LEVEL_SYSTEM } from '@/utils/supList'
+import { SUP_LEVEL_TRIAL,SUP_LEVEL_ALL, SUP_LEVEL_SYSTEM,Sup_scheduleIndex,Sup_scheduleSubmit} from '@/utils/supList'
 export default {
   props: {
     department: {
@@ -192,7 +192,7 @@ export default {
         teacherId: '',
         level: '',
         courseDifficulties: '',
-        courseType: this.tabIndex,
+        courseType:Sup_scheduleIndex[this.tabIndex],
         period: row.period
       }
       const res = await this.$http.DownloadExcel.downloadExcelByPeriod(params)
@@ -243,7 +243,7 @@ export default {
     go_detail(row) {
       const { period = '' } = row
       this.$router.push({
-        path: `/scheduleDetail/${period}/${this.tabIndex}`
+        path: `/scheduleDetail/${period}/${Sup_scheduleIndex[this.tabIndex]}`
       })
     },
     /**
@@ -304,6 +304,8 @@ export default {
             enrollArr.push(item)
           }
         })
+
+        console.log("enrollArr=>",enrollArr);
         content.forEach((item) => {
           if (['待开课', '上课中', '已结课'].includes(item.status)) {
             item.intruSwitchName = '招生完毕'
@@ -359,6 +361,7 @@ export default {
       console.log(name)
       const params = {
         period: period,
+        courseType:Sup_scheduleSubmit[this.tabIndex],
         status: name === '停止转介绍' ? 'NOOPEN' : 'OPEN'
       }
       console.log(params)
