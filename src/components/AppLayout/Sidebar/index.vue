@@ -39,13 +39,13 @@ import variables from '@/assets/styles/variables.scss'
 const menuList = JSON.parse(localStorage.getItem('menuList')) || {}
 var staff = JSON.parse(localStorage.getItem('staff')) || {}
 
-function parseAuthorRouters ( routers, author ) {
+function parseAuthorRouters(routers, author) {
   let data
   routers.map((route, index) => {
-    if ( author.path === route ) {
+    if (author.path === route) {
       data = author
     } else {
-      if ( author.children && author.children.length ) {
+      if (author.children && author.children.length) {
         parseAuthorRouters(author.children, route)
       }
     }
@@ -61,24 +61,23 @@ export default {
       return this.$store.state.app.sidebar
     },
     routes() {
-      let result = [];
-      const newRoutes = routes.filter((item) => !item.hidden);
+      let result = []
+      const newRoutes = routes.filter((item) => !item.hidden)
 
       // console.log('menuList', menuList)
       // console.log('newRoutes', newRoutes)
-      if(staff && staff.admin) {
-        result = newRoutes;
-      }
-      else {
-        newRoutes.map(author => {
-          let route = parseAuthorRouters(menuList, author);
+      if (staff && staff.admin) {
+        result = newRoutes
+      } else {
+        newRoutes.map((author) => {
+          let route = parseAuthorRouters(menuList, author)
           if (route) {
             result.push(route)
           }
         })
       }
-      if(menuList && menuList.length > 0) {
-        result.map(like => {
+      if (menuList && menuList.length > 0) {
+        result.map((like) => {
           let arr = []
           if (like.children) {
             like.children.map((author, i) => {
@@ -92,7 +91,7 @@ export default {
         })
       }
       // console.log('result', result);
-      return result;
+      return result
     },
 
     showLogo() {
@@ -117,18 +116,18 @@ export default {
     return {
       currentMenu: null,
       activeMenu: '0',
-      defaultOpendIndex:[],
+      defaultOpendIndex: [],
       // 让每一项传过来的数据进行对比
-      menuList:{
-        0:"0",
-        1:"1",
-        2:"2",
-        4:"4",
-        5:"5",
-        7:"7",
-        8:"8",
-        9:"9",
-      }
+      menuList: {
+        0: '0',
+        1: '1',
+        2: '2',
+        4: '4',
+        5: '5',
+        7: '7',
+        8: '8',
+        9: '9',
+      },
     }
   },
   created() {
@@ -140,14 +139,25 @@ export default {
   methods: {
     getActive() {
       let active = localStorage.getItem('menuActive')
-      this.activeMenu = active==null?'':active;
+      this.activeMenu = active == null ? '' : active
     },
     getMenuData(data) {
-       this.defaultOpendIndex.push(data.toString())
+      console.log(this.defaultOpendIndex,"this.defaultOpendIndex");
+      if (this.defaultOpendIndex.length > 0) {
+        this.defaultOpendIndex.forEach((item, index) => {
+          if (item == data) {
+            this.defaultOpendIndex.splice(index, 1)
+          } else {
+            this.defaultOpendIndex.push(data.toString())
+          }
+        })
+      } else if(this.defaultOpendIndex.length == 0) {
+        this.defaultOpendIndex.push(data.toString())
+      }
     },
     handleLeave() {
       // this.$store.dispatch('app/resetSidebar')
-    }
-  }
+    },
+  },
 }
 </script>
