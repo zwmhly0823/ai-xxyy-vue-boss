@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-16 15:37:11
+ * @LastEditTime: 2021-04-16 15:48:22
  -->
 <template>
   <div>
@@ -268,7 +268,7 @@ export default {
       this.tabQuery = {
         ...this.tabQuery,
         // page: --this.tabQuery.page,
-        courseType: this.tabIndex==0?2:this.tabIndex==1?0:this.tabIndex==2?1:0
+        courseType: Sup_scheduleIndex[this.tabIndex]
       }
       // TODO:
       try {
