@@ -142,21 +142,15 @@ export default {
       this.activeMenu = active == null ? '' : active
     },
     getMenuData(data) {
-      console.log(data,"data");
-     if (this.defaultOpendIndex.length > 0) {
-        this.defaultOpendIndex.forEach((item, index) => {
-          if (item == data) {
-            console.log(item, 'item')
-            this.defaultOpendIndex.splice(index, 1)
-          } else {
-            this.defaultOpendIndex.push(data.toString())
-          }
-        })
-      } else {
-        this.defaultOpendIndex.push(data.toString())
+      let flag = this.defaultOpendIndex.filter(item => item == data);
+      let result = [];
+      if(flag.length > 0) {
+        result = this.defaultOpendIndex.filter(item => (item != data))
       }
-
-       console.log(this.defaultOpendIndex,"this.defaultOpendIndex");
+      else {
+        result = [...this.defaultOpendIndex, data + ''];
+      }
+      this.defaultOpendIndex = result;
     },
     handleLeave() {
       // this.$store.dispatch('app/resetSidebar')
