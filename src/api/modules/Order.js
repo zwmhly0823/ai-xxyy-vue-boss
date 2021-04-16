@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-12 14:03:06
+ * @LastEditTime: 2021-04-16 14:56:50
  */
 import axios from '../axiosConfig'
 import { injectSubject, getAppSubjectCode } from '@/utils/index'
@@ -33,8 +33,8 @@ export default {
     return axios.post('/graphql/v1/toss', {
       query: `{
         OrderPage(query: ${JSON.stringify(
-          injectSubject(query)
-        )}, page: ${page}) {
+        injectSubject(query)
+      )}, page: ${page}) {
           totalPages
           totalElements
           number
@@ -130,14 +130,241 @@ export default {
     })
   },
   /**
+    * 系统课列表  v1
+  * */
+  OrderOptStatisticsPage(query, page = 1) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+
+        OrderOptStatisticsPage(query: ${JSON.stringify(
+
+        injectSubject(query)
+
+      )}, page: ${page}) {
+
+          totalPages
+
+          totalElements
+
+          number
+
+          content {
+
+            id
+
+            uid
+
+            associated_order_regtype
+
+            associated_order_out_trade_no
+
+            ctime
+
+            buytime
+
+            packages_name
+
+            sup
+
+            stage
+
+            regtype
+
+            amount
+
+            status
+
+            order_status
+
+            bear_integral
+
+            gem_integral
+
+            product_name
+
+            out_trade_no
+
+            total_amount
+
+            pay_teacher_duty_id
+
+            user{
+
+              id
+
+              username
+
+              nickname
+
+              mobile
+
+              mobile_province
+
+              mobile_city
+
+              birthday
+
+            }
+
+            user_coupon{
+
+              status
+
+              oid
+
+              status_text
+
+            }
+
+            channel {
+
+              channel_outer_name
+
+            }
+
+            team {
+
+              id
+
+              team_name
+
+            }
+
+            last_teacher_id
+
+            trial_team_id
+
+            teacher{
+
+              realname
+
+              area_name
+
+              department_name
+
+              group_name 
+
+            }
+
+            salesman{
+
+              realname
+
+              area_name
+
+              department_name
+
+              group_name
+
+            }
+
+            express{
+
+              express_total
+
+              last_express_status
+
+              address_detail
+
+              province
+
+              city
+
+              area
+
+              product_name
+
+              product_type
+
+            }
+
+            trial_course{
+
+              team_category
+
+            }
+
+            first_order_send_id
+
+            first_send_user{
+
+              id
+
+              username
+
+              nickname
+
+              mobile
+
+            }
+
+            trial_pay_channel
+
+            trial_pay_channel_text
+
+            isrefund
+
+            topic_id
+
+            exchange_type_text 
+
+            exchange_code
+
+            course_sub_out_trade_no
+            course_product_name
+            course_order_total_amount
+            instrument_product_name
+            instrument_order_total_amount 
+            instrument_sub_out_trade_no 
+            instrument_invoice_code
+            instrument_invoice_status_text
+            instrument_invoice_type_text
+            product_type
+            exchange_code_log{
+            library{
+              title
+              }
+
+            }
+
+          }
+
+        }
+
+      }`
+
+    })
+
+  },
+  /**
+    * 乐器订单显示金额
+  * */
+   OrderOptSumStatistics(must = {}, sumField, termField) {
+    // bool 表达式
+    // const queryObj = { bool: { must } }
+    const queryStr = `${JSON.stringify(must)}`
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        OrderOptSumStatistics(query: ${JSON.stringify(
+        injectSubject(queryStr)
+      )}, sumField:"${sumField}", termField:"${termField}"){
+          code
+          type
+          count
+          value
+        }
+      }`
+    })
+  },
+  /**
    * 预付款优惠券列表  v1
    * */
-   CouponOrderStatisticsPage(query, page = 1) {
+  CouponOrderStatisticsPage(query, page = 1) {
     return axios.post('/graphql/v1/toss', {
       query: `{
         CouponOrderStatisticsPage(query: ${JSON.stringify(
-          injectSubject(query)
-        )}, page: ${page}) {
+        injectSubject(query)
+      )}, page: ${page}) {
           totalPages
           totalElements
           number
@@ -264,8 +491,8 @@ export default {
     return axios.post('/graphql/v1/toss', {
       query: `{
         OrderStatistics(query: ${JSON.stringify(
-          injectSubject(queryStr)
-        )}, sumField:"${sumField}", termField:"${termField}"){
+        injectSubject(queryStr)
+      )}, sumField:"${sumField}", termField:"${termField}"){
           code
           type
           count
@@ -282,8 +509,8 @@ export default {
     return axios.post('/graphql/v1/toss', {
       query: `{
         CouponOrderSumStatistics(query: ${JSON.stringify(
-          injectSubject(queryStr)
-        )}, sumField:"${sumField}", termField:"${termField}"){
+        injectSubject(queryStr)
+      )}, sumField:"${sumField}", termField:"${termField}"){
           code
           type
           count

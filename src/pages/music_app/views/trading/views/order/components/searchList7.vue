@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-07-01 11:08:23
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-15 15:39:42
+ * @LastEditTime: 2021-04-16 14:36:52
  -->
 <template>
   <el-card
@@ -308,11 +308,11 @@ export default {
       }
       this.$emit('searchShould', temp)
     },
-      showChooseDialogClick() {
+    showChooseDialogClick() {
       // 获取查询条件
       const query = this.$parent.$children[1].finalParams
       // 限制导出全部订单
-     if (!query.status || query.status[0] != 3) {
+      if (!query.status || query.status[0] != 3) {
         this.$message.error('只能导出已完成的订单，请重新选择')
         return
       } else {
@@ -356,32 +356,28 @@ export default {
       })
       if (chooseExport === '1') {
         const params = {
-          apiName: 'CouponOrderStatistics',
+          apiName: 'OrderOptStatistics',
           header: {
             buydate: '缴费时间',
-            out_trade_no: '订单号',
+            out_trade_no: '母订单号',
+            instrument_sub_out_trade_no: '乐器子商品订单号',
             uid: '用户ID',
             'user.username': '用户昵称',
-            'paymentPay.transaction_id': '交易流水号',
             'paymentPay.trade_type_text': '支付方式',
-            amount: '交易金额',
-            packages_name: '商品类型',
-            'user_coupon.status_text': '商品状态',
-            invoice_status_text: '开票状态',
-            invoice_type_text: '开票类型',
-            invoice_code: '发票号码',
-            'user_coupon.coupon_used_amount': '使用金额',
-            'user_coupon.coupon_refund_amount': '退费金额',
-            'user_coupon.coupon_rest_amount': '剩余金额',
+            instrument_order_total_amount: '乐器子商品金额',
+            product_type: '商品类型',
+            instrument_invoice_status_text: '开票状态',
+            instrument_invoice_type_text: '开票类型',
+            instrument_invoice_code: '发票号码',
           },
-          fileName: `预付款优惠券订单导出-${fileTitleTime}`, // 文件名称
+          fileName: `乐器订单导出-${fileTitleTime}`, // 文件名称
           query: JSON.stringify(query),
         }
         // console.log(exportExcel)
         this.$http.DownloadExcel.exportOrder(params)
           .then((res) => {
             console.log(res)
-            downloadHandle(res, `预付款优惠券订单导出-${fileTitle}`, () => {
+            downloadHandle(res, `乐器订单导出-${fileTitle}`, () => {
               loading.close()
               this.$message.success('导出成功')
             })

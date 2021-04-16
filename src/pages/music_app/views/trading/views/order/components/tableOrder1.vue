@@ -34,7 +34,7 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="商品信息" min-width="150">
+      <el-table-column label="商品信息" min-width="260">
         <template slot-scope="scope">
           <p>
             {{
@@ -51,6 +51,30 @@
                 ? scope.row.amount
                 : scope.row.regtype === 6
                 ? ''
+                : '-'
+            }}
+          </p>
+          <p>
+            {{
+              scope.row.course_product_name
+                ? scope.row.course_product_name
+                : '-'
+            }}
+            {{
+              scope.row.course_order_total_amount
+                ? scope.row.course_order_total_amount
+                : '-'
+            }}
+          </p>
+            <p>
+            {{
+              scope.row.instrument_product_name
+                ? scope.row.instrument_product_name
+                : '-'
+            }}
+            {{
+              scope.row.instrument_order_total_amount
+                ? scope.row.instrument_order_total_amount
                 : '-'
             }}
           </p>
@@ -534,19 +558,22 @@ export default {
     orderData(queryObj = {}, page = 1) {
       // 最终搜索条件
       this.$emit('get-params', queryObj)
-      this.$http.Order.orderPage(`${JSON.stringify(queryObj)}`, page)
+      this.$http.Order.OrderOptStatisticsPage(
+        `${JSON.stringify(queryObj)}`,
+        page
+      )
         .then((res) => {
-          if (!res.data.OrderPage) {
+          if (!res.data.OrderOptStatisticsPage) {
             this.totalElements = 0
             this.currentPage = 1
             this.orderList = []
             return
           }
           if (this.topic === '4' || this.topic === '5') {
-            this.totalElements = +res.data.OrderPage.totalElements
-            this.currentPage = +res.data.OrderPage.number
+            this.totalElements = +res.data.OrderOptStatisticsPage.totalElements
+            this.currentPage = +res.data.OrderOptStatisticsPage.number
           }
-          const _data = res.data.OrderPage.content
+          const _data = res.data.OrderOptStatisticsPage.content
           const orderIds = []
           const userIds = []
           _data.forEach((item, index) => {

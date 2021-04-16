@@ -31,7 +31,7 @@
           <p></p>
         </template>
       </el-table-column>
-      <el-table-column label="商品信息" min-width="140">
+      <el-table-column label="商品信息" min-width="260">
         <template slot-scope="scope">
           <p>
             {{
@@ -40,10 +40,40 @@
                 : scope.row.product_name || '-'
             }}
           </p>
+          <!-- 人民币 ， 宝石，小熊币 -->
           <p>
-            人民币<span v-if="+scope.row.regtype !== 6"
-              >：{{ scope.row.total_amount }}</span
-            >
+            {{ scope.row.currency ? scope.row.currency : '人民币 ' }}
+            {{
+              scope.row.amount
+                ? scope.row.amount
+                : scope.row.regtype === 6
+                ? ''
+                : '-'
+            }}
+          </p>
+          <p>
+            {{
+              scope.row.course_product_name
+                ? scope.row.course_product_name
+                : '-'
+            }}
+            {{
+              scope.row.course_order_total_amount
+                ? scope.row.course_order_total_amount
+                : '-'
+            }}
+          </p>
+          <p>
+            {{
+              scope.row.instrument_product_name
+                ? scope.row.instrument_product_name
+                : '-'
+            }}
+            {{
+              scope.row.instrument_order_total_amount
+                ? scope.row.instrument_order_total_amount
+                : '-'
+            }}
           </p>
         </template>
       </el-table-column>
@@ -184,10 +214,8 @@ export default {
     getOrderList(page = this.currentPage, reloadStatistics = false) {
       this.loading = true
       const queryObj = {
-        regtype: this.regtype,
-        packages_id: ['600'],
         subject: 3,
-        is_instrument_flag:1
+        is_instrument_flag: 1,
       }
       // TOSS
       if (this.teacherId) {
@@ -236,32 +264,27 @@ export default {
       // 最终搜索条件
       this.$emit('get-params', queryObj)
       console.log(queryObj, '123123123123')
-      this.$http.Order.orderPage(
+      this.$http.Order.OrderOptStatisticsPage(
         `${JSON.stringify(queryObj)}`,
         page
       )
         .then((res) => {
-          if (!res.data.OrderPage) {
+          if (!res.data.OrderOptStatisticsPage) {
             this.totalElements = 0
             this.currentPage = 1
             this.orderList = []
             return
           }
-          this.totalElements = +res.data.OrderPage.totalElements
-          this.currentPage = +res.data.OrderPage.number
-          const _data = res.data.OrderPage.content
+          this.totalElements = +res.data.OrderOptStatisticsPage.totalElements
+          this.currentPage = +res.data.OrderOptStatisticsPage.number
+          const _data = res.data.OrderOptStatisticsPage.content
           _data.forEach((item, index) => {
             // 下单时间格式化
             item.ctime = formatData(item.ctime, 's')
             // 交易方式
             if (item.regtype) {
               let currency = {}
-              if (item.regtype === 10) {
-                item.regtype_text = '预付款优惠券'
-                currency = { currency: '宝石' }
-                Object.assign(item, currency)
-                item.amount = item.gem_integral
-              }
+              item.regtype_text = '乐器订单'
             }
           })
           this.orderList = _data
@@ -276,12 +299,12 @@ export default {
 
     // 订单统计数据
     async orderStatistics(statisticsQuery = '') {
-      this.$http.Order.CouponOrderSumStatistics(
+      this.$http.Order.OrderOptSumStatistics(
         statisticsQuery,
         'amount',
         'status'
       ).then((res) => {
-        const statistics = res.data.CouponOrderSumStatistics || []
+        const statistics = res.data.OrderOptSumStatistics || []
 
         console.log('statistics', statistics)
         this.$emit('statistics', statistics)
