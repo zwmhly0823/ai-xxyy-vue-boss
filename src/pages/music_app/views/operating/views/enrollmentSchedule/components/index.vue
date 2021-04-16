@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-16 15:48:22
+ * @LastEditTime: 2021-04-16 16:17:20
  -->
 <template>
   <div>
@@ -291,7 +291,7 @@ export default {
           periodsArr.push(item.period)
         })
         // 然后再获取招生的状态
-        const enrollStudentStatus = await this.getStatusByperiods(periodsArr)
+        const enrollStudentStatus = await this.getStatusByperiods(periodsArr,Sup_scheduleSubmit[this.tabIndex])
 
         if (!enrollStudentStatus) {
           this.$message.error('获取招生状态失败')
@@ -337,8 +337,8 @@ export default {
         return new Error(err)
       }
     },
-    getStatusByperiods(periodsArr) {
-      return this.$http.Operating.getStatusByperiods(periodsArr.join(','))
+    getStatusByperiods(periodsArr,courseType) {
+      return this.$http.Operating.getStatusByperiods(periodsArr.join(','),courseType)
         .then((res) => {
           if (res.status === 'OK') {
             return res.payload

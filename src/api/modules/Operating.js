@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-16 15:39:45
+ * @LastEditTime: 2021-04-16 16:15:43
  */
 import axios from '../axiosConfig'
 import { injectSubject, getAppSubjectCode } from '@/utils/index'
@@ -575,8 +575,8 @@ export default {
     return axios.get(`/api/t/v1/teacher/course/teacherLevelByType?level=0`)
   },
   // 招生排期获取招生状态
-  getStatusByperiods(periods) {
-    return axios.get(`/api/t/v1/enroll/getStatusByperiods?periods=${periods}`)
+  getStatusByperiods(periods,courseType) {
+    return axios.get(`/api/t/v1/enroll/getStatusByperiods?periods=${periods}&courseType=${courseType}`)
   },
   // 招生排期切换状态
   updateStatusByPeriod(params) {
