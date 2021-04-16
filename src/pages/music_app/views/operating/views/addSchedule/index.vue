@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-12 17:30:03
+ * @LastEditTime: 2021-04-16 10:30:41
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -69,6 +69,7 @@ import FirstStep from './components/FirstStep'
 import SecondStep from './components/SecondStep'
 import ThirdStep from './components/ThirdStep'
 import SetLeads from './components/SetLeads'
+import { Sup_scheduleIndex,Sup_scheduleSubmit} from '@/utils/supList'
 export default {
   props: [],
   data() {
@@ -93,27 +94,30 @@ export default {
   },
   computed: {
     isShowSecondStep() {
-      return (
+     return (
         (this.courseType === '0' && this.stepStatus === 3) ||
-        (this.courseType === '1' && this.stepStatus === 2)
+        (this.courseType === '1' && this.stepStatus === 2) ||
+        (this.courseType === '2' && this.stepStatus === 2)
       )
     },
     isShowThirdStep() {
       return (
         (this.courseType === '0' && this.stepStatus === 4) ||
-        (this.courseType === '1' && this.stepStatus === 3)
+        (this.courseType === '1' && this.stepStatus === 3) ||
+        (this.courseType === '2' && this.stepStatus === 3)
       )
     },
     isShowLastStep() {
       return (
         (this.courseType === '0' && this.stepStatus === 5) ||
-        (this.courseType === '1' && this.stepStatus === 4)
+        (this.courseType === '1' && this.stepStatus === 4) ||
+        (this.courseType === '2' && this.stepStatus === 6)
       )
     }
   },
   created() {
     const { courseType = '0' } = this.$route.params
-    this.courseType = courseType
+    this.courseType =  courseType
     this.courseName = courseType === '0' ? '单周体验课' :courseType === '1'?'双周体验课':'系统课'
     let staff = JSON.parse(localStorage.getItem('staff'))
     if (staff.stepStatus) {
