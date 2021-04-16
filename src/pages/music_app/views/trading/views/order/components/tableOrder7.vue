@@ -187,6 +187,7 @@ export default {
         regtype: this.regtype,
         packages_id: ['600'],
         subject: 3,
+        is_instrument_flag:1
       }
       // TOSS
       if (this.teacherId) {
@@ -234,22 +235,21 @@ export default {
     orderData(queryObj = {}, page = 1) {
       // 最终搜索条件
       this.$emit('get-params', queryObj)
-
       console.log(queryObj, '123123123123')
-      this.$http.Order.CouponOrderStatisticsPage(
+      this.$http.Order.orderPage(
         `${JSON.stringify(queryObj)}`,
         page
       )
         .then((res) => {
-          if (!res.data.CouponOrderStatisticsPage) {
+          if (!res.data.OrderPage) {
             this.totalElements = 0
             this.currentPage = 1
             this.orderList = []
             return
           }
-          this.totalElements = +res.data.CouponOrderStatisticsPage.totalElements
-          this.currentPage = +res.data.CouponOrderStatisticsPage.number
-          const _data = res.data.CouponOrderStatisticsPage.content
+          this.totalElements = +res.data.OrderPage.totalElements
+          this.currentPage = +res.data.OrderPage.number
+          const _data = res.data.OrderPage.content
           _data.forEach((item, index) => {
             // 下单时间格式化
             item.ctime = formatData(item.ctime, 's')
