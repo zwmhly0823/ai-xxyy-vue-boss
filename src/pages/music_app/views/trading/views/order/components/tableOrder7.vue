@@ -277,7 +277,7 @@ export default {
     async orderStatistics(statisticsQuery = '') {
       this.$http.Order.OrderOptSumStatistics(
         statisticsQuery,
-        'amount',
+        'instrument_order_total_amount',
         'status'
       ).then((res) => {
         const statistics = res.data.OrderOptSumStatistics || []
