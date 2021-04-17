@@ -168,7 +168,7 @@
 import { mapGetters } from 'vuex'
 import ChannelThreeded from './ChannelThreeded'
 import ChannelThreelist from './ChannelThreelist'
-
+import { Sup_scheduleIndex,Sup_scheduleSubmit} from '@/utils/supList'
 export default {
   props: {},
   components: { ChannelThreeded, ChannelThreelist },
@@ -217,6 +217,7 @@ export default {
   },
   created() {
     const { courseType = 0 } = this.$route.params
+    courseType = Sup_scheduleSubmit[courseType]
     if (this.schedulePeriod) {
       this.getLeads({ period: this.schedulePeriod, courseType })
     }

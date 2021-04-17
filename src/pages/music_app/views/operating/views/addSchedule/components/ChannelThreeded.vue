@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-30 19:21:08
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-16 18:10:22
+ * @LastEditTime: 2021-04-17 20:16:12
 -->
 <template>
   <div class="channel-threeded">
@@ -249,8 +249,9 @@ export default {
     /** 教师渠道绑定-查找记录 */
     async getRecord(cb) {
       try {
-        const { period = '' } = this.$route.params
-        const res = await this.$http.Operating.getRecord({ period })
+        const { period = '' ,courseType} = this.$route.params
+       courseType = Sup_scheduleSubmit[courseType]
+        const res = await this.$http.Operating.getRecord({ period,courseType })
         console.log(res, 'getRecord-res')
         if (res.code === 0 && cb) cb()
       } catch (err) {
