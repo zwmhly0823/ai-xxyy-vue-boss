@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-07 10:48:30
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-13 10:50:06
+ * @LastEditTime: 2021-04-17 13:42:33
  -->
 <template>
   <div class="drawer-box">
@@ -81,6 +81,11 @@
           >
           <el-option label="49元体验课模版" :value="'/channel/index?channelId='"
             >49元体验课模版</el-option
+          >
+          <el-option
+            label="200抵500代金券"
+            :value="'/activityCoupon/twoHundred?channelId='"
+            >200抵500代金券</el-option
           >
         </el-select>
       </el-form-item>
