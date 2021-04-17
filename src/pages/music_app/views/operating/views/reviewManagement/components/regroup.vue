@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-06-10 14:38:58
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-17 15:11:52
+ * @LastEditTime: 2021-04-17 16:20:55
 -->
 <template>
   <section class="bianju10">
@@ -53,6 +53,21 @@
             </p>
           </template>
         </el-table-column>
+           <el-table-column label="订单类型" min-width="80">
+        <template slot-scope="scope">
+          <p>
+            {{
+              scope.row.regtype
+                ? +scope.row.regtype === 2
+                  ? '首单'
+                  : +scope.row.regtype === 3
+                  ? '续费'
+                  : '-'
+                : '-'
+            }}
+          </p>
+        </template>
+      </el-table-column>
         <el-table-column label="商品信息" min-width="150">
           <template slot-scope="scope">
             <p>
@@ -180,6 +195,7 @@ export default {
       let obj = {}
       obj.orderId = row.id
       obj.operatorId = JSON.parse(window.localStorage.getItem('staff')).id
+      // obj.operatorId = "470676591924613120"
       let result = await this.$http.Order.getRegrounpreSendOrder(obj)
       if (result.code == 0) {
         this.$message.success('分班成功')
