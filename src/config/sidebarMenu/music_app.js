@@ -353,7 +353,7 @@ let bearArt = [
         path: '/userResult',
         name: 'userResult',
         meta: {
-          title: '用户行为查询',
+          title: '用户登陆查询',
           // module: 'operating'
           module
         }

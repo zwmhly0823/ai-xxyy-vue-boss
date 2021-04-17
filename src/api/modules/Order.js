@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-17 16:15:58
+ * @LastEditTime: 2021-04-17 17:01:42
  */
 import axios from '../axiosConfig'
 import { injectSubject, getAppSubjectCode } from '@/utils/index'
@@ -29,12 +29,12 @@ export default {
   /**
    * ##根据用户ID，查询用户登录信息
    * */
-   UserLoginDataPage(query, page = 1,size = 20) {
+  UserLoginDataPage(query, page = 1, size = 20) {
     return axios.post('/graphql/v1/toss', {
       query: `{
         UserLoginDataPage(query: ${JSON.stringify(
-          injectSubject(query)
-        )}, page: ${page},size:${size}) {
+        injectSubject(query)
+      )}, page: ${page},size:${size}) {
           totalPages
           totalElements
           number
@@ -42,7 +42,7 @@ export default {
             id
             ctime
             login_time
-            ogin_source
+            login_source
             ostype
             old_token
             new_token
@@ -59,8 +59,7 @@ export default {
             carrier
             headers
             }
-          }
-        }
+         }
       }`
     })
   },
@@ -71,8 +70,8 @@ export default {
     return axios.post('/graphql/v1/toss', {
       query: `{
         OrderPage(query: ${JSON.stringify(
-          injectSubject(query)
-        )}, page: ${page}) {
+        injectSubject(query)
+      )}, page: ${page}) {
           totalPages
           totalElements
           number
@@ -170,12 +169,12 @@ export default {
   /**
    * 预付款优惠券列表  v1
    * */
-   CouponOrderStatisticsPage(query, page = 1) {
+  CouponOrderStatisticsPage(query, page = 1) {
     return axios.post('/graphql/v1/toss', {
       query: `{
         CouponOrderStatisticsPage(query: ${JSON.stringify(
-          injectSubject(query)
-        )}, page: ${page}) {
+        injectSubject(query)
+      )}, page: ${page}) {
           totalPages
           totalElements
           number
@@ -261,12 +260,12 @@ export default {
       }`
     })
   },
-   /**
-   * 重新分班
-   * */
-    getRegrounpreSendOrder(params) {
-      return axios.post(`/api/b/v1/reSendOrderCompleteMessage?orderId=${params.orderId}&operatorId=${params.operatorId}`)
-    },
+  /**
+  * 重新分班
+  * */
+  getRegrounpreSendOrder(params) {
+    return axios.post(`/api/b/v1/reSendOrderCompleteMessage?orderId=${params.orderId}&operatorId=${params.operatorId}`)
+  },
   /**
    * 模糊搜索订单号
    * @param {*} query 订单号
@@ -307,8 +306,8 @@ export default {
     return axios.post('/graphql/v1/toss', {
       query: `{
         OrderStatistics(query: ${JSON.stringify(
-          injectSubject(queryStr)
-        )}, sumField:"${sumField}", termField:"${termField}"){
+        injectSubject(queryStr)
+      )}, sumField:"${sumField}", termField:"${termField}"){
           code
           type
           count
@@ -325,8 +324,8 @@ export default {
     return axios.post('/graphql/v1/toss', {
       query: `{
         CouponOrderSumStatistics(query: ${JSON.stringify(
-          injectSubject(queryStr)
-        )}, sumField:"${sumField}", termField:"${termField}"){
+        injectSubject(queryStr)
+      )}, sumField:"${sumField}", termField:"${termField}"){
           code
           type
           count

@@ -140,7 +140,7 @@ const operatingRoutes = [{
     path: '/userResult',
     name: 'userResult',
     meta: {
-      title: '用户行为查询',
+      title: '用户登陆查询',
       keepAlive: false
     },
     component: () =>

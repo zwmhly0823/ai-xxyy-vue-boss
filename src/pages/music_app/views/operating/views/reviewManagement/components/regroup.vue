@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-06-10 14:38:58
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-17 16:20:55
+ * @LastEditTime: 2021-04-17 18:43:27
 -->
 <template>
   <section class="bianju10">
@@ -35,7 +35,7 @@
         <span>查询结果</span>
       </div>
       <el-table :data="tableData">
-        <el-table-column label="用户信息" prop="user" width="300">
+        <el-table-column label="用户信息" prop="user" width="150">
           <template slot-scope="scope">
             <user
               courseType="system"
@@ -44,7 +44,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="归属地" prop="QCellCore" min-width="120">
+        <el-table-column label="归属地" prop="QCellCore" width="150">
           <template slot-scope="scope">
             <p>
               {{ scope.row.user ? scope.row.user.mobile_province || '-' : '-' }}
@@ -53,22 +53,22 @@
             </p>
           </template>
         </el-table-column>
-           <el-table-column label="订单类型" min-width="80">
-        <template slot-scope="scope">
-          <p>
-            {{
-              scope.row.regtype
-                ? +scope.row.regtype === 2
-                  ? '首单'
-                  : +scope.row.regtype === 3
-                  ? '续费'
+        <el-table-column label="订单类型" width="120">
+          <template slot-scope="scope">
+            <p>
+              {{
+                scope.row.regtype
+                  ? +scope.row.regtype === 2
+                    ? '首单'
+                    : +scope.row.regtype === 3
+                    ? '续费'
+                    : '-'
                   : '-'
-                : '-'
-            }}
-          </p>
-        </template>
-      </el-table-column>
-        <el-table-column label="商品信息" min-width="150">
+              }}
+            </p>
+          </template>
+        </el-table-column>
+        <el-table-column label="商品信息" width="200">
           <template slot-scope="scope">
             <p>
               {{
@@ -90,34 +90,12 @@
             </p>
           </template>
         </el-table-column>
-        <el-table-column label="订单来源" min-width="180">
+        <el-table-column label="订单来源" width="100">
           <template slot-scope="scope">
             <p>体验课:{{ scope.row.trial_pay_channel_text || '-' }}</p>
             <p>
               系统课:{{
                 scope.row.channel ? scope.row.channel.channel_outer_name : '-'
-              }}
-            </p>
-          </template>
-        </el-table-column>
-        <el-table-column label="推荐人信息" min-width="160">
-          <template slot-scope="scope">
-            <p
-              v-if="scope.row.first_send_user"
-              :class="{ 'primary-text': scope.row.first_send_user }"
-              @click="openUserDetail(scope.row.first_send_user.id)"
-            >
-              {{
-                scope.row.first_send_user
-                  ? scope.row.first_send_user.username
-                  : '-'
-              }}
-            </p>
-            <p>
-              {{
-                scope.row.first_send_user
-                  ? scope.row.first_send_user.mobile
-                  : '-'
               }}
             </p>
           </template>
@@ -134,6 +112,19 @@
           </template>
         </el-table-column>
       </el-table>
+
+      <el-dialog
+        title="提示"
+        :visible.sync="dialogVisible"
+        width="30%"
+        :before-close="handleClose"
+      >
+        <span style="white-space: pre-line">您确定要重新分班吗？</span>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="regroupClick">确 定</el-button>
+        </span>
+      </el-dialog>
     </div>
   </section>
 </template>
@@ -146,7 +137,9 @@ export default {
     return {
       timestamp,
       cellphone: '',
+      dialogVisible: false,
       tableData: [],
+      queryObj: {},
     }
   },
   components: {
@@ -192,13 +185,20 @@ export default {
   },
   methods: {
     async handleClick(row) {
-      let obj = {}
-      obj.orderId = row.id
-      obj.operatorId = JSON.parse(window.localStorage.getItem('staff')).id
-      // obj.operatorId = "470676591924613120"
-      let result = await this.$http.Order.getRegrounpreSendOrder(obj)
+      this.dialogVisible = true
+      this.queryObj.orderId = row.id
+      this.queryObj.operatorId = JSON.parse(
+        window.localStorage.getItem('staff')
+      ).id
+    },
+    handleClose(done) {
+      done()
+    },
+    async regroupClick() {
+      let result = await this.$http.Order.getRegrounpreSendOrder(this.queryObj)
       if (result.code == 0) {
         this.$message.success('分班成功')
+        this.dialogVisible = false
       }
     },
   },
