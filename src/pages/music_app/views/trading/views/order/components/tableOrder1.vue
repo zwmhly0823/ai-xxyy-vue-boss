@@ -47,8 +47,8 @@
           <p>
             {{ scope.row.currency ? scope.row.currency : '人民币 ' }}
             {{
-              scope.row.order_total_amount
-                ? scope.row.order_total_amount
+              scope.row.amount
+                ? scope.row.amount
                 : scope.row.regtype === 6
                 ? ''
                 : '-'
@@ -61,8 +61,8 @@
                 : '-'
             }}
             {{
-              scope.row.course_order_total_amount
-                ? scope.row.course_order_total_amount
+              (scope.row.amount-scope.row.instrument_order_total_amount)>0 && scope.row.course_product_name
+                ? (scope.row.amount*100-scope.row.instrument_order_total_amount*100)/100
                 : '-'
             }}
           </p>
