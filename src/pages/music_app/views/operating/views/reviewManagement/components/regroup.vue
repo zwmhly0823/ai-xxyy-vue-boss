@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-06-10 14:38:58
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-17 11:44:09
+ * @LastEditTime: 2021-04-17 14:15:43
 -->
 <template>
   <section class="bianju10">
@@ -34,7 +34,7 @@
         <i class="el-icon-s-data"></i>
         <span>查询结果</span>
       </div>
-      <el-table :data="tableData" v-loading="loading">
+      <el-table :data="tableData">
         <el-table-column label="用户信息" prop="user" min-width="180">
           <template slot-scope="scope">
             <user
@@ -100,22 +100,7 @@
             </p>
           </template>
         </el-table-column>
-        <el-table-column :label="orderTimeLabel" min-width="180">
-          <template slot-scope="scope">
-            <p v-if="status === '3'">
-              {{ scope.row.buytime ? scope.row.buytime : '-' }}
-            </p>
-            <p v-else>{{ scope.row.ctime ? scope.row.ctime : '-' }}</p>
-            <p>
-              {{
-                scope.row.out_trade_no
-                  ? scope.row.out_trade_no.replace('xiong', '')
-                  : '-'
-              }}
-            </p>
-          </template>
-        </el-table-column>
-        <el-table-column  label="操作" width="100">
+        <el-table-column label="操作" width="100">
           <template slot-scope="scope">
             <el-button @click="handleClick(scope.row)" type="text" size="small"
               >重新分班</el-button
@@ -123,13 +108,13 @@
           </template>
         </el-table-column>
       </el-table>
-      <div v-if="tableData.length === 0" class="noData">暂无数据</div>
     </div>
   </section>
 </template>
 
 <script>
 import { timestamp } from '@/utils/index'
+import User from './User.vue'
 export default {
   data() {
     return {
@@ -138,37 +123,42 @@ export default {
       tableData: [],
     }
   },
+  components: {
+    User,
+  },
   watch: {
-    // cellphone: {
-    //   immediate: true,
-    //   deep: true,
-    //   async handler(newValue) {
-    //     if (!newValue) {
-    //       this.tableData = []
-    //     }
-    //     if (newValue.length === 11 && Number.isInteger(Number(newValue))) {
-    //       const { code, payload } = await this.$http.Order.orderPage(
-    //         newValue
-    //       ).catch((err) => {
-    //         console.info(err)
-    //         this.$message({
-    //           message: '接口报错',
-    //           type: 'error',
-    //         })
-    //         this.tableData = []
-    //       })
-    //       if (!code && payload.length !== 0) {
-    //         this.tableData = payload
-    //       } else {
-    //         this.$message({
-    //           message: '数据获取失败',
-    //           type: 'warning',
-    //         })
-    //         this.tableData = []
-    //       }
-    //     }
-    //   },
-    // },
+    cellphone: {
+      immediate: true,
+      deep: true,
+      async handler(newValue) {
+        if (!newValue) {
+          this.tableData = []
+        }
+        let queryObj = {};
+        if (newValue) {
+          queryObj.out_trade_no = newValue
+          const { data } = await this.$http.Order.orderPage(
+            `${JSON.stringify(queryObj)}`,1
+          ).catch((err) => {
+            console.info(err)
+            this.$message({
+              message: '接口报错',
+              type: 'error',
+            })
+            this.tableData = []
+          })
+          if (data.OrderPage.content) {
+            this.tableData = data.OrderPage.content
+          } else {
+            this.$message({
+              message: '数据获取失败',
+              type: 'warning',
+            })
+            this.tableData = []
+          }
+        }
+      },
+    },
   },
   created() {
     // this.$http.Operating.getVerification('13512345678')
