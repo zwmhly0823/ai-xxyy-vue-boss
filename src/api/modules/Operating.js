@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-16 16:15:43
+ * @LastEditTime: 2021-04-17 19:26:54
  */
 import axios from '../axiosConfig'
 import { injectSubject, getAppSubjectCode } from '@/utils/index'
@@ -264,7 +264,7 @@ export default {
   ChannelDetailStatisticsPage(Params = `""`, page = 1) {
     return axios.post('/graphql/v1/toss', {
       query: `{
-        ChannelDetailStatisticsPage(query:${Params},page:${page},size:20){
+        ChannelDetailStatisticsPage(query:${Params},page:${page},size:10000){
           totalPages
           totalElements
           number
