@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-12 14:03:06
+ * @LastEditTime: 2021-04-17 14:45:47
  */
 import axios from '../axiosConfig'
 import { injectSubject, getAppSubjectCode } from '@/utils/index'
@@ -223,7 +223,12 @@ export default {
       }`
     })
   },
-
+   /**
+   * 重新分班
+   * */
+    getRegrounpreSendOrder(params) {
+      return axios.post(`/api/b/v1/reSendOrderCompleteMessage?orderId=${params.orderId}&operatorId=${params.operatorId}`)
+    },
   /**
    * 模糊搜索订单号
    * @param {*} query 订单号

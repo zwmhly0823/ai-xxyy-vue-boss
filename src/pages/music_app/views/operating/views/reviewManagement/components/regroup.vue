@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-06-10 14:38:58
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-17 14:15:43
+ * @LastEditTime: 2021-04-17 15:11:52
 -->
 <template>
   <section class="bianju10">
@@ -35,7 +35,7 @@
         <span>查询结果</span>
       </div>
       <el-table :data="tableData">
-        <el-table-column label="用户信息" prop="user" min-width="180">
+        <el-table-column label="用户信息" prop="user" width="300">
           <template slot-scope="scope">
             <user
               courseType="system"
@@ -50,21 +50,6 @@
               {{ scope.row.user ? scope.row.user.mobile_province || '-' : '-' }}
               ·
               {{ scope.row.user ? scope.row.user.mobile_city || '-' : '-' }}
-            </p>
-          </template>
-        </el-table-column>
-        <el-table-column label="订单类型" min-width="80">
-          <template slot-scope="scope">
-            <p>
-              {{
-                scope.row.regtype
-                  ? +scope.row.regtype === 2
-                    ? '首单'
-                    : +scope.row.regtype === 3
-                    ? '续费'
-                    : '-'
-                  : '-'
-              }}
             </p>
           </template>
         </el-table-column>
@@ -100,9 +85,35 @@
             </p>
           </template>
         </el-table-column>
+        <el-table-column label="推荐人信息" min-width="160">
+          <template slot-scope="scope">
+            <p
+              v-if="scope.row.first_send_user"
+              :class="{ 'primary-text': scope.row.first_send_user }"
+              @click="openUserDetail(scope.row.first_send_user.id)"
+            >
+              {{
+                scope.row.first_send_user
+                  ? scope.row.first_send_user.username
+                  : '-'
+              }}
+            </p>
+            <p>
+              {{
+                scope.row.first_send_user
+                  ? scope.row.first_send_user.mobile
+                  : '-'
+              }}
+            </p>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="100">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small"
+            <el-button
+              v-if="!scope.row.team"
+              @click="handleClick(scope.row)"
+              type="text"
+              size="small"
               >重新分班</el-button
             >
           </template>
@@ -134,11 +145,12 @@ export default {
         if (!newValue) {
           this.tableData = []
         }
-        let queryObj = {};
+        let queryObj = {}
         if (newValue) {
           queryObj.out_trade_no = newValue
           const { data } = await this.$http.Order.orderPage(
-            `${JSON.stringify(queryObj)}`,1
+            `${JSON.stringify(queryObj)}`,
+            1
           ).catch((err) => {
             console.info(err)
             this.$message({
@@ -164,7 +176,15 @@ export default {
     // this.$http.Operating.getVerification('13512345678')
   },
   methods: {
-    handleClick(row) {},
+    async handleClick(row) {
+      let obj = {}
+      obj.orderId = row.id
+      obj.operatorId = JSON.parse(window.localStorage.getItem('staff')).id
+      let result = await this.$http.Order.getRegrounpreSendOrder(obj)
+      if (result.code == 0) {
+        this.$message.success('分班成功')
+      }
+    },
   },
 }
 </script>
