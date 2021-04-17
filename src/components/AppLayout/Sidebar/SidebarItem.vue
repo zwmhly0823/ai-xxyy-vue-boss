@@ -30,7 +30,7 @@
         <!-- 有二级导航的，点击一级导航不跳转 -->
         <div
           @click.stop.prevent="() => {}"
-          @click="handleMouseEndter(index)"
+          @mouseenter="handleMouseEndter(item)"
           @mouseleave="handleMouseLeave"
         >
           <!-- <i :class="item.meta.icon"></i> -->
@@ -165,11 +165,10 @@ export default {
     },
 
     // 弹出二级导航的浮层
-    handleMouseEndter(index) {
-      console.log(index,"index");
-      this.$emit("menuClick",index)
+    handleMouseEndter(item) {
+
       // 如果菜单是收起状态，不执行此逻辑
-      if (!this.sidebar.opened) return
+      // if (!this.sidebar.opened) return
 
       // TODO: 兼容性完善
       const { right, top, width, bottom } = this.$el.getBoundingClientRect()
