@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-16 14:39:25
+ * @LastEditTime: 2021-04-17 09:52:38
  -->
 <template>
   <el-card
@@ -469,8 +469,8 @@ export default {
     selectOrder(val) {
       this.searchParams.forEach((item, index) => {
         if (
-          item.terms.associated_order_id ||
-          item.terms.associated_order_id == 0
+         item.terms&& item.terms.associated_order_id ||
+          item.terms &&item.terms.associated_order_id == 0
         ) {
           this.searchParams.splice(index, 1)
         }

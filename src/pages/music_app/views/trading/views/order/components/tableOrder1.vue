@@ -47,8 +47,8 @@
           <p>
             {{ scope.row.currency ? scope.row.currency : '人民币 ' }}
             {{
-              scope.row.amount
-                ? scope.row.amount
+              scope.row.order_total_amount
+                ? scope.row.order_total_amount
                 : scope.row.regtype === 6
                 ? ''
                 : '-'

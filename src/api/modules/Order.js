@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-16 14:56:50
+ * @LastEditTime: 2021-04-17 09:55:20
  */
 import axios from '../axiosConfig'
 import { injectSubject, getAppSubjectCode } from '@/utils/index'
@@ -161,7 +161,7 @@ export default {
             ctime
 
             buytime
-
+            order_total_amount
             packages_name
 
             sup
