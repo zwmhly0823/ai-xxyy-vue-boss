@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-06-10 14:38:58
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-17 11:16:25
+ * @LastEditTime: 2021-04-17 11:44:09
 -->
 <template>
   <section class="bianju10">
@@ -16,13 +16,13 @@
       <div class="seartch_item_z">
         <el-form>
           <el-form-item
-            label="用户手机号:"
+            label="订单号:"
             label-position="right"
             label-width="150px"
           >
             <el-input
               clearable
-              placeholder="请键入用户手机号进行查询"
+              placeholder="请键入用户订单号"
               v-model="cellphone"
             ></el-input>
           </el-form-item>
@@ -35,7 +35,7 @@
         <span>查询结果</span>
       </div>
       <el-table :data="tableData" v-loading="loading">
-        <el-table-column label="用户信息" prop="user" min-width="180" fixed>
+        <el-table-column label="用户信息" prop="user" min-width="180">
           <template slot-scope="scope">
             <user
               courseType="system"
@@ -90,108 +90,12 @@
             </p>
           </template>
         </el-table-column>
-        <el-table-column label="业绩归属老师" min-width="220">
-          <template slot-scope="scope">
-            <!-- 续费情况  v-if="scope.row.regtype && scope.row.regtype !== 3" -->
-            <div>
-              <p>
-                {{ scope.row.salesman ? scope.row.salesman.realname : '-' }}
-                <span
-                  v-if="trialTeamUid[scope.row.uid]"
-                  :class="{
-                    'primary-text': trialTeamUid[scope.row.uid].team_name,
-                  }"
-                  @click="
-                    openDetail(trialTeamUid[scope.row.uid].id, scope.row, 0)
-                  "
-                  >（{{
-                    courseLevelReplace(trialTeamUid[scope.row.uid].team_name)
-                  }}）</span
-                >
-                <span v-else>-</span>
-              </p>
-              <p>
-                {{
-                  scope.row.salesman
-                    ? scope.row.salesman.area_name ||
-                      scope.row.salesman.department_name ||
-                      scope.row.salesman.group_name
-                      ? scope.row.salesman.group_name ||
-                        scope.row.salesman.department_name ||
-                        scope.row.salesman.area_name
-                      : '-'
-                    : '-'
-                }}
-              </p>
-            </div>
-            <!-- <div v-else>
-            <p>-</p>
-            <p>-</p>
-          </div>-->
-          </template>
-        </el-table-column>
-        <el-table-column label="服务老师" min-width="180">
-          <template slot-scope="scope">
-            <!-- 非续费 v-if="scope.row.regtype !== 3" -->
-            <div>
-              <p>
-                {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
-                <span
-                  :class="{ 'primary-text': scope.row.team }"
-                  @click="openDetail(scope.row.team.id, scope.row, 2)"
-                  >({{
-                    scope.row.team
-                      ? courseLevelReplace(scope.row.team.team_name)
-                      : '-'
-                  }})</span
-                >
-              </p>
-              <p>
-                {{
-                  scope.row.teacher
-                    ? scope.row.teacher.area_name ||
-                      scope.row.teacher.department_name ||
-                      scope.row.teacher.group_name
-                      ? scope.row.teacher.group_name ||
-                        scope.row.teacher.department_name ||
-                        scope.row.teacher.area_name
-                      : '-'
-                    : '-'
-                }}
-              </p>
-            </div>
-          </template>
-        </el-table-column>
-
         <el-table-column label="订单来源" min-width="180">
           <template slot-scope="scope">
             <p>体验课:{{ scope.row.trial_pay_channel_text || '-' }}</p>
             <p>
               系统课:{{
                 scope.row.channel ? scope.row.channel.channel_outer_name : '-'
-              }}
-            </p>
-          </template>
-        </el-table-column>
-
-        <el-table-column label="推荐人信息" min-width="120">
-          <template slot-scope="scope">
-            <p
-              v-if="scope.row.first_send_user"
-              :class="{ 'primary-text': scope.row.first_send_user }"
-              @click="openUserDetail(scope.row.first_send_user.id)"
-            >
-              {{
-                scope.row.first_send_user
-                  ? scope.row.first_send_user.username
-                  : '-'
-              }}
-            </p>
-            <p>
-              {{
-                scope.row.first_send_user
-                  ? scope.row.first_send_user.mobile
-                  : '-'
               }}
             </p>
           </template>
@@ -211,25 +115,11 @@
             </p>
           </template>
         </el-table-column>
-       <el-table-column label="订单状态" min-width="80">
-          <template slot-scope="scope">{{
-            scope.row.order_status ? scope.row.order_status : '-'
-          }}</template>
-        </el-table-column>
-        <el-table-column label="关联订单类型及订单号" min-width="180">
+        <el-table-column  label="操作" width="100">
           <template slot-scope="scope">
-            <p>
-              {{
-                scope.row.associated_order_regtype === 1 ? '预付款优惠券' : '-'
-              }}
-            </p>
-            <p>
-              {{
-                scope.row.associated_order_out_trade_no
-                  ? scope.row.associated_order_out_trade_no
-                  : '-'
-              }}
-            </p>
+            <el-button @click="handleClick(scope.row)" type="text" size="small"
+              >重新分班</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -282,6 +172,9 @@ export default {
   },
   created() {
     // this.$http.Operating.getVerification('13512345678')
+  },
+  methods: {
+    handleClick(row) {},
   },
 }
 </script>
