@@ -159,12 +159,12 @@ export default {
     reqgetOrderPage() {
       // 课程的query
       const coursQuery = {
-        topic_id:[4,5],
+        topic_id:[4,5,13],
         uid: this.pUserId
       }
       // 其他的query
         const qiQuery = {
-        regtype:[1, 2, 3, 7, 11, 13],
+        regtype:[12],
         uid: this.pUserId
       }
       // const query = {

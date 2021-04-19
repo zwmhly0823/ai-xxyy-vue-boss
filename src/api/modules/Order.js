@@ -198,6 +198,11 @@ export default {
             promotionsList{
               gifts_name
             }
+            pay_channel_user_extends{
+              username
+              mobile
+              u_id
+            }
             invoice_status_text
             uid
             rmbRefundStatusText

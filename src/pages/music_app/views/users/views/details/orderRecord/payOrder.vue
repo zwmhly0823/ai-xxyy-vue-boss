@@ -118,12 +118,11 @@
       </el-table-column>
       <el-table-column label="赠品商品信息" width="150">
         <template slot-scope="scope">
-          <!-- <div v-if="scope.row.promotionsList">
+          <div v-if="scope.row.promotionsList">
             <div v-for="(item, index) in scope.row.promotionsList" :key="index">
               {{ item.gifts_name }}
             </div>
-          </div> -->
-          <div v-if="scope.row.promotionsList">{{promotionsList.gifts_name}}</div>
+          </div>
           <div v-else>
             -
           </div>
