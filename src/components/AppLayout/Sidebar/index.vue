@@ -18,6 +18,7 @@
           :item="route"
           :index="index"
           :base-path="route.path"
+          @menuClick="getMenuData"
           :opened="defaultOpendIndex"
         />
       </el-menu>
@@ -38,13 +39,13 @@ import variables from '@/assets/styles/variables.scss'
 const menuList = JSON.parse(localStorage.getItem('menuList')) || {}
 var staff = JSON.parse(localStorage.getItem('staff')) || {}
 
-function parseAuthorRouters ( routers, author ) {
+function parseAuthorRouters(routers, author) {
   let data
   routers.map((route, index) => {
-    if ( author.path === route ) {
+    if (author.path === route) {
       data = author
     } else {
-      if ( author.children && author.children.length ) {
+      if (author.children && author.children.length) {
         parseAuthorRouters(author.children, route)
       }
     }
@@ -60,24 +61,23 @@ export default {
       return this.$store.state.app.sidebar
     },
     routes() {
-      let result = [];
-      const newRoutes = routes.filter((item) => !item.hidden);
+      let result = []
+      const newRoutes = routes.filter((item) => !item.hidden)
 
       // console.log('menuList', menuList)
       // console.log('newRoutes', newRoutes)
-      if(staff && staff.admin) {
-        result = newRoutes;
-      }
-      else {
-        newRoutes.map(author => {
-          let route = parseAuthorRouters(menuList, author);
+      if (staff && staff.admin) {
+        result = newRoutes
+      } else {
+        newRoutes.map((author) => {
+          let route = parseAuthorRouters(menuList, author)
           if (route) {
             result.push(route)
           }
         })
       }
-      if(menuList && menuList.length > 0) {
-        result.map(like => {
+      if (menuList && menuList.length > 0) {
+        result.map((like) => {
           let arr = []
           if (like.children) {
             like.children.map((author, i) => {
@@ -91,7 +91,7 @@ export default {
         })
       }
       // console.log('result', result);
-      return result;
+      return result
     },
 
     showLogo() {
@@ -106,16 +106,28 @@ export default {
       return false
     },
     // 默认全部展开
-    defaultOpendIndex() {
-      const ids = routes.map((_, index) => index.toString())
-      console.log(ids)
-      return ids
-    }
+    // defaultOpendIndex() {
+    //   const ids = routes.map((_, index) => index.toString())
+    //   console.log(ids)
+    //   return ids
+    // }
   },
   data() {
     return {
       currentMenu: null,
-      activeMenu: '0'
+      activeMenu: '0',
+      defaultOpendIndex: [],
+      // 让每一项传过来的数据进行对比
+      menuList: {
+        0: '0',
+        1: '1',
+        2: '2',
+        4: '4',
+        5: '5',
+        7: '7',
+        8: '8',
+        9: '9',
+      },
     }
   },
   created() {
@@ -127,11 +139,22 @@ export default {
   methods: {
     getActive() {
       let active = localStorage.getItem('menuActive')
-      this.activeMenu = active==null?'':active;
+      this.activeMenu = active == null ? '' : active
+    },
+    getMenuData(data) {
+      let flag = this.defaultOpendIndex.filter(item => item == data);
+      let result = [];
+      if(flag.length > 0) {
+        result = this.defaultOpendIndex.filter(item => (item != data))
+      }
+      else {
+        result = [...this.defaultOpendIndex, data + ''];
+      }
+      this.defaultOpendIndex = result;
     },
     handleLeave() {
       // this.$store.dispatch('app/resetSidebar')
-    }
-  }
+    },
+  },
 }
 </script>

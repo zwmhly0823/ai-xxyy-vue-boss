@@ -3,8 +3,8 @@
  * @version: 2.0.0
  * @Author: YangJiyong
  * @Date: 2020-03-24 12:49:53
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-17 11:55:24
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-16 17:05:07
 -->
 <template>
   <div v-if="!item.hidden">
@@ -30,7 +30,7 @@
         <!-- 有二级导航的，点击一级导航不跳转 -->
         <div
           @click.stop.prevent="() => {}"
-          @mouseenter="handleMouseEndter(item)"
+          @click="handleMouseEndter(index)"
           @mouseleave="handleMouseLeave"
         >
           <!-- <i :class="item.meta.icon"></i> -->
@@ -165,7 +165,9 @@ export default {
     },
 
     // 弹出二级导航的浮层
-    handleMouseEndter(item) {
+    handleMouseEndter(index) {
+      console.log(index,"index");
+      this.$emit("menuClick",index)
       // 如果菜单是收起状态，不执行此逻辑
       if (!this.sidebar.opened) return
 
