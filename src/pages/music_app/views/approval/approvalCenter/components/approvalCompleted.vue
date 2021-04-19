@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-07 10:45:19
+ * @LastEditTime: 2021-04-15 17:40:42
  -->
 <template>
   <div class="container">
@@ -111,7 +111,7 @@
       </el-table-column>
       <el-table-column label="用户电话" width="180" prop="userTel">
       </el-table-column>
-      <el-table-column label="开课日期" width="120">
+      <el-table-column label="开课日期" width="150">
         <template slot-scope="scope">
           <div v-if="scope.row.subType !== 99">
             <span>
@@ -821,7 +821,7 @@ export default {
         SINGLE_QUALITY: '产品质量问题',
         // SINGLE_PIGMENT_LEAKAGE: '颜料撒漏'
       },
-      courseOptions: { TESTCOURSE: '体验课', SYSTEMCOURSE: '系统课' },
+      courseOptions: { TESTCOURSE: '体验课', SYSTEMCOURSE: '系统课', TESTCOURSE_SINGLE:'体验课'},
       currentType: '',
     }
   },
