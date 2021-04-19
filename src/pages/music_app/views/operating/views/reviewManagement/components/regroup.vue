@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-06-10 14:38:58
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-17 18:43:27
+ * @LastEditTime: 2021-04-19 10:35:37
 -->
 <template>
   <section class="bianju10">
@@ -198,6 +198,8 @@ export default {
       let result = await this.$http.Order.getRegrounpreSendOrder(this.queryObj)
       if (result.code == 0) {
         this.$message.success('分班成功')
+        this.dialogVisible = false
+      } else {
         this.dialogVisible = false
       }
     },
