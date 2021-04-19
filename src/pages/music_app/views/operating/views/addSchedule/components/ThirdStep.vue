@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-15 18:52:32
+ * @LastEditTime: 2021-04-19 11:55:56
  -->
 <template>
   <div class="third-step">
@@ -283,7 +283,7 @@ export default {
   watch: {},
   async created() {
     console.log(this.$route.params)
-    const { courseType = '0' } = this.$route.params // courseType = '0' 体验课
+    let { courseType = '0' } = this.$route.params // courseType = '0' 体验课
     // 根据老师ids获取招生排期设置中老师配置信息 TODO:
 
     this.levelObj = SUP_LEVEL_ALL
