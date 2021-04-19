@@ -123,7 +123,7 @@
 // import MSearch from '@/components/MSearch/index.vue' TODO:
 import EleTable from '@/components/Table/EleTable'
 import { formatData } from '@/utils'
-import { SUP_LEVEL_TRIAL,SUP_LEVEL_ALL, SUP_LEVEL_SYSTEM,Sup_scheduleIndex,Sup_scheduleSubmit} from '@/utils/supList'
+import { SUP_LEVEL_TRIAL,SUP_LEVEL_ALL, SUP_LEVEL_SYSTEM,Sup_scheduleIndex,Sup_scheduleSubmit,Sup_scheduleDownload} from '@/utils/supList'
 export default {
   props: {
     department: {
@@ -198,7 +198,7 @@ export default {
       const res = await this.$http.DownloadExcel.downloadExcelByPeriod(params)
 
       if (res && Object.prototype.toString.call(res) === '[object Blob]') {
-        const name = !+params.courseType ? '体验课' : '系统课'
+        const name = Sup_scheduleDownload[this.tabIndex]
         this.downloadFn(res, `${name}-第${params.period}期`, () => {
           // this.$emit('setExcelStatus', 'complete')
         })

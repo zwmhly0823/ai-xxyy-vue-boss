@@ -43,6 +43,12 @@ export const Sup_scheduleSubmit = {
   1:0,
   2:2
 }
+//招生排期 下载名称字段
+export const Sup_scheduleDownload = {
+  0:"单周体验课",
+  1:"双周体验课",
+  2:"系统课"
+}
 export const SUP_LEVEL_LIST_LOWER = [
   { id: 'S1', text: 'M1' },
   { id: 'S2', text: 'M2' },
