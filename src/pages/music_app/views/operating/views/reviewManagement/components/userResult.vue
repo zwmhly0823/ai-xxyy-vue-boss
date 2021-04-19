@@ -233,7 +233,7 @@ export default {
             let queryObj = {}
             queryObj.uid = this.userId
 
-            queryObj.device_id = {gt:0}
+            queryObj.device_id = {gt:1}
             this.UserLoginDataPage(queryObj, 1)
           } else {
             this.$message({
