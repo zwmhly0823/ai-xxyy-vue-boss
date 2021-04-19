@@ -58,7 +58,7 @@
       </el-table-column>
       <el-table-column label="支付信息" width="120">
         <template slot-scope="scope">
-          <div>优惠券：{{ scope.row.discount_amount?scope.row.discount_amount+'元':'-' }}</div>
+          <div>优惠券：{{ scope.row.discount_amount?scope.row.discount_amount+'元':'0元' }}</div>
           <div>实际支付：{{ scope.row.amount }}元</div>
         </template>
       </el-table-column>
@@ -118,11 +118,12 @@
       </el-table-column>
       <el-table-column label="赠品商品信息" width="150">
         <template slot-scope="scope">
-          <div v-if="scope.row.promotionsList">
+          <!-- <div v-if="scope.row.promotionsList">
             <div v-for="(item, index) in scope.row.promotionsList" :key="index">
               {{ item.gifts_name }}
             </div>
-          </div>
+          </div> -->
+          <div v-if="scope.row.promotionsList">{{promotionsList.gifts_name}}</div>
           <div v-else>
             -
           </div>

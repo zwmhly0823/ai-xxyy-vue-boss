@@ -172,7 +172,7 @@ export default {
       //   uid: this.pUserId
       // }
       let query = {};
-      if(this.changeType === 1) {
+      if(this.changeType === 0) {
          query = coursQuery 
       }else {
         query = qiQuery

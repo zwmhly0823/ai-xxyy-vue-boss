@@ -182,17 +182,26 @@ export default {
           totalPages
 
           totalElements
-
           number
-
-          content {
-
+         
+          content {  
             id
-
+            paymentPay{
+              transaction_id
+              trade_type_text
+            }
+            channelDetail {
+              channel_outer_name
+            }
+            packages_course_week
+            remaining_week
+            promotionsList{
+              gifts_name
+            }
+            invoice_status_text
             uid
-
+            rmbRefundStatusText
             associated_order_regtype
-
             associated_order_out_trade_no
 
             ctime
@@ -376,7 +385,7 @@ export default {
   /**
     * 乐器订单显示金额
   * */
-   OrderOptSumStatistics(must = {}, sumField, termField) {
+  OrderOptSumStatistics(must = {}, sumField, termField) {
     // bool 表达式
     // const queryObj = { bool: { must } }
     const queryStr = `${JSON.stringify(must)}`
