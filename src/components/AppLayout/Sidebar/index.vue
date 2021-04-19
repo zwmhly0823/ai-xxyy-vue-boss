@@ -7,7 +7,9 @@
         :collapse="isCollapse"
         :background-color="variables.menuBg"
         :text-color="variables.menuText"
+        :unique-opened="false"
         :active-text-color="variables.menuActiveText"
+        :collapse-transition="false"
         :default-openeds="defaultOpendIndex"
         menu-trigger="click"
         mode="vertical"
@@ -18,8 +20,6 @@
           :item="route"
           :index="index"
           :base-path="route.path"
-          @menuClick="getMenuData"
-          :opened="defaultOpendIndex"
         />
       </el-menu>
     </el-scrollbar>
@@ -57,6 +57,50 @@ export default {
   components: { SidebarItem, Logo, CustomPop },
   computed: {
     ...mapGetters(['sidebar']),
+    // 高亮选中状态
+    activeMenu() {
+      const { path } = this.$route
+      const { pathname } = location
+      let active = '0'
+      const routes = this.routes
+      if (routes.length === 0) return active
+      // 写字项目：根据切换科目默认跳转路径设置导航默认选中项，现在默认是 学员管理-我的学员
+      if(pathname.includes('music_app')){
+        // 音乐项目
+        routes.forEach((item, index) => {
+          index = index.toString()
+          if (item?.meta?.module && pathname.includes(item.meta.module)) {
+            if (item.path === path) {
+              active = index
+            }
+            // TODO: 特殊处理-显示老版体验课班级入口
+            // if (location.hash === '#/trialTeam') {
+            //    active = '0-0'
+            // }
+            if (item.children) {
+              const children = item.children.filter((item) => item.meta.show)
+              children.forEach((child, cindex) => {
+                // if (child.path.includes(path)) active = `${index}-${cindex}`
+                if (child.path === path) active = `${index}-${cindex}`
+                console.log(active)
+              })
+            }
+          } else {
+            if (item.path === path) {
+              active = index
+            }
+            if (item.children) {
+              const children = item.children.filter((item) => item.meta.show)
+              children.forEach((child, cindex) => {
+                // if (child.path.includes(path)) active = `${index}-${cindex}`
+                if (child.path === path) active = `${index}-${cindex}`
+              })
+            }
+          }
+        })
+      }
+      return active
+    },
     sidebar() {
       return this.$store.state.app.sidebar
     },
@@ -106,28 +150,17 @@ export default {
       return false
     },
     // 默认全部展开
-    // defaultOpendIndex() {
-    //   const ids = routes.map((_, index) => index.toString())
-    //   console.log(ids)
-    //   return ids
-    // }
+     // 默认全部展开
+    defaultOpendIndex() {
+      // const ids = routes.map((_, index) => index.toString())
+      const ids = ['0', '1', '2'];
+      return ids
+    }
   },
   data() {
     return {
       currentMenu: null,
-      activeMenu: '0',
-      defaultOpendIndex: [],
       // 让每一项传过来的数据进行对比
-      menuList: {
-        0: '0',
-        1: '1',
-        2: '2',
-        4: '4',
-        5: '5',
-        7: '7',
-        8: '8',
-        9: '9',
-      },
     }
   },
   created() {
@@ -139,18 +172,7 @@ export default {
   methods: {
     getActive() {
       let active = localStorage.getItem('menuActive')
-      this.activeMenu = active == null ? '' : active
-    },
-    getMenuData(data) {
-      let flag = this.defaultOpendIndex.filter(item => item == data);
-      let result = [];
-      if(flag.length > 0) {
-        result = this.defaultOpendIndex.filter(item => (item != data))
-      }
-      else {
-        result = [...this.defaultOpendIndex, data + ''];
-      }
-      this.defaultOpendIndex = result;
+      // this.activeMenu = active == null ? '' : active
     },
     handleLeave() {
       // this.$store.dispatch('app/resetSidebar')
