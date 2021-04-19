@@ -183,7 +183,7 @@ export default {
       }
       if (bottom > height - 20) {
         Object.assign(payload, {
-          bottom: 100
+          bottom: 10
         })
       }
       this.$store.commit('app/TOGGLE_POPMENU', payload)
