@@ -262,7 +262,7 @@
           scope.row.order_status ? scope.row.order_status : '-'
         }}</template>
       </el-table-column>
-      <el-table-column label="关联订单类型及订单号" min-width="180">
+      <el-table-column label="关联订单类型及母订单号" min-width="180">
         <template slot-scope="scope">
           <p>
             {{
