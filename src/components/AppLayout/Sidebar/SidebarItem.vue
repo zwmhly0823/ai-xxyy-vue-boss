@@ -181,7 +181,7 @@ export default {
         top,
         bottom: 0
       }
-      if (bottom > height - 120 || (item.meta.bottom && height < 800)) {
+      if (bottom > height - 20) {
         Object.assign(payload, {
           bottom: 100
         })
