@@ -626,6 +626,7 @@ export default {
       })
       this.trialTeam = result || {}
       this.trialTeamUid = resultUid || {}
+      console.log(this.trialTeamUid,"this.trialTeamUid");
       // return result
     },
 

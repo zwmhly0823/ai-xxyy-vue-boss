@@ -46,14 +46,14 @@
             {{ timestamp(scope.row.login_time, 2) }}
           </template>
         </el-table-column>
-        <el-table-column prop="ogin_source " label="登陆来源" align="center">
+        <el-table-column prop="ogin_source" label="登陆来源" align="center">
+               <template slot-scope="scope">
+            <p>{{ scope.row.ogin_source ? scope.row.ogin_source : '-' }}</p>
+          </template>
         </el-table-column>
         <el-table-column prop="ostype" label="系统类型" align="center">
         </el-table-column>
-        <el-table-column prop="ogin_source" label="登陆来源" align="center">
-        </el-table-column>
-
-        <el-table-column
+       <el-table-column
           prop="device_id"
           label="设备唯一识别码"
           width="130"
