@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-17 09:55:20
+ * @LastEditTime: 2021-04-19 11:34:19
  */
 import axios from '../axiosConfig'
 import { injectSubject, getAppSubjectCode } from '@/utils/index'
@@ -26,6 +26,43 @@ const subjectCode = getAppSubjectCode()
 // }
 
 export default {
+  /**
+   * ##根据用户ID，查询用户登录信息
+   * */
+  UserLoginDataPage(query, page = 1, size = 20) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        UserLoginDataPage(query: ${JSON.stringify(
+        injectSubject(query)
+      )}, page: ${page},size:${size}) {
+          totalPages
+          totalElements
+          number
+          content {
+            id
+            ctime
+            login_time
+            login_source
+            ostype
+            old_token
+            new_token
+            device_id
+            device_model
+            device_type
+            user_agent
+            appname
+            appversion
+            buildcode
+            system_version
+            channel
+            market
+            carrier
+            headers
+            }
+         }
+      }`
+    })
+  },
   /**
    * 获取订单列表 v1
    * */
@@ -450,7 +487,12 @@ export default {
       }`
     })
   },
-
+  /**
+  * 重新分班
+  * */
+  getRegrounpreSendOrder(params) {
+    return axios.post(`/api/b/v1/reSendOrderCompleteMessage?orderId=${params.orderId}&operatorId=${params.operatorId}`)
+  },
   /**
    * 模糊搜索订单号
    * @param {*} query 订单号

@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-29 10:40:58
+ * @LastEditTime: 2021-04-17 17:05:58
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -56,6 +56,7 @@ export default {
       query: `{
         UserExtendsList(query:${JSON.stringify(injectSubject(q))}){
           id
+          u_id
           mobile
           username
         }

@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
- * @LastEditors: Shentong
- * @LastEditTime: 2020-10-23 15:08:48
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-17 10:52:16
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 const operatingSchedule = [{
@@ -125,6 +125,26 @@ const operatingRoutes = [{
     },
     component: () =>
       import('../views/reviewManagement/components/verificationCode.vue')
+  },
+  {
+    path: '/regroup',
+    name: 'regroup',
+    meta: {
+      title: '重新分班',
+      keepAlive: false
+    },
+    component: () =>
+      import('../views/reviewManagement/components/regroup.vue')
+  },
+  {
+    path: '/userResult',
+    name: 'userResult',
+    meta: {
+      title: '用户登陆查询',
+      keepAlive: false
+    },
+    component: () =>
+      import('../views/reviewManagement/components/userResult.vue')
   },
   {
     path: '/labelManage',
