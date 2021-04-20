@@ -53,7 +53,7 @@ export default {
           text: '单周体验课',
         },
         {
-          id: 0,
+          id: "0",
           text: '双周体验课',
         },
       ],
