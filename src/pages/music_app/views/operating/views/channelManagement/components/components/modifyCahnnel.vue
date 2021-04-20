@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-05-07 10:48:30
- * @LastEditors: panjian
- * @LastEditTime: 2020-05-11 20:55:33
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-13 10:50:36
  -->
 <template>
   <div class="drawer-box">
@@ -70,6 +70,18 @@
           <el-option label="B" :value="0">B</el-option>
         </el-select>
       </el-form-item>
+       <el-form-item label="体验课模版" prop="experience">
+        <el-select disabled v-model="ruleForm.experience" placeholder="请选择" clearable>
+          <el-option
+            label="29元体验课模版"
+            :value="'/channel29/index?channelId= '"
+            >29元体验课模版</el-option
+          >
+          <el-option label="49元体验课模版" :value="'/channel/index?channelId='"
+            >49元体验课模版</el-option
+          >
+        </el-select>
+      </el-form-item>
       <el-form-item label="渠道备注" prop="desc">
         <el-input
           placeholder="请输入备注"
@@ -88,7 +100,7 @@
         </el-switch>
       </el-form-item>
       <el-form-item>
-        <div style="margin-left:50px;">
+        <div style="margin-left: 50px">
           <el-button type="primary" @click="submitForm('ruleForm')"
             >提交</el-button
           >
@@ -130,25 +142,26 @@ export default {
         sort: '',
         desc: '',
         status: '1',
-        channelLevel: ''
+        channelLevel: '',
+        experience: '',
       },
       rules: {
         channelOne: [
-          { required: true, message: '请选择一级渠道', trigger: 'change' }
+          { required: true, message: '请选择一级渠道', trigger: 'change' },
         ],
         channelTwo: [
-          { required: true, message: '请选择二级渠道', trigger: 'change' }
+          { required: true, message: '请选择二级渠道', trigger: 'change' },
         ],
         channelLevel: [
-          { required: true, message: '请选择渠道等级', trigger: 'change' }
+          { required: true, message: '请选择渠道等级', trigger: 'change' },
         ],
         // channelThree: [
         //   { required: true, message: '请填写三级渠道', trigger: 'change' }
         // ],
-        sort: [{ required: true, validator: channelSort, trigger: 'blur' }]
+        sort: [{ required: true, validator: channelSort, trigger: 'blur' }],
         // desc: [{ required: true, message: '请填写渠道备注', trigger: 'blur' }]
         // status: [{ required: true, message: '请选择渠道状态', trigger: 'blur' }]
-      }
+      },
     }
   },
   created() {
@@ -174,7 +187,10 @@ export default {
             this.ruleForm.channelThree = item.channel_inner_name
             this.ruleForm.sort = item.channel_sort
             this.ruleForm.desc = item.remarks
-            this.ruleForm.status = item.status.toString()
+            ;(this.ruleForm.experience = item.channel_link.includes('29')
+              ? '29元体验课模版'
+              : '49元体验课模版'),
+              (this.ruleForm.status = item.status.toString())
             this.ruleForm.channelLevel = item.channel_level
           })
         }
@@ -247,7 +263,7 @@ export default {
               channelSort: this.ruleForm.sort, // 渠道排序
               status: this.ruleForm.status, // 1开启0禁用
               remarks: this.ruleForm.desc,
-              channelLevel: this.getLevel(this.ruleForm.channelLevel) // 渠道等级
+              channelLevel: this.getLevel(this.ruleForm.channelLevel), // 渠道等级
             }
           } else {
             this.props = {
@@ -258,7 +274,7 @@ export default {
               channelSort: this.ruleForm.sort, // 渠道排序
               status: this.ruleForm.status, // 1开启0禁用
               remarks: this.ruleForm.desc,
-              channelLevel: this.getLevel(this.ruleForm.channelLevel) // 渠道等级
+              channelLevel: this.getLevel(this.ruleForm.channelLevel), // 渠道等级
             }
           }
 
@@ -293,8 +309,8 @@ export default {
         return levelNames[val]
       }
       return ''
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-12 15:22:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-17 14:42:47
+ * @LastEditTime: 2021-04-06 16:06:41
  */
 
 import axios from '../axiosConfig'
@@ -70,7 +70,7 @@ export default {
   // 获取剩余金额
   getResidueFee({ orderId }) {
     console.warn('获取剩余金额')
-    return axios.get(`/api/o/v1/order/getRemainingAmount?orderId=${orderId}`)
+    return axios.get(`/api/o/v1/order/getOrderRemainingAmount?orderId=${orderId}`)
     // return new Promise((resolve, reject) => {
     //   resolve({ code: 0, data: { bala: 54188 } })
     // })

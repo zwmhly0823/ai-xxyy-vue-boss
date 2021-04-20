@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-08 20:10:59
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-13 14:40:28
  -->
 <template>
   <div id="channel-box" class="channel-box">
@@ -449,7 +449,9 @@ export default {
             ? 'https://ai-xxyy-test.yinyuebao.com'
             : location.origin.includes('prod')
             ? 'https://ai-xxyy-prod.xiaoxiongyinyue.com'
-            : 'https://ai-xxyy-live.xiaoxiongyinyue.com'
+            : location.origin.includes('live')
+            ? 'https://ai-xxyy-live.xiaoxiongyinyue.com'
+            : 'https://ai-xxyy-live.yinyuebao.com'
           res.channelNameLink =
             qudaourl + `/channel/index?changeImg=1&channelId=${res.pay_channel}`
           // 线索数

@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-08 20:16:36
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-13 10:49:21
  -->
 <template>
   <div class="channelAdd-box">
@@ -73,6 +73,12 @@
           <template slot-scope="scope">
             <span v-if="scope.row.status == 1">启用</span>
             <span v-else>停用</span>
+          </template>
+        </el-table-column>
+
+         <el-table-column prop="channel_link" width="300" label="体验课模版">
+          <template slot-scope="scope">
+            <span>{{scope.row.channel_link?scope.row.channel_link:'-'}}</span>
           </template>
         </el-table-column>
         <el-table-column label="渠道备注" align="center" show-overflow-tooltip>
