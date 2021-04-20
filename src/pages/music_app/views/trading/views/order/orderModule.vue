@@ -11,7 +11,6 @@
     <div class="order-container">
       <div class="order-container-content">
         <el-scrollbar wrap-class="order-wrapper" id="order-scroll">
-          <!-- topicType="topic_id" -->
           <div class="order-box">
             <el-tabs type="border-card" v-model="activeTopic">
               <!-- 包含全部系统课订单数据（月系统课、季系统课、半年系统课、年系统课） -->
@@ -68,17 +67,6 @@
                   v-if="activeTopic === '1,2,6,10,11'"
                 />
               </el-tab-pane>
-              <!-- <el-tab-pane label="素质课" name="7">
-                <search-list4
-                  @search="handleSearch"
-                  v-if="activeTopic === '7'"
-                />
-                <all-order4
-                  :topic="activeTopic"
-                  :search="search"
-                  v-if="activeTopic === '7'"
-                />
-              </el-tab-pane> -->
               <el-tab-pane label="兑换码订单" name="13">
                  <search-list6
                   @search="handleSearch"
@@ -117,14 +105,12 @@ import allOrder3 from './components/allOrder3'
 import allOrder5 from './components/allOrder5'
 import allOrder6 from './components/allOrder6'
 import allOrder7 from './components/allOrder7'
-// import allOrder4 from './components/allOrder4'
 import searchList1 from './components/searchList1.vue'
 import searchList2 from './components/searchList2.vue'
 import searchList3 from './components/searchList3.vue'
 import searchList5 from './components/searchList5.vue'
 import searchList6 from './components/searchList6.vue'
 import searchList7 from './components/searchList7.vue'
-// import searchList4 from './components/searchList4.vue'
 export default {
   name: 'orderModule',
   props: [],
@@ -132,14 +118,12 @@ export default {
     allOrder1,
     allOrder2,
     allOrder3,
-    // allOrder4,
     allOrder5,
     allOrder6,
     allOrder7,
     searchList1,
     searchList2,
     searchList3,
-    // searchList4,
     searchList5,
     searchList6,
     searchList7,

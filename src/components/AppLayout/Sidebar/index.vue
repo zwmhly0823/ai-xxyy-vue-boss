@@ -74,13 +74,9 @@ export default {
               active = index
             }
             // TODO: 特殊处理-显示老版体验课班级入口
-            // if (location.hash === '#/trialTeam') {
-            //    active = '0-0'
-            // }
-            if (item.children) {
+           if (item.children) {
               const children = item.children.filter((item) => item.meta.show)
               children.forEach((child, cindex) => {
-                // if (child.path.includes(path)) active = `${index}-${cindex}`
                 if (child.path === path) active = `${index}-${cindex}`
                 console.log(active)
               })
@@ -92,7 +88,6 @@ export default {
             if (item.children) {
               const children = item.children.filter((item) => item.meta.show)
               children.forEach((child, cindex) => {
-                // if (child.path.includes(path)) active = `${index}-${cindex}`
                 if (child.path === path) active = `${index}-${cindex}`
               })
             }
@@ -107,9 +102,6 @@ export default {
     routes() {
       let result = []
       const newRoutes = routes.filter((item) => !item.hidden)
-
-      // console.log('menuList', menuList)
-      // console.log('newRoutes', newRoutes)
       if (staff && staff.admin) {
         result = newRoutes
       } else {
@@ -134,7 +126,6 @@ export default {
           }
         })
       }
-      // console.log('result', result);
       return result
     },
 
@@ -150,9 +141,7 @@ export default {
       return false
     },
     // 默认全部展开
-     // 默认全部展开
     defaultOpendIndex() {
-      // const ids = routes.map((_, index) => index.toString())
       const ids = ['0', '1', '2'];
       return ids
     }
@@ -172,10 +161,8 @@ export default {
   methods: {
     getActive() {
       let active = localStorage.getItem('menuActive')
-      // this.activeMenu = active == null ? '' : active
     },
     handleLeave() {
-      // this.$store.dispatch('app/resetSidebar')
     },
   },
 }

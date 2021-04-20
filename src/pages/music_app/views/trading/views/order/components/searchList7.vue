@@ -1,11 +1,3 @@
-<!--
- * @Descripttion: 素质课搜索栏
- * @version: 1.0.0
- * @Author: songyanan
- * @Date: 2020-07-01 11:08:23
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-16 14:36:52
- -->
 <template>
   <el-card
     border="false"
@@ -331,24 +323,9 @@ export default {
 
       const query = this.$parent.$children[1].finalParams
       query.subject = 3
-      // delete query.packages_id
-      // delete query.regtype
-      // delete query.status
+    
       const fileTitle = dayjs(new Date()).format('YYYY-MM-DD')
       const fileTitleTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
-
-      // 导出条件为 v1 对象方式
-      // const query = {
-      //   status: 3
-      // }
-      // const search = this.searchParams[0]
-      // for (const key in search) {
-      //   if (Object.keys(search).includes(key)) {
-      //     const item = search[key]
-      //     Object.assign(query, item)
-      //   }
-      // }
-
       const loading = this.$loading({
         lock: true,
         text: '正在导出，请耐心等待……',
