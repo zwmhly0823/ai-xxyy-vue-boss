@@ -47,13 +47,13 @@
           </template>
         </el-table-column>
         <el-table-column prop="ogin_source" label="登陆来源" align="center">
-               <template slot-scope="scope">
+          <template slot-scope="scope">
             <p>{{ scope.row.ogin_source ? scope.row.ogin_source : '-' }}</p>
           </template>
         </el-table-column>
         <el-table-column prop="ostype" label="系统类型" align="center">
         </el-table-column>
-       <el-table-column
+        <el-table-column
           prop="device_id"
           label="设备唯一识别码"
           width="130"
@@ -233,7 +233,7 @@ export default {
             let queryObj = {}
             queryObj.uid = this.userId
 
-            queryObj.device_id = {gt:1}
+            queryObj.device_id = { gt: 1 }
             this.UserLoginDataPage(queryObj, 1)
           } else {
             this.$message({
@@ -256,16 +256,16 @@ export default {
         page
       ).then((res) => {
         this.tableData = res.data.UserLoginDataPage.content
-        this.totalElements =Number(res.data.UserLoginDataPage.totalElements) 
+        this.totalElements = Number(res.data.UserLoginDataPage.totalElements)
         this.currentPage = Number(res.data.UserLoginDataPage.number)
       })
     },
     // 点击分页
     handleSizeChange(val) {
+      let queryObj = {}
+      queryObj.uid = this.userId
       this.currentPage = val
-      this.UserLoginDataPage()
-      const dom = document.getElementById('order-scroll')
-      dom.querySelector('.order-wrapper').scrollTo(0, 0)
+      this.UserLoginDataPage(queryObj, val)
     },
     handleClose(done) {
       done()
