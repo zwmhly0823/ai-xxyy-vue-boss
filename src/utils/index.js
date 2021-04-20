@@ -228,7 +228,14 @@ export function GetAgeByBrithday(birth) {
     } else {
       month = todayMonth - birthdayMonth
     }
-    return age + '岁' + month + '个月'
+
+    if (age < 1 && month < 1) {
+      return  "1个月";
+    } else if (age < 1) {
+      return  month + "个月";
+    } else {
+      return age + "岁" + (month > 0 ? month:(month + 1)) + "个月";
+    }
   }
 }
 
