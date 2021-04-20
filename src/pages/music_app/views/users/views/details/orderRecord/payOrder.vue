@@ -10,19 +10,55 @@
       </el-table-column>
       <el-table-column label="下单时间" prop="ctime" width="160">
       </el-table-column>
-      <el-table-column label="商品信息" width="200">
+       <el-table-column label="商品信息" min-width="260">
         <template slot-scope="scope">
-          <div>
-            {{ scope.row.packages_name ? scope.row.packages_name : '-' }}
-          </div>
-          <div>
-            外显价格: {{ scope.row.amount >= 0 ? scope.row.amount : '-' }}元
-          </div>
+          <p>
+            {{
+              scope.row.packages_name
+                ? scope.row.packages_name || '-'
+                : scope.row.product_name || '-'
+            }}
+          </p>
+          <!-- 人民币 ， 宝石，小熊币 -->
+          <p>
+            {{ scope.row.currency ? scope.row.currency : '人民币 ' }}
+            {{
+              scope.row.amount
+                ? scope.row.amount
+                : scope.row.regtype === 6
+                ? ''
+                : '-'
+            }}
+          </p>
+          <p>
+            {{
+              scope.row.course_product_name
+                ? scope.row.course_product_name
+                : '-'
+            }}
+            {{
+              (scope.row.amount-scope.row.instrument_order_total_amount)>0 && scope.row.course_product_name
+                ? (scope.row.amount*100-scope.row.instrument_order_total_amount*100)/100
+                : '-'
+            }}
+          </p>
+            <p>
+            {{
+              scope.row.instrument_product_name
+                ? scope.row.instrument_product_name
+                : '-'
+            }}
+            {{
+              scope.row.instrument_order_total_amount
+                ? scope.row.instrument_order_total_amount
+                : '-'
+            }}
+          </p>
         </template>
       </el-table-column>
       <el-table-column label="支付信息" width="120">
         <template slot-scope="scope">
-          <div>优惠卷：{{ scope.row.discount_amount }}元</div>
+          <div>优惠券：{{ scope.row.discount_amount?scope.row.discount_amount+'元':'0元' }}</div>
           <div>实际支付：{{ scope.row.amount }}元</div>
         </template>
       </el-table-column>
@@ -92,7 +128,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="订单编号-订单交易流水号" width="220">
+      <el-table-column label="母订单编号-订单交易流水号" width="220">
         <template slot-scope="scope">
           <div>
             <div>

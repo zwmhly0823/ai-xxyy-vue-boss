@@ -115,7 +115,7 @@ export default {
           300,
           this.isParttimeTeacher
         )
-        
+        // 这里赋值的时候要注意
         const teacherIds = teacher.data.TeacherList.map((item) => item.id)
        this.$emit(
           'result',

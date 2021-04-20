@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-14 14:07:45
+ * @LastEditTime: 2021-04-17 09:52:38
  -->
 <template>
   <el-card
@@ -469,8 +469,8 @@ export default {
     selectOrder(val) {
       this.searchParams.forEach((item, index) => {
         if (
-          item.terms.associated_order_id ||
-          item.terms.associated_order_id == 0
+         item.terms&& item.terms.associated_order_id ||
+          item.terms &&item.terms.associated_order_id == 0
         ) {
           this.searchParams.splice(index, 1)
         }
@@ -800,7 +800,7 @@ export default {
       // 获取查询条件
       const query = this.$parent.$children[1].finalParams
       // 限制导出全部订单
-     if (!query.status || query.status[0] != 3) {
+      if (!query.status || query.status[0] != 3) {
         this.$message.error('只能导出已完成的订单，请重新选择')
         return
       } else {
@@ -832,33 +832,28 @@ export default {
       })
       if (chooseExport === '1') {
         const params = {
-          apiName: 'OrderPage',
+          apiName: 'OrderOptStatistics',
           header: {
             buydate: '缴费时间',
-            out_trade_no: '订单号',
+            out_trade_no: '母订单号',
+            course_sub_out_trade_no: '课程子商品订单号',
             uid: '用户ID',
             'user.username': '用户昵称',
             'paymentPay.transaction_id': '交易流水号',
             'paymentPay.trade_type_text': '支付方式',
-            total_amount: '商品价格',
-            discount_type_text: '优惠类型',
-            discount_value_text: '折扣力度',
-            discount_amount: '优惠金额',
-            amount: '交易金额',
+            total_amount: '母订单商品原价',
+            associated_order_amout: '优惠券实收金额',
+            discount_amount: '优惠券抵扣金额',
+            associated_order_out_trade_no: '关联优惠券订单号',
+            amount: '母订单实付金额',
+            order_total_amount: '订单总支付金额',
+            system_course_order_total_amount: '系统课实际支付总金额',
             'packagesType.name': '套餐类型',
             'stageInfo.period_name': '期数',
             'channel.channel_outer_name': '线索渠道',
-            sup_text: '课程难度',
-            is_associated_coupon: '是否关联预付款优惠券',
-            associated_order_out_trade_no: '关联订单号',
-            associated_order_amout: '关联订单交易金额',
             invoice_status_text: '开票状态',
             invoice_type_text: '开票类型',
             invoice_code: '发票号码',
-            order_total_amount: '订单总金额',
-            refund_amount: '累计退费金额',
-            remaining_amount: '剩余金额',
-            class_start_text: '开课时间',
           },
           fileName: `系统课订单导出-${fileTitleTime}`, // 文件名称
           query: JSON.stringify(query),

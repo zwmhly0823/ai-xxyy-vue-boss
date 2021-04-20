@@ -3,8 +3,8 @@
  * @version: 2.0.0
  * @Author: YangJiyong
  * @Date: 2020-03-24 12:49:53
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-17 11:55:24
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-16 17:05:07
 -->
 <template>
   <div v-if="!item.hidden">
@@ -166,8 +166,9 @@ export default {
 
     // 弹出二级导航的浮层
     handleMouseEndter(item) {
+
       // 如果菜单是收起状态，不执行此逻辑
-      if (!this.sidebar.opened) return
+      // if (!this.sidebar.opened) return
 
       // TODO: 兼容性完善
       const { right, top, width, bottom } = this.$el.getBoundingClientRect()
@@ -180,7 +181,7 @@ export default {
         top,
         bottom: 0
       }
-      if (bottom > height - 120 || (item.meta.bottom && height < 800)) {
+      if (bottom > height - 20) {
         Object.assign(payload, {
           bottom: 10
         })

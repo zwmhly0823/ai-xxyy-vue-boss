@@ -340,6 +340,24 @@ let bearArt = [
           module
         }
       },
+      {
+        path: '/regroup',
+        name: 'regroup',
+        meta: {
+          title: '重新分班',
+          // module: 'operating'
+          module
+        }
+      },
+      {
+        path: '/userResult',
+        name: 'userResult',
+        meta: {
+          title: '用户登陆查询',
+          // module: 'operating'
+          module
+        }
+      },
     ]
   },
   {
