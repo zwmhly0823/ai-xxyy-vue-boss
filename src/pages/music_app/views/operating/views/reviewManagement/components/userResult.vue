@@ -262,8 +262,9 @@ export default {
     },
     // 点击分页
     handleSizeChange(val) {
-      let queryObj = {}
-      queryObj.uid = this.userId
+      let queryObj = {};
+      queryObj.uid = this.userId;
+      queryObj.device_id = { gt: 1 };
       this.currentPage = val
       this.UserLoginDataPage(queryObj, val)
     },
