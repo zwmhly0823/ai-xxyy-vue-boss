@@ -162,7 +162,7 @@
                 ></i>
                 <audio
                   :id="`audio${[aItem.id]}`"
-                  :src="aItem.sound_comment"
+                  :src="OSS_IMG_BASE_URL+aItem.sound_comment"
                 ></audio>
               </div>
               <img class="img-play" :src="scope.row.imgWorks" />
