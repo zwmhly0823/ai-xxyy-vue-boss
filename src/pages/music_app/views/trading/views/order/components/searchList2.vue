@@ -365,8 +365,8 @@ export default {
     getExpressStatus(res) {
       this.setSeachParmas(res, ['express_status'])
     },
-    getDepartment(res) {
-      this.teacherscope = res.last_teacher_id || null
+    getDepartment(res,res1) {
+      this.teacherscope = res1.pay_teacher_id || null
       this.setSeachParmas(res, ['last_teacher_id'], 'terms')
     },
     // 选择社群销售

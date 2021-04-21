@@ -105,7 +105,7 @@ export default {
       const allNodes = this.$refs.dept.getCheckedNodes()
       const allNodesId = allNodes.map((item) => item.value)
       const ids = { department_id: allNodesId || [] }
-      window.localStorage.setItem("department",JSON.stringify(ids))
+      window.localStorage.setItem('department', JSON.stringify(ids))
       if (this.onlyDept === 1) {
         this.$emit('result', { [this.name]: allNodesId })
         // this.$emit('result', { [this.name]: data })
@@ -117,9 +117,10 @@ export default {
         )
         // 这里赋值的时候要注意
         const teacherIds = teacher.data.TeacherList.map((item) => item.id)
-       this.$emit(
+        this.$emit(
           'result',
-          data === null || data.length > 0 ? { [this.name]: teacherIds } : ''
+          data === null || data.length > 0 ? { [this.name]: teacherIds } : '',
+          { [this.name]: allNodesId }
         )
       }
     },
