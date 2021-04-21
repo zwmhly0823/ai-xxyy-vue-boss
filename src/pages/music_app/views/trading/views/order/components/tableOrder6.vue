@@ -165,7 +165,6 @@ import MPagination from '@/components/MPagination/index.vue'
 import { formatData, isToss, deepClone, openBrowserTab } from '@/utils/index.js'
 import ExpressDetail from '../../components/expressDetail'
 import User from '../../components/User.vue'
-import { translateStoZ } from '@/utils/supList'
 export default {
   components: {
     MPagination,

@@ -41,46 +41,50 @@ export default {
   props: {
     name: {
       type: String,
-      default: ''
+      default: '',
+    },
+    category: {
+      type: Array,
+      default: () => [],
     },
     // 1-系统课，0-体验课
     type: {
       type: String,
-      default: '1'
+      default: '1',
     },
     // 是否多选
     isMultiple: {
       type: Boolean,
-      default: true
+      default: true,
     },
     placeholder: {
       type: String,
-      default: ''
+      default: '',
     },
     // 老师ID,通过老师获取对应的排期
     teacherId: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     myStyle: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     isDisabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     record: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
   data() {
     return {
       loading: false,
       stage: this.isMultiple ? this.record : '',
       dataList: [],
-      period: [] // 期数
+      period: [], // 期数
     }
   },
   computed: {
@@ -90,12 +94,15 @@ export default {
     placeholderText() {
       if (this.placeholder) return this.placeholder
       return this.type === '1' ? '系统课排期' : '体验课排期'
-    }
+    },
   },
   created() {
     this.getData()
   },
   watch: {
+    category(val, oldValue) {
+      this.getData()
+    },
     record(val) {
       this.stage = val
     },
@@ -118,8 +125,8 @@ export default {
       const teamType =
         this.type === '0' ? { team_type: 0 } : { team_type: { gt: 0 } }
       Object.assign(query, teamType, {
-        subject: this.$store.getters.subjects.subjectCode
-      })
+        subject: this.$store.getters.subjects.subjectCode,
+      },{type:this.category})
 
       const q = JSON.stringify(query)
       axios
@@ -128,14 +135,14 @@ export default {
             StudentTeamList(query: ${JSON.stringify(q)}, size: 500){
               term
             }
-          }`
+          }`,
         })
         .then((res) => {
           const period = (res.data && res.data.StudentTeamList) || []
           this.period = period.map((item) => item.term)
           this.getData()
         })
-    }
+    },
   },
   methods: {
     getData(queryString = '') {
@@ -144,12 +151,12 @@ export default {
         bool: {
           must: [
             { wildcard: { 'period_name.keyword': `*${queryString}*` } },
-            { term: { subject: this.$store.getters.subjects.subjectCode } }
-          ]
-        }
+            { term: { subject: this.$store.getters.subjects.subjectCode } },
+          ],
+        },
       }
       if (this.type) {
-        queryParams.bool.must.push({ term: { type: `${this.type}` } })
+        queryParams.bool.must.push({ term: { type: `${this.category}` } })
       }
       if (this.record.length > 0) {
         console.log(this.period)
@@ -170,11 +177,11 @@ export default {
                     period
                     period_name
                   }
-                }`
+                }`,
         })
         .then((res) => {
           this.loading = false
-          
+
           this.dataList = res.data.ManagementListEx
         })
         .catch(() => {
@@ -185,8 +192,8 @@ export default {
     onChange(data) {
       console.log(data)
       this.$emit('result', data.length > 0 ? { [this.name]: data } : '')
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>

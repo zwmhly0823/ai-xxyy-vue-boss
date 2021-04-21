@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-06-20 20:23:28
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-09 16:59:36
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-14 18:25:24
  @ApiModel(description = "用户跟进状态")
     public enum STATUS {
 
@@ -266,6 +266,18 @@
               />
             </div>
           </el-form-item>
+           <!-- 体验课类型 -->
+           <el-form-item label="体验课类型">
+            <div class="search-group">
+              <trial-classtype
+                name="team_category"
+                placeholder="请选择"
+                :my-style="{ width: '100px' }"
+                :multiple="false"
+                @result="getSearchData"
+              />
+            </div>
+          </el-form-item>
           <!-- 用来占位 -->
           <div class="seat-div">
             <el-button size="mini" type="primary">高级筛选</el-button>
@@ -293,8 +305,10 @@ import DefineLabelV2 from '@/components/MSearch/searchItems/defineLabelV2.vue'
 import SearchPhoneOrUsernum from '@/components/MSearch/searchItems/searchPhoneOrUsernum.vue'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect.vue'
 import enums from '../components/searchData'
+import trialClasstype from '@/components/MSearch/searchItems/trialClassType.vue'
 export default {
   components: {
+    trialClasstype,
     FollowExpressStatus,
     Department,
     GroupSell,
@@ -355,7 +369,7 @@ export default {
      * search item 回调。 key,自定义参数，res，组件返回的值 res[0]
      */
     getSearchData(key, res) {
-      var search = res && res[0]
+     var search = res && res[0]
       if (key == 'sup') {
         search.sup = search.sup.replace(/[A-Z]/g, 's')
         // search.sup = search.sup
@@ -387,7 +401,11 @@ export default {
             'user_label.keyword': `*${search['user_label.like']}*`
           }
         }
+        if (key === 'team_category') {
+          search.team_category = search['team_category']
+        }
 
+        console.log(search,"search");
         this.searchQuery = {
           ...this.searchQuery,
           ...search

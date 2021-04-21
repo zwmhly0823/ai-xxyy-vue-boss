@@ -911,10 +911,13 @@ export default {
         this.teacherId && (timeType.teacher_id = this.teacherIds.join())
       }
       this.searchIn.forEach((item) => {
-        console.log(item, 'item===')
+        console.log(item, 'item===物流参数')
         if (item && item.term) {
           if (item.term.regType) {
             timeType.regtype = item.term.regType
+          }
+          if (item.term.packages_id) {
+            timeType.packages_id = item.term.packages_id
           }
           if (item.term.operator_id) {
             timeType.operator_id = item.term.operator_id

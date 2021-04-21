@@ -1,16 +1,6 @@
 <template>
   <div class="component-search">
     <div class="search-part">
-      <span>体验课排期：</span>
-      <search-stage
-        class="inline-block"
-        @result="stageRes"
-        name="stage"
-        type="0"
-        placeholder="体验课排期"
-      />
-    </div>
-    <div class="search-part">
       <span>销售组：</span>
       <department
         class="inline-block"
@@ -49,12 +39,33 @@
       >
       </el-input>
     </div>
+    <div class="search-part">
+      <span>体验课类型：</span>
+      <trial-course-type
+        class="inline-block"
+        name="category"
+        @result="getTrialCourseType"
+      />
+    </div>
+    <div class="search-part">
+      <search-stage
+        class="inline-block"
+        :category="categoryType"
+        :isDisabled="isDisabled"
+        @result="stageRes"
+        name="stage"
+        type="0"
+        placeholder="体验课排期"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
 import Department from '@/components/MSearch/searchItems/department'
+// 单双周搜索  体验课类型
+import TrialCourseType from '@/components/MSearch/searchItems/trialClassType'
 import GroupSell from '@/components/MSearch/searchItems/groupSell'
 import StageSupLevels from '@/components/MSearch/searchItems/stageSupLevels.vue'
 import { debounce } from 'lodash'
@@ -64,18 +75,21 @@ export default {
     SearchStage,
     Department,
     GroupSell,
-    StageSupLevels
+    StageSupLevels,
+    TrialCourseType,
   },
   data() {
     return {
       teamName: '',
-      searchParams: {}
+      categoryType: [0, 2],
+      searchParams: {},
+      isDisabled:false,
     }
   },
   computed: {
     handleDebounce() {
       return debounce(this.inputHandler, 500)
-    }
+    },
   },
   methods: {
     stageRes(val) {
@@ -92,6 +106,24 @@ export default {
         department = val.department
       }
       this.searchRes(department, 'department')
+    },
+
+    // 体验课类型
+    getTrialCourseType(val) {
+      console.log(val, '体验课类型')
+      let category = ''
+      // 当数组为全部的时候直接赋值
+      if (val) {
+         this.categoryType = val.category
+        if (val.category.length == 2) {
+          category = val.category;
+          this.isDisabled = true
+        } else {
+          category = val.category.join('');
+          this.isDisabled = false
+        }
+      }
+      this.searchRes(category, 'category')
     },
     teacherRes(val) {
       let teacherId = ''
@@ -116,10 +148,9 @@ export default {
     },
     searchRes(val, name) {
       this.searchParams[name] = val
-      // console.log(this.searchParams)
       this.$emit('searchParams', this.searchParams)
-    }
-  }
+    },
+  },
 }
 </script>
 
