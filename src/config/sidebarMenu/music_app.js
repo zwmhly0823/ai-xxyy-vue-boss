@@ -539,6 +539,26 @@ let bearArt = [
       module: module,
     },
   },
+  {
+    path: '/statistics',
+    name: 'statistics',
+    // hidden: true,
+    meta: {
+      title: '营销中心',
+      icon: 'iconiconset',
+      module: "statistics",
+    },
+    children: [
+      {
+        path: '/liveActivity',
+        name: 'liveActivity',
+        meta: {
+          title: '直播活动',
+          module: 'statistics'
+        }
+      },
+    ],
+  },
 ]
 
 

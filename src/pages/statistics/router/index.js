@@ -20,6 +20,15 @@ const routes = [
     redirect: '/priodPerformance'
   },
   {
+    path: '/liveActivity',
+    name: 'liveActivity',
+    meta: {
+      title: '直播活动',
+      keepAlive: false
+    },
+    component: () => import('../views/liveActivity/index.vue')
+  },
+  {
     path: '/priodPerformance',
     name: 'priodPerformance',
     meta: {
@@ -96,7 +105,7 @@ const routes = [
 const router = new VueRouter({
   // mode: 'history',
   base: process.env.BASE_URL,
-  module: 'teacher',
+  module: 'statistics',
   routes
 })
 
