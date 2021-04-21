@@ -14,7 +14,7 @@ const routes = [
     path: '/',
     name: 'statistics',
     meta: {
-      title: '统计分析',
+      title: '数据中心',
       icon: 'el-icon-s-platform'
     },
     redirect: '/priodPerformance'

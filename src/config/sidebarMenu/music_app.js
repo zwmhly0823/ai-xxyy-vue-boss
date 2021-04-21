@@ -544,8 +544,8 @@ let bearArt = [
     name: 'statistics',
     // hidden: true,
     meta: {
-      title: '营销中心',
-      icon: 'iconiconset',
+      title: '数据中心',
+      icon: 'icontongjifenxi',
       module: "statistics",
     },
     children: [
