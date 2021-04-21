@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
- * @LastEditors: liukun
- * @LastEditTime: 2020-11-04 17:54:42
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-17 19:26:54
  */
 import axios from '../axiosConfig'
 import { injectSubject, getAppSubjectCode } from '@/utils/index'
@@ -264,7 +264,7 @@ export default {
   ChannelDetailStatisticsPage(Params = `""`, page = 1) {
     return axios.post('/graphql/v1/toss', {
       query: `{
-        ChannelDetailStatisticsPage(query:${Params},page:${page},size:20){
+        ChannelDetailStatisticsPage(query:${Params},page:${page},size:10000){
           totalPages
           totalElements
           number
@@ -575,13 +575,13 @@ export default {
     return axios.get(`/api/t/v1/teacher/course/teacherLevelByType?level=0`)
   },
   // 招生排期获取招生状态
-  getStatusByperiods(periods) {
-    return axios.get(`/api/t/v1/enroll/getStatusByperiods?periods=${periods}`)
+  getStatusByperiods(periods,courseType) {
+    return axios.get(`/api/t/v1/enroll/getStatusByperiods?periods=${periods}&courseType=${courseType}`)
   },
   // 招生排期切换状态
   updateStatusByPeriod(params) {
     return axios.get(
-      `/api/t/v1/enroll/updateStatusByPeriod?period=${params.period}&status=${params.status}`
+      `/api/t/v1/enroll/updateStatusByPeriod?period=${params.period}&status=${params.status}&courseType=${params.courseType}`
     )
   },
   // 转介绍招生数

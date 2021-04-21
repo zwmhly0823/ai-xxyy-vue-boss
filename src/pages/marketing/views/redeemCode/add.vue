@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-06 22:29:42
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-11 18:00:56
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-17 19:32:36
 -->
 <template>
   <div class="add-redeem-code">
@@ -430,7 +430,8 @@ export default {
     // 获取渠道id列表
     getChannelList() {
       const subject = { subject: this.$store.getters.subjects.subjectCode }
-      const obj = { ...subject, "channel_inner_name.keyword": "兑换码"}
+      // const obj = { ...subject, "channel_inner_name.keyword": "兑换码"} channel_class_id\":82
+      const obj = { ...subject, channel_class_id:82}
       let query = JSON.stringify(JSON.stringify(obj))
       if (query) {
         this.$http.Operating.ChannelDetailStatisticsPage(

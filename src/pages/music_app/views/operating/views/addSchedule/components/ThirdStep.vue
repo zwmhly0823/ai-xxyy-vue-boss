@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
- * @LastEditors: Shentong
- * @LastEditTime: 2020-10-24 15:38:26
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-19 11:55:56
  -->
 <template>
   <div class="third-step">
@@ -209,7 +209,7 @@ import _ from 'lodash'
 import EleTable from '@/components/Table/EleTable'
 // import TableSearch from '../../../components/tableSearch/index'
 import { mapGetters } from 'vuex'
-import { SUP_LEVEL_ALL } from '@/utils/supList'
+import { SUP_LEVEL_ALL,Sup_scheduleSubmit } from '@/utils/supList'
 export default {
   props: ['stepStatus'],
   data() {
@@ -283,7 +283,7 @@ export default {
   watch: {},
   async created() {
     console.log(this.$route.params)
-    const { courseType = '0' } = this.$route.params // courseType = '0' 体验课
+    let { courseType = '0' } = this.$route.params // courseType = '0' 体验课
     // 根据老师ids获取招生排期设置中老师配置信息 TODO:
 
     this.levelObj = SUP_LEVEL_ALL
@@ -292,7 +292,7 @@ export default {
       this.params.courseDifficulty = 'S1'
     }
     Object.assign(this.params, {
-      courseType,
+      courseType:Sup_scheduleSubmit[courseType],
       period: this.schedulePeriod,
       ids: this.scheduleTeacherId
     })
@@ -529,7 +529,7 @@ export default {
       this.validateTableForm(tableData)
       if (this.isValidate) {
         const params = {
-          courseType,
+          courseType:Sup_scheduleSubmit[courseType],
           period: this.schedulePeriod,
           body: tableData
         }
