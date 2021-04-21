@@ -17,7 +17,7 @@ const routes = [
       title: '数据中心',
       icon: 'el-icon-s-platform'
     },
-    redirect: '/priodPerformance'
+    redirect: '/liveActivity'
   },
   {
     path: '/liveActivity',
