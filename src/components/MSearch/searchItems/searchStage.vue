@@ -126,7 +126,7 @@ export default {
         this.type === '0' ? { team_type: 0 } : { team_type: { gt: 0 } }
       Object.assign(query, teamType, {
         subject: this.$store.getters.subjects.subjectCode,
-      },{type:this.category})
+      },{type: `${this.category.length==0?this.type:this.category}`})
 
       const q = JSON.stringify(query)
       axios
@@ -156,7 +156,7 @@ export default {
         },
       }
       if (this.type) {
-        queryParams.bool.must.push({ term: { type: `${this.category}` } })
+        queryParams.bool.must.push({ term: { type: `${this.category.length==0?this.type:this.category}` } })
       }
       if (this.record.length > 0) {
         console.log(this.period)
