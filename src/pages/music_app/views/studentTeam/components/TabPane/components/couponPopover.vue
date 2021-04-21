@@ -146,7 +146,7 @@ export default {
       // 系统课老师可发放优惠券ID
       systemCouponIds: ['11', '20'],
       // 体验课老师可发放优惠券ID
-      trialCouponIds: ['6', '11', '20']
+      trialCouponIds: ['6','7','11', '20']
     }
   },
   computed: {
