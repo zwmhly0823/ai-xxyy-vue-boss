@@ -21,8 +21,17 @@
               </el-form-item>
             </el-form>
           </div>
-
-          <el-table :data="orderList" v-loading="loading">
+          <base-table
+            :loading="loading"
+            :columns="headers"
+            :list="list"
+            :total="total"
+            :pageNum.sync="tableParam.pageNum"
+            :pageSize.sync="tableParam.pageSize"
+            @getList="initData"
+            @operateEdit="operateEdit"
+          ></base-table>
+          <!-- <el-table :data="orderList" v-loading="loading">
             <el-table-column
               label="活动ID"
               prop="user"
@@ -49,47 +58,274 @@
                 >
               </template>
             </el-table-column>
-          </el-table>
+          </el-table> -->
         </el-scrollbar>
       </div>
-
-      <m-pagination
-        :current-page="currentPage"
-        :page-count="totalPages"
-        :total="totalElements"
-        @current-change="handleSizeChange"
-        show-pager
-        open="calc(100vw - 170px - 25px)"
-        close="calc(100vw - 50px - 25px)"
-      ></m-pagination>
-    </el-col>
+      </el-col>
   </el-row>
 </template>
 <script>
 import liveActivityName from '@/components/MSearch/searchItems/liveActivityName'
 import selectStartTime from '@/components/MSearch/searchItems/selectStartTime'
-import MPagination from '@/components/MPagination/index.vue'
+// import MPagination from '@/components/MPagination/index.vue'
+import baseTable from '@/components/newTable'
 export default {
   name: 'liveActivityList',
   components: {
     liveActivityName,
     selectStartTime,
-    MPagination,
+    // MPagination,
+    baseTable,
   },
   data() {
     return {
+      headers: [
+        {
+          key: 'seq',
+          title: '活动ID',
+        },
+        {
+          key: 'title',
+          title: '直播活动名称',
+        },
+        {
+          key: 'content',
+          title: '活动开启时间-关闭时间',
+          width: '300',
+        },
+        {
+          key: 'url',
+          title: '售卖商品',
+        },
+        {
+          key: 'putTime',
+          title: '活动覆盖人数',
+        },
+        {
+          key: 'failureTime',
+          title: '支持终端',
+        },
+        {
+          key: 'isHomePageShow',
+          title: '直播状态',
+          escape: (row) => {
+            return row.isHomePageShow ? '是' : '否'
+          },
+        },
+        {
+          type: 'operate',
+          title: '操作',
+          operates: [
+            {
+              emitKey: 'operateEdit',
+              escape: (row) => {
+                return row.status == '0' ? '查看' : ''
+              },
+            },
+          ],
+        },
+      ],
       name: '123',
       // 总页数
       totalPages: 1,
-      totalElements: 0, // 总条数
+      total: 0, // 总条数
       // 当前页数
-      currentPage: 1,
+      tableParam: {
+        pageNum: 1, // 页码
+        pageSize: 10, // 页长
+      },
       loading: false,
       // 订单列表
-      orderList: [],
+      list: [{
+         seq:"121323",
+         title:"你好嗷嗷",
+         content:"2020-11-12",
+         url:"你好",
+         putTime:"33",
+         failureTime:"ios",
+         isHomePageShow:true,
+         status:0
+      },{
+         seq:"121323",
+         title:"你好嗷嗷",
+         content:"2020-11-12",
+         url:"你好",
+         putTime:"33",
+         failureTime:"ios",
+         isHomePageShow:true,
+      },{
+         seq:"121323",
+         title:"你好嗷嗷",
+         content:"2020-11-12",
+         url:"你好",
+         putTime:"33",
+         failureTime:"ios",
+         isHomePageShow:true,
+      },{
+         seq:"121323",
+         title:"你好嗷嗷",
+         content:"2020-11-12",
+         url:"你好",
+         putTime:"33",
+         failureTime:"ios",
+         isHomePageShow:true,
+      },{
+         seq:"121323",
+         title:"你好嗷嗷",
+         content:"2020-11-12",
+         url:"你好",
+         putTime:"33",
+         failureTime:"ios",
+         isHomePageShow:true,
+      },{
+         seq:"121323",
+         title:"你好嗷嗷",
+         content:"2020-11-12",
+         url:"你好",
+         putTime:"33",
+         failureTime:"ios",
+         isHomePageShow:true,
+      },{
+         seq:"121323",
+         title:"你好嗷嗷",
+         content:"2020-11-12",
+         url:"你好",
+         putTime:"33",
+         failureTime:"ios",
+         isHomePageShow:true,
+      },{
+         seq:"121323",
+         title:"你好嗷嗷",
+         content:"2020-11-12",
+         url:"你好",
+         putTime:"33",
+         failureTime:"ios",
+         isHomePageShow:true,
+      },{
+         seq:"121323",
+         title:"你好嗷嗷",
+         content:"2020-11-12",
+         url:"你好",
+         putTime:"33",
+         failureTime:"ios",
+         isHomePageShow:true,
+      },{
+         seq:"121323",
+         title:"你好嗷嗷",
+         content:"2020-11-12",
+         url:"你好",
+         putTime:"33",
+         failureTime:"ios",
+         isHomePageShow:true,
+      },{
+         seq:"121323",
+         title:"你好嗷嗷",
+         content:"2020-11-12",
+         url:"你好",
+         putTime:"33",
+         failureTime:"ios",
+         isHomePageShow:true,
+      },{
+         seq:"121323",
+         title:"你好嗷嗷",
+         content:"2020-11-12",
+         url:"你好",
+         putTime:"33",
+         failureTime:"ios",
+         isHomePageShow:true,
+      },{
+         seq:"121323",
+         title:"你好嗷嗷",
+         content:"2020-11-12",
+         url:"你好",
+         putTime:"33",
+         failureTime:"ios",
+         isHomePageShow:true,
+      },{
+         seq:"121323",
+         title:"你好嗷嗷",
+         content:"2020-11-12",
+         url:"你好",
+         putTime:"33",
+         failureTime:"ios",
+         isHomePageShow:true,
+      },{
+         seq:"121323",
+         title:"你好嗷嗷",
+         content:"2020-11-12",
+         url:"你好",
+         putTime:"33",
+         failureTime:"ios",
+         isHomePageShow:true,
+      },{
+         seq:"121323",
+         title:"你好嗷嗷",
+         content:"2020-11-12",
+         url:"你好",
+         putTime:"33",
+         failureTime:"ios",
+         isHomePageShow:true,
+      },{
+         seq:"121323",
+         title:"你好嗷嗷",
+         content:"2020-11-12",
+         url:"你好",
+         putTime:"33",
+         failureTime:"ios",
+         isHomePageShow:true,
+      },{
+         seq:"121323",
+         title:"你好嗷嗷",
+         content:"2020-11-12",
+         url:"你好",
+         putTime:"33",
+         failureTime:"ios",
+         isHomePageShow:true,
+      },{
+         seq:"121323",
+         title:"你好嗷嗷",
+         content:"2020-11-12",
+         url:"你好",
+         putTime:"33",
+         failureTime:"ios",
+         isHomePageShow:true,
+      },{
+         seq:"121323",
+         title:"你好嗷嗷",
+         content:"2020-11-12",
+         url:"你好",
+         putTime:"33",
+         failureTime:"ios",
+         isHomePageShow:true,
+         status:0
+      },{
+         seq:"121323",
+         title:"你好嗷嗷",
+         content:"2020-11-12",
+         url:"你好",
+         putTime:"33",
+         failureTime:"ios",
+         isHomePageShow:true,
+         status:0
+      },{
+         seq:"121323",
+         title:"你好嗷嗷",
+         content:"2020-11-12",
+         url:"你好",
+         putTime:"33",
+         failureTime:"ios",
+         isHomePageShow:true,
+         status:0
+      }],
     }
   },
   methods: {
+    initData() {
+
+    },
+    // 编辑
+    operateEdit() {
+    },
     // 获取直播活动名称
     getOrderSearch() {},
     // 点击分页
@@ -128,7 +364,7 @@ export default {
         overflow-x: hidden;
       }
       .form_search {
-          padding: 10px 0 0 10px;
+        padding: 10px 0 0 10px;
       }
       .el-scrollbar {
         flex: 1;
