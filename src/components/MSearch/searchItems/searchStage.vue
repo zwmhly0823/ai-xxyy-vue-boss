@@ -156,7 +156,7 @@ export default {
         },
       }
       if (this.type) {
-        queryParams.bool.must.push({ term: { type: `${this.category}` } })
+        queryParams.bool.must.push({ term: { type: `${this.category.length==0?this.type:this.category}` } })
       }
       if (this.record.length > 0) {
         console.log(this.period)
