@@ -387,39 +387,6 @@ export default {
           this.loading = false
         })
     },
-
-    // 获取组织机构
-    // getDepartment() {
-    //   this.$http.Department.teacherDepartment().then((res) => {
-    //     const dpt = (res.data && res.data.TeacherDepartmentList) || []
-    //     this.departmentObj = _.keyBy(dpt, 'id') || {}
-    //   })
-    // },
-
-    // 获取学员体验课班级
-    // 通过Uid查询对应体验课班级，通过team_id获取
-    async getUserTrialTeam(ids = []) {
-      const query = ids.length > 0 ? JSON.stringify({ student_id: ids }) : ''
-      const trial = await this.$http.Team.getTrialCourseList(query)
-
-      const teamIds =
-        trial.data.StudentTrialCourseList &&
-        trial.data.StudentTrialCourseList.map((item) => item.team_id)
-      const teamQuery = teamIds ? JSON.stringify({ id: teamIds }) : ''
-      const team = await this.$http.Team.getStudentTeamV1(teamQuery)
-      const teamArr = team.data.StudentTeamList || []
-      const teamById = _.keyBy(teamArr, 'id')
-      const result = {}
-      const resultUid = {}
-      trial.data.StudentTrialCourseList.forEach((item) => {
-        result[item.order_no] = teamById[item.team_id]
-        resultUid[item.student_id] = teamById[item.team_id]
-      })
-      this.trialTeam = result || {}
-      this.trialTeamUid = resultUid || {}
-      // return result
-    },
-
     // 点击分页
     handleSizeChange(val) {
       this.currentPage = val
