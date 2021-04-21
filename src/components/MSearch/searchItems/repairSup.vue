@@ -19,7 +19,7 @@
       <el-option
         v-for="item in supList"
         :key="item.id"
-        :label="item.id"
+        :label="item.text"
         :value="item.id"
       >
       </el-option>
