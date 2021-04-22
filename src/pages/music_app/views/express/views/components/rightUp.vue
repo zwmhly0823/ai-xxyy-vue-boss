@@ -214,7 +214,7 @@ export default {
         selectAddress: 'province',
         replenishReason: 'replenish_reason',
         replenishMethod: 'replenish_type',
-        packages_id:'packages_id'
+        packages_id:!this.addSupS?'packages_id':''
       }
     }
   },

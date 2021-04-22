@@ -120,7 +120,7 @@ export default {
     onChange(item) {
       console.log(item,"选择的值");
       if(this.name == 'team_category') {
-        this.$emit('result','team_category', item ? [{ [this.name]: item[0] }] : '')
+        this.$emit('result','team_category', item ? [{ [this.name]: item }] : '')
       }else {
         this.$emit('result', item ? { [this.name]: item } : '')
       }
