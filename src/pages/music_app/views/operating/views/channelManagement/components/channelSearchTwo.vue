@@ -42,40 +42,46 @@
         <el-col :span="12">
           <div class="grid-content bg-purple">
             <el-row :gutter="20">
-              <el-col :span="6" style="text-align:center;">
+              <el-col :span="6" style="text-align: center">
                 <p class="bg-purple-text">添加微信</p>
                 <span class="bg-purple-num">{{ allWechatAddNums }}</span>
               </el-col>
-              <el-col :span="6" style="text-align:center;">
+              <el-col :span="6" style="text-align: center">
                 <p class="bg-purple-text">未支付</p>
                 <span class="bg-purple-num">{{ unpaid }}</span>
               </el-col>
-              <el-col :span="6" style="text-align:center;">
+              <el-col :span="6" style="text-align: center">
                 <p class="bg-purple-text">参课数</p>
                 <span class="bg-purple-num">{{ allJoinUserNums }}</span>
               </el-col>
-              <el-col :span="6" style="text-align:center;">
+              <el-col :span="6" style="text-align: center">
                 <p class="bg-purple-text">完课数</p>
                 <span class="bg-purple-num">{{ allCompleteUserNums }}</span>
               </el-col>
-              <el-col :span="6" style="text-align:center;">
+              <el-col :span="6" style="text-align: center">
                 <p class="bg-purple-text">体验课成单数</p>
                 <span class="bg-purple-num">{{ allPayUserNums }}</span>
               </el-col>
-              <el-col :span="6" style="text-align:center;">
+              <el-col :span="6" style="text-align: center">
                 <p class="bg-purple-text">线索数</p>
                 <span class="bg-purple-num">{{ allUserNums }}</span>
               </el-col>
-              <el-col :span="6" style="text-align:center;">
+              <el-col :span="6" style="text-align: center">
                 <p class="bg-purple-text">参课率</p>
-                <span class="bg-purple-num">
-                  {{ allJoinUserNumsPercent }}
-                </span>
+                <span class="bg-purple-num">{{
+                  allJoinUserNumsPercent.includes('NaN')
+                    ? '0'
+                    : allJoinUserNumsPercent
+                }}</span>
               </el-col>
-              <el-col :span="6" style="text-align:center;">
+              <el-col :span="6" style="text-align: center">
                 <p class="bg-purple-text">完课率</p>
                 <span class="bg-purple-num">
-                  {{ allCompleteUserNumsPercent }}
+                  {{
+                    allCompleteUserNumsPercent.includes('NaN')
+                      ? '0'
+                      : allCompleteUserNumsPercent
+                  }}
                 </span>
               </el-col>
             </el-row>
@@ -143,12 +149,12 @@
         <el-table
           :header-cell-style="headerCss"
           :data="tableData"
-          style="width: 100%;"
+          style="width: 100%"
         >
           <el-table-column label="渠道分类" width="200" align="center">
             <template slot-scope="scope">
               <span>{{ scope.row.p_channel_class_name || '-' }}</span>
-              <span style="margin-left:10px;">{{
+              <span style="margin-left: 10px">{{
                 scope.row.channel_class_name || '-'
               }}</span>
             </template>
@@ -253,12 +259,12 @@ export default {
   props: {
     tabIndex: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
   components: {
     MPagination,
-    channelSearchTwo
+    channelSearchTwo,
   },
   data() {
     return {
@@ -311,7 +317,7 @@ export default {
       // 二级渠道emit数据
 
       // 参数渠道id
-      channelValueList: []
+      channelValueList: [],
     }
   },
   watch: {
@@ -327,7 +333,7 @@ export default {
         this.getChannelDetailPage()
         this.channelSearchValList = ''
       }
-    }
+    },
   },
   created() {
     this.getChannelDetailPage()
@@ -338,7 +344,7 @@ export default {
   methods: {
     initScrollTop() {
       this.timer = null
-      this.timer = setTimeout(function() {
+      this.timer = setTimeout(function () {
         if (document.getElementById('channel-box')) {
           window.addEventListener('scroll', this.handleScroll, true)
           clearTimeout(this.timer)
@@ -374,13 +380,15 @@ export default {
         trialChannelClassIds: this.channelSearchValList,
         stage: this.querySearchTrialStage,
         startCtime: this.stateTime,
-        endCtime: this.endTime
+        endCtime: this.endTime,
       }
       this.$http.Operating.countsByTrialChannel(params).then((res) => {
-        const _data =res.data && res.data.ChannelManagementStatisticsPage.content
+        const _data =
+          res.data && res.data.ChannelManagementStatisticsPage.content
         if (!_data) return
         this.totalNumber = res.data.ChannelManagementStatisticsPage.number
-        this.totalElements = res.data.ChannelManagementStatisticsPage.totalElements
+        this.totalElements =
+          res.data.ChannelManagementStatisticsPage.totalElements
         _data.forEach((res) => {
           res.channelNameLink = `https://www.xiaoxiongmeishu.com/activity/newFortyNine?changeImg=1&channelId=${res.pay_channel}`
           // 线索数
@@ -580,8 +588,8 @@ export default {
     // 表头回调样式
     headerCss({ row, column, rowIndex, columnIndex }) {
       return 'font-size:12px;color:#666;font-weight:normal;'
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>

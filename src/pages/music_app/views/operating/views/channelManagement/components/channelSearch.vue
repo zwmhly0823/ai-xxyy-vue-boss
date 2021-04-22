@@ -74,14 +74,14 @@
               <el-col :span="6" style="text-align: center">
                 <p class="bg-purple-text">参课率</p>
                 <span class="bg-purple-num">{{
-                  isNaN(allJoinUserNumsPercent) ? '0' : allJoinUserNumsPercent
+                  allJoinUserNumsPercent.includes("NaN")  ? '0' : allJoinUserNumsPercent
                 }}</span>
-              </el-col>
+               </el-col>
               <el-col :span="6" style="text-align: center">
                 <p class="bg-purple-text">完课率</p>
                 <span class="bg-purple-num">
                   {{
-                    isNaN(allCompleteUserNumsPercent)
+                    allCompleteUserNumsPercent.includes("NaN") 
                       ? '0'
                       : allCompleteUserNumsPercent
                   }}
@@ -556,6 +556,7 @@ export default {
           if (+_datas.join_user_num === 0 && _datas.trial_user_num === 'null') {
             this.allJoinUserNumsPercent = `0%`
           } else {
+            debugger;
             const allJoinUserNumsPercentNums =
               (_datas.join_user_num / _datas.trial_user_num) * 100
             this.allJoinUserNumsPercent = `${allJoinUserNumsPercentNums.toFixed(
