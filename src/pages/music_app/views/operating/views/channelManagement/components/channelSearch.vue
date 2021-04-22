@@ -556,7 +556,6 @@ export default {
           if (+_datas.join_user_num === 0 && _datas.trial_user_num === 'null') {
             this.allJoinUserNumsPercent = `0%`
           } else {
-            debugger;
             const allJoinUserNumsPercentNums =
               (_datas.join_user_num / _datas.trial_user_num) * 100
             this.allJoinUserNumsPercent = `${allJoinUserNumsPercentNums.toFixed(
