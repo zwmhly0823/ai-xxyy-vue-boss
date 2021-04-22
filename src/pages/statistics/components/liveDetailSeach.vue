@@ -13,7 +13,7 @@
           <el-form-item label="学员搜索:">
             <div class="search-group">
               <search-phone-or-usernum
-                style="margin-right: 10px;"
+                style="margin-right: 10px"
                 type="2"
                 :extension="true"
                 user-num-key="user_num"
@@ -27,7 +27,7 @@
               <department
                 name="last_department_ids"
                 placeholder="选择销售组"
-                style="margin-right: 10px;"
+                style="margin-right: 10px"
                 :multiple="false"
                 :checkStrictly="true"
                 :only-dept="1"
@@ -35,31 +35,60 @@
               />
               <group-sell
                 name="last_teacher_ids"
-                tip="选择销售/班主任"
+                tip="选择销售人员"
                 @result="getSearchData('last_teacher_ids', arguments)"
               />
             </div>
           </el-form-item>
-       
-          <el-form-item label="渠道选择:">
+          <el-form-item label="归属教辅:" label-width="105px">
             <div class="search-group">
-              <channel
-                placeholder="请选择"
-                :my-style="{ width: '100px' }"
-                name="channel"
-                @result="getSearchData('channel', arguments)"
+              <department
+                name="last_department_ids"
+                placeholder="选择教辅组"
+                style="margin-right: 10px"
+                :multiple="false"
+                :checkStrictly="true"
+                :only-dept="1"
+                @result="getSearchData('last_department_ids', arguments)"
+              />
+              <group-sell
+                name="last_teacher_ids"
+                tip="选择教辅人员"
+                @result="getSearchData('last_teacher_ids', arguments)"
               />
             </div>
           </el-form-item>
-          <el-form-item label="系统课转化:" label-width="85px">
+          <el-form-item label="学员转化:" label-width="85px">
             <div class="search-group">
               <simple-select
                 name="status"
                 placeholder="请选择"
                 :my-style="{ width: '100px' }"
                 :multiple="false"
-                :data-list="conversionStatusAll"
                 @result="getSearchData('status', arguments)"
+              />
+            </div>
+          </el-form-item>
+          <el-form-item label="体验课排期:" label-width="85px">
+            <div class="search-group">
+              <trial-course-type
+                class="inline-block"
+                name="category"
+                @result="getSearchData('category', arguments)"
+              />
+            </div>
+          </el-form-item>
+          <el-form-item label="学员转化:" label-width="85px">
+            <div class="search-group">
+              <search-stage
+                class="inline-block"
+                :category="categoryType"
+                :isDisabled="isDisabled"
+                @result="stageRes"
+
+                name="stage"
+                type="0"
+                placeholder="体验课排期"
               />
             </div>
           </el-form-item>
@@ -72,7 +101,6 @@
 <script>
 import Department from '@/components/MSearch/searchItems/department.vue'
 import GroupSell from '@/components/MSearch/searchItems/groupSell.vue'
-import Channel from '@/components/MSearch/searchItems/channel.vue'
 import SearchPhoneOrUsernum from '@/components/MSearch/searchItems/searchPhoneOrUsernum.vue'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect.vue'
 
@@ -81,34 +109,33 @@ export default {
     Department,
     GroupSell,
     SearchPhoneOrUsernum,
-    Channel,
     SimpleSelect,
   },
   props: {
     // 班级类型： 0-体验课 1-系统课
     teamType: {
       type: String,
-      default: '0'
+      default: '0',
     },
     // 参数集合
     paramsToSearch: {
       type: Object,
       default: () => {
         return {}
-      }
-    }
+      },
+    },
   },
   data() {
     return {
       labelName: '',
       searchQuery: {},
-      nowDate: new Date().getTime()
+      nowDate: new Date().getTime(),
     }
   },
   computed: {
     resetSearch() {
       return this.nowDate
-    }
+    },
   },
   created() {},
   methods: {
@@ -139,22 +166,22 @@ export default {
         if (key === 'last_department_ids') {
           Object.assign(search, {
             [`${key}.like`]: {
-              [`${key}.keyword`]: `*${search[key].join(',')}*`
-            }
+              [`${key}.keyword`]: `*${search[key].join(',')}*`,
+            },
           })
         }
 
         if (key === 'last_teacher_ids') {
           Object.assign(search, {
             [`${key}.like`]: {
-              [`${key}.keyword`]: `*${search[key]}*`
-            }
+              [`${key}.keyword`]: `*${search[key]}*`,
+            },
           })
         }
 
         this.searchQuery = {
           ...this.searchQuery,
-          ...search
+          ...search,
         }
       } else {
         this.$delete(this.searchQuery, key)
@@ -173,8 +200,8 @@ export default {
         this.$delete(this.searchQuery, key)
       }
       this.$emit('search', this.searchQuery)
-    }
-  }
+    },
+  },
 }
 </script>
 

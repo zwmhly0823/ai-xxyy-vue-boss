@@ -3,7 +3,7 @@
     <el-col class="grop-container">
       <div class="scroll-container">
         <div class="detail_box">
-          <div v-for="(item, index) in showList" :key="index">
+          <div class="detail_item"  v-for="(item, index) in showList" :key="index">
             <p>{{ item.num }}</p>
             <p>{{ item.title }}</p>
           </div>
@@ -93,7 +93,7 @@ export default {
   },
   data() {
     return {
-      paramsToSearch:{},
+      paramsToSearch: {},
       currentDate: '',
       showList: [
         {
@@ -455,6 +455,12 @@ export default {
       border: 2px solid #dedede;
       border-radius: 10px;
       justify-content: space-around;
+      .detail_item {
+          text-align: center;
+      }
+    }
+    p:nth-child(2) {
+        margin-top: 20px;
     }
   }
 }
