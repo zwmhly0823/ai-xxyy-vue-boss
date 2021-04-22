@@ -3,36 +3,23 @@
     <el-col class="grop-container">
       <div class="scroll-container">
         <div class="detail_box">
-          <div class="detail_item"  v-for="(item, index) in showList" :key="index">
+          <div
+            class="detail_item"
+            v-for="(item, index) in showList"
+            :key="index"
+          >
             <p>{{ item.num }}</p>
             <p>{{ item.title }}</p>
           </div>
         </div>
-        <search
-          ref="searchC"
-          @search="getSearchQuery"
-          :key="currentDate"
-          :paramsToSearch="paramsToSearch"
-        />
+
         <el-scrollbar wrap-class="scrollbar-wrapper">
-          <div class="form_search">
-            <el-form :inline="true" label-position="right" label-width="100px">
-              <el-form-item label="直播活动名称:">
-                <liveActivityName
-                  class="allmini"
-                  :name="name"
-                  @result="getOrderSearch"
-                />
-              </el-form-item>
-              <el-form-item label="直播开启时间:">
-                <selectStartTime
-                  class="allmini"
-                  :name="name"
-                  @result="getOrderSearch"
-                />
-              </el-form-item>
-            </el-form>
-          </div>
+          <search
+            ref="searchC"
+            @search="getSearchQuery"
+            :key="currentDate"
+            :paramsToSearch="paramsToSearch"
+          />
           <base-table
             :loading="loading"
             :columns="headers"
@@ -77,16 +64,11 @@
   </el-row>
 </template>
 <script>
-import liveActivityName from '@/components/MSearch/searchItems/liveActivityName'
-import selectStartTime from '@/components/MSearch/searchItems/selectStartTime'
-// import MPagination from '@/components/MPagination/index.vue'
 import baseTable from '@/components/newTable'
 import search from '../../components/liveDetailSeach'
 export default {
   name: 'liveActivityList',
   components: {
-    liveActivityName,
-    selectStartTime,
     // MPagination,
     baseTable,
     search,
@@ -450,22 +432,25 @@ export default {
 
     .detail_box {
       display: flex;
-      margin: 30px 50px;
+      margin: 30px 50px 10px;
       padding: 30px 0;
       border: 2px solid #dedede;
       border-radius: 10px;
       justify-content: space-around;
       .detail_item {
-          text-align: center;
+        text-align: center;
       }
     }
     p:nth-child(2) {
-        margin-top: 20px;
+      margin-top: 20px;
     }
   }
 }
 .elard {
   border: none;
   margin-top: 5px;
+}
+/deep/.el-form-item {
+  margin-top: 10px;
 }
 </style>

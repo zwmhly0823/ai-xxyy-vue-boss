@@ -72,21 +72,44 @@
           <el-form-item label="体验课排期:" label-width="85px">
             <div class="search-group">
               <trial-course-type
-                class="inline-block"
                 name="category"
                 @result="getSearchData('category', arguments)"
               />
             </div>
           </el-form-item>
-          <el-form-item label="学员转化:" label-width="85px">
+          <el-form-item label="体验课排期:" label-width="80px">
             <div class="search-group">
               <search-stage
-                class="inline-block"
                 :category="categoryType"
                 :isDisabled="isDisabled"
-                @result="stageRes"
+                @result="getSearchData('category', arguments)"
+               name="stage"
+                type="0"
+                placeholder="体验课排期"
+              />
+            </div>
+          </el-form-item>
 
-                name="stage"
+           <el-form-item label="体验课排期:" label-width="80px">
+            <div class="search-group">
+              <buyGoods
+                :category="categoryType"
+                :isDisabled="isDisabled"
+                @result="getSearchData('category', arguments)"
+               name="stage"
+                type="0"
+                placeholder="体验课排期"
+              />
+            </div>
+          </el-form-item>
+
+           <el-form-item label="体验课排期:" label-width="80px">
+            <div class="search-group">
+              <enterTime
+                :category="categoryType"
+                :isDisabled="isDisabled"
+                @result="getSearchData('category', arguments)"
+               name="stage"
                 type="0"
                 placeholder="体验课排期"
               />
@@ -103,11 +126,19 @@ import Department from '@/components/MSearch/searchItems/department.vue'
 import GroupSell from '@/components/MSearch/searchItems/groupSell.vue'
 import SearchPhoneOrUsernum from '@/components/MSearch/searchItems/searchPhoneOrUsernum.vue'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect.vue'
-
+// 单双周搜索  体验课类型
+import TrialCourseType from '@/components/MSearch/searchItems/trialClassType'
+import SearchStage from '@/components/MSearch/searchItems/searchStage'
+import buyGoods from '@/components/MSearch/searchItems/buyGoods'
+import enterTime from '@/components/MSearch/searchItems/enterTime'
 export default {
   components: {
     Department,
     GroupSell,
+    buyGoods,
+    enterTime,
+    TrialCourseType,
+    SearchStage,
     SearchPhoneOrUsernum,
     SimpleSelect,
   },
@@ -129,6 +160,8 @@ export default {
     return {
       labelName: '',
       searchQuery: {},
+      categoryType: [0, 2],
+       isDisabled:false,
       nowDate: new Date().getTime(),
     }
   },
@@ -261,6 +294,20 @@ export default {
   margin-bottom: 0 !important;
   &-item {
     margin-right: 10px;
+  }
+}
+</style>
+<style lang="scss" scoped>
+.component-search {
+  background-color: #fff;
+  padding: 10px 0 0 20px;
+  .inline-block {
+    display: inline-block;
+    width: auto;
+  }
+  .search-part {
+    display: inline-block;
+    margin: 0 20px 10px 0;
   }
 }
 </style>
