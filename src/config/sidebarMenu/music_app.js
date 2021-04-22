@@ -193,12 +193,59 @@ let bearArt = [
     }]
   },
   {
+    path: '/operatingdian',
+    name: 'operatingdian',
+    // hidden: true,
+    meta: {
+      title: '点评管理',
+      icon: 'icon-dianping',
+      // module: 'operating',
+      module,
+      bottom: true
+    },
+    children: [
+      {
+        path: '/reviewManagement',
+        name: '/reviewManagement',
+        meta: {
+          title: '作品点评',
+          // module: 'operating'
+          module
+        }
+      },
+      {
+        path: '/schedule',
+        name: '/schedule',
+        meta: {
+          title: '兼职老师分配',
+          module
+        }
+      },
+      {
+        path: '/parttimeHandover',
+        name: '/parttimeHandover',
+        meta: {
+          title: '兼职老师移交班级',
+          module
+        }
+      },
+      {
+        path: '/dataprepare',
+        name: '/dataprepare',
+        meta: {
+          title: '兼职老师数据看板',
+          module
+        }
+      }
+    ]
+  },
+  {
     path: '/operating',
     name: 'operating',
     // hidden: true,
     meta: {
       title: '运营管理',
-      icon: 'iconyunyingzhongxin',
+      icon: 'icon-yunyingguanli2',
       // module: 'operating',
       module,
       bottom: true
@@ -236,15 +283,6 @@ let bearArt = [
         name: 'comment',
         meta: {
           title: '语音库',
-          // module: 'operating'
-          module
-        }
-      },
-      {
-        path: '/reviewManagement',
-        name: 'reviewManagement',
-        meta: {
-          title: '点评管理',
           // module: 'operating'
           module
         }
@@ -469,7 +507,7 @@ let bearArt = [
     // hidden: true,
     meta: {
       title: 'boss权限',
-      icon: 'iconiconset',
+      icon: 'icon-quanxian',
       module: 'bossAuth',
     },
     children: [
@@ -505,7 +543,7 @@ let bearArt = [
     // hidden: true,
     meta: {
       title: 'toss权限',
-      icon: 'iconiconset',
+      icon: 'icon-quanxian',
       module: 'tossAuth',
     },
     children: [
@@ -525,7 +563,7 @@ let bearArt = [
     // hidden: true,
     meta: {
       title: 'app升级管理',
-      icon: 'iconxueyuanguanli',
+      icon: 'icon-APPshengji',
       module: "teacher",
     },
   },
@@ -535,7 +573,7 @@ let bearArt = [
     // hidden: true,
     meta: {
       title: '活动',
-      icon: 'iconiconset',
+      icon: 'icon-tubiao-',
       module: module,
     },
   },

@@ -3,13 +3,16 @@
  * @Descripttion:
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-21 23:04:10
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-06 20:07:13
  */
  -->
 <template>
   <div class="container">
-    <have-riview-search @result="getSearch"></have-riview-search>
+    <have-riview-search
+      v-if="tabIndex == 2"
+      @result="getSearch"
+    ></have-riview-search>
     <el-table
       v-loading="loading"
       element-loading-text="拼命加载中"
@@ -17,22 +20,68 @@
     >
       <el-table-column label="作品" width="100" align="center">
         <template slot-scope="scope">
-          <el-image
-            class="works-img"
-            :src="`${scope.row.task_image}?x-oss-process=image/resize,l_100`"
-            :lazy="true"
-            :preview-src-list="[scope.row.task_image]"
-            :z-index="1001"
-          >
-          </el-image>
+          <div class="task-image-container" v-if="scope.row.task_image">
+            <div
+              class="task-image"
+              @click="
+                handleViewLarge(
+                  `https://xxyy-kczzht.oss-cn-hangzhou.aliyuncs.com/` +
+                    scope.row.task_video
+                )
+              "
+            >
+              <img
+                :src="`https://xxyy-kczzht.oss-cn-hangzhou.aliyuncs.com/${scope.row.task_image}?x-oss-process=image/resize,l_100`"
+              />
+              <!-- 视频-播放按钮 -->
+              <i class="el-icon-video-play" v-if="scope.row.task_video"></i>
+            </div>
+          </div>
         </template>
       </el-table-column>
-      <el-table-column label="点评" width="180" align="center">
+      <el-table-column label="审核状态" width="180" align="center">
+        <template slot-scope="scope">
+          <p>
+            {{
+              scope.row.status == 1
+                ? '审核中'
+                : scope.row.status == 2
+                ? '发布成功'
+                : scope.row.status == 3
+                ? '已被禁'
+                : '审核未通过'
+            }}
+          </p>
+        </template>
+      </el-table-column>
+      <el-table-column label="审核未通过原因" align="center" width="180">
+        <template slot-scope="scope">
+          <p>
+            {{
+              scope.row.status == 1
+                ? '-'
+                : scope.row.status == 2
+                ? '-'
+                : scope.row.status == 3
+                ? '内容违规'
+                : '内容违规'
+            }}
+          </p>
+        </template>
+      </el-table-column>
+      <el-table-column label="点评状态" align="center" width="180">
+        <template slot-scope="scope">
+          <p>
+            {{ scope.row.comment_status == 0 ? '未点评' : '点评' }}
+          </p>
+        </template>
+      </el-table-column>
+      <el-table-column label="点评内容" align="center" width="180">
         <template slot-scope="scope">
           <p
             v-if="
               !scope.row.soundCommentlist ||
-                scope.row.soundCommentlist.length === 0
+              scope.row.soundCommentlist.length === 0
             "
           >
             -
@@ -49,50 +98,13 @@
               controls
             ></audio>
           </div>
-          <!-- <div class="audio-container">
-            <audio
-              :src="scope.row.sound_comment"
-              style="height: 47px"
-              controls
-            ></audio>
-          </div> -->
-        </template>
-      </el-table-column>
-      <el-table-column label="点评分类" align="center" width="180">
-        <template slot-scope="scope">
-          <p
-            v-if="
-              !scope.row.soundCommentlist ||
-                scope.row.soundCommentlist.length === 0
-            "
-          >
-            -
-          </p>
-          <div
-            v-else
-            v-for="(item, index) in scope.row.soundCommentlist"
-            :key="index"
-            class="review-type"
-          >
-            {{ item.type === 0 ? '手动点评' : '智能点评' }}
-          </div>
-          <!-- <div class="review-type">
-            {{ scope.row.type === 0 ? '手动点评' : '智能点评' }}
-          </div> -->
+          <p>{{scope.row.rank_status==0?'未上榜':scope.row.rank_status>0?'已上榜':'-'}}</p>
         </template>
       </el-table-column>
       <el-table-column label="用户信息" align="center" width="180">
         <template slot-scope="scope">
-          <p>
-            {{ (scope.row.userExtends && scope.row.userExtends.mobile) || '-' }}
-          </p>
-          <p>
-            {{
-              (scope.row.userExtends &&
-                scope.row.userExtends.wechat_nikename) ||
-                '-'
-            }}
-          </p>
+          <div>{{ scope.row.userExtends.mobile }}</div>
+          <div>{{ scope.row.userExtends.wechat_nikename }}</div>
         </template>
       </el-table-column>
       <el-table-column label="班级" align="center" width="180">
@@ -116,7 +128,7 @@
             {{
               (scope.row.assistantTeacherInfo &&
                 scope.row.assistantTeacherInfo.realname) ||
-                '-'
+              '-'
             }}
           </div>
         </template>
@@ -127,7 +139,7 @@
             {{
               (scope.row.parttimeTeacherInfo &&
                 scope.row.parttimeTeacherInfo.realname) ||
-                '-'
+              '-'
             }}
           </div>
         </template>
@@ -138,7 +150,7 @@
             {{
               (scope.row.commentTeacherInfo &&
                 scope.row.commentTeacherInfo.realname) ||
-                '-'
+              '-'
             }}
           </div>
         </template>
@@ -152,13 +164,6 @@
       </el-table-column>
       <el-table-column label="点评日期" align="center" width="180">
         <template slot-scope="scope">
-          <!-- <div
-            v-for="(item, index) in scope.row.taskComments"
-            :key="index"
-            class="review-type"
-          >
-            {{ timestamp(item.ctime. 's') || '-' }}
-          </div> -->
           <div class="review-type">
             {{ timestamp(scope.row.comment_time, 's') || '-' }}
           </div>
@@ -171,12 +176,64 @@
               (scope.row.flagRecord &&
                 scope.row.flagRecord.ctime &&
                 timestamp(scope.row.flagRecord.ctime, 's')) ||
-                '未听点评'
+              '未听点评'
             }}
           </div>
         </template>
       </el-table-column>
+      <el-table-column
+        label="操作"
+        align="center"
+        fixed="right"
+        width="180"
+        class-name="small-padding fixed-width"
+      >
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            @click="
+              scope.row.status != 1 && tabIndex != 0
+                ? handleUpdate(scope.row)
+                : ''
+            "
+            >{{
+              scope.row.status == 2 && tabIndex != 0
+                ? '置为审核不通过'
+                : scope.row.status >= 3 && tabIndex != 0
+                ? '置为审核通过'
+                : '-'
+            }}</el-button
+          >
+        </template>
+      </el-table-column>
     </el-table>
+    <el-dialog
+      width="30%"
+      title="提示:"
+      :visible.sync="visible1"
+      :close-on-click-modal="false"
+    >
+      <div>
+        {{
+          checkStatus == 2
+            ? '确认将该作品状态更改为审核不通过吗？'
+            : checkStatus >= 3
+            ? '确认将该作品状态更改为审核通过吗？'
+            : ''
+        }}
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="visible1 = false" size="mini">取 消</el-button>
+        <el-button
+          :loading="loading"
+          type="primary"
+          @click="handleSaveDelete"
+          size="mini"
+          >确 定</el-button
+        >
+      </div>
+    </el-dialog>
     <m-pagination
       :current-page="query.pageNum"
       :page-size="query.size"
@@ -186,6 +243,24 @@
       open="calc(100vw - 95px - 100px)"
       close="calc(100vw - 23px - 50px)"
     />
+    <!-- 查看作品 -->
+    <el-dialog
+      :visible.sync="taskDialogVisible"
+      width="450px"
+      center
+      custom-class="enlarge-box"
+      @close="closeTaskDialog"
+    >
+      <!-- 作品-视频播放 -->
+      <video
+        v-if="currentVideo"
+        :src="currentVideo"
+        controls
+        autoplay
+        class="video"
+        width="100%"
+      ></video>
+    </el-dialog>
   </div>
 </template>
 
@@ -193,24 +268,35 @@
 import { formatData } from '@/utils/index'
 import { courseLevelReplace } from '@/utils/supList'
 export default {
+  props: {
+    tabIndex: {
+      type: String,
+      default: '0',
+    },
+  },
   components: {
     MPagination: () => import('@/components/MPagination/index.vue'),
     HaveRiviewSearch: () =>
-      import('../../../components/search/haveRiviewSearch.vue')
+      import('../../../components/search/haveRiviewSearch.vue'),
   },
   data() {
     return {
       number: 1,
       list: [],
+      visible1: false,
+      checkStatus: null,
+      course_id: null,
+      taskDialogVisible: false,
       query: {
         size: 10,
-        pageNum: 1
+        pageNum: 1,
       },
       totalElements: 0,
       radio: '',
       timestamp: formatData,
       loading: true,
-      searchParams: {}
+      searchParams: {},
+      currentVideo: '',
     }
   },
   mounted() {
@@ -219,7 +305,22 @@ export default {
   methods: {
     async initList(params = this.searchParams, number = this.query.pageNum) {
       // 增加 已点评 状态
-      const query = Object.assign({}, params, { comment_time: { gt: 0 } })
+
+      let query
+      if (this.tabIndex == 0) {
+        query = Object.assign({}, params)
+      } else if (this.tabIndex == 1) {
+        query = Object.assign({}, params, { comment_time: 0 }, { status: '2' })
+      } else if (this.tabIndex == 2) {
+        query = Object.assign(
+          {},
+          params,
+          { comment_time: { gt: 0 } },
+          { status: '2' }
+        )
+      } else {
+        query = Object.assign({}, params, { status: '4' })
+      }
       try {
         const res = await this.$http.RiviewCourse.getHaveRiviewV2(query, number)
         if (res?.data?.StudentTaskRelationCommentDetailPage) {
@@ -256,7 +357,23 @@ export default {
       }
       return arr
     },
-
+    // 通过和不通过按钮
+    handleUpdate(row) {
+      this.visible1 = true
+      this.checkStatus = row.status
+      this.course_id = row.id
+    },
+    async handleSaveDelete() {
+      let obj = {
+        status: this.checkStatus == 2 ? 4 : this.checkStatus >= 3 ? 1 : '',
+        workIds: [this.course_id],
+      }
+      const res = await this.$http.RiviewCourse.getWorksAuditWorks(obj)
+      if (res.status == 'OK') {
+        this.visible1 = false
+        this.initList()
+      }
+    },
     /**
      * 搜索
      */
@@ -266,7 +383,16 @@ export default {
       this.query.pageNum = 1
       this.initList()
     },
-
+    // 查看大图
+    handleViewLarge(task) {
+      this.currentVideo = task
+      this.taskDialogVisible = true
+    },
+    // 关闭查看作品dialog
+    closeTaskDialog() {
+      this.taskDialogVisible = false
+      this.currentVideo = ''
+    },
     // T2S3L1U2Lesson1 -> S3L1U2
     formatCourse(course) {
       if (!course) return
@@ -278,8 +404,8 @@ export default {
       this.query.pageNum = page
       await this.initList(page)
       document.body.scrollTop = document.documentElement.scrollTop = 0
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -292,6 +418,27 @@ export default {
     border-radius: 100%;
     height: 47px;
     margin: 0 auto 20px;
+  }
+  .task-image-container {
+    width: 60px;
+    text-align: center;
+  }
+  .task-image {
+    position: relative;
+    height: 40px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+    i {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      color: white;
+      transform: translate(-50%, -50%);
+      font-size: 16px;
+      font-weight: bold;
+    }
   }
   .review-type {
     margin: 0 0 20px 0;

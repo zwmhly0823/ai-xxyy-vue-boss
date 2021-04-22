@@ -2,8 +2,8 @@
  * @Descripttion:
  * @Author: songyanan
  * @Date: 2020-05-11 17:35:28
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-16 21:45:49
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-06 18:48:49
  */
 import axios from '../axiosConfig'
 import { injectSubject } from '@/utils/index'
@@ -64,6 +64,9 @@ export default {
   getToViewInform(courseId) {
     return axios.get(`/api/b/v1/reviewVoice/courses?courseIds=${courseId}`)
   },
+
+
+  
   /**
    * 生成语音
    * */
@@ -86,7 +89,11 @@ export default {
       `/api/tm/v1/teacher/manager/courseTask/all/commentTask?pageNumber=${number}&pageSize=${size}`
     )
   },
-
+  getWorksAuditWorks(params) {
+    return axios.post(
+      `/api/wk/v1/works/auditWorks`,params
+    )
+  },
   /**
    * 作品点评 - 已听点评数 重写
    */
@@ -102,8 +109,14 @@ export default {
           content{
             comment_id
             task_image
+            task_video
             sound_comment
             type
+            id
+            status
+            rank_status
+            listen_comment_time
+            comment_status
             student_id
             course_id
             team_id
@@ -115,12 +128,6 @@ export default {
             comment_time
             comment_id
             subject
-            soundCommentlist{
-              id
-              sound_comment
-              sound_comment_second
-              type
-            }
             userExtends{
               id
               mobile
@@ -147,10 +154,7 @@ export default {
             commentTeacherInfo{
               realname
             }
-            flagRecord{
-              id
-              ctime
-            }
+           
           }
         }
       }`
