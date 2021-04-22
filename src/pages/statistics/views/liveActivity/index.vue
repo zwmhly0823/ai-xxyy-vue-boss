@@ -323,8 +323,11 @@ export default {
     initData() {
 
     },
-    // 编辑
+    // 查看
     operateEdit() {
+      this.$router.push({
+        path:'/liveDetail'
+      })
     },
     // 获取直播活动名称
     getOrderSearch() {},

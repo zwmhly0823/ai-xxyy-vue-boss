@@ -29,6 +29,15 @@ const routes = [
     component: () => import('../views/liveActivity/index.vue')
   },
   {
+    path: '/liveDetail',
+    name: '/liveDetail',
+    meta: {
+      title: '直播活动详情',
+      keepAlive: false
+    },
+    component: () => import('../views/liveActivity/liveDetail.vue')
+  },
+  {
     path: '/priodPerformance',
     name: 'priodPerformance',
     meta: {

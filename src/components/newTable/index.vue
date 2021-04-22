@@ -17,6 +17,7 @@
           size="small"
           ref="baseTable"
           @selection-change="handleSelectionChange"
+          @sort-change="sortChange"
           :max-height="tableHeight"
           v-bind="$attrs"
         >
@@ -283,6 +284,33 @@ export default {
     // 选中变化
     handleSelectionChange(val) {
       this.$emit('changeSelect', val)
+    },
+      //排序
+    sortChange(data) {
+      //direction
+      //sort = a.property;
+      //pvConfirmTime;
+      let direction = "DESC";
+      if (data.order == "ascending") {
+        direction = "ASC";
+      }
+      if (direction == this.direction && this.sortName == data.prop) {
+        let obj = {
+          sort: "",
+          direction: "",
+        };
+        this.direction = "";
+        this.$refs.baseTable.clearSort();
+        this.$emit("sortChange", obj);
+      } else {
+        let obj = {
+          sort: data.prop,
+          direction: direction,
+        };
+        this.direction = direction;
+        this.$emit("sortChange", obj);
+      }
+      this.sortName = data.prop;
     },
     clearSort() {
       this.direction = ''
