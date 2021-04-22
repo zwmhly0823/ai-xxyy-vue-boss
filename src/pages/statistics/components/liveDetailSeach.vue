@@ -90,7 +90,7 @@
             </div>
           </el-form-item>
 
-           <el-form-item label="体验课排期:" label-width="80px">
+           <el-form-item label="进入直播时机:" label-width="100px">
             <div class="search-group">
               <buyGoods
                 :category="categoryType"
@@ -98,12 +98,11 @@
                 @result="getSearchData('category', arguments)"
                name="stage"
                 type="0"
-                placeholder="体验课排期"
               />
             </div>
           </el-form-item>
 
-           <el-form-item label="体验课排期:" label-width="80px">
+           <el-form-item label="是否购买商品:" label-width="100px">
             <div class="search-group">
               <enterTime
                 :category="categoryType"
@@ -111,7 +110,6 @@
                 @result="getSearchData('category', arguments)"
                name="stage"
                 type="0"
-                placeholder="体验课排期"
               />
             </div>
           </el-form-item>

@@ -236,7 +236,7 @@ export default {
   },
   data() {
     return {
-      tableHeight: 780,
+      tableHeight: 580,
       direction: '',
       sortName: '',
     }

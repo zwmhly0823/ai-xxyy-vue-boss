@@ -12,7 +12,7 @@
       v-model="result"
       size="mini"
       clearable
-      placeholder="选择进入直播间时机"
+      placeholder="进入直播间时机"
       @change="onChange"
       class="item-style"
     >

@@ -118,36 +118,84 @@ export default {
       headers: [
         {
           key: 'seq',
-          title: '活动ID',
+          title: '学员',
         },
         {
           key: 'title',
-          title: '直播活动名称',
+          title: '社销老师*体验课班级',
+          width: '150',
         },
         {
           key: 'content',
-          title: '活动开启时间-关闭时间',
-          width: '300',
+          title: '服务老师*服务班级',
+          width: '150',
         },
         {
           key: 'url',
-          title: '售卖商品',
+          title: '是否进直播间',
+          width: '150',
         },
         {
           key: 'putTime',
-          title: '活动覆盖人数',
+          title: '进直播间次数',
+          width: '120',
+          sort:true,
         },
         {
           key: 'failureTime',
-          title: '支持终端',
+          title: '进直播间时机',
+          width: '120',
         },
         {
-          key: 'isHomePageShow',
-          title: '直播状态',
-          escape: (row) => {
-            return row.isHomePageShow ? '是' : '否'
-          },
+          key: 'failureTime',
+          title: '首次进入时间',
+          width: '120',
         },
+        {
+          key: 'failureTime',
+          title: '观看直播总时长',
+          width: '150',
+          sort:true,
+        },
+        {
+          key: 'failureTime',
+          title: '观看回放总时长',
+          width: '150',
+          sort:true,
+        },
+        
+        {
+          key: 'failureTime',
+          title: '评论数',
+          sort:true,
+        },
+        {
+          key: '点赞数',
+          title: '首次进入时间',
+          width: '120',
+          sort:true,
+        },
+        {
+          key: 'failureTime',
+          title: '进入购物袋',
+        },
+        {
+          key: 'failureTime',
+          title: '查看商品',
+        },
+        {
+          key: 'failureTime',
+          title: '购买商品',
+        },
+        {
+          key: 'failureTime',
+          title: '进入终端',
+        },
+        {
+          key: 'failureTime',
+          title: '系统课转化',
+        },
+
         {
           type: 'operate',
           title: '操作',
@@ -155,7 +203,7 @@ export default {
             {
               emitKey: 'operateEdit',
               escape: (row) => {
-                return row.status == '0' ? '查看' : ''
+                return row.status == '0' ? '详情' : ''
               },
             },
           ],

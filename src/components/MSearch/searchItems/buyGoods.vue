@@ -12,7 +12,7 @@
       v-model="result"
       size="mini"
       clearable
-      placeholder="选择是否购买商品"
+      placeholder="是否购买商品"
       @change="onChange"
       class="item-style"
     >
