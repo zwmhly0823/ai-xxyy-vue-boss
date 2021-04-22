@@ -657,8 +657,8 @@ export default {
       })
       this.setSeachParmas(res, ['packages_type'])
     },
-    getDepartment(res) {
-      this.teacherscope = res.pay_teacher_id || null
+    getDepartment(res,res1) {
+      this.teacherscope = res1.pay_teacher_id || null
       this.setSeachParmas(res, ['pay_teacher_id'], 'terms')
     },
     getTeamName(res) {

@@ -233,7 +233,7 @@ export function GetAgeByBrithday(birth) {
       return  "1个月";
     } else if (age < 1 && month!=12) {
       return  month + "个月";
-    } else if (month==12) {
+    } else if (month==12 && age>1) {
       return (age+1) + "岁" + "1个月";
     }
     else {

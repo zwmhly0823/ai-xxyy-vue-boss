@@ -157,7 +157,9 @@ export default {
     },
     // 选择状态
     getStatus(res) {
-      console.log(res, '选择状态')
+      if(res.coupon_status && res.coupon_status ==='1') {
+         res.coupon_status = [0,1]
+      }
       this.setSeachParmas(res, ['coupon_status'], 'terms')
     },
     // 难度

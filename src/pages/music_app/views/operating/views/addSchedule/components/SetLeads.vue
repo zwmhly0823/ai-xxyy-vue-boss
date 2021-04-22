@@ -168,7 +168,7 @@
 import { mapGetters } from 'vuex'
 import ChannelThreeded from './ChannelThreeded'
 import ChannelThreelist from './ChannelThreelist'
-
+import { Sup_scheduleIndex,Sup_scheduleSubmit} from '@/utils/supList'
 export default {
   props: {},
   components: { ChannelThreeded, ChannelThreelist },
@@ -216,7 +216,8 @@ export default {
     ...mapGetters(['schedulePeriod'])
   },
   created() {
-    const { courseType = 0 } = this.$route.params
+    let { courseType = 0 } = this.$route.params
+    courseType = Sup_scheduleSubmit[courseType]
     if (this.schedulePeriod) {
       this.getLeads({ period: this.schedulePeriod, courseType })
     }
@@ -243,7 +244,7 @@ export default {
     },
     /** 导入数据上传 */
     uploadFile(params) {
-      const { courseType = 0 } = this.$route.params
+      let { courseType = 0 } = this.$route.params
       const formdata = new FormData()
       const { file } = params
       formdata.append('file', file)

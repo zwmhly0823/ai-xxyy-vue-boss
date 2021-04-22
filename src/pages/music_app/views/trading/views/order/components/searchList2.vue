@@ -86,6 +86,7 @@
         </DatePicker>
       </el-form-item>
       <br />
+
       <el-form-item label="体验课:" :class="{ [$style.marginer]: true }">
         <div class="row_colum">
           <department
@@ -127,11 +128,11 @@
             style="width: 140px"
           />
           <!-- BOSS 显示单双周选择 -->
-          <!-- <trial-course-type
+          <trial-course-type
             class="margin_l10"
-            name="packages_id"
+            name="packages_type"
             @result="getTrialCourseType"
-          /> -->
+          />
         </div>
       </el-form-item>
     </el-form>
@@ -186,7 +187,7 @@ import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
 // 单双周搜索  体验课类型
-// import TrialCourseType from '@/components/MSearch/searchItems/trialClassType'
+import TrialCourseType from '@/components/MSearch/searchItems/trialClassType'
 import { downloadHandle } from '@/utils/download'
 import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
@@ -212,6 +213,7 @@ export default {
     SearchStage,
     SearchPhoneAndUsername,
     SimpleSelect,
+    TrialCourseType,
   },
 
   data() {
@@ -365,8 +367,8 @@ export default {
     getExpressStatus(res) {
       this.setSeachParmas(res, ['express_status'])
     },
-    getDepartment(res) {
-      this.teacherscope = res.last_teacher_id || null
+    getDepartment(res,res1) {
+      this.teacherscope = res1.pay_teacher_id || null
       this.setSeachParmas(res, ['last_teacher_id'], 'terms')
     },
     // 选择社群销售
@@ -406,7 +408,7 @@ export default {
 
     // 体验课类型
     getTrialCourseType(res) {
-      this.setSeachParmas(res, ['packages_id'], 'terms')
+      this.setSeachParmas(res, ['packages_type'], 'terms')
     },
 
     async getSendUser(res) {
