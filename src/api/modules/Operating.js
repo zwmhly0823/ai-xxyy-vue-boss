@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-17 19:26:54
+ * @LastEditTime: 2021-04-09 18:45:17
  */
 import axios from '../axiosConfig'
 import { injectSubject, getAppSubjectCode } from '@/utils/index'
@@ -25,7 +25,7 @@ export default {
     const page = params.page - 1
     return axios.get(
       `/api/s/v1/management/enroll/count/page?courseType=${params.courseType}&pageSize=${params.size}&pageNumber=` +
-        page
+      page
     )
   },
   /**
@@ -73,7 +73,7 @@ export default {
    *
    */
   getTeacherConfigList(params) {
-    Object.assign(params,{subject:"MUSIC_APP"})
+    Object.assign(params, { subject: "MUSIC_APP" })
     return axios.post(
       `/api/t/v1/teacher/course/enroll/teacher/config?courseType=${params.courseType}&period=${params.period}&courseDifficulty=${params.courseDifficulty}&departmentIds=${params.departmentIds}&teacherWechatIds=${params.teacherWechatIds}&levels=${params.levels}`,
       params.ids
@@ -83,7 +83,7 @@ export default {
    * 保存 招生排期 设置
    */
   saveScheduleConfig(params) {
-    Object.assign(params,{subject:"MUSIC_APP"})
+    Object.assign(params, { subject: "MUSIC_APP" })
     return axios.post(
       `/api/t/v1/teacher/course/enroll/teacher/config/save?courseType=${params.courseType}&period=${params.period}`,
       params.body
@@ -123,7 +123,7 @@ export default {
   getScheduleDetailList(params) {
     return axios.get(
       `/api/s/v1/management/enroll/getDetail?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&level=${params.level}&courseType=${params.courseType}&period=${params.period}&courseDifficulties=${params.courseDifficulties}&pageSize=${params.size}&pageNumber=` +
-        params.pageNum
+      params.pageNum
     )
   },
   /**
@@ -163,11 +163,11 @@ export default {
           `
     })
   },
-  countsByTrialChannel(params) {
-    return axios.get(
-      `/api/o/v1/userOrderSuccess/channel/boss/countsByTrialChannel?trialChannels=${params.trialChannels}&trialChannelClassIds=${params.trialChannelClassIds}&stage=${params.stage}&startCtime=${params.startCtime}&endCtime=${params.endCtime}&page=${params.page}&pageSzie=${params.pageSzie}`
-    )
-  },
+  // countsByTrialChannel(params) {
+  //   return axios.get(
+  //     `/api/o/v1/userOrderSuccess/channel/boss/countsByTrialChannel?trialChannels=${params.trialChannels}&trialChannelClassIds=${params.trialChannelClassIds}&stage=${params.stage}&startCtime=${params.startCtime}&endCtime=${params.endCtime}&page=${params.page}&pageSzie=${params.pageSzie}`
+  //   )
+  // },
   // 查询渠道名称 渠道分类
   ChannelDetailStatisticsList(Params = `""`) {
     const query = injectSubject(Params)
@@ -190,6 +190,50 @@ export default {
     return axios.get(
       `/api/o/v1/userOrderSuccess/channel/boss/countsByTrialChannelOfTotal?trialChannels=${params.trialChannels}&trialChannelClassIds=${params.trialChannelClassIds}&stage=${params.stage}&startCtime=${params.startCtime}&endCtime=${params.endCtime}`
     )
+  },
+  // 渠道查询结果的数据  java 接口改成toss
+  ChannelManagementStatisticsTotal(params) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        ChannelManagementStatisticsTotal(query: ${JSON.stringify(
+        injectSubject(params)
+      )}){
+           trial_user_num
+           order_user_no_pay_nums
+           wet_nums
+           join_user_num
+           complete_user_num
+           system_user_num
+           system_user_amounts
+        }
+      }`
+    })
+  },
+  // 查询渠道名称 渠道分类
+  countsByTrialChannel(Params) {
+    const query = injectSubject(Params)
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        ChannelManagementStatisticsPage(query:${JSON.stringify(query)}){
+          content {
+            trial_user_num,
+            pay_channel,
+            order_user_no_pay_nums,
+            wet_nums,
+            join_user_num,
+            complete_user_num,
+            system_user_num,
+            system_user_amounts
+            trial_channel_class_id
+            },
+            numberOfElements,
+            totalElements,
+            totalPages,
+            size,
+          number
+        }
+      }`
+    })
   },
   // 二级渠道查询 列表查询
   countsByTrialChannelClassId(params) {
@@ -608,13 +652,13 @@ export default {
     )
   },
   // 删除定向分配销售
-  async removeChannelSales(params){
+  async removeChannelSales(params) {
     return axios.post(
-      '/api/t/v1/teacherChannel/delRecord?id='+params
+      '/api/t/v1/teacherChannel/delRecord?id=' + params
     )
   },
   // 删除定向分配销售
-  async channelMobile(params){
+  async channelMobile(params) {
     return axios.post(
       '/api/u/v2/user/cancelMobile',
       params
