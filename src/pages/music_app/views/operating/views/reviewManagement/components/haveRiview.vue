@@ -78,27 +78,24 @@
       </el-table-column>
       <el-table-column label="点评内容" align="center" width="180">
         <template slot-scope="scope">
-          <p
-            v-if="
-              !scope.row.soundCommentlist ||
-              scope.row.soundCommentlist.length === 0
-            "
-          >
-            -
-          </p>
-          <div
-            class="audio-container"
-            v-for="(audio, idx) in scope.row.soundCommentlist"
-            :key="idx"
-            v-else
-          >
+          <p v-if="!scope.row.sound_comment">-</p>
+          
+          <div v-else class="audio-container">
             <audio
-              :src="audio.sound_comment"
+              :src="imgUrl + scope.row.sound_comment"
               style="height: 47px"
               controls
             ></audio>
           </div>
-          <p>{{scope.row.rank_status==0?'未上榜':scope.row.rank_status>0?'已上榜':'-'}}</p>
+          <p>
+            {{
+              scope.row.rank_status == 0
+                ? '未上榜'
+                : scope.row.rank_status > 0
+                ? '已上榜'
+                : '-'
+            }}
+          </p>
         </template>
       </el-table-column>
       <el-table-column label="用户信息" align="center" width="180">
@@ -267,6 +264,8 @@
 <script>
 import { formatData } from '@/utils/index'
 import { courseLevelReplace } from '@/utils/supList'
+import contants from '@/utils/contants'
+const { OSS_IMG_BASE_URL } = contants
 export default {
   props: {
     tabIndex: {
@@ -282,6 +281,7 @@ export default {
   data() {
     return {
       number: 1,
+      imgUrl: OSS_IMG_BASE_URL,
       list: [],
       visible1: false,
       checkStatus: null,
