@@ -193,6 +193,7 @@ export default {
             channelDetail {
               channel_outer_name
             }
+            discount_amount
             packages_course_week
             remaining_week
             promotionsList{
