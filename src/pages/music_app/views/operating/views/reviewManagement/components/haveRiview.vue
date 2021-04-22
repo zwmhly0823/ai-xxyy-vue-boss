@@ -378,8 +378,10 @@ export default {
      * 搜索
      */
     getSearch(res) {
-      console.log(res, 'search')
       this.searchParams = res || {}
+      if(res.rank_status ==1) {
+         Object.assign(this.searchParams,{rank_status:{gt:0}})
+      }
       this.query.pageNum = 1
       this.initList()
     },

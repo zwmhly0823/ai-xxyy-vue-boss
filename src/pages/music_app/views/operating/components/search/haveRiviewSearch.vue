@@ -5,7 +5,7 @@
       <department
         name="assistant_teacher_id_dpt"
         placeholder="区部"
-        style="margin-right: 10px;"
+        style="margin-right: 10px"
         @result="getSearchData('assistant_teacher_id_dpt', arguments)"
       />
       <group-sell
@@ -22,7 +22,7 @@
       <department
         name="parttime_teacher_id_dpt"
         placeholder="区部"
-        style="margin-right: 10px;"
+        style="margin-right: 10px"
         @result="getSearchData('parttime_teacher_id_dpt', arguments)"
       />
       <group-sell
@@ -61,7 +61,7 @@
         tip="学员手机号"
       />
     </div>
-     <div class="search-item">
+    <div class="search-item">
       <span class="search-text">是否上榜</span>
       <onList
         name="rank_status"
@@ -71,12 +71,12 @@
         @result="getSearchData('rank_status', arguments)"
       />
     </div>
-      <div class="search-item">
+    <div class="search-item">
       <span class="search-text">点评老师</span>
       <department
         name="assistant_teacher_id_dpt"
         placeholder="区部"
-        style="margin-right: 10px;"
+        style="margin-right: 10px"
         @result="getSearchData('assistant_teacher_id_dpt', arguments)"
       />
       <group-sell
@@ -106,7 +106,7 @@ export default {
     SearchStage,
     SearchTeamName,
     SearchPhone,
-    onList
+    onList,
   },
   data() {
     return {
@@ -116,7 +116,7 @@ export default {
       termScope: null,
       tkey: 0,
       pkey: 0,
-      akey: 0
+      akey: 0,
     }
   },
   methods: {
@@ -154,18 +154,13 @@ export default {
         this.assistantTeacherScope = val
         Object.assign(this.searchParams, { assistant_teacher_id: val })
       }
-       if (key === 'comment_teacher_id_dpt') {
+      if (key === 'comment_teacher_id_dpt') {
         this.akey = Date.now()
         this.assistantTeacherScope = val
         Object.assign(this.searchParams, { comment_teacher_id: val })
       }
-      if(key ==='rank_status') {
-        if(data ==0) {
-          Object.assign(this.searchParams, { rank_status:val});
-        }else if(data ==1) {
-          Object.assign(this.searchParams, { rank_status:{gt:0} })
-        }
-        
+      if (key === 'rank_status') {
+        Object.assign(this.searchParams, { rank_status: val })
       }
       if (key === 'term') {
         this.tkey = Date.now()
@@ -181,11 +176,11 @@ export default {
         ? Object.assign(this.searchParams, val)
         : this.$delete(this.searchParams, 'student_id')
       this.$emit('result', this.searchParams)
-    }
+    },
     // resetPartOfFormData(val) {
     //   console.log(val, 'student')
     // }
-  }
+  },
 }
 </script>
 
