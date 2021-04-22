@@ -20,10 +20,10 @@
       @change="supChange"
     >
       <el-option
-        v-for="(item) in supList"
+        v-for="(item,index) in supList"
         :key="item.id"
         :label="item.text"
-        :value="item.id"
+        :value="(index+1)"
       >
       </el-option>
     </el-select>
@@ -31,6 +31,7 @@
 </template>
 
 <script>
+// 这个只针对订单管理的
 // import axios from '@/api/axiosConfig'
 import { mapState } from 'vuex'
 import {
