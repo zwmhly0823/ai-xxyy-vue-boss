@@ -85,31 +85,29 @@
                 :isDisabled="isDisabled"
                 @result="getSearchData('category', arguments)"
                 name="stage"
-                type="0"
+                type="1"
                 placeholder="体验课排期"
               />
             </div>
           </el-form-item>
 
-           <el-form-item label="进入直播时机:" label-width="100px">
+          <el-form-item label="进入直播时机:" label-width="100px">
             <div class="search-group">
               <buyGoods
                 :category="categoryType"
-                :isDisabled="isDisabled"
                 @result="getSearchData('category', arguments)"
-               name="stage"
+                name="stage"
                 type="0"
               />
             </div>
           </el-form-item>
 
-           <el-form-item label="是否购买商品:" label-width="100px">
+          <el-form-item label="是否购买商品:" label-width="100px">
             <div class="search-group">
               <enterTime
                 :category="categoryType"
-                :isDisabled="isDisabled"
                 @result="getSearchData('category', arguments)"
-               name="stage"
+                name="stage"
                 type="0"
               />
             </div>
@@ -158,22 +156,24 @@ export default {
   data() {
     return {
       // 学员转化
-      studentList:[{
-        id:1,
-        text:"未转化"
-      },
-      {
-        id:2,
-        text:"已购年系统课、"
-      },
-       {
-        id:3,
-        text:"已购半年系统课"
-      }],
+      studentList: [
+        {
+          id: 1,
+          text: '未转化',
+        },
+        {
+          id: 2,
+          text: '已购年系统课、',
+        },
+        {
+          id: 3,
+          text: '已购半年系统课',
+        },
+      ],
       labelName: '',
       searchQuery: {},
-      categoryType: [0, 2],
-      isDisabled:false,
+      categoryType: [2],
+      isDisabled: false,
       nowDate: new Date().getTime(),
     }
   },
@@ -188,6 +188,11 @@ export default {
      * search item 回调。 key,自定义参数，res，组件返回的值 res[0]
      */
     getSearchData(key, res) {
+      if (key == 'category' && Array.from(res[0].category).length == 2) {
+        this.isDisabled = true
+      } else {
+        this.isDisabled = false
+      }
       const search = res && res[0]
       console.log(key, search)
 
@@ -282,7 +287,7 @@ export default {
       border-radius: 0;
       border-bottom: 1px solid #ddd;
       .el-card__body {
-        padding: 0 0 10px 10px;
+        padding: 0 0 30px 10px;
       }
     }
     .el-form-item__label {

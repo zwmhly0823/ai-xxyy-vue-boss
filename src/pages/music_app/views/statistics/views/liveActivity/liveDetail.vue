@@ -28,11 +28,45 @@
             :pageNum.sync="tableParam.pageNum"
             :pageSize.sync="tableParam.pageSize"
             @getList="initData"
+            @StudentJump="StudentJump"
             @operateEdit="operateEdit"
+            @experienceClass="experienceClass"
+            @serviceClass="serviceClass"
+            @enterLive="enterLive"
+            @discussLive="discussLive"
           ></base-table>
         </el-scrollbar>
       </div>
     </el-col>
+    <!-- 进去直播间行为 -->
+    <el-dialog
+      :title="dia_type == 1 ? '进入直播间行为' : '直播评论'"
+      :visible.sync="dialogVisible"
+      :width="dia_type == 1 ? '40%' : '20%'"
+      :before-close="handleClose"
+    >
+      <span>学员:18910275255</span>
+      <base-table
+        :loading="loading"
+        :columns="headersDialogList"
+        :tableHeight="380"
+        :list="list"
+        :total="total"
+        :pageNum.sync="tableParam.pageNum"
+        :pageSize.sync="tableParam.pageSize"
+        @getList="initData"
+      ></base-table>
+      <el-pagination
+        background
+        @size-change="handleSizeChangeDialog"
+        @current-change="handleCurrentChangeDialog"
+        :current-page="1"
+        :page-size="10"
+        :pager-count="4"
+        :total="40"
+      >
+      </el-pagination>
+    </el-dialog>
   </el-row>
 </template>
 <script>
@@ -48,6 +82,7 @@ export default {
   data() {
     return {
       paramsToSearch: {},
+      dialogVisible: false,
       currentDate: '',
       showList: [
         {
@@ -87,20 +122,86 @@ export default {
           num: '100人',
         },
       ],
-      headers: [
+      headersDialogList: [],
+      dia_type: null,
+      headersEnter: [
         {
           key: 'seq',
-          title: '学员',
+          title: '进入时间',
         },
         {
           key: 'title',
-          title: '社销老师*体验课班级',
+          title: '进入时机',
           width: '150',
         },
         {
           key: 'content',
+          title: '观看时长',
+          width: '150',
+        },
+        {
+          key: 'url',
+          title: '是否进入购物袋',
+          width: '150',
+        },
+        {
+          key: 'putTime',
+          title: '是否点击商品',
+          width: '120',
+        },
+      ],
+      headersDiscuss: [
+        {
+          key: 'seq',
+          title: '评论时间',
+          width: '120',
+        },
+        {
+          key: 'title',
+          title: '评论内容',
+        },
+      ],
+      headers: [
+        {
+          type: 'operate',
+          key: 'seq',
+          title: '学员',
+          operates: [
+            {
+              emitKey: 'StudentJump',
+              escape: (row) => {
+                return row.status == '0' ? '详情' : '18910275255'
+              },
+            },
+          ],
+        },
+        {
+          key: 'title',
+          type: 'operate',
+          title: '社销老师*体验课班级',
+          width: '150',
+          operates: [
+            {
+              emitKey: 'experienceClass',
+              escape: (row) => {
+                return '2020M1体验课'
+              },
+            },
+          ],
+        },
+        {
+          key: 'content',
+          type: 'operate',
           title: '服务老师*服务班级',
           width: '150',
+          operates: [
+            {
+              emitKey: 'serviceClass',
+              escape: (row) => {
+                return '2020M1体验课'
+              },
+            },
+          ],
         },
         {
           key: 'url',
@@ -109,9 +210,18 @@ export default {
         },
         {
           key: 'putTime',
+          type: 'operate',
           title: '进直播间次数',
           width: '120',
           sort: true,
+          operates: [
+            {
+              emitKey: 'enterLive',
+              escape: (row) => {
+                return '2020M1体验课'
+              },
+            },
+          ],
         },
         {
           key: 'failureTime',
@@ -138,8 +248,17 @@ export default {
 
         {
           key: 'failureTime',
+          type: 'operate',
           title: '评论数',
           sort: true,
+          operates: [
+            {
+              emitKey: 'discussLive',
+              escape: (row) => {
+                return '2020M1体验课'
+              },
+            },
+          ],
         },
         {
           key: '点赞数',
@@ -167,7 +286,6 @@ export default {
           key: 'failureTime',
           title: '系统课转化',
         },
-
         {
           type: 'operate',
           title: '操作',
@@ -405,6 +523,35 @@ export default {
     getSearchQuery(res) {
       this.search = res
     },
+    handleClose(done) {
+      done()
+    },
+    // 学员
+    StudentJump() {
+      console.log(111111)
+    },
+    //体验课班级跳转
+    experienceClass() {
+      console.log('体验课班级跳转')
+    },
+    // 服务班级跳转
+    serviceClass() {
+      console.log('服务班级跳转')
+    },
+    //进直播间次数
+    enterLive() {
+      this.dialogVisible = true
+      this.dia_type = 1
+      this.headersDialogList = this.headersEnter
+      console.log('进直播间次数')
+    },
+    // 评论数
+    discussLive() {
+      console.log('评论数')
+      this.dialogVisible = true
+      this.dia_type = 2
+      this.headersDialogList = this.headersDiscuss
+    },
     // 获取直播活动名称
     getOrderSearch() {},
     // 点击分页
@@ -416,6 +563,8 @@ export default {
       this.loading = true
       const queryObj = {}
     },
+    handleSizeChangeDialog() {},
+    handleCurrentChangeDialog() {},
   },
 }
 </script>
@@ -471,6 +620,16 @@ export default {
   margin-top: 5px;
 }
 /deep/.el-form-item {
+  margin-top: 10px;
+}
+/deep/ .el-dialog__body {
+  padding-top: 0 !important;
+  padding-bottom: 20px !important;
+}
+/deep/ .el-pagination__jump {
+  display: none !important;
+}
+/deep/ .el-pagination {
   margin-top: 10px;
 }
 </style>

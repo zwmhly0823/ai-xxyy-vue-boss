@@ -11,7 +11,7 @@
     <el-row>
       <el-col :span="24">
         <slot name="button-slot"></slot>
-         <el-table
+        <el-table
           v-loading="loading"
           :data="list"
           size="small"
@@ -145,15 +145,15 @@
           <!--默认的slot -->
           <slot></slot>
         </el-table>
-       <m-pagination
-        :current-page="pageNum"
-        :page-count="pageSize"
-        :total="total"
-        @current-change="handleSizeChange"
-        show-pager
-        open="calc(100vw - 170px - 25px)"
-        close="calc(100vw - 50px - 25px)"
-      ></m-pagination>
+        <m-pagination
+          :current-page="pageNum"
+          :page-count="pageSize"
+          :total="total"
+          @current-change="handleSizeChange"
+          show-pager
+          open="calc(100vw - 170px - 25px)"
+          close="calc(100vw - 50px - 25px)"
+        ></m-pagination>
       </el-col>
     </el-row>
   </div>
@@ -233,10 +233,13 @@ export default {
       type: Number,
       default: 10,
     },
+    tableHeight: {
+      type: Number,
+      default: 580,
+    },
   },
   data() {
     return {
-      tableHeight: 580,
       direction: '',
       sortName: '',
     }
@@ -266,7 +269,7 @@ export default {
     },
     // 点击分页
     handleSizeChange(val) {
-        console.log(val);
+      console.log(val)
     },
     // 导出excel
     exportExcel() {
@@ -285,39 +288,39 @@ export default {
     handleSelectionChange(val) {
       this.$emit('changeSelect', val)
     },
-      //排序
+    //排序
     sortChange(data) {
       //direction
       //sort = a.property;
       //pvConfirmTime;
-      let direction = "DESC";
-      if (data.order == "ascending") {
-        direction = "ASC";
+      let direction = 'DESC'
+      if (data.order == 'ascending') {
+        direction = 'ASC'
       }
       if (direction == this.direction && this.sortName == data.prop) {
         let obj = {
-          sort: "",
-          direction: "",
-        };
-        this.direction = "";
-        this.$refs.baseTable.clearSort();
-        this.$emit("sortChange", obj);
+          sort: '',
+          direction: '',
+        }
+        this.direction = ''
+        this.$refs.baseTable.clearSort()
+        this.$emit('sortChange', obj)
       } else {
         let obj = {
           sort: data.prop,
           direction: direction,
-        };
-        this.direction = direction;
-        this.$emit("sortChange", obj);
+        }
+        this.direction = direction
+        this.$emit('sortChange', obj)
       }
-      this.sortName = data.prop;
+      this.sortName = data.prop
     },
     clearSort() {
       this.direction = ''
       this.sortName = ''
       this.$refs.baseTable.clearSort()
     },
-   isShow(key, value) {
+    isShow(key, value) {
       // return true;
       let data = value.escape !== undefined ? value.escape(key) : key[value.key]
       if (typeof data == 'number') {
