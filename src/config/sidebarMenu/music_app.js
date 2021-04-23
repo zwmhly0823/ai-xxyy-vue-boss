@@ -546,7 +546,7 @@ let bearArt = [
     meta: {
       title: '数据中心',
       icon: 'icontongjifenxi',
-      module: "statistics",
+      module,
     },
     children: [
       {
@@ -554,7 +554,7 @@ let bearArt = [
         name: 'liveActivity',
         meta: {
           title: '直播活动',
-          module: 'statistics'
+          module,
         }
       },
     ],

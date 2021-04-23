@@ -30,34 +30,6 @@
             @getList="initData"
             @operateEdit="operateEdit"
           ></base-table>
-          <!-- <el-table :data="orderList" v-loading="loading">
-            <el-table-column
-              label="活动ID"
-              prop="user"
-              width="150"
-              align="center"
-            >
-            </el-table-column>
-            <el-table-column label="直播活动名称" prop="user">
-            </el-table-column>
-            <el-table-column label="活动开启时间-关闭时间" prop="user">
-            </el-table-column>
-            <el-table-column label="售卖商品" prop="user"> </el-table-column>
-            <el-table-column label="活动覆盖人数" prop="user">
-            </el-table-column>
-            <el-table-column label="支持终端" prop="user"> </el-table-column>
-            <el-table-column label="直播状态"> </el-table-column>
-            <el-table-column fixed="right" label="操作" width="200" align="center">
-              <template slot-scope="scope">
-                <el-button
-                  @click="handleClick(scope.row)"
-                  type="text"
-                  size="small"
-                  >查看</el-button
-                >
-              </template>
-            </el-table-column>
-          </el-table> -->
         </el-scrollbar>
       </div>
     </el-col>
@@ -139,7 +111,7 @@ export default {
           key: 'putTime',
           title: '进直播间次数',
           width: '120',
-          sort:true,
+          sort: true,
         },
         {
           key: 'failureTime',
@@ -155,25 +127,25 @@ export default {
           key: 'failureTime',
           title: '观看直播总时长',
           width: '150',
-          sort:true,
+          sort: true,
         },
         {
           key: 'failureTime',
           title: '观看回放总时长',
           width: '150',
-          sort:true,
+          sort: true,
         },
-        
+
         {
           key: 'failureTime',
           title: '评论数',
-          sort:true,
+          sort: true,
         },
         {
           key: '点赞数',
           title: '首次进入时间',
           width: '120',
-          sort:true,
+          sort: true,
         },
         {
           key: 'failureTime',

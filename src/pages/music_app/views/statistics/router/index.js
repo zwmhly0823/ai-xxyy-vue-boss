@@ -4,11 +4,6 @@
  * @LastEditTime: 2020-10-13 22:07:00
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-
-Vue.use(VueRouter)
-
 const routes = [
   {
     path: '/',
@@ -110,12 +105,4 @@ const routes = [
     component: () => import('../views/systemJoinCourseLog/index.vue')
   }
 ]
-
-const router = new VueRouter({
-  // mode: 'history',
-  base: process.env.BASE_URL,
-  module: 'statistics',
-  routes
-})
-
-export default router
+export default routes

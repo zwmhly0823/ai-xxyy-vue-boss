@@ -63,13 +63,14 @@
               <simple-select
                 name="status"
                 placeholder="请选择"
+                :dataList="studentList"
                 :my-style="{ width: '100px' }"
                 :multiple="false"
                 @result="getSearchData('status', arguments)"
               />
             </div>
           </el-form-item>
-          <el-form-item label="体验课排期:" label-width="85px">
+          <el-form-item label="体验课类型:" label-width="85px">
             <div class="search-group">
               <trial-course-type
                 name="category"
@@ -83,7 +84,7 @@
                 :category="categoryType"
                 :isDisabled="isDisabled"
                 @result="getSearchData('category', arguments)"
-               name="stage"
+                name="stage"
                 type="0"
                 placeholder="体验课排期"
               />
@@ -156,10 +157,23 @@ export default {
   },
   data() {
     return {
+      // 学员转化
+      studentList:[{
+        id:1,
+        text:"未转化"
+      },
+      {
+        id:2,
+        text:"已购年系统课、"
+      },
+       {
+        id:3,
+        text:"已购半年系统课"
+      }],
       labelName: '',
       searchQuery: {},
       categoryType: [0, 2],
-       isDisabled:false,
+      isDisabled:false,
       nowDate: new Date().getTime(),
     }
   },
