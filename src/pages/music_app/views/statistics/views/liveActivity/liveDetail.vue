@@ -166,11 +166,12 @@ export default {
           type: 'operate',
           key: 'seq',
           title: '学员',
+          slot:"slot",
           operates: [
             {
               emitKey: 'StudentJump',
               escape: (row) => {
-                return row.status == '0' ? '详情' : '18910275255'
+                return row.status == '0' ? '详情<h1>123123123123</h1>' : '18910275255'
               },
             },
           ],

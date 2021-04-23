@@ -173,23 +173,6 @@
  *      name: 名称
  *      emitKey: 要emit出去的事件
  *  ]
- * ]
- * demo columns
- * headers: [
-        { type: 'selection'},
-        { type: 'index'},
-        { key: 'loginName', title: 'XXX'，escape: row => { return row.state == 0? "发送": "已领取"} },   <!-- escape字段可写转码函数 -->
-        { key: 'userName', title: 'XXX' },
-        { key: 'roleName', title: 'XXX', hidden: true, slot: 'roleSlot' },
-        { key: 'createDate', title: 'XXX' },
-        // operate 这一行可以选择直接使用slot或者是使用配置项
-        { type: 'operate', title: 'XXX',
-          operates: [
-            { name: 'XXX', emitKey: 'reset' },
-            { name: 'XXX', emitKey: 'edit' },
-            { name: 'XXX', emitKey: 'delete' }
-        ] }
-      ]
  */
 
 import MPagination from '@/components/MPagination/index.vue'
@@ -271,11 +254,7 @@ export default {
     handleSizeChange(val) {
       console.log(val)
     },
-    // 导出excel
-    exportExcel() {
-      this.$emit('exportExcel')
-    },
-    // 页码变化触发获取数据
+   // 页码变化触发获取数据
     getList(obj) {
       this.$emit('getList', obj)
     },
