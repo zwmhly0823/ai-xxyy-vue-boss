@@ -58,7 +58,7 @@
       </el-table-column>
       <el-table-column label="支付信息" width="120">
         <template slot-scope="scope">
-          <div>优惠券：{{ scope.row.discount_amount?scope.row.discount_amount+'元':'0元' }}</div>
+          <div v-if="scope.row.discount_amount">优惠券：{{ scope.row.discount_amount?scope.row.discount_amount+'元':'0元' }}</div>
           <div>实际支付：{{ scope.row.amount }}元</div>
         </template>
       </el-table-column>
