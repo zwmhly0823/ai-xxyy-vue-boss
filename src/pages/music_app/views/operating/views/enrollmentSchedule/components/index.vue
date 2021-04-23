@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-15 17:31:21
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-16 16:17:20
  -->
 <template>
   <div>
@@ -96,7 +96,7 @@
               <span style="margin-right:15px" @click="addEditSchedule(scope.row)">编辑</span>
               <span style="margin-right:15px" @click="go_detail(scope.row)">详细</span>
               <span
-                v-if="tabIndex === 0"
+                v-if="tabIndex === 0 || tabIndex === 1"
                 :class="[
                   {
                     'cant-click-button':
@@ -123,7 +123,7 @@
 // import MSearch from '@/components/MSearch/index.vue' TODO:
 import EleTable from '@/components/Table/EleTable'
 import { formatData } from '@/utils'
-import { SUP_LEVEL_TRIAL,SUP_LEVEL_ALL, SUP_LEVEL_SYSTEM } from '@/utils/supList'
+import { SUP_LEVEL_TRIAL,SUP_LEVEL_ALL, SUP_LEVEL_SYSTEM,Sup_scheduleIndex,Sup_scheduleSubmit,Sup_scheduleDownload} from '@/utils/supList'
 export default {
   props: {
     department: {
@@ -140,7 +140,7 @@ export default {
       canClick: true,
       query: '',
       tabIndex: 0,
-      tabs: ['体验课', '系统课'],
+      tabs: ['单周体验课','双周体验课', '系统课'],
       totalElements: 0,
       flags: {
         loading: false
@@ -192,13 +192,13 @@ export default {
         teacherId: '',
         level: '',
         courseDifficulties: '',
-        courseType: this.tabIndex,
+        courseType:Sup_scheduleIndex[this.tabIndex],
         period: row.period
       }
       const res = await this.$http.DownloadExcel.downloadExcelByPeriod(params)
 
       if (res && Object.prototype.toString.call(res) === '[object Blob]') {
-        const name = !+params.courseType ? '体验课' : '系统课'
+        const name = Sup_scheduleDownload[this.tabIndex]
         this.downloadFn(res, `${name}-第${params.period}期`, () => {
           // this.$emit('setExcelStatus', 'complete')
         })
@@ -232,7 +232,7 @@ export default {
     // 新增、编辑
     addEditSchedule(row) {
       const { period = 0 } = row // TODO:
-
+      
       var staff = JSON.parse(localStorage.getItem('staff'))
       staff.stepStatus = 1
       localStorage.setItem('staff', JSON.stringify(staff))
@@ -243,7 +243,7 @@ export default {
     go_detail(row) {
       const { period = '' } = row
       this.$router.push({
-        path: `/scheduleDetail/${period}/${this.tabIndex}`
+        path: `/scheduleDetail/${period}/${Sup_scheduleIndex[this.tabIndex]}`
       })
     },
     /**
@@ -268,7 +268,7 @@ export default {
       this.tabQuery = {
         ...this.tabQuery,
         // page: --this.tabQuery.page,
-        courseType: this.tabIndex
+        courseType: Sup_scheduleIndex[this.tabIndex]
       }
       // TODO:
       try {
@@ -291,7 +291,7 @@ export default {
           periodsArr.push(item.period)
         })
         // 然后再获取招生的状态
-        const enrollStudentStatus = await this.getStatusByperiods(periodsArr)
+        const enrollStudentStatus = await this.getStatusByperiods(periodsArr,Sup_scheduleSubmit[this.tabIndex])
 
         if (!enrollStudentStatus) {
           this.$message.error('获取招生状态失败')
@@ -304,6 +304,8 @@ export default {
             enrollArr.push(item)
           }
         })
+
+        console.log("enrollArr=>",enrollArr);
         content.forEach((item) => {
           if (['待开课', '上课中', '已结课'].includes(item.status)) {
             item.intruSwitchName = '招生完毕'
@@ -335,8 +337,8 @@ export default {
         return new Error(err)
       }
     },
-    getStatusByperiods(periodsArr) {
-      return this.$http.Operating.getStatusByperiods(periodsArr.join(','))
+    getStatusByperiods(periodsArr,courseType) {
+      return this.$http.Operating.getStatusByperiods(periodsArr.join(','),courseType)
         .then((res) => {
           if (res.status === 'OK') {
             return res.payload
@@ -359,6 +361,7 @@ export default {
       console.log(name)
       const params = {
         period: period,
+        courseType:Sup_scheduleSubmit[this.tabIndex],
         status: name === '停止转介绍' ? 'NOOPEN' : 'OPEN'
       }
       console.log(params)

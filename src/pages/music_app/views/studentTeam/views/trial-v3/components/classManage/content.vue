@@ -356,6 +356,7 @@ export default {
       this.initData()
     },
     changeSearchParams(params) {
+      console.log("接收的参数",params);
       Object.assign(this.params, params, { page: 1 })
       Object.keys(this.params).forEach((item) => {
         if (!this.params[item]) {

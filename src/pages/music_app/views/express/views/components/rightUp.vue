@@ -32,6 +32,7 @@
         :productName="showItem.productName"
         :regType="showItem.regType"
         :channel="showItem.channel"
+        :packages_id="showItem.packages_id"
       />
     </div>
     <!-- v-if="!teacherId" TOSS -->
@@ -212,7 +213,8 @@ export default {
         ],
         selectAddress: 'province',
         replenishReason: 'replenish_reason',
-        replenishMethod: 'replenish_type'
+        replenishMethod: 'replenish_type',
+        packages_id:!this.addSupS?'packages_id':''
       }
     }
   },

@@ -160,12 +160,15 @@ export default {
       // 课程的query
       const coursQuery = {
         topic_id:[4,5,13],
-        uid: this.pUserId
+        uid: this.pUserId,
+        status:3
+        
       }
       // 其他的query
         const qiQuery = {
         regtype:[12],
-        uid: this.pUserId
+        uid: this.pUserId,
+        status:3
       }
       // const query = {
       //   regtype: this.changeType === 1 ? [4, 5, 6,10] : [1, 2, 3, 7, 11, 13],
