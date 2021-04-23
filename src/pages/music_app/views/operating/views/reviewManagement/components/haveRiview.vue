@@ -25,13 +25,13 @@
               class="task-image"
               @click="
                 handleViewLarge(
-                  `https://xxyy-kczzht.oss-cn-hangzhou.aliyuncs.com/` +
+                  imgUrl +
                     scope.row.task_video
                 )
               "
             >
               <img
-                :src="`https://xxyy-kczzht.oss-cn-hangzhou.aliyuncs.com/${scope.row.task_image}?x-oss-process=image/resize,l_100`"
+                :src="`${imgUrl}${scope.row.task_image}?x-oss-process=image/resize,l_100`"
               />
               <!-- 视频-播放按钮 -->
               <i class="el-icon-video-play" v-if="scope.row.task_video"></i>

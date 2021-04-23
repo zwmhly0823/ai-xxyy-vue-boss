@@ -145,6 +145,10 @@ export default {
             teamInfo{
               team_name
             }
+            flagRecord{
+               id
+               ctime
+            }
             assistantTeacherInfo{
               realname
             }
