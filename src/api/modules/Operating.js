@@ -209,7 +209,7 @@ export default {
       }`
     })
   },
-  //一级 二级渠道查询 列表查询
+  // 查询渠道名称 渠道分类
   countsByTrialChannel(Params) {
     const query = injectSubject(Params)
     return axios.post('/graphql/v1/toss', {
@@ -234,6 +234,12 @@ export default {
         }
       }`
     })
+  },
+  // 二级渠道查询 列表查询
+  countsByTrialChannelClassId(params) {
+    return axios.get(
+      `/api/o/v1/userOrderSuccess/channel/boss/countsByTrialChannelClassId?trialChannelClassIds=${params.trialChannelClassIds}&stage=${params.stage}&startCtime=${params.startCtime}&endCtime=${params.endCtime}&page=${params.page}&pageSzie=${params.pageSzie}`
+    )
   },
   // 二级渠道查询 模块数据
   countsByTrialChannelClassIdOfTotal(params) {
