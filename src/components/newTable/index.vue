@@ -1,8 +1,8 @@
 <!--
- * @Author: wuhao
- * @Date: 2018-12-20 09:47:02
- * @LastEditors: wuhao
- * @LastEditTime: 2018-12-27 16:08:11
+ * @Author: zhaowenming
+ * @Date: 2021-4-23 14:47:02
+ * @LastEditors: zhaowenming
+ * @LastEditTime: 2021-4-24 15:23:02
  * @Description: 封装el-table
  -->
 
@@ -269,9 +269,8 @@ export default {
     },
     //排序
     sortChange(data) {
-      //direction
-      //sort = a.property;
-      //pvConfirmTime;
+
+      console.log(data,"排序数据");
       let direction = 'DESC'
       if (data.order == 'ascending') {
         direction = 'ASC'

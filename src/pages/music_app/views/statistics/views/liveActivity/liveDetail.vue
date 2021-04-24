@@ -27,6 +27,7 @@
             :total="total"
             :pageNum.sync="tableParam.pageNum"
             :pageSize.sync="tableParam.pageSize"
+            @sortChange="sortChange"
             @getList="initData"
             @StudentJump="StudentJump"
             @operateEdit="operateEdit"
@@ -519,6 +520,9 @@ export default {
   },
   methods: {
     initData() {},
+    sortChange() {
+
+    },
     // 编辑
     operateEdit() {},
     getSearchQuery(res) {
@@ -531,29 +535,24 @@ export default {
     StudentJump() {
       console.log(111111)
     },
-    //体验课班级跳转
     experienceClass() {
       console.log('体验课班级跳转')
     },
-    // 服务班级跳转
     serviceClass() {
       console.log('服务班级跳转')
     },
-    //进直播间次数
     enterLive() {
       this.dialogVisible = true
       this.dia_type = 1
       this.headersDialogList = this.headersEnter
       console.log('进直播间次数')
     },
-    // 评论数
     discussLive() {
       console.log('评论数')
       this.dialogVisible = true
       this.dia_type = 2
       this.headersDialogList = this.headersDiscuss
     },
-    // 获取直播活动名称
     getOrderSearch() {},
     // 点击分页
     handleSizeChange(val) {
