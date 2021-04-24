@@ -20,6 +20,10 @@
             :key="currentDate"
             :paramsToSearch="paramsToSearch"
           />
+          <el-tabs v-model="activeName" @tab-click="handleClick">
+            <el-tab-pane label="进入过直播学员" name="1"></el-tab-pane>
+            <el-tab-pane label="未进入过直播学员" name="2"></el-tab-pane>
+          </el-tabs>
           <base-table
             :loading="loading"
             :columns="headers"
@@ -29,7 +33,6 @@
             :pageSize.sync="tableParam.pageSize"
             @sortChange="sortChange"
             @getList="initData"
-            @StudentJump="StudentJump"
             @operateEdit="operateEdit"
             @experienceClass="experienceClass"
             @serviceClass="serviceClass"
@@ -46,7 +49,7 @@
       :width="dia_type == 1 ? '40%' : '20%'"
       :before-close="handleClose"
     >
-      <span>学员:18910275255</span>
+      <span class="studeng_name">学员:18910275255</span>
       <base-table
         :loading="loading"
         :columns="headersDialogList"
@@ -63,7 +66,7 @@
         @current-change="handleCurrentChangeDialog"
         :current-page="1"
         :page-size="10"
-        :pager-count="4"
+        :pager-count="5"
         :total="40"
       >
       </el-pagination>
@@ -83,6 +86,7 @@ export default {
   data() {
     return {
       paramsToSearch: {},
+      activeName: '1',
       dialogVisible: false,
       currentDate: '',
       showList: [
@@ -164,44 +168,30 @@ export default {
       ],
       headers: [
         {
-          type: 'operate',
+          type: 'moreKey',
           key: 'seq',
           title: '学员',
-          slot:"slot",
-          operates: [
-            {
-              emitKey: 'StudentJump',
-              escape: (row) => {
-                return row.status == '0' ? '详情<h1>123123123123</h1>' : '18910275255'
-              },
-            },
-          ],
+          width: '150',
         },
         {
           key: 'title',
-          type: 'operate',
+          type: 'classKey',
           title: '社销老师*体验课班级',
           width: '150',
           operates: [
             {
               emitKey: 'experienceClass',
-              escape: (row) => {
-                return '2020M1体验课'
-              },
             },
           ],
         },
         {
           key: 'content',
-          type: 'operate',
+          type: 'classKey',
           title: '服务老师*服务班级',
           width: '150',
           operates: [
             {
               emitKey: 'serviceClass',
-              escape: (row) => {
-                return '2020M1体验课'
-              },
             },
           ],
         },
@@ -322,6 +312,21 @@ export default {
           failureTime: 'ios',
           isHomePageShow: true,
           status: 0,
+          trailTeams: [
+            {
+              teacher_info: {
+                realname: '体验课',
+                departmentInfo: {
+                  name: '测试部门',
+                },
+              },
+              team_name: '火狼战队',
+            },
+          ],
+          userInfo: {
+            mobile: '18910275255',
+            id: '1',
+          },
         },
         {
           seq: '121323',
@@ -331,6 +336,26 @@ export default {
           putTime: '33',
           failureTime: 'ios',
           isHomePageShow: true,
+          trailTeams: [
+            {
+              teacher_info: {
+                realname: '体验课',
+                departmentInfo: {
+                  name: '测试部门',
+                },
+              },
+              team_name: '火狼战队',
+            },
+            {
+              teacher_info: {
+                realname: '体验课',
+                departmentInfo: {
+                  name: '测试部门',
+                },
+              },
+              team_name: '火狼战队',
+            },
+          ],
         },
         {
           seq: '121323',
@@ -340,6 +365,17 @@ export default {
           putTime: '33',
           failureTime: 'ios',
           isHomePageShow: true,
+          trailTeams: [
+            {
+              teacher_info: {
+                realname: '体验课',
+                departmentInfo: {
+                  name: '测试部门',
+                },
+              },
+              team_name: '火狼战队',
+            },
+          ],
         },
         {
           seq: '121323',
@@ -520,9 +556,7 @@ export default {
   },
   methods: {
     initData() {},
-    sortChange() {
-
-    },
+    sortChange() {},
     // 编辑
     operateEdit() {},
     getSearchQuery(res) {
@@ -530,10 +564,6 @@ export default {
     },
     handleClose(done) {
       done()
-    },
-    // 学员
-    StudentJump() {
-      console.log(111111)
     },
     experienceClass() {
       console.log('体验课班级跳转')
@@ -562,6 +592,9 @@ export default {
     async getOrderList(page = this.currentPage, status) {
       this.loading = true
       const queryObj = {}
+    },
+    handleClick(tab, event) {
+      console.log(tab, event)
     },
     handleSizeChangeDialog() {},
     handleCurrentChangeDialog() {},
@@ -603,17 +636,27 @@ export default {
       display: flex;
       margin: 30px 50px 10px;
       padding: 30px 0;
-      border: 2px solid #dedede;
+      box-shadow: 0 1px 10px #dedede;
       border-radius: 10px;
       justify-content: space-around;
       .detail_item {
         text-align: center;
       }
     }
+    p:nth-child(1) {
+      font-size: 22px;
+    }
     p:nth-child(2) {
       margin-top: 20px;
     }
   }
+}
+.studeng_name {
+  color: #000;
+  font-size: 16px;
+  display: flex;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #dedede;
 }
 .elard {
   border: none;
@@ -631,5 +674,8 @@ export default {
 }
 /deep/ .el-pagination {
   margin-top: 10px;
+}
+/deep/ .el-tabs__nav-scroll {
+  padding-left: 30px;
 }
 </style>

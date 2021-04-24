@@ -104,6 +104,48 @@
                       style="width: 100%"
                     />
                   </label>
+                  <!--多个字段显示-->
+                  <label v-else-if="column.type === 'moreKey'">
+                    <extend-user-info
+                      :user="scope.row.userInfo"
+                      :sys-label="scope.row.sys_label"
+                      :is-head="true"
+                    />
+                  </label>
+                  <label v-else-if="column.type === 'classKey'">
+                    <span
+                      v-if="
+                        scope.row.trailTeams &&
+                        scope.row.trailTeams.length === 0
+                      "
+                    ></span>
+                    <div>
+                      <div
+                        v-for="(item, index) in scope.row.trailTeams"
+                        :key="index"
+                      >
+                        <div>
+                          <span>{{
+                            (item.teacher_info && item.teacher_info.realname) ||
+                            '--'
+                          }}</span>
+                          <span class="primary-text" @click="openTeam(item)">{{
+                            `(${item.team_name})`
+                          }}</span>
+                        </div>
+                        <div>
+                          {{
+                            `${
+                              (item.teacher_info &&
+                                item.teacher_info.departmentInfo &&
+                                item.teacher_info.departmentInfo.name) ||
+                              '--'
+                            }`
+                          }}
+                        </div>
+                      </div>
+                    </div>
+                  </label>
                   <span v-else>
                     <el-tooltip
                       v-if="isShow(scope.row, column)"
@@ -176,9 +218,11 @@
  */
 
 import MPagination from '@/components/MPagination/index.vue'
+import { openBrowserTab, formatData } from '@/utils/index'
+import ExtendUserInfo from '@/components/BaseUserInfo/Extend.vue'
 export default {
   name: 'base-table',
-  components: { MPagination },
+  components: { MPagination, ExtendUserInfo },
   props: {
     // 核心数据
     list: {
@@ -250,11 +294,22 @@ export default {
     continuousIndex(index) {
       return index + (this.currentPage - 1) * this.pageSizes + 1
     },
+    formatDate(date, flag = 's') {
+      return formatData(date, flag)
+    },
+    // 点击班级名称，打开班级详情
+    openTeam(row) {
+      if (!row.id) return
+      const teamId = row.id
+      const teamType = row.team_type || '0'
+      const typeUrl = teamType == 2 ? 'teamDetail' : 'teamTrialDetail'
+      teamId && openBrowserTab(`/music_app/#/${typeUrl}/${teamId}/${teamType}`)
+    },
     // 点击分页
     handleSizeChange(val) {
       console.log(val)
     },
-   // 页码变化触发获取数据
+    // 页码变化触发获取数据
     getList(obj) {
       this.$emit('getList', obj)
     },
@@ -269,8 +324,7 @@ export default {
     },
     //排序
     sortChange(data) {
-
-      console.log(data,"排序数据");
+      console.log(data, '排序数据')
       let direction = 'DESC'
       if (data.order == 'ascending') {
         direction = 'ASC'
