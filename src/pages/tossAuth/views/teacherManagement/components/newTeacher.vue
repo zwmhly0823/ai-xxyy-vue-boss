@@ -159,8 +159,8 @@
       <!-- 管理部门 -->
       <el-form-item
         label="管理部门"
-        :prop="['1', '2'].includes(ruleForm.rank) ? 'administration' : ''"
-        v-show="['1', '2'].includes(ruleForm.rank)"
+        :prop="['1', '2','4'].includes(ruleForm.rank) ? 'administration' : ''"
+        v-show="['1', '2','4'].includes(ruleForm.rank)"
       >
         <el-cascader
           ref="administration"
