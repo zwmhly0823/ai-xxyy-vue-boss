@@ -146,6 +146,7 @@
                       </div>
                     </div>
                   </label>
+                  <!-- 字段为数组的情况 -->
                   <span v-else>
                     <el-tooltip
                       v-if="isShow(scope.row, column)"

@@ -31,43 +31,14 @@
             @getList="initData"
             @operateEdit="operateEdit"
           ></base-table>
-          <!-- <el-table :data="orderList" v-loading="loading">
-            <el-table-column
-              label="活动ID"
-              prop="user"
-              width="150"
-              align="center"
-            >
-            </el-table-column>
-            <el-table-column label="直播活动名称" prop="user">
-            </el-table-column>
-            <el-table-column label="活动开启时间-关闭时间" prop="user">
-            </el-table-column>
-            <el-table-column label="售卖商品" prop="user"> </el-table-column>
-            <el-table-column label="活动覆盖人数" prop="user">
-            </el-table-column>
-            <el-table-column label="支持终端" prop="user"> </el-table-column>
-            <el-table-column label="直播状态"> </el-table-column>
-            <el-table-column fixed="right" label="操作" width="200" align="center">
-              <template slot-scope="scope">
-                <el-button
-                  @click="handleClick(scope.row)"
-                  type="text"
-                  size="small"
-                  >查看</el-button
-                >
-              </template>
-            </el-table-column>
-          </el-table> -->
         </el-scrollbar>
       </div>
-      </el-col>
+    </el-col>
   </el-row>
 </template>
 <script>
 import liveActivityName from '@/components/MSearch/searchItems/liveActivityName'
 import selectStartTime from '@/components/MSearch/searchItems/selectStartTime'
-// import MPagination from '@/components/MPagination/index.vue'
 import baseTable from '@/components/newTable'
 export default {
   name: 'liveActivityList',
@@ -81,32 +52,32 @@ export default {
     return {
       headers: [
         {
-          key: 'seq',
+          key: 'activityId',
           title: '活动ID',
         },
         {
-          key: 'title',
+          key: 'liveName',
           title: '直播活动名称',
         },
         {
-          key: 'content',
+          key: 'timeRange',
           title: '活动开启时间-关闭时间',
           width: '300',
         },
         {
-          key: 'url',
+          key: 'goodsInfos',
           title: '售卖商品',
         },
         {
-          key: 'putTime',
+          key: 'activityCoverNum',
           title: '活动覆盖人数',
         },
         {
-          key: 'failureTime',
+          key: 'supportTerminal',
           title: '支持终端',
         },
         {
-          key: 'isHomePageShow',
+          key: 'liveStatus',
           title: '直播状态',
           escape: (row) => {
             return row.isHomePageShow ? '是' : '否'
@@ -119,7 +90,7 @@ export default {
             {
               emitKey: 'operateEdit',
               escape: (row) => {
-                return row.status == '0' ? '查看' : ''
+                return '查看'
               },
             },
           ],
@@ -136,197 +107,39 @@ export default {
       },
       loading: false,
       // 订单列表
-      list: [{
-         seq:"121323",
-         title:"你好嗷嗷",
-         content:"2020-11-12",
-         url:"你好",
-         putTime:"33",
-         failureTime:"ios",
-         isHomePageShow:true,
-         status:0
-      },{
-         seq:"121323",
-         title:"你好嗷嗷",
-         content:"2020-11-12",
-         url:"你好",
-         putTime:"33",
-         failureTime:"ios",
-         isHomePageShow:true,
-      },{
-         seq:"121323",
-         title:"你好嗷嗷",
-         content:"2020-11-12",
-         url:"你好",
-         putTime:"33",
-         failureTime:"ios",
-         isHomePageShow:true,
-      },{
-         seq:"121323",
-         title:"你好嗷嗷",
-         content:"2020-11-12",
-         url:"你好",
-         putTime:"33",
-         failureTime:"ios",
-         isHomePageShow:true,
-      },{
-         seq:"121323",
-         title:"你好嗷嗷",
-         content:"2020-11-12",
-         url:"你好",
-         putTime:"33",
-         failureTime:"ios",
-         isHomePageShow:true,
-      },{
-         seq:"121323",
-         title:"你好嗷嗷",
-         content:"2020-11-12",
-         url:"你好",
-         putTime:"33",
-         failureTime:"ios",
-         isHomePageShow:true,
-      },{
-         seq:"121323",
-         title:"你好嗷嗷",
-         content:"2020-11-12",
-         url:"你好",
-         putTime:"33",
-         failureTime:"ios",
-         isHomePageShow:true,
-      },{
-         seq:"121323",
-         title:"你好嗷嗷",
-         content:"2020-11-12",
-         url:"你好",
-         putTime:"33",
-         failureTime:"ios",
-         isHomePageShow:true,
-      },{
-         seq:"121323",
-         title:"你好嗷嗷",
-         content:"2020-11-12",
-         url:"你好",
-         putTime:"33",
-         failureTime:"ios",
-         isHomePageShow:true,
-      },{
-         seq:"121323",
-         title:"你好嗷嗷",
-         content:"2020-11-12",
-         url:"你好",
-         putTime:"33",
-         failureTime:"ios",
-         isHomePageShow:true,
-      },{
-         seq:"121323",
-         title:"你好嗷嗷",
-         content:"2020-11-12",
-         url:"你好",
-         putTime:"33",
-         failureTime:"ios",
-         isHomePageShow:true,
-      },{
-         seq:"121323",
-         title:"你好嗷嗷",
-         content:"2020-11-12",
-         url:"你好",
-         putTime:"33",
-         failureTime:"ios",
-         isHomePageShow:true,
-      },{
-         seq:"121323",
-         title:"你好嗷嗷",
-         content:"2020-11-12",
-         url:"你好",
-         putTime:"33",
-         failureTime:"ios",
-         isHomePageShow:true,
-      },{
-         seq:"121323",
-         title:"你好嗷嗷",
-         content:"2020-11-12",
-         url:"你好",
-         putTime:"33",
-         failureTime:"ios",
-         isHomePageShow:true,
-      },{
-         seq:"121323",
-         title:"你好嗷嗷",
-         content:"2020-11-12",
-         url:"你好",
-         putTime:"33",
-         failureTime:"ios",
-         isHomePageShow:true,
-      },{
-         seq:"121323",
-         title:"你好嗷嗷",
-         content:"2020-11-12",
-         url:"你好",
-         putTime:"33",
-         failureTime:"ios",
-         isHomePageShow:true,
-      },{
-         seq:"121323",
-         title:"你好嗷嗷",
-         content:"2020-11-12",
-         url:"你好",
-         putTime:"33",
-         failureTime:"ios",
-         isHomePageShow:true,
-      },{
-         seq:"121323",
-         title:"你好嗷嗷",
-         content:"2020-11-12",
-         url:"你好",
-         putTime:"33",
-         failureTime:"ios",
-         isHomePageShow:true,
-      },{
-         seq:"121323",
-         title:"你好嗷嗷",
-         content:"2020-11-12",
-         url:"你好",
-         putTime:"33",
-         failureTime:"ios",
-         isHomePageShow:true,
-      },{
-         seq:"121323",
-         title:"你好嗷嗷",
-         content:"2020-11-12",
-         url:"你好",
-         putTime:"33",
-         failureTime:"ios",
-         isHomePageShow:true,
-         status:0
-      },{
-         seq:"121323",
-         title:"你好嗷嗷",
-         content:"2020-11-12",
-         url:"你好",
-         putTime:"33",
-         failureTime:"ios",
-         isHomePageShow:true,
-         status:0
-      },{
-         seq:"121323",
-         title:"你好嗷嗷",
-         content:"2020-11-12",
-         url:"你好",
-         putTime:"33",
-         failureTime:"ios",
-         isHomePageShow:true,
-         status:0
-      }],
+      list: [],
     }
   },
-  methods: {
-    initData() {
 
+  mounted() {
+    this.initData()
+    this.getList()
+  },
+  methods: {
+    async initData() {
+      let result = await this.$http.liveBroadcast.liveBroadcastActivityList(
+        this.tableParam
+      )
+      if (result.code == 0) {
+        this.list = result.payload.content
+        this.total = Number(result.payload.totalElements)
+      }
+    },
+
+    getList() {
+      let obj = {
+        keyword: 'HAHA1',
+      }
+      this.$http.liveBroadcast.liveAssociationActivityName(obj)
     },
     // 查看
-    operateEdit() {
+    operateEdit(row) {
+      let activityId = row.activityId
       this.$router.push({
-        path:'/liveDetail'
+        path: '/liveDetail',
+        query: {
+          activityId: activityId,
+        },
       })
     },
     // 获取直播活动名称

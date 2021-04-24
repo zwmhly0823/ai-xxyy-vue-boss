@@ -48,7 +48,7 @@ import TeamV3 from './modules/studentTeam/TeamV3' // 班级接口
 import Complaint from './modules/complaint/complaint.js' // 投诉中心
 import SystemMenu from './modules/SystemMenu.js' // 菜单资源
 import SystemRole from './modules/SystemRole.js' // 角色管理
-
+import liveBroadcast from './modules/liveBroadcast'
 export default Object.assign(
   {},
   // { writeApp },
@@ -147,5 +147,8 @@ export default Object.assign(
   },
   {
     TeamV3
+  },
+  {
+    liveBroadcast
   }
 )
