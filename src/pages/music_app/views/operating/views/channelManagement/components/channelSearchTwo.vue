@@ -431,10 +431,10 @@ export default {
         })
         this.onGetChannelList(_data)
       })
-      this.$http.Operating.countsByTrialChannelClassIdOfTotal(paramsM).then(
+      this.$http.Operating.ChannelManagementStatisticsTotal(paramsM).then(
         (ele) => {
           // 模块数据
-          const _datas = ele.payload
+          const _datas = ele.data && ele.data.ChannelManagementStatisticsTotal
           if (!_datas) return
           // 累计成单金额
           if (_datas.system_user_amounts !== 'null') {
