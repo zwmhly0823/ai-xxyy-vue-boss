@@ -23,6 +23,8 @@
             /> -->
             <employees-role
               employees="role_id"
+              phoneNumber="mobile"
+              :isShow="true"
               @search="handleSearchEmployees"
               class="search-container"
             />
@@ -216,6 +218,7 @@ export default {
         pageNum: 1,
         realName: this.tabQuery.realName,
         roleId: data[0].term,
+        mobile:data[0].terms,
         departmentId: this.tabQuery.id,
       };
       this.tabQuery = query;
