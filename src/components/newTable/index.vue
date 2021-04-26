@@ -192,25 +192,11 @@
                   </label>
                   <!-- 字段为数组的情况 -->
                   <span v-else>
-                    <el-tooltip
-                      v-if="isShow(scope.row, column)"
-                      class="awidth"
-                      :style="{ width: column.width }"
-                      effect="dark"
-                      :content="
-                        column.escape !== undefined
-                          ? column.escape(scope.row)
-                          : scope.row[column.key].toString()
-                      "
-                      placement="top"
-                      :enterable="false"
-                    >
-                      <span>{{
-                        column.escape !== undefined
-                          ? column.escape(scope.row)
-                          : scope.row[column.key]
-                      }}</span>
-                    </el-tooltip>
+                    <span>{{
+                      column.escape !== undefined
+                        ? column.escape(scope.row)
+                        : scope.row[column.key]
+                    }}</span>
                   </span>
                 </label>
                 <!-- 使用slot的情况下 -->
@@ -393,11 +379,13 @@ export default {
   background: #fff;
   border: none;
   color: #606266;
-  p:last-child {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+  // p {
+  //   white-space: nowrap;
+  //   overflow: hidden;
+  //   width: 100px;
+  //   text-overflow:ellipsis;
+  //   line-clamp: 3;
+  // }
 }
 /deep/ .el-table--enable-row-hover .el-table__body tr:hover > td {
   background: #fff;

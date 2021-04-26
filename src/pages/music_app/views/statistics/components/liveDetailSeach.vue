@@ -83,7 +83,7 @@
               <search-stage
                 :category="categoryType"
                 :isDisabled="isDisabled"
-                @result="getSearchData('category', arguments)"
+                @result="getSearchData('stage', arguments)"
                 name="stage"
                 type="1"
                 placeholder="体验课排期"
@@ -93,7 +93,7 @@
 
           <el-form-item label="进入直播时机:" label-width="100px">
             <div class="search-group">
-              <buyGoods
+              <enterTime
                 :category="categoryType"
                 @result="getSearchData('category', arguments)"
                 name="stage"
@@ -104,7 +104,7 @@
 
           <el-form-item label="是否购买商品:" label-width="100px">
             <div class="search-group">
-              <enterTime
+              <buyGoods
                 :category="categoryType"
                 @result="getSearchData('category', arguments)"
                 name="stage"
@@ -189,7 +189,11 @@ export default {
      */
     getSearchData(key, res) {
       // 体验课类型
-      if (key == 'category' && res[0].category && Array.from(res[0].category).length == 2) {
+      if (
+        key == 'category' &&
+        res[0].category &&
+        Array.from(res[0].category).length == 2
+      ) {
         this.isDisabled = true
       } else {
         this.isDisabled = false

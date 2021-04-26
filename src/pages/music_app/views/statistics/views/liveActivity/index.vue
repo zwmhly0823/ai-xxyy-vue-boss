@@ -23,6 +23,7 @@
           </div>
           <base-table
             :loading="loading"
+            :tableHeight="680"
             :columns="headers"
             :list="list"
             :total="total"
