@@ -36,7 +36,7 @@
         <el-col :span="6">
           <div class="grid-content bg-purple">
             <p>累计转化率/系统课成单人数</p>
-            <span>{{ conversionRate }} <em>/</em> {{ allSystemUser }}</span>
+            <span>{{ isNaN(conversionRate) ? '0' : conversionRate }} <em>/</em> {{ allSystemUser }}</span>
           </div>
         </el-col>
         <el-col :span="12">
@@ -381,6 +381,7 @@ export default {
         stage: this.querySearchTrialStage,
         startCtime: this.stateTime,
         endCtime: this.endTime,
+        termCondition: 'trialchannelclassid',
       }
       this.$http.Operating.countsByTrialChannel(params).then((res) => {
         const _data =

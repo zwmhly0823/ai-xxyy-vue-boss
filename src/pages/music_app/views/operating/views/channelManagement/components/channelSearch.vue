@@ -458,6 +458,7 @@ export default {
         stage: this.querySearchTrialStage,
         startCtime: this.stateTime,
         endCtime: this.endTime,
+        termCondition: 'trialchannel',
       }
       this.$http.Operating.countsByTrialChannel(params).then((res) => {
         const _data =
@@ -534,7 +535,7 @@ export default {
             +_datas.system_user_num === 0 &&
             _datas.trial_user_num === 'null'
           ) {
-            this.conversionRate = `0%`
+            this.conversionRate = `0`
           } else {
             const conversionRatePercentNums =
               (_datas.system_user_num / _datas.trial_user_num) * 100
@@ -554,7 +555,7 @@ export default {
           this.allJoinUserNums = _datas.join_user_num
           // 参课率
           if (+_datas.join_user_num === 0 && _datas.trial_user_num === 'null') {
-            this.allJoinUserNumsPercent = `0%`
+            this.allJoinUserNumsPercent = `0`
           } else {
             const allJoinUserNumsPercentNums =
               (_datas.join_user_num / _datas.trial_user_num) * 100
@@ -569,7 +570,7 @@ export default {
             +_datas.complete_user_num === 0 &&
             _datas.trial_user_num === 'null'
           ) {
-            this.allCompleteUserNumsPercent = `0%`
+            this.allCompleteUserNumsPercent = `0`
           } else {
             const allCompleteUserNumsPercentNums =
               (_datas.complete_user_num / _datas.trial_user_num) * 100
