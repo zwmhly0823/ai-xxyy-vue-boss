@@ -8,14 +8,14 @@
               <el-form-item label="直播活动名称:">
                 <liveActivityName
                   class="allmini"
-                  :name="name"
+                  name="activityId"
                   @result="getOrderSearch"
                 />
               </el-form-item>
               <el-form-item label="直播开启时间:">
                 <selectStartTime
                   class="allmini"
-                  :name="name"
+                  name="openTime"
                   @result="getOrderSearch"
                 />
               </el-form-item>
@@ -64,8 +64,8 @@ export default {
           title: '活动开启时间-关闭时间',
           width: '300',
         },
-        { 
-          type:"arr",
+        {
+          type: 'arr',
           key: 'goodsInfos',
           title: '售卖商品',
         },
@@ -97,14 +97,13 @@ export default {
           ],
         },
       ],
-      name: '123',
       // 总页数
       totalPages: 1,
       total: 0, // 总条数
       // 当前页数
       tableParam: {
         pageNum: 1, // 页码
-        pageSize: 10, // 页长
+        pageSize: 20, // 页长
       },
       loading: false,
       // 订单列表
@@ -116,7 +115,10 @@ export default {
     this.initData()
   },
   methods: {
-    async initData() {
+    async initData(page) {
+       if(page){
+         this.tableParam.pageNum = page
+       }
       let result = await this.$http.liveBroadcast.liveBroadcastActivityList(
         this.tableParam
       )
@@ -136,15 +138,9 @@ export default {
       })
     },
     // 获取直播活动名称
-    getOrderSearch() {},
-    // 点击分页
-    handleSizeChange(val) {
-      this.currentPage = val
-    },
-    // 订单列表
-    async getOrderList(page = this.currentPage, status) {
-      this.loading = true
-      const queryObj = {}
+    getOrderSearch(data) {
+      this.tableParam = Object.assign(this.tableParam, data)
+      this.initData()
     },
   },
 }

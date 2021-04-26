@@ -188,7 +188,8 @@ export default {
      * search item 回调。 key,自定义参数，res，组件返回的值 res[0]
      */
     getSearchData(key, res) {
-      if (key == 'category' && Array.from(res[0].category).length == 2) {
+      // 体验课类型
+      if (key == 'category' && res[0].category && Array.from(res[0].category).length == 2) {
         this.isDisabled = true
       } else {
         this.isDisabled = false

@@ -13,8 +13,8 @@
       <el-option
         v-for="item in typeList"
         :key="item.id"
-        :value="item.liveName"
-        :label="item.liveStatusName"
+        :value="item.activityId"
+        :label="item.liveName"
       ></el-option>
     </el-select>
   </div>

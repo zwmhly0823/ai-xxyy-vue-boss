@@ -8,8 +8,8 @@
             v-for="(item, index) in showList"
             :key="index"
           >
-            <p>{{ item.num }}</p>
-            <p>{{ item.title }}</p>
+            <p>{{ item.value+'人' }}</p>
+            <p>{{ item.desc }}</p>
           </div>
         </div>
 
@@ -18,7 +18,6 @@
             ref="searchC"
             @search="getSearchQuery"
             :key="currentDate"
-            :paramsToSearch="paramsToSearch"
           />
           <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="进入过直播学员" name="1"></el-tab-pane>
@@ -89,44 +88,7 @@ export default {
       activeName: '1',
       dialogVisible: false,
       currentDate: '',
-      showList: [
-        {
-          title: '活动覆盖人数',
-          num: '100人',
-        },
-        {
-          title: '活动覆盖人数',
-          num: '100人',
-        },
-        {
-          title: '活动覆盖人数',
-          num: '100人',
-        },
-        {
-          title: '活动覆盖人数',
-          num: '100人',
-        },
-        {
-          title: '活动覆盖人数',
-          num: '100人',
-        },
-        {
-          title: '活动覆盖人数',
-          num: '100人',
-        },
-        {
-          title: '活动覆盖人数',
-          num: '100人',
-        },
-        {
-          title: '活动覆盖人数',
-          num: '100人',
-        },
-        {
-          title: '活动覆盖人数',
-          num: '100人',
-        },
-      ],
+      showList: [],
       headersDialogList: [],
       dia_type: null,
       headersEnter: [
@@ -552,15 +514,30 @@ export default {
           status: 0,
         },
       ],
+      activityId: this.$route.query.activityId,
     }
   },
+  mounted() {
+    this.initCount()
+  },
   methods: {
-    initData() {},
+    async initData() {},
+    async initCount() {
+      let params = {
+        activityId: this.activityId,
+      }
+      let result = await this.$http.liveBroadcast.liveBroadcastActivityDetailCountDetail(
+        params
+      )
+      if (result.status == 'OK') {
+        this.showList = result.payload
+      }
+    },
     sortChange() {},
     // 编辑
     operateEdit() {},
     getSearchQuery(res) {
-      this.search = res
+      this.paramsToSearch = res
     },
     handleClose(done) {
       done()

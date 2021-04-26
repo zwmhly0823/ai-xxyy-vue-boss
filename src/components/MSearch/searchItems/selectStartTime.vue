@@ -1,10 +1,11 @@
 <template>
   <div class="search-item small">
-    <el-date-picker type="date" @change="onChange" placeholder="选择日期">
+    <el-date-picker v-model="time" type="date" @change="onChange" placeholder="选择日期">
     </el-date-picker>
   </div>
 </template>
 <script>
+import { formatData } from '@/utils/index'
 export default {
   props: {
     name: {
@@ -13,11 +14,14 @@ export default {
     },
   },
   data() {
-    return {}
+    return {
+      time:'',
+    }
   },
   methods: {
     onChange(type) {
-      this.$emit('result', { [this.name]: item })
+      type = formatData(type)
+      this.$emit('result', { [this.name]: type })
     },
   },
 }

@@ -114,12 +114,47 @@
                   </label>
                   <!-- 数组的展示 -->
                   <label v-else-if="column.type === 'arr'">
-                    <p
-                      v-for="(item, index) in scope.row[column.key]"
-                      :key="index"
+                    <!-- <div
+                      v-if="
+                        scope.row[column.key] &&
+                        scope.row[column.key].length > 0
+                      "
                     >
-                      {{ item }}
-                    </p>
+                      <p
+                        v-for="(item, index) in scope.row[column.key]"
+                        :key="index"
+                      >
+                        {{ item }}
+                      </p>
+                    </div> -->
+                    <el-popover
+                      v-if="
+                        scope.row[column.key] &&
+                        scope.row[column.key].length > 0
+                      "
+                      trigger="hover"
+                      placement="top"
+                    >
+                      <p
+                        v-for="(item, index) in scope.row[column.key]"
+                        :key="index"
+                      >
+                        {{ item }}
+                      </p>
+                      <div slot="reference">
+                        <el-tag>
+                          <p
+                            v-for="(item1, index1) in scope.row[
+                              column.key
+                            ].slice(0, 3)"
+                            :key="index1"
+                          >
+                            {{ item1 }}
+                          </p>
+                        </el-tag>
+                      </div>
+                    </el-popover>
+                    <div v-else>-</div>
                   </label>
                   <label v-else-if="column.type === 'classKey'">
                     <span
@@ -268,7 +303,7 @@ export default {
     },
     pageSize: {
       type: Number,
-      default: 10,
+      default: 20,
     },
     tableHeight: {
       type: Number,
@@ -281,28 +316,10 @@ export default {
       sortName: '',
     }
   },
-  computed: {
-    currentPage: {
-      get() {
-        return this.pageNum
-      },
-      set(val) {
-        this.$emit('update:pageNum', val)
-      },
-    },
-    pageSizes: {
-      get() {
-        return this.pageSize
-      },
-      set(val) {
-        this.$emit('update:pageSize', val)
-      },
-    },
-  },
   methods: {
     // 让index序号连续
     continuousIndex(index) {
-      return index + (this.currentPage - 1) * this.pageSizes + 1
+      return index + (this.pageNum - 1) * this.pageNum + 1
     },
     formatDate(date, flag = 's') {
       return formatData(date, flag)
@@ -317,11 +334,7 @@ export default {
     },
     // 点击分页
     handleSizeChange(val) {
-      console.log(val)
-    },
-    // 页码变化触发获取数据
-    getList(obj) {
-      this.$emit('getList', obj)
+      this.$emit('getList', val)
     },
     // 处理点击事件
     handleClick(action, data) {
@@ -376,6 +389,19 @@ export default {
 </script>
 
 <style scoped lang="scss">
+/deep/ .el-tag--light {
+  background: #fff;
+  border: none;
+  color: #606266;
+  p:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+/deep/ .el-table--enable-row-hover .el-table__body tr:hover > td {
+  background: #fff;
+}
 .base-table-container {
   background: #fff;
   .table-title {
