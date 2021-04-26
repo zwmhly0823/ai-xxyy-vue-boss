@@ -112,6 +112,15 @@
                       :is-head="true"
                     />
                   </label>
+                  <!-- 数组的展示 -->
+                  <label v-else-if="column.type === 'arr'">
+                    <p
+                      v-for="(item, index) in scope.row[column.key]"
+                      :key="index"
+                    >
+                      {{ item }}
+                    </p>
+                  </label>
                   <label v-else-if="column.type === 'classKey'">
                     <span
                       v-if="

@@ -4,15 +4,17 @@
       v-model="type"
       size="mini"
       clearable
+      filterable
       :placeholder="placeholder"
       @change="onChange"
+      :filter-method="filterMethod"
       class="item-style"
     >
       <el-option
         v-for="item in typeList"
         :key="item.id"
-        :value="item.id"
-        :label="item.text"
+        :value="item.liveName"
+        :label="item.liveStatusName"
       ></el-option>
     </el-select>
   </div>
@@ -22,33 +24,46 @@ export default {
   props: {
     name: {
       type: String,
-      default: ''
+      default: '',
     },
     placeholder: {
       type: String,
-      default: '体验课类型'
-    }
+      default: '体验课类型',
+    },
   },
   data() {
     return {
       type: null,
-      typeList: [
-        {
-          id: '5',
-          text: '直播名称'
-        },
-        {
-          id: '11',
-          text: '直播名称'
-        }
-      ]
+      words:"",
+      typeList: [],
+    }
+  },
+  mounted() {
+    this.getList()
+  },
+  watch:{
+    words(newValue,oldValue) {
+      if(newValue || newValue == '') {
+        this.getList()
+      }
     }
   },
   methods: {
+   async getList() {
+      let obj = {
+        keyword:this.words,
+      }
+      let result = await this.$http.liveBroadcast.liveAssociationActivityName(obj)
+      this.typeList = result.payload
+      console.log(this.typeList, 'this.typeList')
+    },
+    filterMethod(words) {
+      this.words = words
+    },
     onChange(type) {
-      this.$emit('result', { [this.name]: item })
-    }
-  }
+      this.$emit('result', { [this.name]: type })
+    },
+  },
 }
 </script>
 

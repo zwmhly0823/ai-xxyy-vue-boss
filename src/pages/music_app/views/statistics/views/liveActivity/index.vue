@@ -64,7 +64,8 @@ export default {
           title: '活动开启时间-关闭时间',
           width: '300',
         },
-        {
+        { 
+          type:"arr",
           key: 'goodsInfos',
           title: '售卖商品',
         },
@@ -113,7 +114,6 @@ export default {
 
   mounted() {
     this.initData()
-    this.getList()
   },
   methods: {
     async initData() {
@@ -124,13 +124,6 @@ export default {
         this.list = result.payload.content
         this.total = Number(result.payload.totalElements)
       }
-    },
-
-    getList() {
-      let obj = {
-        keyword: 'HAHA1',
-      }
-      this.$http.liveBroadcast.liveAssociationActivityName(obj)
     },
     // 查看
     operateEdit(row) {
