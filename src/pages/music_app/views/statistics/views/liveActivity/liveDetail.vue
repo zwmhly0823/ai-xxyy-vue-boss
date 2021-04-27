@@ -8,20 +8,16 @@
             v-for="(item, index) in showList"
             :key="index"
           >
-            <p>{{ item.value+'人' }}</p>
+            <p>{{ item.value + '人' }}</p>
             <p>{{ item.desc }}</p>
           </div>
         </div>
 
         <el-scrollbar wrap-class="scrollbar-wrapper">
-          <search
-            ref="searchC"
-            @search="getSearchQuery"
-            :key="currentDate"
-          />
-          <el-tabs v-model="activeName" @tab-click="handleClick">
-            <el-tab-pane label="进入过直播学员" name="1"></el-tab-pane>
-            <el-tab-pane label="未进入过直播学员" name="2"></el-tab-pane>
+          <search ref="searchC" @search="getSearchQuery" :key="currentDate" />
+          <el-tabs v-model="activeName" @tab-click="handleClick(activeName)">
+            <el-tab-pane label="进入过直播学员" name="0"></el-tab-pane>
+            <el-tab-pane label="未进入过直播学员" name="1"></el-tab-pane>
           </el-tabs>
           <base-table
             :loading="loading"
@@ -74,6 +70,7 @@
 </template>
 <script>
 import baseTable from '@/components/newTable'
+import { copyText, openBrowserTab } from '@/utils/index'
 import search from '../../components/liveDetailSeach'
 export default {
   name: 'liveActivityList',
@@ -85,7 +82,10 @@ export default {
   data() {
     return {
       paramsToSearch: {},
-      activeName: '1',
+      sortTab: {
+        join_date: 'desc',
+      },
+      activeName: '0',
       dialogVisible: false,
       currentDate: '',
       showList: [],
@@ -131,12 +131,12 @@ export default {
       headers: [
         {
           type: 'moreKey',
-          key: 'seq',
+          key: 'user',
           title: '学员',
           width: '150',
         },
         {
-          key: 'title',
+          key: 'teacher_trial',
           type: 'classKey',
           title: '社销老师*体验课班级',
           width: '150',
@@ -147,8 +147,8 @@ export default {
           ],
         },
         {
-          key: 'content',
-          type: 'classKey',
+          key: 'teacher_system',
+          type: 'classKey1',
           title: '服务老师*服务班级',
           width: '150',
           operates: [
@@ -158,12 +158,12 @@ export default {
           ],
         },
         {
-          key: 'url',
+          key: 'is_in_room_text',
           title: '是否进直播间',
           width: '150',
         },
         {
-          key: 'putTime',
+          key: 'in_room_num',
           type: 'operate',
           title: '进直播间次数',
           width: '120',
@@ -172,73 +172,77 @@ export default {
             {
               emitKey: 'enterLive',
               escape: (row) => {
-                return '2020M1体验课'
+                return row.in_room_num ? row.in_room_num : '-'
               },
             },
           ],
         },
         {
-          key: 'failureTime',
-          title: '进直播间时机',
-          width: '120',
-        },
-        {
-          key: 'failureTime',
+          key: 'join_at',
           title: '首次进入时间',
           width: '120',
+          escape: (row) => {
+            return '123'
+          },
         },
         {
-          key: 'failureTime',
+          key: 'watch_time',
           title: '观看直播总时长',
           width: '150',
           sort: true,
+          escape: (row) => {
+            return row.watch_time ? row.watch_time : '-'
+          },
         },
         {
-          key: 'failureTime',
-          title: '观看回放总时长',
-          width: '150',
-          sort: true,
-        },
-
-        {
-          key: 'failureTime',
-          type: 'operate',
+          key: 'chat_count',
           title: '评论数',
+          type: 'operate',
           sort: true,
           operates: [
             {
               emitKey: 'discussLive',
               escape: (row) => {
-                return '2020M1体验课'
+                return row.chat_count ? row.chat_count : '-'
               },
             },
           ],
         },
         {
-          key: '点赞数',
-          title: '首次进入时间',
+          key: 'like_count',
+          title: '点赞数',
           width: '120',
           sort: true,
+          escape: (row) => {
+            return row.like_count ? row.like_count : '-'
+          },
         },
         {
-          key: 'failureTime',
-          title: '进入购物袋',
-        },
-        {
-          key: 'failureTime',
-          title: '查看商品',
-        },
-        {
-          key: 'failureTime',
+          key: 'packages_name',
           title: '购买商品',
+          escape: (row) => {
+            return row.packages_name ? row.packages_name : '-'
+          },
         },
         {
-          key: 'failureTime',
+          key: 'push_terminal',
           title: '进入终端',
+          escape: (row) => {
+            return row.live.push_terminal ? row.live.push_terminal : '-'
+          },
         },
         {
-          key: 'failureTime',
+          key: 'user_status',
           title: '系统课转化',
+          escape: (row) => {
+            return row.user_status == 1
+              ? '未转化'
+              : row.user_status == 3
+              ? '已购年系统课'
+              : row.user_status == 4
+              ? '已购半年系统课'
+              : '-'
+          },
         },
         {
           type: 'operate',
@@ -247,281 +251,52 @@ export default {
             {
               emitKey: 'operateEdit',
               escape: (row) => {
-                return row.status == '0' ? '详情' : ''
+                return row.user && row.user.id ? '详情' : '-'
               },
             },
           ],
         },
       ],
-      name: '123',
       // 总页数
       totalPages: 1,
       total: 0, // 总条数
       // 当前页数
       tableParam: {
-        pageNum: 1, // 页码
-        pageSize: 10, // 页长
+        page: 1, // 页码
+        // pageSize: 10, // 页长
       },
       loading: false,
       // 订单列表
-      list: [
-        {
-          seq: '121323',
-          title: '你好嗷嗷',
-          content: '2020-11-12',
-          url: '你好',
-          putTime: '33',
-          failureTime: 'ios',
-          isHomePageShow: true,
-          status: 0,
-          trailTeams: [
-            {
-              teacher_info: {
-                realname: '体验课',
-                departmentInfo: {
-                  name: '测试部门',
-                },
-              },
-              team_name: '火狼战队',
-            },
-          ],
-          userInfo: {
-            mobile: '18910275255',
-            id: '1',
-          },
-        },
-        {
-          seq: '121323',
-          title: '你好嗷嗷',
-          content: '2020-11-12',
-          url: '你好',
-          putTime: '33',
-          failureTime: 'ios',
-          isHomePageShow: true,
-          trailTeams: [
-            {
-              teacher_info: {
-                realname: '体验课',
-                departmentInfo: {
-                  name: '测试部门',
-                },
-              },
-              team_name: '火狼战队',
-            },
-            {
-              teacher_info: {
-                realname: '体验课',
-                departmentInfo: {
-                  name: '测试部门',
-                },
-              },
-              team_name: '火狼战队',
-            },
-          ],
-        },
-        {
-          seq: '121323',
-          title: '你好嗷嗷',
-          content: '2020-11-12',
-          url: '你好',
-          putTime: '33',
-          failureTime: 'ios',
-          isHomePageShow: true,
-          trailTeams: [
-            {
-              teacher_info: {
-                realname: '体验课',
-                departmentInfo: {
-                  name: '测试部门',
-                },
-              },
-              team_name: '火狼战队',
-            },
-          ],
-        },
-        {
-          seq: '121323',
-          title: '你好嗷嗷',
-          content: '2020-11-12',
-          url: '你好',
-          putTime: '33',
-          failureTime: 'ios',
-          isHomePageShow: true,
-        },
-        {
-          seq: '121323',
-          title: '你好嗷嗷',
-          content: '2020-11-12',
-          url: '你好',
-          putTime: '33',
-          failureTime: 'ios',
-          isHomePageShow: true,
-        },
-        {
-          seq: '121323',
-          title: '你好嗷嗷',
-          content: '2020-11-12',
-          url: '你好',
-          putTime: '33',
-          failureTime: 'ios',
-          isHomePageShow: true,
-        },
-        {
-          seq: '121323',
-          title: '你好嗷嗷',
-          content: '2020-11-12',
-          url: '你好',
-          putTime: '33',
-          failureTime: 'ios',
-          isHomePageShow: true,
-        },
-        {
-          seq: '121323',
-          title: '你好嗷嗷',
-          content: '2020-11-12',
-          url: '你好',
-          putTime: '33',
-          failureTime: 'ios',
-          isHomePageShow: true,
-        },
-        {
-          seq: '121323',
-          title: '你好嗷嗷',
-          content: '2020-11-12',
-          url: '你好',
-          putTime: '33',
-          failureTime: 'ios',
-          isHomePageShow: true,
-        },
-        {
-          seq: '121323',
-          title: '你好嗷嗷',
-          content: '2020-11-12',
-          url: '你好',
-          putTime: '33',
-          failureTime: 'ios',
-          isHomePageShow: true,
-        },
-        {
-          seq: '121323',
-          title: '你好嗷嗷',
-          content: '2020-11-12',
-          url: '你好',
-          putTime: '33',
-          failureTime: 'ios',
-          isHomePageShow: true,
-        },
-        {
-          seq: '121323',
-          title: '你好嗷嗷',
-          content: '2020-11-12',
-          url: '你好',
-          putTime: '33',
-          failureTime: 'ios',
-          isHomePageShow: true,
-        },
-        {
-          seq: '121323',
-          title: '你好嗷嗷',
-          content: '2020-11-12',
-          url: '你好',
-          putTime: '33',
-          failureTime: 'ios',
-          isHomePageShow: true,
-        },
-        {
-          seq: '121323',
-          title: '你好嗷嗷',
-          content: '2020-11-12',
-          url: '你好',
-          putTime: '33',
-          failureTime: 'ios',
-          isHomePageShow: true,
-        },
-        {
-          seq: '121323',
-          title: '你好嗷嗷',
-          content: '2020-11-12',
-          url: '你好',
-          putTime: '33',
-          failureTime: 'ios',
-          isHomePageShow: true,
-        },
-        {
-          seq: '121323',
-          title: '你好嗷嗷',
-          content: '2020-11-12',
-          url: '你好',
-          putTime: '33',
-          failureTime: 'ios',
-          isHomePageShow: true,
-        },
-        {
-          seq: '121323',
-          title: '你好嗷嗷',
-          content: '2020-11-12',
-          url: '你好',
-          putTime: '33',
-          failureTime: 'ios',
-          isHomePageShow: true,
-        },
-        {
-          seq: '121323',
-          title: '你好嗷嗷',
-          content: '2020-11-12',
-          url: '你好',
-          putTime: '33',
-          failureTime: 'ios',
-          isHomePageShow: true,
-        },
-        {
-          seq: '121323',
-          title: '你好嗷嗷',
-          content: '2020-11-12',
-          url: '你好',
-          putTime: '33',
-          failureTime: 'ios',
-          isHomePageShow: true,
-        },
-        {
-          seq: '121323',
-          title: '你好嗷嗷',
-          content: '2020-11-12',
-          url: '你好',
-          putTime: '33',
-          failureTime: 'ios',
-          isHomePageShow: true,
-          status: 0,
-        },
-        {
-          seq: '121323',
-          title: '你好嗷嗷',
-          content: '2020-11-12',
-          url: '你好',
-          putTime: '33',
-          failureTime: 'ios',
-          isHomePageShow: true,
-          status: 0,
-        },
-        {
-          seq: '121323',
-          title: '你好嗷嗷',
-          content: '2020-11-12',
-          url: '你好',
-          putTime: '33',
-          failureTime: 'ios',
-          isHomePageShow: true,
-          status: 0,
-        },
-      ],
+      list: [],
       activityId: this.$route.query.activityId,
     }
   },
   mounted() {
     this.initCount()
+    this.initData()
+  },
+  watch: {
+    paramsToSearch() {
+      this.initData()
+    },
   },
   methods: {
-    async initData() {},
+    async initData(page = 1) {
+      this.paramsToSearch = Object.assign(this.paramsToSearch, {
+        act_id: this.activityId,
+      })
+      let result = await this.$http.liveBroadcast.ActivityUserStatisticsPage(
+        this.paramsToSearch,
+        page,
+        this.sortTab,
+      )
+      if (result.data.ActivityUserStatisticsPage) {
+        this.list = result.data.ActivityUserStatisticsPage.content
+        this.total = Number(
+          result.data.ActivityUserStatisticsPage.totalElements
+        )
+      }
+    },
     async initCount() {
       let params = {
         activityId: this.activityId,
@@ -535,7 +310,10 @@ export default {
     },
     sortChange() {},
     // 编辑
-    operateEdit() {},
+    operateEdit(row) {
+      let id = row.user.id
+      openBrowserTab(`/music_app/#/details/${id}`)
+    },
     getSearchQuery(res) {
       this.paramsToSearch = res
     },
@@ -570,8 +348,13 @@ export default {
       this.loading = true
       const queryObj = {}
     },
-    handleClick(tab, event) {
-      console.log(tab, event)
+    handleClick(tab) {
+      if (tab == 0) {
+        this.paramsToSearch.in_room_num = { gt: 0 }
+      } else if (tab == 1) {
+        this.paramsToSearch.in_room_num = 0
+      }
+      this.initData()
     },
     handleSizeChangeDialog() {},
     handleCurrentChangeDialog() {},

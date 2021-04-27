@@ -61,12 +61,12 @@
           <el-form-item label="学员转化:" label-width="85px">
             <div class="search-group">
               <simple-select
-                name="status"
+                name="user_status"
                 placeholder="请选择"
                 :dataList="studentList"
                 :my-style="{ width: '100px' }"
                 :multiple="false"
-                @result="getSearchData('status', arguments)"
+                @result="getSearchData('user_status', arguments)"
               />
             </div>
           </el-form-item>
@@ -91,7 +91,7 @@
             </div>
           </el-form-item>
 
-          <el-form-item label="进入直播时机:" label-width="100px">
+          <el-form-item label="进入直播时机:" v-if="false" label-width="100px">
             <div class="search-group">
               <enterTime
                 :category="categoryType"
@@ -106,8 +106,8 @@
             <div class="search-group">
               <buyGoods
                 :category="categoryType"
-                @result="getSearchData('category', arguments)"
-                name="stage"
+                @result="getSearchData('by_shop_flag', arguments)"
+                name="by_shop_flag"
                 type="0"
               />
             </div>
@@ -203,18 +203,18 @@ export default {
 
       if (search) {
         // 系统课转化
-        if (key === 'status') {
+        if (key === 'user_status') {
           // 未转化
-          if (search.status === 1) {
-            search.status = { gt: 0, lte: 2 }
+          if (search.user_status === 1) {
+            search.user_status = { gt: 0, lte: 2 }
           }
           // 已购半年课
-          if (search.status === 3) {
-            search.status = { gte: 11, lte: 12 }
+          if (search.user_status === 3) {
+            search.user_status = { gte: 11, lte: 12 }
           }
           // 已购年课
-          if (search.status === 4) {
-            search.status = { gte: 5, lte: 7 }
+          if (search.user_status === 4) {
+            search.user_status = { gte: 5, lte: 7 }
           }
         }
 

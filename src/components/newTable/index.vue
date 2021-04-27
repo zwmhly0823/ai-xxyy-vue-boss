@@ -107,26 +107,13 @@
                   <!--多个字段显示-->
                   <label v-else-if="column.type === 'moreKey'">
                     <extend-user-info
-                      :user="scope.row.userInfo"
+                      :user="scope.row.user"
                       :sys-label="scope.row.sys_label"
                       :is-head="true"
                     />
                   </label>
                   <!-- 数组的展示 -->
                   <label v-else-if="column.type === 'arr'">
-                    <!-- <div
-                      v-if="
-                        scope.row[column.key] &&
-                        scope.row[column.key].length > 0
-                      "
-                    >
-                      <p
-                        v-for="(item, index) in scope.row[column.key]"
-                        :key="index"
-                      >
-                        {{ item }}
-                      </p>
-                    </div> -->
                     <el-popover
                       v-if="
                         scope.row[column.key] &&
@@ -156,39 +143,70 @@
                     </el-popover>
                     <div v-else>-</div>
                   </label>
-                  <label v-else-if="column.type === 'classKey'">
-                    <span
+                  <label
+                    v-else-if="
+                      column.type === 'classKey' || column.type === 'classKey1'
+                    "
+                  >
+                    <div
                       v-if="
-                        scope.row.trailTeams &&
-                        scope.row.trailTeams.length === 0
+                        scope.row.teacher_trial && column.type === 'classKey'
                       "
-                    ></span>
-                    <div>
-                      <div
-                        v-for="(item, index) in scope.row.trailTeams"
-                        :key="index"
-                      >
-                        <div>
-                          <span>{{
-                            (item.teacher_info && item.teacher_info.realname) ||
+                    >
+                      <div>
+                        <span>{{
+                          (scope.row.teacher_trial &&
+                            scope.row.teacher_trial.realname) ||
+                          '--'
+                        }}</span>
+                        <span
+                          class="primary-text"
+                          @click="openTeam(scope.row.teacher_trial)"
+                          >{{
+                            `(${
+                              scope.row.team ? scope.row.team.team_name : '-'
+                            })`
+                          }}</span
+                        >
+                      </div>
+                      <div>
+                        {{
+                          `${
+                            (scope.row.teacher_trial &&
+                              scope.row.teacher_trial.departmentInfo.name) ||
                             '--'
-                          }}</span>
-                          <span class="primary-text" @click="openTeam(item)">{{
-                            `(${item.team_name})`
-                          }}</span>
-                        </div>
-                        <div>
-                          {{
-                            `${
-                              (item.teacher_info &&
-                                item.teacher_info.departmentInfo &&
-                                item.teacher_info.departmentInfo.name) ||
-                              '--'
-                            }`
-                          }}
-                        </div>
+                          }`
+                        }}
                       </div>
                     </div>
+                    <div
+                      v-if="
+                        scope.row.teacher_system && column.type === 'classKey1'
+                      "
+                    >
+                      <span>{{
+                        (scope.row.teacher_system &&
+                          scope.row.teacher_system.realname) ||
+                        '--'
+                      }}</span>
+                      <span
+                        class="primary-text"
+                        @click="openTeam(scope.row.teacher_system)"
+                        >{{
+                          `(${scope.row.team ? scope.row.team.team_name : '-'})`
+                        }}</span
+                      >
+                      <div>
+                        {{
+                          `${
+                            (scope.row.teacher_system &&
+                              scope.row.teacher_system.departmentInfo.name) ||
+                            '--'
+                          }`
+                        }}
+                      </div>
+                    </div>
+                    <div v-else>{{ '--' }}</div>
                   </label>
                   <!-- 字段为数组的情况 -->
                   <span v-else>
@@ -333,28 +351,17 @@ export default {
     },
     //排序
     sortChange(data) {
-      console.log(data, '排序数据')
+      let key =  data.prop
       let direction = 'DESC'
       if (data.order == 'ascending') {
         direction = 'ASC'
       }
-      if (direction == this.direction && this.sortName == data.prop) {
-        let obj = {
-          sort: '',
-          direction: '',
-        }
-        this.direction = ''
-        this.$refs.baseTable.clearSort()
-        this.$emit('sortChange', obj)
-      } else {
-        let obj = {
-          sort: data.prop,
-          direction: direction,
-        }
-        this.direction = direction
-        this.$emit('sortChange', obj)
+       if (data.order == 'descending') {
+        direction = 'DESC'
       }
-      this.sortName = data.prop
+      let obj = {key:direction}
+
+      console.log(obj,"data");
     },
     clearSort() {
       this.direction = ''

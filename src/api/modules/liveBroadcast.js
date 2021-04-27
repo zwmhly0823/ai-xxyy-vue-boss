@@ -7,7 +7,7 @@
  * @LastEditTime: 2020-11-09 21:53:20
  */
 import axios from '../axiosConfig'
-
+import { injectSubject, getAppSubjectCode } from '@/utils/index'
 export default {
     /**
      * 获取直播活动分页列表接口
@@ -33,4 +33,63 @@ export default {
         return axios.get(`/api/ump/live/activity/detail/count`, params)
     },
 
+    /**
+     * 直播活动详情列表
+     * 
+     */
+    ActivityUserStatisticsPage(query, page = 1,sort) {
+        return axios.post('/graphql/v1/toss', {
+            query: `{
+                ActivityUserStatisticsPage(query: ${JSON.stringify(
+                    injectSubject(query)
+                  )}, page: ${page}) {
+                  totalPages
+                  totalElements
+                  number
+                  content {
+                    uid
+                    is_in_room_text
+                    in_room_num
+                    chat_count
+                    watch_time
+                    user_status
+                    packages_name
+                    like_count
+                    chat_count
+                    join_at
+                    user {
+                      id
+                      mobile
+                      head
+                      username
+                    }
+                    team {
+                      team_name
+                      team_type
+                      team_state
+                    }
+                    teacher_trial {
+                      id
+                      realname
+                      departmentInfo {
+                        name
+                      }
+                    }
+                    teacher_system {
+                      realname
+                      departmentInfo {
+                        name
+                      }
+                    }
+                    live {
+                      open_time
+                      live_name
+                      live_status
+                      push_terminal
+                    }
+                  }
+                }
+            }`
+        })
+    },
 }

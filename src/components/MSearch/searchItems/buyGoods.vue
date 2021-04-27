@@ -39,11 +39,11 @@ export default {
       result: null,
       typeList: [
         {
-          id: 0,
+          id: "1",
           text: '是',
         },
         {
-          id: 1,
+          id: "0",
           text: '否',
         },
       ],
