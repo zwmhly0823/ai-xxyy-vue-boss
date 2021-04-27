@@ -446,8 +446,7 @@ export function injectSubject(query) {
   } else {
     const queryObj = JSON.parse(queryStr)
     for (let key in query) {
-      console.log(key, query);
-      if (!query[key].includes('sc')) {
+      if (!query[key] == 'desc') {
         queryObj.subject = getAppSubjectCode()
       }
     }

@@ -34,28 +34,29 @@ export default {
   data() {
     return {
       type: null,
-      words:"",
+      words: '',
       typeList: [],
     }
   },
   mounted() {
     this.getList()
   },
-  watch:{
-    words(newValue,oldValue) {
-      if(newValue || newValue == '') {
+  watch: {
+    words(newValue, oldValue) {
+      if (newValue || newValue == '') {
         this.getList()
       }
-    }
+    },
   },
   methods: {
-   async getList() {
+    async getList() {
       let obj = {
-        keyword:this.words,
+        keyword: this.words,
       }
-      let result = await this.$http.liveBroadcast.liveAssociationActivityName(obj)
+      let result = await this.$http.liveBroadcast.liveAssociationActivityName(
+        obj
+      )
       this.typeList = result.payload
-      console.log(this.typeList, 'this.typeList')
     },
     filterMethod(words) {
       this.words = words
