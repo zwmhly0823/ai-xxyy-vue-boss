@@ -9,40 +9,42 @@
 import axios from '../axiosConfig'
 import { injectSubject, getAppSubjectCode } from '@/utils/index'
 export default {
-    /**
-     * 获取直播活动分页列表接口
-     *
-     */
-    liveBroadcastActivityList(params) {
-        return axios.get(`/api/ump//live/activity/page/list`, params)
-    },
+  /**
+   * 获取直播活动分页列表接口
+   *
+   */
+  liveBroadcastActivityList(params) {
+    return axios.get(`/api/ump//live/activity/page/list`, params)
+  },
 
-    /**
-     * 获取自动联想活动名称接口
-     *
-     */
-    liveAssociationActivityName(params) {
-        return axios.get(`/api/ump/live/activity/select/list`, params)
-    },
+  /**
+   * 获取自动联想活动名称接口
+   *
+   */
+  liveAssociationActivityName(params) {
+    return axios.get(`/api/ump/live/activity/select/list`, params)
+  },
 
-    /**
-     * 获取直播活动详情页统计接口
-     *
-     */
-    liveBroadcastActivityDetailCountDetail(params) {
-        return axios.get(`/api/ump/live/activity/detail/count`, params)
-    },
+  /**
+   * 获取直播活动详情页统计接口
+   *
+   */
+  liveBroadcastActivityDetailCountDetail(params) {
+    return axios.get(`/api/ump/live/activity/detail/count`, params)
+  },
 
-    /**
-     * 直播活动详情列表
-     * 
-     */
-    ActivityUserStatisticsPage(query, page = 1,sort) {
-        return axios.post('/graphql/v1/toss', {
-            query: `{
-                ActivityUserStatisticsPage(query: ${JSON.stringify(
-                    injectSubject(query)
-                  )}, page: ${page}) {
+  /**
+   * 直播活动详情列表
+   * 
+   */
+  ActivityUserStatisticsPage(query, page = 1, sort) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        ActivityUserStatisticsPage(sort:${JSON.stringify(
+          injectSubject(sort)
+        )} query: ${JSON.stringify(
+        injectSubject(query)
+      )}, page: ${page}), {
                   totalPages
                   totalElements
                   number
@@ -90,6 +92,14 @@ export default {
                   }
                 }
             }`
-        })
-    },
+    })
+  },
+
+  /**
+  * 获取直播评论分页列表接口
+  * 
+  */
+  liveBroadcastChatList(params) {
+    return axios.get(`/api/ump/live/chat/page/list`, params)
+  },
 }

@@ -29,8 +29,6 @@
             @sortChange="sortChange"
             @getList="initData"
             @operateEdit="operateEdit"
-            @experienceClass="experienceClass"
-            @serviceClass="serviceClass"
             @enterLive="enterLive"
             @discussLive="discussLive"
           ></base-table>
@@ -44,12 +42,12 @@
       :width="dia_type == 1 ? '40%' : '20%'"
       :before-close="handleClose"
     >
-      <span class="studeng_name">学员:18910275255</span>
+      <span class="studeng_name">学员:{{ phoneNumber }}</span>
       <base-table
         :loading="loading"
         :columns="headersDialogList"
         :tableHeight="380"
-        :list="list"
+        :list="enterList"
         :total="total"
         :pageNum.sync="tableParam.pageNum"
         :pageSize.sync="tableParam.pageSize"
@@ -62,7 +60,7 @@
         :current-page="1"
         :page-size="10"
         :pager-count="5"
-        :total="40"
+        :total="enterTotal"
       >
       </el-pagination>
     </el-dialog>
@@ -70,7 +68,7 @@
 </template>
 <script>
 import baseTable from '@/components/newTable'
-import { copyText, openBrowserTab } from '@/utils/index'
+import { copyText, openBrowserTab, formatData } from '@/utils/index'
 import search from '../../components/liveDetailSeach'
 export default {
   name: 'liveActivityList',
@@ -97,11 +95,6 @@ export default {
           title: '进入时间',
         },
         {
-          key: 'title',
-          title: '进入时机',
-          width: '150',
-        },
-        {
           key: 'content',
           title: '观看时长',
           width: '150',
@@ -119,12 +112,12 @@ export default {
       ],
       headersDiscuss: [
         {
-          key: 'seq',
+          key: 'chatTime',
           title: '评论时间',
-          width: '120',
+          width: '150',
         },
         {
-          key: 'title',
+          key: 'chatContent',
           title: '评论内容',
         },
       ],
@@ -140,22 +133,12 @@ export default {
           type: 'classKey',
           title: '社销老师*体验课班级',
           width: '150',
-          operates: [
-            {
-              emitKey: 'experienceClass',
-            },
-          ],
         },
         {
           key: 'teacher_system',
           type: 'classKey1',
           title: '服务老师*服务班级',
           width: '150',
-          operates: [
-            {
-              emitKey: 'serviceClass',
-            },
-          ],
         },
         {
           key: 'is_in_room_text',
@@ -164,7 +147,7 @@ export default {
         },
         {
           key: 'in_room_num',
-          type: 'operate',
+          // type: 'operate',
           title: '进直播间次数',
           width: '120',
           sort: true,
@@ -182,7 +165,7 @@ export default {
           title: '首次进入时间',
           width: '120',
           escape: (row) => {
-            return '123'
+            return row.join_at ? formatData(row.join_at[0], 's') : '-'
           },
         },
         {
@@ -228,20 +211,40 @@ export default {
           key: 'push_terminal',
           title: '进入终端',
           escape: (row) => {
-            return row.live.push_terminal ? row.live.push_terminal : '-'
+            return row.live ? row.live.push_terminal : '-'
           },
         },
         {
           key: 'user_status',
           title: '系统课转化',
           escape: (row) => {
-            return row.user_status == 1
-              ? '未转化'
-              : row.user_status == 3
-              ? '已购年系统课'
-              : row.user_status == 4
-              ? '已购半年系统课'
-              : '-'
+            switch (+row.user_status) {
+              case 0:
+              case 1:
+              case 2:
+                return '未转化'
+                break
+              case 3:
+              case 4:
+                return '已购月课'
+                break
+              case 5:
+              case 6:
+              case 7:
+                return '已购年课'
+                break
+              case 8:
+                return '注销失效'
+                break
+              case 9:
+              case 10:
+                return '已购季度课'
+                break
+              case 11:
+              case 12:
+                return '已购半年课'
+                break
+            }
           },
         },
         {
@@ -260,14 +263,19 @@ export default {
       // 总页数
       totalPages: 1,
       total: 0, // 总条数
+      enterTotal: 0,
       // 当前页数
       tableParam: {
-        page: 1, // 页码
-        // pageSize: 10, // 页长
+        pageNum: 1, // 页码
+        pageSize: 10, // 页长
+        activityId: this.$route.query.activityId,
+        userId: null,
       },
       loading: false,
+      phoneNumber: '-',
       // 订单列表
       list: [],
+      enterList: [],
       activityId: this.$route.query.activityId,
     }
   },
@@ -281,20 +289,31 @@ export default {
     },
   },
   methods: {
-    async initData(page = 1) {
+    async initData(page = 1, sort) {
+      this.sortTab = Object.assign(this.sortTab,sort)
       this.paramsToSearch = Object.assign(this.paramsToSearch, {
         act_id: this.activityId,
       })
       let result = await this.$http.liveBroadcast.ActivityUserStatisticsPage(
         this.paramsToSearch,
         page,
-        this.sortTab,
+        this.sortTab
       )
       if (result.data.ActivityUserStatisticsPage) {
         this.list = result.data.ActivityUserStatisticsPage.content
         this.total = Number(
           result.data.ActivityUserStatisticsPage.totalElements
         )
+      }
+    },
+    // 进直播间次数
+    async initEnter() {
+      let result = await this.$http.liveBroadcast.liveBroadcastChatList(
+        this.tableParam
+      )
+      if (result.code == 0) {
+        this.enterList = result.payload.content
+        this.enterTotal = Number(result.payload.totalElements)
       }
     },
     async initCount() {
@@ -320,29 +339,21 @@ export default {
     handleClose(done) {
       done()
     },
-    experienceClass() {
-      console.log('体验课班级跳转')
-    },
-    serviceClass() {
-      console.log('服务班级跳转')
-    },
-    enterLive() {
+    enterLive(row) {
+      this.phoneNumber = row.user.mobile
       this.dialogVisible = true
       this.dia_type = 1
       this.headersDialogList = this.headersEnter
-      console.log('进直播间次数')
     },
-    discussLive() {
-      console.log('评论数')
+    discussLive(row) {
+      this.phoneNumber = row.user.mobile
+      this.tableParam.userId = row.user.id
       this.dialogVisible = true
       this.dia_type = 2
       this.headersDialogList = this.headersDiscuss
+      this.initEnter()
     },
     getOrderSearch() {},
-    // 点击分页
-    handleSizeChange(val) {
-      this.currentPage = val
-    },
     // 订单列表
     async getOrderList(page = this.currentPage, status) {
       this.loading = true
@@ -357,7 +368,10 @@ export default {
       this.initData()
     },
     handleSizeChangeDialog() {},
-    handleCurrentChangeDialog() {},
+    handleCurrentChangeDialog(val) {
+      this.tableParam.pageNum = val
+      this.initEnter()
+    },
   },
 }
 </script>

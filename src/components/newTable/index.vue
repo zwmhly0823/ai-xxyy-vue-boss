@@ -318,6 +318,7 @@ export default {
     return {
       direction: '',
       sortName: '',
+      sortData:{},
     }
   },
   methods: {
@@ -351,17 +352,16 @@ export default {
     },
     //排序
     sortChange(data) {
-      let key =  data.prop
-      let direction = 'DESC'
+      let direction = 'desc'
       if (data.order == 'ascending') {
-        direction = 'ASC'
+        direction = 'asc'
       }
-       if (data.order == 'descending') {
-        direction = 'DESC'
+      if (data.order == 'descending') {
+        direction = 'desc'
       }
-      let obj = {key:direction}
-
-      console.log(obj,"data");
+     let obj = { [data.prop]: direction };
+     this.sortData = obj;
+     this.$emit('getList',1,this.sortData)
     },
     clearSort() {
       this.direction = ''
