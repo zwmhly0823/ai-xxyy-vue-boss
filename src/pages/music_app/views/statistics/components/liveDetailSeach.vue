@@ -92,7 +92,7 @@
             </div>
           </el-form-item>
 
-          <el-form-item label="进入直播时机:" v-if="false" label-width="100px">
+          <el-form-item label="进入直播时机:" label-width="100px">
             <div class="search-group">
               <enterTime
                 :category="categoryType"

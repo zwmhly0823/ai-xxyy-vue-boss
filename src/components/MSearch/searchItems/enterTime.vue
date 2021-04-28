@@ -39,16 +39,20 @@ export default {
       result: null,
       typeList: [
         {
-          id: 0,
-          text: '直播前',
-        },
-        {
           id: 1,
-          text: '直播中',
+          text: '直播观看',
         },
         {
           id: 2,
-          text: '直播后',
+          text: '预告观看 ',
+        },
+        {
+          id: 3,
+          text: '回放观看',
+        },
+        {
+          id: 10,
+          text: '页面停留',
         },
       ],
     }

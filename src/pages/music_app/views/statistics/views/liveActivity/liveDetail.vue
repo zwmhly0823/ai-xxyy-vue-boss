@@ -165,12 +165,21 @@ export default {
           title: '首次进入时间',
           width: '120',
           escape: (row) => {
-            return row.join_at ? formatData(row.join_at[0], 's') : '-'
+            return row.join_at ? formatData(row.join_at, 's') : '-'
           },
         },
         {
           key: 'watch_time',
           title: '观看直播总时长',
+          width: '150',
+          sort: true,
+          escape: (row) => {
+            return row.watch_time ? row.watch_time : '-'
+          },
+        },
+         {
+          key: 'watch_time',
+          title: '观看回放总时长',
           width: '150',
           sort: true,
           escape: (row) => {
