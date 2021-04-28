@@ -12,6 +12,7 @@
         <el-tab-pane label="课前准备" name="prepare"></el-tab-pane>
         <el-tab-pane label="上课记录" name="log"></el-tab-pane>
         <el-tab-pane label="订单记录" name="order"></el-tab-pane>
+        <el-tab-pane label="直播活动" name="broadcast"></el-tab-pane>
       </el-tabs>
 
       <div class="team-container" v-if="!loading">
@@ -27,6 +28,10 @@
           v-show="activeTab === 'log'"
         ></log-page-index>
         <order-page :team-info="teamInfo" v-if="activeTab === 'order'" />
+         <broadcast
+          :team-info="teamInfo"
+          v-show="activeTab === 'broadcast'"
+        ></broadcast>
       </div>
     </div>
   </el-row>
@@ -39,14 +44,15 @@ import UserPage from './pages/UserPage'
 import PreparePage from './pages/PreparePage'
 import OrderPage from './pages/OrderPage'
 import LogPageIndex from './pages/LogPageIndex'
-
+import Broadcast from './pages/Broadcast'
 export default {
   components: {
     TeamInfo,
     UserPage,
     PreparePage,
     OrderPage,
-    LogPageIndex
+    LogPageIndex,
+    Broadcast,
   },
   data() {
     return {

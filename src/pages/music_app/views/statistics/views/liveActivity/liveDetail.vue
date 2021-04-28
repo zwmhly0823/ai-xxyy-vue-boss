@@ -191,15 +191,16 @@ export default {
             },
           ],
         },
-        {
-          key: 'like_count',
-          title: '点赞数',
-          width: '120',
-          sort: true,
-          escape: (row) => {
-            return row.like_count ? row.like_count : '-'
-          },
-        },
+        // {
+        //   key: 'like_count',
+        //   title: '点赞数',
+        //   width: '120',
+        //   sort: true,
+        //   hidden:true,
+        //   escape: (row) => {
+        //     return row.like_count ? row.like_count : '-'
+        //   },
+        // },
         {
           key: 'packages_name',
           title: '购买商品',
@@ -207,13 +208,14 @@ export default {
             return row.packages_name ? row.packages_name : '-'
           },
         },
-        {
-          key: 'push_terminal',
-          title: '进入终端',
-          escape: (row) => {
-            return row.live ? row.live.push_terminal : '-'
-          },
-        },
+        // {
+        //   key: 'push_terminal',
+        //   title: '进入终端',
+        //   hidden:true,
+        //   escape: (row) => {
+        //     return row.live ? row.live.push_terminal : '-'
+        //   },
+        // },
         {
           key: 'user_status',
           title: '系统课转化',

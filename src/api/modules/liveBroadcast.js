@@ -94,7 +94,6 @@ export default {
             }`
     })
   },
-
   /**
   * 获取直播评论分页列表接口
   * 
@@ -102,4 +101,75 @@ export default {
   liveBroadcastChatList(params) {
     return axios.get(`/api/ump/live/chat/page/list`, params)
   },
+    // 获取直播活动
+    getLiveActive(params) {
+      return axios.get(
+        `/api/ump/live/activity/list/byTeam?teamId=${params.teamId}`
+      )
+    },
+    // 获取直播活动统计接口
+    getLiveCount(params) {
+      return axios.get(
+        `/api/ump/live/activity/team/trialcourse/detail/count?teamId=${params.teamId}&activityId=${params.activityId}`
+      )
+    },
+  
+    // 获取直播活动列表
+    getActiveList(
+      params = {},
+      { page = 1, size = 20 } = {},
+    ) {
+      const query = JSON.stringify(injectSubject(params))
+  
+      return axios.post('/graphql/v1/toss', {
+        query: `{
+          ActivityUserStatisticsPage(query:${query}, page: ${page}, size: ${size}){
+            totalPages
+            totalElements
+            number
+            content {
+              uid
+              act_id
+              is_in_room_text
+              in_room_num
+              chat_count
+              watch_time
+              user_status
+              packages_name
+              like_count
+              chat_count
+              user {
+                id
+                mobile
+                head
+              }
+              team {
+                team_name
+                team_type
+                team_state
+              }
+              teacher_trial {
+                id
+                realname
+                departmentInfo {
+                  name
+                }
+              }
+              teacher_system {
+                realname
+                departmentInfo {
+                  name
+                }
+              }
+              live {
+                open_time
+                live_name
+                live_status
+                push_terminal
+              }
+            }
+          }
+        }`
+      })
+    },
 }
