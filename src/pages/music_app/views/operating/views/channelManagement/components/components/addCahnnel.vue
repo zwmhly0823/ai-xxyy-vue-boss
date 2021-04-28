@@ -87,6 +87,11 @@
             :value="'/activityCoupon/twoHundred?channelId='"
             >200抵500代金券</el-option
           >
+          <el-option
+            label="年系统课"
+            :value="'/fortyNine/newSystemYear?channelId='"
+            >年系统课</el-option
+          >
         </el-select>
       </el-form-item>
       <el-form-item label="渠道备注" prop="desc">
