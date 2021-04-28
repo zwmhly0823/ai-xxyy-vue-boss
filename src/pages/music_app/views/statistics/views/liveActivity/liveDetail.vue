@@ -290,7 +290,7 @@ export default {
   },
   methods: {
     async initData(page = 1, sort) {
-      this.sortTab = Object.assign(this.sortTab,sort)
+      this.sortTab = Object.assign(this.sortTab, sort)
       this.paramsToSearch = Object.assign(this.paramsToSearch, {
         act_id: this.activityId,
       })
@@ -299,13 +299,12 @@ export default {
         page,
         this.sortTab
       )
-      let reg = /S/g
-      if (result.data.ActivityUserStatisticsPage) {
-        let list = result.data.ActivityUserStatisticsPage.content;
-        for(let i=0;i<list.length;i++) {
-           if(list[i].team) {
-              list[i].team.team_name.replace(reg,"M")
-           }
+      let list = result.data.ActivityUserStatisticsPage.content
+      if (list) {
+        for (let i = 0; i < list.length; i++) {
+          if (list[i].team) {
+            list[i].team.team_name = list[i].team.team_name.replace(/S/g, 'M')
+          }
         }
         this.list = list
         this.total = Number(
