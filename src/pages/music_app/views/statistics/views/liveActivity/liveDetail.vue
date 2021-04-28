@@ -299,8 +299,15 @@ export default {
         page,
         this.sortTab
       )
+      let reg = /S/g
       if (result.data.ActivityUserStatisticsPage) {
-        this.list = result.data.ActivityUserStatisticsPage.content
+        let list = result.data.ActivityUserStatisticsPage.content;
+        for(let i=0;i<list.length;i++) {
+           if(list[i].team) {
+              list[i].team.team_name.replace(reg,"M")
+           }
+        }
+        this.list = list
         this.total = Number(
           result.data.ActivityUserStatisticsPage.totalElements
         )

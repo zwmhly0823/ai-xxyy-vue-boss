@@ -27,6 +27,7 @@
               <department
                 name="trial_teacher_id"
                 placeholder="选择销售组"
+                :departStatus="departStatus"
                 style="margin-right: 10px"
                 :checkStrictly="true"
                 @result="getSearchData('trial_teacher_id', arguments, 1)"
@@ -44,6 +45,7 @@
               <department
                 name="system_teacher_id"
                 placeholder="选择教辅组"
+                :groupStatus="groupStatus"
                 style="margin-right: 10px"
                 :checkStrictly="true"
                 @result="getSearchData('system_teacher_id', arguments, 2)"
@@ -51,6 +53,7 @@
               <group-sell
                 name="system_teacher_id"
                 :teacherscope="teacherscope"
+                
                 tip="选择教辅人员"
                 @result="getSearchData('system_teacher_id', arguments, 2)"
               />
@@ -169,9 +172,11 @@ export default {
         },
       ],
       labelName: '',
-      teacherscope:[],
+      teacherscope: [],
       searchQuery: {},
       categoryType: [2],
+      departStatus: false,
+      groupStatus: false,
       isDisabled: false,
       nowDate: new Date().getTime(),
     }
@@ -207,6 +212,11 @@ export default {
       }
       const search = res && res[0]
       if (search) {
+        if (type == 1) {
+          this.departStatus = false
+        } else if (type == 2) {
+          this.groupStatus = false
+        }
         // 系统课转化
         if (key === 'user_status') {
           // 未转化
@@ -230,8 +240,12 @@ export default {
           ...this.searchQuery,
           ...search,
         }
-      } 
-      else {
+      } else {
+        if (type == 1) {
+          this.departStatus = true
+        } else if (type == 2) {
+          this.groupStatus = true
+        }
         this.$delete(this.searchQuery, key)
       }
       this.$emit('search', this.searchQuery)
