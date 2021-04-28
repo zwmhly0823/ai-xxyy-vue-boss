@@ -76,7 +76,7 @@
           </template>
         </el-table-column>
 
-         <el-table-column prop="channel_link" width="300" label="体验课模版">
+         <el-table-column prop="channel_link" width="300" label="模版">
           <template slot-scope="scope">
             <span>{{scope.row.channel_link?scope.row.channel_link:'-'}}</span>
           </template>
