@@ -70,7 +70,7 @@
           <el-option label="B" :value="0">B</el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="体验课模版" prop="experience">
+      <el-form-item label="模版" prop="experience">
         <el-select
           disabled
           v-model="ruleForm.experience"

@@ -72,7 +72,7 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="体验课模版" prop="experience">
+      <el-form-item label="模版" prop="experience">
         <el-select v-model="ruleForm.experience" placeholder="请选择" clearable>
           <el-option
             label="29元体验课模版"
