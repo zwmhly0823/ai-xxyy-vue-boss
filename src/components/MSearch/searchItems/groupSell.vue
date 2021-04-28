@@ -151,7 +151,7 @@ export default {
       this.$emit('result', item ? obj : '')
     },
     onClear() {
-      this.teacherscope = null
+      // this.teacherscope = null
       this.getTeacher()
     }
   }

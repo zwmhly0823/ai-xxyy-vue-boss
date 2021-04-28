@@ -25,36 +25,34 @@
           <el-form-item label="归属销售/班主任:" label-width="105px">
             <div class="search-group">
               <department
-                name="last_department_ids"
+                name="trial_teacher_id"
                 placeholder="选择销售组"
                 style="margin-right: 10px"
-                :multiple="false"
                 :checkStrictly="true"
-                :only-dept="1"
-                @result="getSearchData('last_department_ids', arguments)"
+                @result="getSearchData('trial_teacher_id', arguments, 1)"
               />
               <group-sell
-                name="last_teacher_ids"
+                name="trial_teacher_id"
+                :teacherscope="teacherscope"
                 tip="选择销售人员"
-                @result="getSearchData('last_teacher_ids', arguments)"
+                @result="getSearchData('trial_teacher_id', arguments, 1)"
               />
             </div>
           </el-form-item>
           <el-form-item label="归属教辅:" label-width="105px">
             <div class="search-group">
               <department
-                name="last_department_ids"
+                name="system_teacher_id"
                 placeholder="选择教辅组"
                 style="margin-right: 10px"
-                :multiple="false"
                 :checkStrictly="true"
-                :only-dept="1"
-                @result="getSearchData('last_department_ids', arguments)"
+                @result="getSearchData('system_teacher_id', arguments, 2)"
               />
               <group-sell
-                name="last_teacher_ids"
+                name="system_teacher_id"
+                :teacherscope="teacherscope"
                 tip="选择教辅人员"
-                @result="getSearchData('last_teacher_ids', arguments)"
+                @result="getSearchData('system_teacher_id', arguments, 2)"
               />
             </div>
           </el-form-item>
@@ -171,6 +169,7 @@ export default {
         },
       ],
       labelName: '',
+      teacherscope:[],
       searchQuery: {},
       categoryType: [2],
       isDisabled: false,
@@ -186,8 +185,16 @@ export default {
   methods: {
     /**
      * search item 回调。 key,自定义参数，res，组件返回的值 res[0]
+     * 部门数据res[0] 是老师,res[1]是部门数据
+     * type 1 是班主任  2 是教辅
      */
-    getSearchData(key, res) {
+    getSearchData(key, res, type) {
+      if (res[1] && type == 1) {
+        this.teacherscope = res[1].trial_teacher_id
+      }
+      if (res[1] && type == 2) {
+        this.teacherscope = res[1].system_teacher_id
+      }
       // 体验课类型
       if (
         key == 'category' &&
@@ -199,8 +206,6 @@ export default {
         this.isDisabled = false
       }
       const search = res && res[0]
-      console.log(key, search)
-
       if (search) {
         // 系统课转化
         if (key === 'user_status') {
@@ -217,41 +222,16 @@ export default {
             search.user_status = { gte: 5, lte: 7 }
           }
         }
-
-        if (key === 'last_department_ids') {
-          Object.assign(search, {
-            [`${key}.like`]: {
-              [`${key}.keyword`]: `*${search[key].join(',')}*`,
-            },
-          })
-        }
-
-        if (key === 'last_teacher_ids') {
-          Object.assign(search, {
-            [`${key}.like`]: {
-              [`${key}.keyword`]: `*${search[key]}*`,
-            },
-          })
+        if (key === 'trial_teacher_id') {
+          Object.assign(this.searchQuery, search)
         }
 
         this.searchQuery = {
           ...this.searchQuery,
           ...search,
         }
-      } else {
-        this.$delete(this.searchQuery, key)
-        if (key === 'last_department_ids' || key === 'last_teacher_ids') {
-          this.$delete(this.searchQuery, `${key}.like`)
-        }
-      }
-      // 删除返回值没空数组的情况
-      if (search && search[key].length === 0) {
-        this.$delete(this.searchQuery, key)
-        if (key === 'last_department_ids' || key === 'last_teacher_ids') {
-          this.$delete(this.searchQuery, `${key}.like`)
-        }
-      }
-      if (key === 'last_department_ids' || key === 'last_teacher_ids') {
+      } 
+      else {
         this.$delete(this.searchQuery, key)
       }
       this.$emit('search', this.searchQuery)
