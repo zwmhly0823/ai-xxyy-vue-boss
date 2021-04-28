@@ -201,6 +201,8 @@ export default {
               ? '29元体验课模版'
               : item.channel_link.includes('twoHundred')
               ? '200抵500代金券'
+              : item.channel_link.includes('newSystemYear')
+              ? '年系统课'
               : '49元体验课模版'),
               (this.ruleForm.status = item.status.toString())
             this.ruleForm.channelLevel = item.channel_level
