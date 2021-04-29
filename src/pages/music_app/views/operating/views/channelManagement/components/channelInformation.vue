@@ -76,7 +76,7 @@
           </template>
         </el-table-column>
 
-         <el-table-column prop="channel_link" width="300" label="体验课模版">
+         <el-table-column prop="channel_link" width="300" label="模版">
           <template slot-scope="scope">
             <span>{{scope.row.channel_link?scope.row.channel_link:'-'}}</span>
           </template>
@@ -88,6 +88,12 @@
           </template>
         </el-table-column>
         <el-table-column prop="ctime" label="创建时间" width="160" align="center"></el-table-column>
+        <el-table-column prop="create_user" label="创建人名称" width="160" align="center">
+             <template slot-scope="scope">
+            <span v-if="scope.row.create_user">{{ scope.row.create_user?scope.row.create_user:'-' }}</span>
+            <span v-else>-</span>
+          </template>
+        </el-table-column>
         <el-table-column width="300" align="center" label="其他">
           <template slot-scope="scope">
             <div

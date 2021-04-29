@@ -157,8 +157,10 @@
       <el-form-item v-if="employees">
         <employees-role
           :size="size"
+          :isShow="isShow"
           :devalueValue="devalueValue"
           @result="gerEmployeesName"
+          @resultPhone="gerEmployeesPhone"
         />
       </el-form-item>
 
@@ -739,6 +741,14 @@ export default {
       type: String,
       default: '',
     },
+    phoneNumber: {
+      type: String,
+      default: '',
+    },
+    isShow: {
+      type: Boolean,
+      default: false,
+    },
     size: {
       type: String,
       default: 'mini',
@@ -843,8 +853,8 @@ export default {
     },
     // 选择体验课类型
     gettrialClassType(res) {
-      console.log(res,"packages_id");
-      this.setSeachParmas(res, [this.packages_id|| 'packages_id'], 'term')
+      console.log(res, 'packages_id')
+      this.setSeachParmas(res, [this.packages_id || 'packages_id'], 'term')
     },
     // 级别
     levelCallBack(res) {
@@ -1000,7 +1010,9 @@ export default {
     },
     gerEmployeesName(res) {
       this.sendSeachParams(res, this.employees)
-      // this.setSeachParmas(res, [this.employees])
+    },
+    gerEmployeesPhone(res) {
+      this.sendSeachParams(res, this.phoneNumber,"terms")
     },
     getReplenishProduct(res) {
       this.setSeachParmas(res, [this.replenishProduct || 'product_type'])

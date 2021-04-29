@@ -70,7 +70,7 @@
           <el-option label="B" :value="0">B</el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="体验课模版" prop="experience">
+      <el-form-item label="模版" prop="experience">
         <el-select
           disabled
           v-model="ruleForm.experience"
@@ -201,6 +201,8 @@ export default {
               ? '29元体验课模版'
               : item.channel_link.includes('twoHundred')
               ? '200抵500代金券'
+              : item.channel_link.includes('newSystemYear')
+              ? '年系统课'
               : '49元体验课模版'),
               (this.ruleForm.status = item.status.toString())
             this.ruleForm.channelLevel = item.channel_level

@@ -36,7 +36,7 @@
         <el-col :span="6">
           <div class="grid-content bg-purple">
             <p>累计转化率/系统课成单人数</p>
-            <span>{{ conversionRate }} <em>/</em> {{ allSystemUser }}</span>
+            <span>{{ isNaN(conversionRate) ? '0' : conversionRate }} <em>/</em> {{ allSystemUser }}</span>
           </div>
         </el-col>
         <el-col :span="12">
@@ -381,6 +381,7 @@ export default {
         stage: this.querySearchTrialStage,
         startCtime: this.stateTime,
         endCtime: this.endTime,
+        termCondition: 'trialchannelclassid',
       }
       this.$http.Operating.countsByTrialChannel(params).then((res) => {
         const _data =
@@ -431,10 +432,10 @@ export default {
         })
         this.onGetChannelList(_data)
       })
-      this.$http.Operating.countsByTrialChannelClassIdOfTotal(paramsM).then(
+      this.$http.Operating.ChannelManagementStatisticsTotal(paramsM).then(
         (ele) => {
           // 模块数据
-          const _datas = ele.payload
+          const _datas = ele.data && ele.data.ChannelManagementStatisticsTotal
           if (!_datas) return
           // 累计成单金额
           if (_datas.system_user_amounts !== 'null') {

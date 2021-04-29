@@ -9,6 +9,7 @@
 <template>
   <section class="bianju10">
     <div class="seartch_item">
+      <div class="tips_system">注意:系统课请先删除已有物流！</div>
       <div class="title">
         <i class="el-icon-setting"></i>
         <span>查询条件</span>
@@ -210,6 +211,18 @@ export default {
 <style lang="scss" scoped>
 .bianju10 {
   padding: 10px;
+  color: #fff;
+}
+.tips_system {
+  background-color: #f56c6c;
+  width: 400px;
+  height: 50px;
+  border-radius: 10px;
+  line-height: 50px;
+  text-align: center;
+  margin: 0 auto;
+  font-size: 22px;
+  transform: translate(0,15px);
 }
 .seartch_item {
   background-color: #fff;

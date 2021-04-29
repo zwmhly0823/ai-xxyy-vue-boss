@@ -72,7 +72,7 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="体验课模版" prop="experience">
+      <el-form-item label="模版" prop="experience">
         <el-select v-model="ruleForm.experience" placeholder="请选择" clearable>
           <el-option
             label="29元体验课模版"
@@ -86,6 +86,11 @@
             label="200抵500代金券"
             :value="'/activityCoupon/twoHundred?channelId='"
             >200抵500代金券</el-option
+          >
+          <el-option
+            label="年系统课"
+            :value="'/fortyNine/newSystemYear?channelId='"
+            >年系统课</el-option
           >
         </el-select>
       </el-form-item>

@@ -321,6 +321,7 @@ export default {
             short_er_code
             status
             ctime
+            create_user
             cdate
             utime
             udate

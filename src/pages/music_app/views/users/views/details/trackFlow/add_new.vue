@@ -42,7 +42,7 @@
               老生覆盖: 'EARLY_STUDENT',
               日常回访: 'DAILY_CONTACT',
               运营: 'OPERATIONS',
-              客服: 'CUSTOMER_SERVICE'
+              客服: 'CUSTOMER_SERVICE',
             }"
             :key="name"
             >{{ name }}</el-radio
@@ -67,15 +67,15 @@ export default {
   props: {
     changeSubject: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       roles: [
         { id: '1', name: '管理员' },
-        { id: '2', name: '运营' },
-        { id: '3', name: '市场' },
+        { id: '2', name: '综合运营' },
+        { id: '3', name: '小度市场' },
         { id: '4', name: '财务' },
         { id: '5', name: '供应链' },
         { id: '6', name: '人事' },
@@ -89,10 +89,24 @@ export default {
         { id: '14', name: 'S3Operator' },
         { id: '15', name: 'Anonymous' },
         { id: '16', name: 'WriteAdmin' },
+        { id: '17', name: 'MusicAdmin' },
         { id: '18', name: 'ArtAdmin' },
         { id: '19', name: '教研' },
-        { id: '20', name: 'testAdmin' },
-        { id: '21', name: '客服' }
+        { id: '22', name: 'S7Producer' },
+        { id: '23', name: 'S7Admin' },
+        { id: '27', name: 'test' },
+        { id: '28', name: '测试' },
+        { id: '19', name: '教研' },
+        { id: '29', name: '投放运营' },
+        { id: '30', name: '产品运营' },
+        { id: '31', name: '客服' },
+        { id: '32', name: '后端服务' },
+        { id: '33', name: '数据分析' },
+        { id: '34', name: '社群运营' },
+        { id: '35', name: '销售部数据分析' },
+        { id: '38', name: 'APP端人员' },
+        { id: '39', name: '综合运营部' },
+        { id: '40', name: '中台运营' },
       ],
       dialogFormVisible: false,
       // form
@@ -104,7 +118,7 @@ export default {
         contactType: '',
         finishType: '',
         pointType: '',
-        content: ''
+        content: '',
       },
       rules: {
         roleType: [{ required: true, message: '必填', trigger: 'change' }],
@@ -113,9 +127,9 @@ export default {
         pointType: [{ required: true, message: '必选', trigger: 'change' }],
         content: [
           { required: true, message: '请键入内容', trigger: 'blur' },
-          { max: 255, message: '最多255个字符', trigger: 'blur' }
-        ]
-      }
+          { max: 255, message: '最多255个字符', trigger: 'blur' },
+        ],
+      },
     }
   },
   methods: {
@@ -124,7 +138,7 @@ export default {
         if (valid) {
           const { code } = await this.$http.User.submitForm(
             Object.assign(this.form, {
-              subject: this.changeSubject ? 'WRITE_APP' : 'ART_APP'
+              subject: this.changeSubject ? 'WRITE_APP' : 'ART_APP',
             })
           ).catch((err) => {
             console.error(err)
@@ -146,20 +160,20 @@ export default {
     resetForm() {
       this.$refs.form.resetFields()
       this.dialogFormVisible = false
-    }
+    },
   },
   mounted() {
     this.form.uid = this.$route.params.id
     const storage1 = JSON.parse(localStorage.getItem('staff'))
     this.form.cid = storage1.id
-    console.log(storage1,'1111212');
-    this.form.roleType = this.roles.filter( 
-      (n) => n.id === storage1.roleId
+    let arr = []
+    arr = this.roles.filter(
+      (n) => storage1.roleList && n.id === storage1.roleList[0]
     )
-    if(this.form.roleType && this.form.roleType.length>0) {
-     this.form.roleType = this.form.roleType[0].name
+    if (arr && arr.length > 0) {
+      this.form.roleType = arr[0].name
     }
-  }
+  },
 }
 </script>
 
