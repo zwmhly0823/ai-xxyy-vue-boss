@@ -8,7 +8,7 @@
             v-for="(item, index) in showList"
             :key="index"
           >
-            <p>{{ item.value + '人' }}</p>
+            <p>{{ item.value + `${item.desc=='直播总时长'?'分钟':'人'}` }}</p>
             <p>{{ item.desc }}</p>
           </div>
         </div>
@@ -161,29 +161,45 @@ export default {
           ],
         },
         {
-          key: 'join_at',
+          key: 'play_status_text',
+          title: '进入直播时机描述',
+          width: '120',
+          escape: (row) => {
+            return row.play_status_text ? row.play_status_text : '-'
+          },
+        },
+         {
+          key: 'first_join_time',
           title: '首次进入时间',
           width: '120',
           escape: (row) => {
-            return row.join_at ? formatData(row.join_at, 's') : '-'
+            return row.first_join_time ? formatData(row.first_join_time,'s') : '-'
+          },
+        },
+         {
+          key: 'in_room_count',
+          title: '进入次数',
+          width: '120',
+          escape: (row) => {
+            return row.in_room_count ? row.in_room_count : '-'
           },
         },
         {
-          key: 'watch_time',
+          key: 'live_watch_time',
           title: '观看直播总时长',
           width: '150',
           sort: true,
           escape: (row) => {
-            return row.watch_time ? row.watch_time : '-'
+            return row.live_watch_time ? row.live_watch_time : '-'
           },
         },
          {
-          key: 'watch_time',
+          key: 'playback_watch_time',
           title: '观看回放总时长',
           width: '150',
           sort: true,
           escape: (row) => {
-            return row.watch_time ? row.watch_time : '-'
+            return row.playback_watch_time ? row.playback_watch_time : '-'
           },
         },
         {

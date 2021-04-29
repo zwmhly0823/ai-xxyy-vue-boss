@@ -18,7 +18,7 @@
     >
       <el-option
         v-for="item in typeList"
-        :key="item.id"
+        :key="item.id[0]"
         :value="item.id"
         :label="item.text"
       ></el-option>
@@ -39,20 +39,16 @@ export default {
       result: null,
       typeList: [
         {
-          id: 1,
-          text: '直播观看',
+          id: ["1"],
+          text: '直播前',
         },
         {
-          id: 2,
-          text: '预告观看 ',
+          id: ["2"],
+          text: '直播中',
         },
         {
-          id: 3,
-          text: '回放观看',
-        },
-        {
-          id: 10,
-          text: '页面停留',
+          id: ["3"],
+          text: '直播后',
         },
       ],
     }

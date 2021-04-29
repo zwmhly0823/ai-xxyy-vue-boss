@@ -446,10 +446,11 @@ export function injectSubject(query) {
   } else {
     const queryObj = JSON.parse(queryStr)
     for (let key in query) {
-      if (!query[key] == 'desc') {
+      if (!query[key] == 'desc' || key!='join_date') {
         queryObj.subject = getAppSubjectCode()
       }
     }
+    // queryObj.subject = getAppSubjectCode()
     return JSON.stringify(queryObj)
   }
 }

@@ -220,7 +220,7 @@ export default {
       });
       if(data.code === 0) {
         this.liveActive = data.payload;
-        this.liveActivityId =data.payload[0]&& data.payload[0].liveActivityId;
+        this.liveActivityId =data.payload[0] && data.payload[0].liveActivityId;
         this.getLiveCount();
         this.getActiveList();
       }
@@ -342,7 +342,7 @@ export default {
           Object.assign(query, { in_room_num: 0 })
           break;
         case 'watchLiveNum':  //观看过直播人数
-          Object.assign(query, { in_room_num: 0 })
+          Object.assign(query, { live_watch_time: { gt: 0 } })
           break;
         case 'buyGoodsNum': //购买商品人数
           const by_shop_flag = value === 0 ? value : { gt: 0 };
@@ -570,3 +570,4 @@ export default {
     justify-content: space-between;
   }
 </style>
+

@@ -96,8 +96,8 @@
             <div class="search-group">
               <enterTime
                 :category="categoryType"
-                @result="getSearchData('category', arguments)"
-                name="stage"
+                @result="getSearchData('play_status', arguments)"
+                name="play_status"
                 type="0"
               />
             </div>

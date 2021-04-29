@@ -28,7 +28,7 @@ export default {
     },
     placeholder: {
       type: String,
-      default: '体验课类型',
+      default: '选择活动名称',
     },
   },
   data() {
