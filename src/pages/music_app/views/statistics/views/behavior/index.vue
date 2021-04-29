@@ -33,12 +33,12 @@
                 <img
                   class="user-info-img-sex"
                   v-if="+scope.row.sex === 1"
-                  src="../../../../assets/images/man-icon.png"
+                  src="@/assets/images/man-icon.png"
                 />
                 <img
                   class="user-info-img-sex"
                   v-else-if="+scope.row.sex === 2"
-                  src="../../../../assets/images/woman-icon.png"
+                  src="@/assets/images/woman-icon.png"
                 />
               </div>
               <div class="user-info-text-box">

@@ -51,12 +51,12 @@ export function param2Obj(url) {
   }
   return JSON.parse(
     '{"' +
-      decodeURIComponent(search)
-        .replace(/"/g, '\\"')
-        .replace(/&/g, '","')
-        .replace(/=/g, '":"')
-        .replace(/\+/g, ' ') +
-      '"}'
+    decodeURIComponent(search)
+      .replace(/"/g, '\\"')
+      .replace(/&/g, '","')
+      .replace(/=/g, '":"')
+      .replace(/\+/g, ' ') +
+    '"}'
   )
 }
 
@@ -220,8 +220,8 @@ export function GetAgeByBrithday(birth) {
     if (todayMonth <= birthdayMonth) {
       month = todayMonth - birthdayMonth + 12
       age--;
-      if(age<0){
-        age=0;
+      if (age < 0) {
+        age = 0;
         month = 0;
       }
 
@@ -230,14 +230,14 @@ export function GetAgeByBrithday(birth) {
     }
 
     if (age < 1 && month < 1) {
-      return  "1个月";
-    } else if (age < 1 && month!=12) {
-      return  month + "个月";
-    } else if (month==12 && age>1) {
-      return (age+1) + "岁" + "1个月";
+      return "1个月";
+    } else if (age < 1 && month != 12) {
+      return month + "个月";
+    } else if (month == 12) {
+      return (age + 1) + "岁" + "1个月";
     }
     else {
-      return age + "岁" + (month > 0 ? month:(month + 1)) + "个月";
+      return age + "岁" + (month > 0 ? month : (month + 1)) + "个月";
     }
   }
 }
@@ -445,7 +445,11 @@ export function injectSubject(query) {
     return JSON.stringify(queryObj)
   } else {
     const queryObj = JSON.parse(queryStr)
-    queryObj.subject = getAppSubjectCode()
+    for (let key in query) {
+      if (!query[key] == 'desc') {
+        queryObj.subject = getAppSubjectCode()
+      }
+    }
     return JSON.stringify(queryObj)
   }
 }
@@ -498,7 +502,7 @@ export function MillisecondToDate(msd) {
             parseInt(
               (parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60
             )) *
-            60
+          60
         )
       )
   } else {
