@@ -8,7 +8,7 @@
             v-for="(item, index) in showList"
             :key="index"
           >
-            <p>{{ item.value + '人' }}</p>
+            <p>{{ item.value + `${item.desc=='直播总时长'?'分钟':'人'}` }}</p>
             <p>{{ item.desc }}</p>
           </div>
         </div>
