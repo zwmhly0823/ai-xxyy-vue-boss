@@ -58,7 +58,12 @@ export default {
                     packages_name
                     like_count
                     chat_count
+                    play_status_text
+                    in_room_count
+                    live_watch_time
                     join_at
+                    playback_watch_time
+                    first_join_time
                     user {
                       id
                       mobile
