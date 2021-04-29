@@ -220,7 +220,7 @@ export default {
       });
       if(data.code === 0) {
         this.liveActive = data.payload;
-        this.liveActivityId =data.payload[0] && data.payload[0].liveActivityId;
+        this.liveActivityId =data.payload[0]&& data.payload[0].liveActivityId;
         this.getLiveCount();
         this.getActiveList();
       }
@@ -332,8 +332,27 @@ export default {
       this.$refs.search.nowDate = Date.now()
       this.searchParams = {}
       const name = this.liveStatistics[index].name;
+      const value = this.liveStatistics[index].value
       const query = {}
-      Object.assign(query, { [name]: { gt: 0 } })
+      switch (name) {
+        case 'enteredLiveRoomNum':  //进入直播间人数
+          Object.assign(query, { in_room_num: { gt: 0 } })
+          break;
+        case 'notEnteredLiveRoomNum': //未进入直播间人数
+          Object.assign(query, { in_room_num: 0 })
+          break;
+        case 'watchLiveNum':  //观看过直播人数
+          Object.assign(query, { in_room_num: 0 })
+          break;
+        case 'buyGoodsNum': //购买商品人数
+          const by_shop_flag = value === 0 ? value : { gt: 0 };
+          Object.assign(query, { by_shop_flag: by_shop_flag })
+          break;
+
+        default:
+          break;
+      }
+
       this.statisticsParams = query
       this.listQuery.currentPage = 1
       this.getActiveList()
@@ -551,4 +570,3 @@ export default {
     justify-content: space-between;
   }
 </style>
-

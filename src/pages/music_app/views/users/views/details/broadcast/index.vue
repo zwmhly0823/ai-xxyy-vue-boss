@@ -10,8 +10,8 @@
   <div class="logistics">
     <el-radio-group v-model="changeType" size="mini" style="margin-bottom:10px">
       <el-radio-button :label="-1">全部</el-radio-button>
-      <el-radio-button :label="0">进入直播间</el-radio-button>
-      <el-radio-button :label="1">未进入直播间</el-radio-button>
+      <el-radio-button :label="1">进入直播间</el-radio-button>
+      <el-radio-button :label="0">未进入直播间</el-radio-button>
     </el-radio-group>
     <!-- 数据table -->
     <el-table
@@ -87,6 +87,7 @@ export default {
   data() {
     return {
       uid: '',
+      in_room_num: undefined,
       changeType: -1,
       tableData: [],
       listQuery: {
@@ -141,7 +142,7 @@ export default {
       const params = {}
       Object.assign(
         params,
-        { uid: this.uid },
+        { uid: this.uid,  in_room_num: this.in_room_num},
       )
       this.$http.liveBroadcast.getActiveList(
         params,
@@ -170,6 +171,21 @@ export default {
       this.getActiveList()
     },
   },
+  watch: {
+    changeType(newVal, oldVal) {
+      if(newVal === -1) {
+        this.in_room_num = undefined;
+      }
+      else if(newVal === 0) {
+        this.in_room_num = 0;
+        this.getActiveList();
+      }
+      else if(newVal === 1) {
+        this.in_room_num = { gt: 0};
+        this.getActiveList();
+      }
+    }
+  }
 }
 </script>
 
