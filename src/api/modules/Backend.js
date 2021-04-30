@@ -61,6 +61,12 @@ export default {
       }`
     )
   },
+  // 校验关单赠品权限的
+  isPromotions() {
+    return axios.get(
+      `/api/b/v1/backend/promotions/checkpriviles`
+    )
+  },
   // 财务驳回的重新提交
   rejectedUpdate(params) {
     return axios.post(`/api/b/v1/backend/refund/detail/update`, params)
