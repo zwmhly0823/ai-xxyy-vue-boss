@@ -166,6 +166,7 @@ export default {
         )
         if (res.code === 0) {
           const list = res.payload.content
+          this.loading = false
           this.totalElements = Number.parseInt(res.payload.totalElements)
           list.forEach((item, index) => {
             const str = `${item.id}@${item.courseId}`
@@ -177,6 +178,7 @@ export default {
         }
       } catch (error) {
         console.log(error)
+        this.loading = false
       }
     },
     async iniToViewInform(list) {
