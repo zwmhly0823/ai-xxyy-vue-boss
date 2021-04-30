@@ -173,7 +173,7 @@ export default {
         }
       }
       // 删除返回值没空数组的情况
-      if (search && search[key].length === 0) {
+      if (search[key] && search[key].length === 0) {
         this.$delete(this.searchQuery, key)
         if (key === 'last_department_ids' || key === 'last_teacher_ids') {
           this.$delete(this.searchQuery, `${key}.like`)
