@@ -38,9 +38,9 @@
       >
         <el-option
           v-for="item in dataList"
-          :key="item.user.id"
-          :label="`${name[searchType] === 'uid' ? item[name[searchType]] : item.user[name[searchType]]}`"
-          :value="`${needUid ? item.user.id : name[searchType] === 'uid' ? item[name[searchType]] : item.user[name[searchType]]}`"
+          :key="item.id"
+          :label="`${item[name[searchType]]}`"
+          :value="`${needUid ? item.id : item[name[searchType]]}`"
         ></el-option>
       </el-select>
       <i class="el-icon-search"></i>
@@ -60,7 +60,7 @@ export default {
     },
     name: {
       type: Array,
-      default: () => ['mobile', 'uid']
+      default: () => ['mobile', 'user_num_text']
     },
     // 1-系统课，0-体验课 2-全部
     type: {
@@ -89,11 +89,7 @@ export default {
     teamId: {
       type: String,
       default: ''
-    },
-    activeId: {
-      type: String,
-      default: ''
-    },
+    }
   },
   data() {
     return {
@@ -163,11 +159,6 @@ export default {
           team_id: this.teamId
         })
       }
-      if (this.activeId) {
-        Object.assign(query, {
-          act_id: this.activeId
-        })
-      }
       //   const query = {}
       if (this.searchType === 0) {
         Object.assign(query, {
@@ -186,49 +177,12 @@ export default {
       axios
         .post('/graphql/v1/toss', {
           query: `{
-                  ${this.tablename}(query: ${JSON.stringify(injectSubject(q))}, sort: ${JSON.stringify(sort)}){
-                    uid
-                    act_id
-                    is_in_room_text
-                    in_room_count
-                    first_join_time
-                    play_status_text
-                    chat_count
-                    live_watch_time
-                    playback_watch_time
-                    user_status
-                    packages_name
-                    like_count
-                    chat_count
-                    user {
-                      id
-                      mobile
-                      head
-                    }
-                    team {
-                      team_name
-                      team_type
-                      team_state
-                    }
-                    teacher_trial {
-                      id
-                      realname
-                      departmentInfo {
-                        name
-                      }
-                    }
-                    teacher_system {
-                      realname
-                      departmentInfo {
-                        name
-                      }
-                    }
-                    live {
-                      open_time
-                      live_name
-                      live_status
-                      push_terminal
-                    }
+                  ${this.tablename}(query: ${JSON.stringify(
+            injectSubject(q)
+          )}, sort: ${JSON.stringify(sort)}){
+                    id
+                    user_num_text
+                    mobile
                   }
                 }`
         })
