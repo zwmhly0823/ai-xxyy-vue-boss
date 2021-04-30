@@ -164,7 +164,7 @@ export default {
         },
         {
           id: 2,
-          text: '已购年系统课、',
+          text: '已购年系统课',
         },
         {
           id: 3,
