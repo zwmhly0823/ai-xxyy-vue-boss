@@ -38,6 +38,14 @@
   </el-row>
 </template>
 <script>
+let liveStatusLabel = {
+  0:'--',
+  1: '直播中',
+  2: '预告',
+  3: '回放',
+  4: '结束',
+  5: '关闭',
+}
 import liveActivityName from '@/components/MSearch/searchItems/liveActivityName'
 import selectStartTime from '@/components/MSearch/searchItems/selectStartTime'
 import baseTable from '@/components/newTable'
@@ -82,7 +90,7 @@ export default {
           key: 'liveStatus',
           title: '直播状态',
           escape: (row) => {
-            return row.isHomePageShow ? '是' : '否'
+            return liveStatusLabel[row.liveStatus]
           },
         },
         {
@@ -117,9 +125,9 @@ export default {
   },
   methods: {
     async initData(page) {
-       if(page){
-         this.tableParam.pageNum = page
-       }
+      if (page) {
+        this.tableParam.pageNum = page
+      }
       let result = await this.$http.liveBroadcast.liveBroadcastActivityList(
         this.tableParam
       )
