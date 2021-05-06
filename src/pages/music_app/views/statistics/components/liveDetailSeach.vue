@@ -22,7 +22,7 @@
               />
             </div>
           </el-form-item>
-          <el-form-item label="归属销售/班主任:" label-width="105px">
+          <el-form-item label="归属销售:" label-width="105px">
             <div class="search-group">
               <department
                 name="trial_teacher_id"

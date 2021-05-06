@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-06-22 12:08:17
- * @LastEditors: YangJiyong
- * @LastEditTime: 2021-01-12 17:34:55
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-09-11 13:48:56
 -->
 <template>
   <div class="search-mobile d-flex align-center">
@@ -13,6 +13,7 @@
       class="search-type"
       @change="handleChange"
       v-model="searchType"
+      v-if="isHidden"
     >
       <el-option
         v-for="item in searchTypeList"
@@ -24,6 +25,7 @@
     <div class="search-item">
       <el-select
         class="item-style"
+        :class="{ single: !isHidden }"
         :style="customStyle"
         v-model="value"
         filterable
@@ -39,8 +41,10 @@
         <el-option
           v-for="item in dataList"
           :key="item.id"
-          :label="`${item[name[searchType]]}`"
-          :value="`${needUid ? item.id : item[name[searchType]]}`"
+          :label="
+            `${item[name[searchType] === 'id' ? 'mobile' : name[searchType]]}`
+          "
+          :value="`${item[name[searchType]]}`"
         ></el-option>
       </el-select>
       <i class="el-icon-search"></i>
@@ -71,24 +75,33 @@ export default {
       type: Array,
       default: () => ['输入学员手机号', '输入学员ID']
     },
-    // 默认搜索u_user表。特殊情况传入对应graphql表, 如体验课学员列表：‘StudentTrialStatisticsList’，
-    // 多科目全部学员-UserSubjectStatisticsList
+    // 默认搜索u_user表。特殊情况传入对应graphql表, 如体验课学员列表：‘StudentTrialStatisticsList’
     tablename: {
       type: String,
       default: 'UserListEx'
     },
+    // 运营管理--小熊币发送页面,只有用户ID搜索 1
+    defaultType: {
+      type: String,
+      default: '0'
+    },
+    // 运营管理--小熊币发送页面,隐藏掉下拉选择
+    isHidden: {
+      type: Boolean,
+      default: true
+    },
+    // 是否增加扩展配置，抛出id使用
+    extension: {
+      type: Boolean,
+      default: false
+    },
+    userStatusKey: {
+      type: String,
+      default: 'user_status'
+    },
     userNumKey: {
       type: String,
       default: 'user_num_text'
-    },
-    needUid: {
-      type: String,
-      default: ''
-    },
-    // 如果有teamId，限制只查本班级学员
-    teamId: {
-      type: String,
-      default: ''
     }
   },
   data() {
@@ -106,7 +119,8 @@ export default {
           label: '学员ID'
         }
       ],
-      dataList: []
+      dataList: [],
+      uid: ''
     }
   },
   computed: {
@@ -114,7 +128,7 @@ export default {
       return this.placeholder[this.searchType]
     },
     nameKey() {
-      return this.needUid || this.name[this.searchType]
+      return this.name[this.searchType]
     },
     handleDebounce() {
       return debounce(this.getData, 500)
@@ -126,39 +140,31 @@ export default {
   methods: {
     handleChange() {
       this.value = ''
+      this.uid = ''
       this.$emit('result', '')
     },
     getData(value = '') {
       if (!value) return
       const val = value.replace(/\s*/g, '')
       this.loading = true
-      // let range = {
-      //   // user_status: { gte: 2 }
-      //   user_status: { gt: 0 }
-      // }
-      // // 系统课
-      // if (this.type === '1') {
-      //   range = {
-      //     user_status: { gte: 2 }
-      //   }
-      // }
-      // // 体验课
-      // if (this.type === '0') {
-      //   range = { user_status: ['1', '2'] }
-      // }
+      let range = {}
+      // 系统课
+      if (this.type === '1') {
+        range = {
+          [`${this.userStatusKey}`]: { gte: 2 }
+        }
+      }
+      // 体验课
+      if (this.type === '0') {
+        range = { [`${this.userStatusKey}`]: ['1', '2'] }
+      }
       // 全部
       // if (this.type === '2') {
       //   range = {
-      //     user_status: { gt: 0 }
+      //     [`${this.userStatusKey}`]: { gte: 0 }
       //   }
       // }
-      // const query = { ...range }
-      const query = {}
-      if (this.teamId) {
-        Object.assign(query, {
-          team_id: this.teamId
-        })
-      }
+      const query = { ...range }
       //   const query = {}
       if (this.searchType === 0) {
         Object.assign(query, {
@@ -174,6 +180,8 @@ export default {
       const q = JSON.stringify(query)
 
       const sort = `{"id":"desc"}`
+      // 搜索全部学员时，传 u_id
+      const exParams = this.tablename === 'UserExtendsList' ? 'u_id' : ''
       axios
         .post('/graphql/v1/toss', {
           query: `{
@@ -183,6 +191,7 @@ export default {
                     id
                     user_num_text
                     mobile
+                    ${exParams}
                   }
                 }`
         })
@@ -195,9 +204,16 @@ export default {
         })
     },
     // 获取选中的
-    onChange(data, obj) {
-      console.log(data, obj)
-      this.$emit('result', data ? { [this.nameKey]: data } : '')
+    onChange(data) {
+      const _list = [...this.dataList]
+      for (const item of _list) {
+        if (item.mobile === data || item.user_num_text === data) {
+          this.uid = item.u_id
+        }
+      }
+      !this.extension
+        ? this.$emit('result', data ? { [this.nameKey]: data } : '')
+        : this.$emit('result', data ? { uid: this.uid } : '')
     }
   }
 }
@@ -222,6 +238,14 @@ export default {
         padding-left: 25px;
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
+      }
+    }
+    &.single {
+      ::v-deep {
+        .el-input__inner {
+          border-top-left-radius: 4px;
+          border-bottom-left-radius: 4px;
+        }
       }
     }
   }
