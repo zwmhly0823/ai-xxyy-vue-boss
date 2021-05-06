@@ -5,7 +5,7 @@
       <department
         name="assistant_teacher_id_dpt"
         placeholder="区部"
-        style="margin-right: 10px;"
+        style="margin-right: 10px"
         @result="getSearchData('assistant_teacher_id_dpt', arguments)"
       />
       <group-sell
@@ -22,7 +22,7 @@
       <department
         name="parttime_teacher_id_dpt"
         placeholder="区部"
-        style="margin-right: 10px;"
+        style="margin-right: 10px"
         @result="getSearchData('parttime_teacher_id_dpt', arguments)"
       />
       <group-sell
@@ -61,12 +61,40 @@
         tip="学员手机号"
       />
     </div>
+    <div class="search-item">
+      <span class="search-text">是否上榜</span>
+      <onList
+        name="rank_status"
+        tip="老师姓名"
+        is-multiple
+        :key="akey"
+        @result="getSearchData('rank_status', arguments)"
+      />
+    </div>
+    <div class="search-item">
+      <span class="search-text">点评老师</span>
+      <department
+        name="assistant_teacher_id_dpt"
+        placeholder="区部"
+        style="margin-right: 10px"
+        @result="getSearchData('assistant_teacher_id_dpt', arguments)"
+      />
+      <group-sell
+        name="comment_teacher_id"
+        tip="老师姓名"
+        is-multiple
+        :teacherscope="assistantTeacherScope"
+        :key="akey"
+        @result="getSearchData('comment_teacher_id', arguments)"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import Department from '@/components/MSearch/searchItems/department.vue'
 import GroupSell from '@/components/MSearch/searchItems/groupSell.vue'
+import onList from '@/components/MSearch/searchItems/onList.vue'
 import SearchStage from '@/components/MSearch/searchItems/searchStage.vue'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 import SearchPhone from '@/components/MSearch/searchItems/searchPhone'
@@ -77,7 +105,8 @@ export default {
     GroupSell,
     SearchStage,
     SearchTeamName,
-    SearchPhone
+    SearchPhone,
+    onList,
   },
   data() {
     return {
@@ -87,7 +116,7 @@ export default {
       termScope: null,
       tkey: 0,
       pkey: 0,
-      akey: 0
+      akey: 0,
     }
   },
   methods: {
@@ -125,6 +154,14 @@ export default {
         this.assistantTeacherScope = val
         Object.assign(this.searchParams, { assistant_teacher_id: val })
       }
+      if (key === 'comment_teacher_id_dpt') {
+        this.akey = Date.now()
+        this.assistantTeacherScope = val
+        Object.assign(this.searchParams, { comment_teacher_id: val })
+      }
+      if (key === 'rank_status') {
+        Object.assign(this.searchParams, { rank_status: val })
+      }
       if (key === 'term') {
         this.tkey = Date.now()
         this.termScope = val
@@ -139,11 +176,11 @@ export default {
         ? Object.assign(this.searchParams, val)
         : this.$delete(this.searchParams, 'student_id')
       this.$emit('result', this.searchParams)
-    }
+    },
     // resetPartOfFormData(val) {
     //   console.log(val, 'student')
     // }
-  }
+  },
 }
 </script>
 

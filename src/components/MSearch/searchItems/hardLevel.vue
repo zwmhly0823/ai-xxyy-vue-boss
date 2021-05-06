@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-13 13:02:03
+ * @LastEditTime: 2021-03-31 20:05:09
  -->
 <template>
   <div class="search-item small">
@@ -20,10 +20,10 @@
       @change="supChange"
     >
       <el-option
-        v-for="(item,index) in supList"
+        v-for="(item) in supList"
         :key="item.id"
         :label="item.text"
-        :value="(index+1)"
+        :value="item.id"
       >
       </el-option>
     </el-select>
@@ -125,7 +125,7 @@ export default {
     // },
 
     supChange(data) {
-      console.log(data)
+      console.log(data,"难度数据")
       // 如果是体验课难度，查询订单的话，需要关联tg_student_team,根据id关联o_order的trial_team_id
       if (this.name === 'trial_team_id') {
         const supArr = data.map((item) => `${item}`)
