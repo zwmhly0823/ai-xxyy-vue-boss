@@ -1179,6 +1179,7 @@ export default {
           this.totalPages = +res.data.LogisticsListPageNew.totalPages
 
           this.totalElements = +res.data.LogisticsListPageNew.totalElements // 总条数
+          this.$emit('getTotal',this.totalElements)
           // this.getTeacherList(realnameId)
           // this.getStudentTeamList(teamId)
           this.getScheduleList(schedule)

@@ -17,29 +17,33 @@ import { isToss, injectSubject } from '@/utils/index'
 import { expressToggleList } from '@/utils/expressItemConfig'
 export default {
   props: {
+    seachTotal: {
+      type: Number,
+      default: 0,
+    },
     hideToggleBtn: {
       type: Array,
       default: () => {
         return []
-      }
+      },
     },
     tab: {
       type: String,
-      default: ''
+      default: '',
     },
     source_type: {
       type: String,
-      default: ''
+      default: '',
     },
     regtype: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
   data() {
     return {
       activeIndex: 0,
-      toggleList: JSON.parse(JSON.stringify(expressToggleList))
+      toggleList: JSON.parse(JSON.stringify(expressToggleList)),
     }
   },
   methods: {
@@ -64,7 +68,7 @@ export default {
             invalid
             difficult
           }
-        }`
+        }`,
       }).then((res) => {
         const x = res.data.logisticsStatisticsNew
         this.toggleList.map((item) => {
@@ -81,9 +85,9 @@ export default {
     getLogisticsStatisticsDsh() {
       let q
       if (this.teacherId || this.teacherId === 0) {
-        q = `{"teacher_id": [${this.teacherId}],"regtype":[${this.regtype}],"source_type":[${this.source_type}],"center_express_id":{"lte":0}}`
+        q = `{"teacher_id": [${this.teacherId}],"regtype":[${this.regtype}],"source_type":[${this.source_type}],"center_express_id":{"lte":0},"subject":3}`
       } else {
-        q = `{"regtype":[${this.regtype}],"source_type":[${this.source_type}],"center_express_id":{"lte":0}}`
+        q = `{"regtype":[${this.regtype}],"source_type":[${this.source_type}],"center_express_id":{"lte":0},"subject":3}`
       }
       const query = JSON.stringify(q)
       this.$http.Express.getLogisticsStatistics({
@@ -99,7 +103,7 @@ export default {
             invalid
             difficult
           }
-        }`
+        }`,
       }).then((res) => {
         const x = res.data.logisticsStatisticsNew
         this.toggleList.map((item) => {
@@ -135,7 +139,7 @@ export default {
     },
     initToggleList() {
       this.toggleList = JSON.parse(JSON.stringify(expressToggleList))
-    }
+    },
   },
   mounted() {
     this.hideSomeBtn()
@@ -153,8 +157,14 @@ export default {
     },
     activeIndex() {
       this.emitStatus()
+    },
+    seachTotal(newVal) {
+      if(newVal && this.activeIndex !=0 || newVal ==0) {
+        this.toggleList[this.activeIndex].count = newVal
+        this.$set(this.toggleList,this.activeIndex,this.toggleList[this.activeIndex])
+      }
     }
-  }
+  },
 }
 </script>
 
