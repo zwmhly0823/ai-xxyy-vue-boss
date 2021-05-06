@@ -79,7 +79,9 @@ export default {
   },
   data() {
     return {
-      paramsToSearch: {},
+      paramsToSearch: {
+        in_room_num:{ gt: 0 }
+      },
       sortTab: {
         join_date: 'desc',
       },
