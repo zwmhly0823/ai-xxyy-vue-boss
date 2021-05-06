@@ -358,6 +358,14 @@ let bearArt = [
           module
         }
       },
+      {
+        path: '/manageChangeClass',
+        name: 'manageChangeClass',
+        meta: {
+          title: '体验课调班',
+          module
+        },
+      },
     ]
   },
   {
