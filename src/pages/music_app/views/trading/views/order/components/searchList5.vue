@@ -157,7 +157,9 @@ export default {
     },
     // 选择状态
     getStatus(res) {
-      console.log(res, '选择状态')
+      if(res.coupon_status && res.coupon_status ==='1') {
+         res.coupon_status = [0,1]
+      }
       this.setSeachParmas(res, ['coupon_status'], 'terms')
     },
     // 难度
@@ -315,11 +317,11 @@ export default {
       }
       this.$emit('searchShould', temp)
     },
-      showChooseDialogClick() {
+    showChooseDialogClick() {
       // 获取查询条件
       const query = this.$parent.$children[1].finalParams
       // 限制导出全部订单
-     if (!query.status || query.status[0] != 3) {
+      if (!query.status || query.status[0] != 3) {
         this.$message.error('只能导出已完成的订单，请重新选择')
         return
       } else {
@@ -338,23 +340,9 @@ export default {
 
       const query = this.$parent.$children[1].finalParams
       query.subject = 3
-      // delete query.packages_id
-      // delete query.regtype
-      // delete query.status
+
       const fileTitle = dayjs(new Date()).format('YYYY-MM-DD')
       const fileTitleTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
-
-      // 导出条件为 v1 对象方式
-      // const query = {
-      //   status: 3
-      // }
-      // const search = this.searchParams[0]
-      // for (const key in search) {
-      //   if (Object.keys(search).includes(key)) {
-      //     const item = search[key]
-      //     Object.assign(query, item)
-      //   }
-      // }
 
       const loading = this.$loading({
         lock: true,

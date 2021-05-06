@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-06-30 19:21:08
- * @LastEditors: Shentong
- * @LastEditTime: 2020-09-24 15:39:33
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-17 20:16:12
 -->
 <template>
   <div class="channel-threeded">
@@ -101,6 +101,7 @@
 import { cloneDeep } from 'lodash'
 import Department from './department'
 import axios from '@/api/axiosConfig'
+import { Sup_scheduleIndex,Sup_scheduleSubmit} from '@/utils/supList'
 export default {
   props: {
     centerDialogVisible: {
@@ -211,7 +212,7 @@ export default {
             period,
             channelId: channel,
             teacherId: id,
-            courseCategory: courseType !== '0' ? '2' : '0'
+            courseCategory: Sup_scheduleSubmit[courseType]
           }
           formArr.push(Object.assign(obj,editChannelThreededObj))
         })
@@ -248,8 +249,9 @@ export default {
     /** 教师渠道绑定-查找记录 */
     async getRecord(cb) {
       try {
-        const { period = '' } = this.$route.params
-        const res = await this.$http.Operating.getRecord({ period })
+        const { period = '' ,courseType} = this.$route.params
+       courseType = Sup_scheduleSubmit[courseType]
+        const res = await this.$http.Operating.getRecord({ period,courseType })
         console.log(res, 'getRecord-res')
         if (res.code === 0 && cb) cb()
       } catch (err) {

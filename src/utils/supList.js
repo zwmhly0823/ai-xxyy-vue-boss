@@ -30,7 +30,24 @@ export const SUP_LEVEL_UPPER = formatSup('S')
  * 系统课里面  显示 MA MB   传值  对应  S8 S9
  * */
 // export const SUP_LEVEL_LIST_UPPER = formatSupList()
-
+// 招生排期点索引传的值
+export const Sup_scheduleIndex = {
+  0:2,
+  1:0,
+  2:1
+}
+//招生排期点提交传的值
+export const Sup_scheduleSubmit = {
+  0:3,
+  1:0,
+  2:2
+}
+//招生排期 下载名称字段
+export const Sup_scheduleDownload = {
+  0:"单周体验课",
+  1:"双周体验课",
+  2:"系统课"
+}
 export const SUP_LEVEL_LIST_LOWER = [
   { id: 'M1', text: 'M1' },
   { id: 'M2', text: 'M2' },

@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-31 20:46:42
+ * @LastEditTime: 2021-04-17 10:52:16
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 const operatingSchedule = [{

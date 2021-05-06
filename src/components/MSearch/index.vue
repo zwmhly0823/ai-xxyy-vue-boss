@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-09-14 15:43:55
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-14 17:05:10
  -->
 
 <template>
@@ -50,12 +50,20 @@
 
       <el-form-item v-if="date">
         <!-- 下单时间 -->
-        <date-picker :name="date" @result="getDate" :date-placeholder="datePlaceholder" />
+        <date-picker
+          :name="date"
+          @result="getDate"
+          :date-placeholder="datePlaceholder"
+        />
       </el-form-item>
 
       <el-form-item v-if="timeData">
         <!-- 下拉时间选择 -->
-        <select-date :name="timeData" @result="getTimeData" @timeCallBack="getTimeCallBack" />
+        <select-date
+          :name="timeData"
+          @result="getTimeData"
+          @timeCallBack="getTimeCallBack"
+        />
       </el-form-item>
 
       <el-form-item v-if="channel">
@@ -90,7 +98,7 @@
           :levelName="level"
           :addSupS="addSupS"
           :supPlaceholder="supPlaceholder"
-          style="margin-bottom:0px"
+          style="margin-bottom: 0px"
         />
         <!-- 
         <hard-write-level
@@ -106,7 +114,12 @@
 
       <el-form-item v-if="schedule">
         <!-- 排期 -->
-        <Schedule ref="schedule" @result="selectSchedule" :name="schedule" :teamClass="teamClass" />
+        <Schedule
+          ref="schedule"
+          @result="selectSchedule"
+          :name="schedule"
+          :teamClass="teamClass"
+        />
       </el-form-item>
 
       <el-form-item v-if="teacherphone">
@@ -142,7 +155,13 @@
 
       <!-- 员工角色 -->
       <el-form-item v-if="employees">
-        <employees-role :size="size" :devalueValue="devalueValue" @result="gerEmployeesName" />
+        <employees-role
+          :size="size"
+          :isShow="isShow"
+          :devalueValue="devalueValue"
+          @result="gerEmployeesName"
+          @resultPhone="gerEmployeesPhone"
+        />
       </el-form-item>
 
       <el-form-item v-if="teachernickname">
@@ -156,7 +175,11 @@
       </el-form-item>
       <el-form-item v-if="teacherwx">
         <!-- 老师模块微信号搜索 -->
-        <teacher-wx :teacherwx="teacherwx" :WeChat="WeChat" @getWxTeacher="getWxTeacher" />
+        <teacher-wx
+          :teacherwx="teacherwx"
+          :WeChat="WeChat"
+          @getWxTeacher="getWxTeacher"
+        />
       </el-form-item>
       <el-form-item v-if="rank || induction || landing || position">
         <!-- 老师模块职级，登陆状态，入职状态，选择职务搜索 -->
@@ -171,13 +194,16 @@
           :landingName="landing"
           :positionName="position"
           :sellerLevelName="sellerLevel"
-          style="margin-bottom:0px"
+          style="margin-bottom: 0px"
         />
       </el-form-item>
 
       <el-form-item v-if="systemCourseType">
         <!-- 系统课类型 -->
-        <system-course-type @result="getSystemCourseType" :name="systemCourseType" />
+        <system-course-type
+          @result="getSystemCourseType"
+          :name="systemCourseType"
+        />
       </el-form-item>
 
       <!-- && !teacherId -->
@@ -188,7 +214,11 @@
 
       <el-form-item v-if="groupSell">
         <!-- 社群销售 -->
-        <group-sell @result="selectSellTeacher" :name="groupSell" :tip="teacherTip" />
+        <group-sell
+          @result="selectSellTeacher"
+          :name="groupSell"
+          :tip="teacherTip"
+        />
       </el-form-item>
 
       <!-- && !teacherId -->
@@ -200,7 +230,10 @@
       <!-- && !teacherId -->
       <el-form-item v-if="searchTrialTeamName">
         <!-- 体验课班级名称搜索 -->
-        <search-trial-team-name @result="getTrialTeamName" :name="searchTrialTeamName" />
+        <search-trial-team-name
+          @result="getTrialTeamName"
+          :name="searchTrialTeamName"
+        />
       </el-form-item>
 
       <el-form-item v-if="searchStage">
@@ -210,7 +243,11 @@
 
       <el-form-item v-if="searchTrialStage">
         <!-- 体验课排期搜索 -->
-        <search-stage @result="getSearchTrialStage" :name="searchTrialStage" type="0" />
+        <search-stage
+          @result="getSearchTrialStage"
+          :name="searchTrialStage"
+          type="0"
+        />
       </el-form-item>
 
       <!-- <el-form-item
@@ -235,7 +272,9 @@
         </el-popover>
       </el-form-item>-->
 
-      <el-form-item v-if="wxSerch || wxTeacherPhone || wxStatus || wxConcatTeacher || wxId">
+      <el-form-item
+        v-if="wxSerch || wxTeacherPhone || wxStatus || wxConcatTeacher || wxId"
+      >
         <wx-list
           :wxSerch="wxSerch"
           :wxTeacherPhone="wxTeacherPhone"
@@ -256,6 +295,10 @@
       <el-form-item v-if="selectAddress">
         <selectAddress @getAddress="getAddress" :name="selectAddress" />
       </el-form-item>
+      <el-form-item v-if="packages_id">
+        <!-- 体验课类型 -->
+        <trial-classtype @result="gettrialClassType" :name="packages_id" />
+      </el-form-item>
       <el-form-item>
         <slot name="searchItems"></slot>
       </el-form-item>
@@ -265,7 +308,10 @@
       </el-form-item>
       <!-- 补发方式 -->
       <el-form-item v-if="replenishMethod">
-        <replenish-method @result="getReplenishMethod" :sourceType="sourceType" />
+        <replenish-method
+          @result="getReplenishMethod"
+          :sourceType="sourceType"
+        />
       </el-form-item>
       <!-- 物流类型 -->
       <el-form-item v-if="regType">
@@ -291,7 +337,11 @@
       </el-form-item>
       <el-form-item v-if="searchCourseware">
         <!-- 系统课名称搜索 -->
-        <search-courseware @result="getSearchCourseware" :name="searchCourseware" type="0" />
+        <search-courseware
+          @result="getSearchCourseware"
+          :name="searchCourseware"
+          type="0"
+        />
       </el-form-item>
       <el-form-item>
         <slot></slot>
@@ -345,367 +395,381 @@ import expressType from './searchItems/expressType'
 import employeesRole from './searchItems/role.vue'
 import staffName from './searchItems/staffName.vue'
 import SearchCourseware from './searchItems/searchCourseware'
-
+import trialClasstype from './searchItems/trialClassType'
 export default {
   props: {
     // 物流体验课0 系统课1
     tab: {
       type: String,
-      default: '' // tab
+      default: '', // tab
     },
     // 有无收货地址
     hasaddress: {
       type: String,
-      default: '' // hasaddress
+      default: '', // hasaddress
     },
     changeData: {
       type: String,
-      default: '' // hasaddress
+      default: '', // hasaddress
     },
     // 渠道
     channel: {
       type: String,
-      default: '' // channelid
+      default: '', // channelid
     },
     // 主题
     topicType: {
       type: String,
-      default: '' // topicType
+      default: '', // topicType
     },
     // 物流类别
     productType: {
       type: String,
-      default: ''
+      default: '',
     },
     // 期数
     stage: {
       type: String,
-      default: '' // stage
+      default: '', // stage
     },
     // 排期
     schedule: {
       type: String,
-      default: '' // schedule
+      default: '', // schedule
     },
     // teamClass 排期类别
     teamClass: {
       type: String,
-      default: '' // schedule
+      default: '', // schedule
     },
     // 难度
     sup: {
       type: String,
-      default: '' // sup
+      default: '', // sup
     },
     addSupS: {
       type: Boolean,
-      default: false // sup+S ?
+      default: false, // sup+S ?
     },
     // 级别
     level: {
       type: String,
-      default: '' // current_level
+      default: '', // current_level
     },
     // 下单时间
     date: {
       type: String,
-      default: '' // octime
+      default: '', // octime
     },
     // datepicker placeholder
     datePlaceholder: {
       type: String,
-      default: '下单时间'
+      default: '下单时间',
     },
     // 班级内搜索 需要班级类型
     teamType: {
       type: String,
-      default: '' // 0
+      default: '', // 0
     },
 
     // 手机号
     phone: {
       type: String,
-      default: '' // phone
+      default: '', // phone
     },
     // 老师手机号搜索
     teacherphone: {
       type: String,
-      default: '' // phone
+      default: '', // phone
     },
     // 老师微信号搜索
     teacherwx: {
       type: String,
-      default: ''
+      default: '',
     },
     // 是否只搜手机号
     onlyPhone: {
       type: String,
-      default: '0' // 0
+      default: '0', // 0
     },
     // 是否只搜手机号
     phoneTip: {
       type: String,
-      default: '用户手机号查询'
+      default: '用户手机号查询',
     },
     // 微信号搜索
     weixinNumber: {
       type: String,
-      default: '0'
+      default: '0',
     },
     // team_id
     teamId: {
       type: String,
-      default: ''
+      default: '',
     },
     // 查询班级  搜到用户的最后一个班
     last_team_id: {
       type: String,
-      default: ''
+      default: '',
     },
     // 老师姓名搜索
     teachername: {
       type: String,
-      default: ''
+      default: '',
     },
     // 老师昵称搜索
     teachernickname: {
       type: String,
-      default: ''
+      default: '',
     },
     // 是否只搜老师姓名
     nameTip: {
       type: String,
-      default: '姓名查询'
+      default: '姓名查询',
     },
     // 是否只搜老师昵称
     nicknameTip: {
       type: String,
-      default: '对外昵称查询'
+      default: '对外昵称查询',
     },
     // 是否只搜老师姓名
     onlyName: {
       type: String,
-      default: '0' // 0
+      default: '0', // 0
     },
     // 是否只搜老师昵称
     onlyNickname: {
       type: String,
-      default: '0' // 0
+      default: '0', // 0
     },
     // 职级
     rank: {
       type: String,
-      default: ''
+      default: '',
     },
     // 老师微信传参
     WeChat: {
       type: Array,
-      default: null
+      default: null,
     },
     // 入职状态
     induction: {
       type: String,
-      default: ''
+      default: '',
     },
     // 登陆状态
     landing: {
       type: String,
-      default: ''
+      default: '',
     },
     // 职务
     position: {
       type: String,
-      default: ''
+      default: '',
     },
     // 销售等级
     sellerLevel: {
       type: String,
-      default: ''
+      default: '',
     },
     // 订单号
     outTradeNo: {
       type: String,
-      default: '' // out_trade_no
+      default: '', // out_trade_no
     },
     // 商品名称
     productName: {
       type: String,
-      default: '' // product_name
+      default: '', // product_name
     },
     // 下拉时间选择
     timeData: {
       type: Array,
-      default: null // [ {text:'创建时间',value:'ectime'}]
+      default: null, // [ {text:'创建时间',value:'ectime'}]
     },
     // 物流单号查询
     expressNo: {
       type: String,
-      default: '' // express_nu
+      default: '', // express_nu
     },
     // 社群销售查询
     groupSell: {
       type: String,
-      default: '' //
+      default: '', //
     },
     // 班级信息查询
     teamDetail: {
       type: String,
-      default: '' //
+      default: '', //
     },
     moreVersion: {
       type: String,
-      default: '' //
+      default: '', //
     },
     orderType: {
       type: String,
-      default: ''
+      default: '',
     },
     systemCourseType: {
       type: String,
-      default: ''
+      default: '',
     },
     // 销售部门
     department: {
       type: String,
-      default: ''
+      default: '',
     },
     // 搜索系统课班级名称
     searchTeamName: {
       type: String,
-      default: ''
+      default: '',
     },
     // 搜索体验课班级名称
     searchTrialTeamName: {
       type: String,
-      default: ''
+      default: '',
     },
     // 微信号搜索
     wxSerch: {
       type: String,
-      default: '' // wxSerch
+      default: '', // wxSerch
     },
     // 手机号搜索
     wxTeacherPhone: {
       type: String,
-      default: '' // wxInput
+      default: '', // wxInput
     },
     // 使用状态搜索
     wxStatus: {
       type: String,
-      default: '' // wxStatus
+      default: '', // wxStatus
     },
     weixinStatus: {
       type: String,
-      default: ''
+      default: '',
     },
     // 是否关联老师搜索
     wxConcatTeacher: {
       type: String,
-      default: ''
+      default: '',
     },
     // wechat_id
     wxId: {
       type: String,
-      default: ''
+      default: '',
     },
     // wechat_record_id
     wxRecordId: {
       type: String,
-      default: ''
+      default: '',
     },
     // 是否关联老师搜索
     selectAddress: {
       type: String,
-      default: '' // selectAddress
+      default: '', // selectAddress
     },
     // 系统课排期
     searchStage: {
       type: String,
-      default: ''
+      default: '',
     },
     // 体验课排期
     searchTrialStage: {
       type: String,
-      default: ''
+      default: '',
     },
     // 体验课排期 是否多选
     isMultiple: {
       type: Boolean,
-      default: true
+      default: true,
     },
     // 难度 placeholder
     supPlaceholder: {
       type: String,
-      default: '难度'
+      default: '难度',
     },
     // 补发原因
     replenishReason: {
       type: String,
-      default: ''
+      default: '',
     },
     // 补发方式
     replenishMethod: {
       type: String,
-      default: ''
+      default: '',
     },
     // 物流方式
     regType: {
       type: String,
-      default: ''
+      default: '',
     },
     // 申请人
     operatorId: {
       type: String,
-      default: ''
+      default: '',
     },
     // 5 代表活动课物流补发货
     sourceType: {
       type: String,
-      default: ''
+      default: '',
     },
     // 活动课补发商品
     replenishProduct: {
       type: String,
-      default: ''
+      default: '',
     },
     // 补发商品类别
     replenishProductType: {
       type: String,
-      default: ''
+      default: '',
     },
     // 收货人电话
     consigneePhone: {
       type: String,
-      default: ''
+      default: '',
     },
     teacherTip: {
       type: String,
-      default: '社群销售' // topicType
+      default: '社群销售', // topicType
     },
     // 员工姓名搜索
     staffname: {
       type: String,
-      default: ''
+      default: '',
     },
     employees: {
       type: String,
-      default: ''
+      default: '',
+    },
+    phoneNumber: {
+      type: String,
+      default: '',
+    },
+    isShow: {
+      type: Boolean,
+      default: false,
     },
     size: {
       type: String,
-      default: 'mini'
+      default: 'mini',
     },
     devalueValue: {
       type: String,
-      default: ''
+      default: '',
     },
     // 系统课名称
     searchCourseware: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
+    //体验课类型
+    packages_id: {
+      type: String,
+      default: '',
+    },
   },
   components: {
+    trialClasstype,
     ChannelSelect,
     ProductTopic,
     ProductTypelog,
@@ -742,7 +806,7 @@ export default {
     employeesRole,
     staffName,
     expressType,
-    SearchCourseware
+    SearchCourseware,
   },
   data() {
     return {
@@ -753,7 +817,7 @@ export default {
       selectTime: null, // 物流时间下拉列表_选中项
       oldTime: '', // 上次时间选择值
       teacherId: '', // 判断是否是toss环境还是boss环境
-      ExpressReplenishType: '' // 活动课 补发货 补发商品 筛选id
+      ExpressReplenishType: '', // 活动课 补发货 补发商品 筛选id
     }
   },
   computed: {},
@@ -786,6 +850,11 @@ export default {
     supCallBack(res) {
       console.log(res, 'res')
       this.setSeachParmas(res, [this.sup || 'sup'], 'terms')
+    },
+    // 选择体验课类型
+    gettrialClassType(res) {
+      console.log(res, 'packages_id')
+      this.setSeachParmas(res, [this.packages_id || 'packages_id'], 'term')
     },
     // 级别
     levelCallBack(res) {
@@ -873,7 +942,7 @@ export default {
       this.setSeachParmas(res, [this.wxSerch], 'wildcard')
     },
     getWeixinStatus(res) {
-      this.sendSeachParams(res,this.weixinStatus,'wechat_status')
+      this.sendSeachParams(res, this.weixinStatus, 'wechat_status')
       // this.setSeachParmas(res, [this.weixinStatus], 'wechat_status')
     },
     getVersionNu(res) {
@@ -940,8 +1009,10 @@ export default {
       this.setSeachParmas(res, [this.operatorId])
     },
     gerEmployeesName(res) {
-      this.sendSeachParams(res,this.employees)
-      // this.setSeachParmas(res, [this.employees])
+      this.sendSeachParams(res, this.employees)
+    },
+    gerEmployeesPhone(res) {
+      this.sendSeachParams(res, this.phoneNumber,"terms")
     },
     getReplenishProduct(res) {
       this.setSeachParmas(res, [this.replenishProduct || 'product_type'])
@@ -965,10 +1036,10 @@ export default {
       this.setSeachParmas(res, [this.searchTrialStage || 'course_id'], 'terms')
     },
     // 单选搜索
-    sendSeachParams(res,key, extraKey = 'term'){
+    sendSeachParams(res, key, extraKey = 'term') {
       let arr = []
       arr.push({
-        [extraKey]:res
+        [extraKey]: res,
       })
       this.$emit('search', arr)
     },
@@ -1001,11 +1072,11 @@ export default {
             Object.keys(res).includes('provincesCode')
           ) {
             temp.push({
-              [extraKey]: { [`${this.selectAddress}`]: res }
+              [extraKey]: { [`${this.selectAddress}`]: res },
             })
           } else {
             temp.push({
-              [extraKey]: res
+              [extraKey]: res,
             })
           }
 
@@ -1019,19 +1090,19 @@ export default {
       // should
       if (res) {
         temp.push({
-          [`${extraKey}`]: `${JSON.stringify(res)}`
+          [`${extraKey}`]: `${JSON.stringify(res)}`,
         })
         this.should = temp
       }
       this.$emit('searchShould', temp)
-    }
+    },
   },
   created() {
     const teacherId = isToss()
     if (teacherId) {
       this.teacherId = teacherId
     }
-  }
+  },
 }
 </script>
 <style lang="scss" scoped>

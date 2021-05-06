@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-26 16:48:42
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-09 18:48:35
  -->
 <template>
   <div id="channel-boxs" class="channel-box">
@@ -36,46 +36,52 @@
         <el-col :span="6">
           <div class="grid-content bg-purple">
             <p>累计转化率/系统课成单人数</p>
-            <span>{{ conversionRate }} <em>/</em> {{ allSystemUser }}</span>
+            <span>{{ isNaN(conversionRate) ? '0' : conversionRate }} <em>/</em> {{ allSystemUser }}</span>
           </div>
         </el-col>
         <el-col :span="12">
           <div class="grid-content bg-purple">
             <el-row :gutter="20">
-              <el-col :span="6" style="text-align:center;">
+              <el-col :span="6" style="text-align: center">
                 <p class="bg-purple-text">添加微信</p>
                 <span class="bg-purple-num">{{ allWechatAddNums }}</span>
               </el-col>
-              <el-col :span="6" style="text-align:center;">
+              <el-col :span="6" style="text-align: center">
                 <p class="bg-purple-text">未支付</p>
                 <span class="bg-purple-num">{{ unpaid }}</span>
               </el-col>
-              <el-col :span="6" style="text-align:center;">
+              <el-col :span="6" style="text-align: center">
                 <p class="bg-purple-text">参课数</p>
                 <span class="bg-purple-num">{{ allJoinUserNums }}</span>
               </el-col>
-              <el-col :span="6" style="text-align:center;">
+              <el-col :span="6" style="text-align: center">
                 <p class="bg-purple-text">完课数</p>
                 <span class="bg-purple-num">{{ allCompleteUserNums }}</span>
               </el-col>
-              <el-col :span="6" style="text-align:center;">
+              <el-col :span="6" style="text-align: center">
                 <p class="bg-purple-text">体验课成单数</p>
                 <span class="bg-purple-num">{{ allPayUserNums }}</span>
               </el-col>
-              <el-col :span="6" style="text-align:center;">
+              <el-col :span="6" style="text-align: center">
                 <p class="bg-purple-text">线索数</p>
                 <span class="bg-purple-num">{{ allUserNums }}</span>
               </el-col>
-              <el-col :span="6" style="text-align:center;">
+              <el-col :span="6" style="text-align: center">
                 <p class="bg-purple-text">参课率</p>
-                <span class="bg-purple-num">
-                  {{ allJoinUserNumsPercent }}
-                </span>
+                <span class="bg-purple-num">{{
+                  allJoinUserNumsPercent.includes('NaN')
+                    ? '0'
+                    : allJoinUserNumsPercent
+                }}</span>
               </el-col>
-              <el-col :span="6" style="text-align:center;">
+              <el-col :span="6" style="text-align: center">
                 <p class="bg-purple-text">完课率</p>
                 <span class="bg-purple-num">
-                  {{ allCompleteUserNumsPercent }}
+                  {{
+                    allCompleteUserNumsPercent.includes('NaN')
+                      ? '0'
+                      : allCompleteUserNumsPercent
+                  }}
                 </span>
               </el-col>
             </el-row>
@@ -143,12 +149,12 @@
         <el-table
           :header-cell-style="headerCss"
           :data="tableData"
-          style="width: 100%;"
+          style="width: 100%"
         >
           <el-table-column label="渠道分类" width="200" align="center">
             <template slot-scope="scope">
               <span>{{ scope.row.p_channel_class_name || '-' }}</span>
-              <span style="margin-left:10px;">{{
+              <span style="margin-left: 10px">{{
                 scope.row.channel_class_name || '-'
               }}</span>
             </template>
@@ -253,12 +259,12 @@ export default {
   props: {
     tabIndex: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
   components: {
     MPagination,
-    channelSearchTwo
+    channelSearchTwo,
   },
   data() {
     return {
@@ -311,7 +317,7 @@ export default {
       // 二级渠道emit数据
 
       // 参数渠道id
-      channelValueList: []
+      channelValueList: [],
     }
   },
   watch: {
@@ -327,7 +333,7 @@ export default {
         this.getChannelDetailPage()
         this.channelSearchValList = ''
       }
-    }
+    },
   },
   created() {
     this.getChannelDetailPage()
@@ -338,7 +344,7 @@ export default {
   methods: {
     initScrollTop() {
       this.timer = null
-      this.timer = setTimeout(function() {
+      this.timer = setTimeout(function () {
         if (document.getElementById('channel-box')) {
           window.addEventListener('scroll', this.handleScroll, true)
           clearTimeout(this.timer)
@@ -366,20 +372,24 @@ export default {
         startCtime: this.stateTime,
         endCtime: this.endTime,
         page: this.totalNumber,
-        pageSzie: '60'
+        pageSzie: '60',
+        termCondition: 'trialchannelclassid',
       }
       const paramsM = {
         trialChannels: this.channelIds,
         trialChannelClassIds: this.channelSearchValList,
         stage: this.querySearchTrialStage,
         startCtime: this.stateTime,
-        endCtime: this.endTime
+        endCtime: this.endTime,
+        termCondition: 'trialchannelclassid',
       }
-      this.$http.Operating.countsByTrialChannelClassId(params).then((res) => {
-        const _data = res.content
+      this.$http.Operating.countsByTrialChannel(params).then((res) => {
+        const _data =
+          res.data && res.data.ChannelManagementStatisticsPage.content
         if (!_data) return
-        this.totalNumber = res.number
-        this.totalElements = res.totalElements
+        this.totalNumber = res.data.ChannelManagementStatisticsPage.number
+        this.totalElements =
+          res.data.ChannelManagementStatisticsPage.totalElements
         _data.forEach((res) => {
           res.channelNameLink = `https://www.xiaoxiongmeishu.com/activity/newFortyNine?changeImg=1&channelId=${res.pay_channel}`
           // 线索数
@@ -394,21 +404,21 @@ export default {
           const systemOrderNums = +res.system_user_num
           // 计算参课率
           if (joinCourseNums === 0 && orderUserPayNums === 0) {
-            res.joinCourseNumsPercent = '0%'
+            res.joinCourseNumsPercent = '0'
           } else {
             const nums = (joinCourseNums / orderUserPayNums) * 100
             res.joinCourseNumsPercent = `${nums.toFixed(2)}%`
           }
           // 计算完课率
           if (completeCourseNums === 0 && orderUserPayNums === 0) {
-            res.completeCourseNumsPercent = '0%'
+            res.completeCourseNumsPercent = '0'
           } else {
             const nums = (completeCourseNums / orderUserPayNums) * 100
             res.completeCourseNumsPercent = `${nums.toFixed(2)}%`
           }
           // 计算成单率
           if (systemOrderNums === 0 && orderUserPayNums === 0) {
-            res.systemOrderNumsPercent = '0%'
+            res.systemOrderNumsPercent = '0'
           } else {
             const nums = (systemOrderNums / orderUserPayNums) * 100
             res.systemOrderNumsPercent = `${nums.toFixed(2)}%`
@@ -422,10 +432,10 @@ export default {
         })
         this.onGetChannelList(_data)
       })
-      this.$http.Operating.countsByTrialChannelClassIdOfTotal(paramsM).then(
+      this.$http.Operating.ChannelManagementStatisticsTotal(paramsM).then(
         (ele) => {
           // 模块数据
-          const _datas = ele.payload
+          const _datas = ele.data && ele.data.ChannelManagementStatisticsTotal
           if (!_datas) return
           // 累计成单金额
           if (_datas.system_user_amounts !== 'null') {
@@ -439,7 +449,7 @@ export default {
             +_datas.system_user_num === 0 &&
             _datas.trial_user_num === 'null'
           ) {
-            this.conversionRate = `0%`
+            this.conversionRate = `0`
           } else {
             const conversionRatePercentNums =
               (_datas.system_user_num / _datas.trial_user_num) * 100
@@ -459,7 +469,7 @@ export default {
           this.allJoinUserNums = _datas.join_user_num
           // 参课率
           if (+_datas.join_user_num === 0 && _datas.trial_user_num === 'null') {
-            this.allJoinUserNumsPercent = `0%`
+            this.allJoinUserNumsPercent = `0`
           } else {
             const allJoinUserNumsPercentNums =
               (_datas.join_user_num / _datas.trial_user_num) * 100
@@ -474,7 +484,7 @@ export default {
             +_datas.complete_user_num === 0 &&
             _datas.trial_user_num === 'null'
           ) {
-            this.allCompleteUserNumsPercent = `0%`
+            this.allCompleteUserNumsPercent = `0`
           } else {
             const allCompleteUserNumsPercentNums =
               (_datas.complete_user_num / _datas.trial_user_num) * 100
@@ -515,6 +525,7 @@ export default {
         const __data = ele?.data?.ChannelClassPage.content
         if (!__data) return
         _data.forEach((val) => {
+          val.system_user_amounts = val.system_user_amounts.toFixed(2)
           __data.forEach((item) => {
             if (+item.id === +val.trial_channel_class_id) {
               val.channel_class_id = item.channel_class_parent_id
@@ -578,8 +589,8 @@ export default {
     // 表头回调样式
     headerCss({ row, column, rowIndex, columnIndex }) {
       return 'font-size:12px;color:#666;font-weight:normal;'
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>

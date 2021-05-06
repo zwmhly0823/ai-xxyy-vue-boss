@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-09-04 18:38:15
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-12-12 11:52:00
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-14 18:40:46
  */
 import _ from 'lodash'
 import { todayTimestamp, tomorrowTimestamp } from '../../utils'
@@ -385,7 +385,7 @@ export default {
       }
       const query = Object.assign({}, obj)
       // 学员列表筛掉特价课的
-      query.team_category = [0, 5, 6, 7]
+      // query.team_category = [0, 5, 6, 7]
 
       const page = this.currentPage
       const sort = {}

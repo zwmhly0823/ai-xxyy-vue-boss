@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-20 18:42:43
+ * @LastEditTime: 2021-04-17 19:09:19
 -->
 <template>
   <div class="order-record">
@@ -157,23 +157,42 @@ export default {
     },
     // 数据接口_订单·物流
     reqgetOrderPage() {
-      const query = {
-        regtype: this.changeType === 1 ? [4, 5, 6,10] : [1, 2, 3, 7, 11, 13],
-        uid: this.pUserId
+      // 课程的query
+      const coursQuery = {
+        topic_id:[4,5,13],
+        uid: this.pUserId,
+        status:3
+        
+      }
+      // 其他的query
+        const qiQuery = {
+        regtype:[12],
+        uid: this.pUserId,
+        status:3
+      }
+      // const query = {
+      //   regtype: this.changeType === 1 ? [4, 5, 6,10] : [1, 2, 3, 7, 11, 13],
+      //   uid: this.pUserId
+      // }
+      let query = {};
+      if(this.changeType === 0) {
+         query = coursQuery 
+      }else {
+        query = qiQuery
       }
       // const regtype = this.changeType?[4,5,6]:[1,2,3,7]
-      this.$http.User.getOrderPage(
+      this.$http.Order.OrderOptStatisticsPage(
         query, // studentId
         this.currentPage
       ).then((res) => {
-        if (res.data.OrderPage) {
-          console.log('订单物流模块接口', res.data.OrderPage.content)
-          const _data = res.data.OrderPage.content
+        if (res.data.OrderOptStatisticsPage) {
+          console.log('订单物流模块接口', res.data.OrderOptStatisticsPage.content)
+          const _data = res.data.OrderOptStatisticsPage.content
           _data.forEach((item) => {
             item.ctime = item.ctime ? formatData(item.ctime, 's') : ''
             item.regtype_text = REGTYPE[item.regtype] || '-'
           })
-          this.allDigit = +res.data.OrderPage.totalElements
+          this.allDigit = +res.data.OrderOptStatisticsPage.totalElements
           this.logisticsTableData = _data // 赋值
         }
       })

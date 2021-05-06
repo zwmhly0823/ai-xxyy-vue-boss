@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
- * @LastEditors: Shentong
- * @LastEditTime: 2020-07-27 16:41:08
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-16 11:48:23
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -15,7 +15,7 @@
           <div class="step-container-status">
             <el-steps :active="stepStatus">
               <el-step title="设置基本信息" icon="el-icon-edit"></el-step>
-              <el-step v-if="courseType == '0'" title="设置分配线索规则" icon="el-icon-s-tools"></el-step>
+              <el-step v-if="courseType == '0' || courseType == '1'" title="设置分配线索规则" icon="el-icon-s-tools"></el-step>
               <el-step title="选择带班销售" icon="el-icon-s-flag"></el-step>
               <el-step title="设置招生容量" icon="el-icon-s-check"></el-step>
               <!-- <el-step title="完成" icon="el-icon-success"></el-step> -->
@@ -30,7 +30,7 @@
 
           <!-- 插入一步 设置分配线索 仅体验课显示 -->
           <set-leads
-            v-if="courseType == '0' && stepStatus == 2"
+            v-if="(courseType == '0' || courseType == '1') && stepStatus == 2"
             @listenStepStatus="fSstepStatus"
             @setExcelStatus="excelStatus"
           ></set-leads>
@@ -69,6 +69,7 @@ import FirstStep from './components/FirstStep'
 import SecondStep from './components/SecondStep'
 import ThirdStep from './components/ThirdStep'
 import SetLeads from './components/SetLeads'
+import { Sup_scheduleIndex,Sup_scheduleSubmit} from '@/utils/supList'
 export default {
   props: [],
   data() {
@@ -93,28 +94,31 @@ export default {
   },
   computed: {
     isShowSecondStep() {
-      return (
+     return (
         (this.courseType === '0' && this.stepStatus === 3) ||
-        (this.courseType === '1' && this.stepStatus === 2)
+        (this.courseType === '1' && this.stepStatus === 3) ||
+        (this.courseType === '2' && this.stepStatus === 2)
       )
     },
     isShowThirdStep() {
       return (
         (this.courseType === '0' && this.stepStatus === 4) ||
-        (this.courseType === '1' && this.stepStatus === 3)
+        (this.courseType === '1' && this.stepStatus === 4) ||
+        (this.courseType === '2' && this.stepStatus === 3)
       )
     },
     isShowLastStep() {
       return (
         (this.courseType === '0' && this.stepStatus === 5) ||
-        (this.courseType === '1' && this.stepStatus === 4)
+        (this.courseType === '1' && this.stepStatus === 5) ||
+        (this.courseType === '2' && this.stepStatus === 6)
       )
     }
   },
   created() {
     const { courseType = '0' } = this.$route.params
-    this.courseType = courseType
-    this.courseName = courseType === '0' ? '体验课' : '系统课'
+    this.courseType =  courseType
+    this.courseName = courseType === '0' ? '单周体验课' :courseType === '1'?'双周体验课':'系统课'
     let staff = JSON.parse(localStorage.getItem('staff'))
     if (staff.stepStatus) {
       this.stepStatus = staff.stepStatus

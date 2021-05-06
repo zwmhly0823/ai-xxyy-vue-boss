@@ -20,7 +20,7 @@
       <el-table-column label="购课方式" min-width="160">
         <template slot-scope="scope">
           <p>
-            {{scope.row.exchange_type_text}}
+            {{ scope.row.exchange_type_text }}
           </p>
         </template>
       </el-table-column>
@@ -37,7 +37,7 @@
           <p>
             {{ scope.row.currency ? scope.row.currency : '人民币 ' }}
             {{
-              scope.row.amount
+              scope.row.amount || scope.row.amount == 0
                 ? scope.row.amount
                 : scope.row.regtype === 6
                 ? ''
@@ -50,6 +50,7 @@
         <template slot-scope="scope">
           <p>
             {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
+
             <span
               v-if="trialTeam[scope.row.id]"
               :class="{ 'primary-text': trialTeam[scope.row.id] }"
@@ -93,12 +94,15 @@
       <el-table-column label="兑换码标题·兑换码" min-width="220">
         <template slot-scope="scope">
           <p>
-            {{scope.row.exchange_code_log && scope.row.exchange_code_log.library.title ? scope.row.exchange_code_log.library.title : '-'}}
+            {{
+              scope.row.exchange_code_log &&
+              scope.row.exchange_code_log.library.title
+                ? scope.row.exchange_code_log.library.title
+                : '-'
+            }}
           </p>
           <p>
-            {{
-              scope.row.exchange_code ? scope.row.exchange_code : '-'
-            }}
+            {{ scope.row.exchange_code ? scope.row.exchange_code : '-' }}
           </p>
         </template>
       </el-table-column>
@@ -161,7 +165,6 @@ import MPagination from '@/components/MPagination/index.vue'
 import { formatData, isToss, deepClone, openBrowserTab } from '@/utils/index.js'
 import ExpressDetail from '../../components/expressDetail'
 import User from '../../components/User.vue'
-import { translateStoZ } from '@/utils/supList'
 export default {
   components: {
     MPagination,
@@ -186,7 +189,7 @@ export default {
       },
     },
   },
- data() {
+  data() {
     return {
       loading: false,
       // 给物流详情组件传递的订单id
@@ -269,9 +272,8 @@ export default {
           last_teacher_id:
             this.teacherGroup.length > 0 ? this.teacherGroup : [this.teacherId],
         })
-      
-}
-     // 组合搜索条件
+      }
+      // 组合搜索条件
       this.searchIn.forEach((item) => {
         const subObj =
           item && (item.term || item.terms || item.range || item.wildcard)
@@ -350,7 +352,7 @@ export default {
 
     // 订单列表数据
     orderData(queryObj = {}, page = 1) {
-       // 最终搜索条件
+      // 最终搜索条件
       this.$emit('get-params', queryObj)
       this.$http.Order.orderPage(`${JSON.stringify(queryObj)}`, page)
         .then((res) => {
@@ -385,47 +387,6 @@ export default {
           this.loading = false
         })
     },
-
-    // 获取组织机构
-    // getDepartment() {
-    //   this.$http.Department.teacherDepartment().then((res) => {
-    //     const dpt = (res.data && res.data.TeacherDepartmentList) || []
-    //     this.departmentObj = _.keyBy(dpt, 'id') || {}
-    //   })
-    // },
-
-    // 获取学员体验课班级
-    // 通过Uid查询对应体验课班级，通过team_id获取
-    async getUserTrialTeam(ids = []) {
-      if (this.topic !== '5' && this.topic !== '4') return {}
-
-      const query = ids.length > 0 ? JSON.stringify({ student_id: ids }) : ''
-      const trial = await this.$http.MusicApp.Team.getTrialCourseList(query)
-
-      const teamIds =
-        trial.data.StudentTrialCourseList &&
-        trial.data.StudentTrialCourseList.map((item) => item.team_id)
-      const teamQuery = teamIds ? JSON.stringify({ id: teamIds }) : ''
-      const team = await this.$http.MusicApp.Team.getStudentTeamV1(teamQuery)
-      const teamArr = team.data.StudentTeamList || []
-      const teamById = _.keyBy(teamArr, 'id')
-      const result = {}
-      const resultUid = {}
-      trial.data.StudentTrialCourseList.forEach((item) => {
-        if (teamById[item.team_id] && teamById[item.team_id].team_name) {
-          teamById[item.team_id].team_name = translateStoZ(
-            teamById[item.team_id].team_name
-          )
-        }
-        result[item.order_no] = teamById[item.team_id]
-        resultUid[item.student_id] = teamById[item.team_id]
-      })
-      this.trialTeam = result || {}
-      this.trialTeamUid = resultUid || {}
-
-      // return result
-    },
-
     // 点击分页
     handleSizeChange(val) {
       this.currentPage = val
