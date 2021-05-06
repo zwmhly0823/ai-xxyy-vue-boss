@@ -131,13 +131,13 @@ export default {
         {
           key: 'teacher_trial',
           type: 'classKey',
-          title: '社销老师*体验课班级',
+          title: '销售老师*体验课班级',
           width: '150',
         },
         {
           key: 'teacher_system',
           type: 'classKey1',
-          title: '服务老师*服务班级',
+          title: '教辅老师*服务班级',
           width: '150',
         },
         {
@@ -162,7 +162,7 @@ export default {
         },
         {
           key: 'play_status_text',
-          title: '进入直播时机描述',
+          title: '进入直播时机',
           width: '120',
           escape: (row) => {
             return row.play_status_text ? row.play_status_text : '-'
@@ -174,14 +174,6 @@ export default {
           width: '120',
           escape: (row) => {
             return row.first_join_time ? formatData(row.first_join_time,'s') : '-'
-          },
-        },
-         {
-          key: 'in_room_count',
-          title: '进入次数',
-          width: '120',
-          escape: (row) => {
-            return row.in_room_count ? row.in_room_count : '-'
           },
         },
         {
@@ -380,7 +372,7 @@ export default {
     },
     discussLive(row) {
       this.phoneNumber = row.user.mobile
-      this.tableParam.userId = row.user.id
+      this.tableParam.userId = row.huo_user_id
       this.dialogVisible = true
       this.dia_type = 2
       this.headersDialogList = this.headersDiscuss

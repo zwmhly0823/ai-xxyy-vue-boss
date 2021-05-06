@@ -52,6 +52,7 @@ export default {
                     uid
                     is_in_room_text
                     in_room_num
+                    huo_user_id
                     chat_count
                     watch_time
                     user_status
