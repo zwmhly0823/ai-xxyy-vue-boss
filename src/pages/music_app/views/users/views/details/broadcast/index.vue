@@ -8,35 +8,39 @@
 -->
 <template>
   <div class="logistics">
-    <el-radio-group v-model="changeType" size="mini" style="margin-bottom:10px">
+    <el-radio-group
+      v-model="changeType"
+      size="mini"
+      style="margin-bottom: 10px"
+    >
       <el-radio-button :label="-1">全部</el-radio-button>
       <el-radio-button :label="1">进入直播间</el-radio-button>
       <el-radio-button :label="0">未进入直播间</el-radio-button>
     </el-radio-group>
     <!-- 数据table -->
-    <el-table
-      :data="tableData"
-      style="width: 100%"
-    >
+    <el-table :data="tableData" style="width: 100%">
       <el-table-column prop="act_id" label="活动ID"></el-table-column>
       <el-table-column prop="live" label="直播活动名称">
         <template slot-scope="scope">
-          {{scope.row.live ? scope.row.live.live_name : ''}}
+          {{ scope.row.live ? formatTime(scope.row.live.open_time) : '' }}
         </template>
       </el-table-column>
       <el-table-column prop="live" label="活动开启时间">
         <template slot-scope="scope">
-          {{scope.row.live ? scope.row.live.open_time : ''}}
+          {{ scope.row.live ? scope.row.live.open_time : '' }}
         </template>
       </el-table-column>
       <el-table-column prop="in_room_num" label="进入直播间">
         <template slot-scope="scope">
-          {{scope.row.in_room_num > 0 ? '是' : '否'}}
+          {{ scope.row.in_room_num > 0 ? '是' : '否' }}
         </template>
       </el-table-column>
       <!-- <el-table-column prop="addTime" label="进入直播时机"></el-table-column> -->
       <el-table-column prop="join_at" label="首次进入时间"></el-table-column>
-      <el-table-column prop="watch_time" label="观看直播总时长"></el-table-column>
+      <el-table-column
+        prop="watch_time"
+        label="观看直播总时长"
+      ></el-table-column>
       <!-- <el-table-column prop="addTime" label="观看回放总时长"></el-table-column> -->
       <el-table-column prop="chat_count" label="评论数"></el-table-column>
       <el-table-column prop="like_count" label="点赞数"></el-table-column>
@@ -44,17 +48,17 @@
       <!-- <el-table-column prop="addTime" label="查看商品"></el-table-column> -->
       <el-table-column prop="by_shop_flag" label="购买商品">
         <template slot-scope="scope">
-          {{scope.row.by_shop_flag > 0 ? '是' : '否'}}
+          {{ scope.row.by_shop_flag > 0 ? '是' : '否' }}
         </template>
       </el-table-column>
       <el-table-column prop="live" label="进入终端">
         <template slot-scope="scope">
-          {{scope.row.live ? scope.row.live.push_terminal : ''}}
+          {{ scope.row.live ? scope.row.live.push_terminal : '' }}
         </template>
       </el-table-column>
       <el-table-column prop="user_status" label="系统课转化">
         <template slot-scope="scope">
-          {{transformStatus(scope.row.user_status)}}
+          {{ transformStatus(scope.row.user_status) }}
         </template>
       </el-table-column>
     </el-table>
@@ -69,20 +73,18 @@
       >
       </el-pagination>
     </div>
-
   </div>
 </template>
 
 <script>
-
+import moment from 'moment'
 export default {
   name: 'broadcast',
-  components: {
-  },
+  components: {},
   mounted() {
-    const { id } = this.$route.params;
-    this.uid = id;
-    this.getActiveList();
+    const { id } = this.$route.params
+    this.uid = id
+    this.getActiveList()
   },
   data() {
     return {
@@ -95,11 +97,14 @@ export default {
         totalElements: 0,
         totalPages: 0,
         pageSize: 20,
-        pageSizeArr: [20, 50, 100, 200, 500]
+        pageSizeArr: [20, 50, 100, 200, 500],
       },
     }
   },
   methods: {
+    formatTime(str) {
+      return moment(str * 1).format('YYYY-MM-DD HH:mm:ss')
+    },
     transformStatus(val) {
       switch (+val) {
         case 0:
@@ -135,57 +140,50 @@ export default {
     ) {
       Object.assign(this.listQuery, {
         currentPage: page,
-        pageSize: size
+        pageSize: size,
       })
 
       this.loading = true
       const params = {}
-      Object.assign(
-        params,
-        { uid: this.uid,  in_room_num: this.in_room_num},
-      )
-      this.$http.liveBroadcast.getActiveList(
-        params,
-        {
+      Object.assign(params, { uid: this.uid, in_room_num: this.in_room_num })
+      this.$http.liveBroadcast
+        .getActiveList(params, {
           page,
-          size
-        },
-      )
-      .then((res) => {
-        const { content = [], totalElements = 0, totalPages = 0 } =
-          res?.data?.ActivityUserStatisticsPage || {}
-        // this.tableData = this.formatUserData(content)
-        this.tableData = content;
-        Object.assign(this.listQuery, {
-          totalElements: +totalElements,
-          totalPages: +totalPages
+          size,
         })
-      })
-      .finally(() => {
-        this.loading = false
-      })
+        .then((res) => {
+          const { content = [], totalElements = 0, totalPages = 0 } =
+            res?.data?.ActivityUserStatisticsPage || {}
+          // this.tableData = this.formatUserData(content)
+          this.tableData = content
+          Object.assign(this.listQuery, {
+            totalElements: +totalElements,
+            totalPages: +totalPages,
+          })
+        })
+        .finally(() => {
+          this.loading = false
+        })
     },
     // 翻页
     handleCurrentChange(val) {
-      this.listQuery.currentPage = val;
+      this.listQuery.currentPage = val
       this.getActiveList()
     },
   },
   watch: {
     changeType(newVal, oldVal) {
-      if(newVal === -1) {
-        this.in_room_num = undefined;
+      if (newVal === -1) {
+        this.in_room_num = undefined
+      } else if (newVal === 0) {
+        this.in_room_num = 0
+        this.getActiveList()
+      } else if (newVal === 1) {
+        this.in_room_num = { gt: 0 }
+        this.getActiveList()
       }
-      else if(newVal === 0) {
-        this.in_room_num = 0;
-        this.getActiveList();
-      }
-      else if(newVal === 1) {
-        this.in_room_num = { gt: 0};
-        this.getActiveList();
-      }
-    }
-  }
+    },
+  },
 }
 </script>
 
