@@ -1,13 +1,13 @@
 <template>
   <el-row class="coins">
     <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-      <el-tab-pane label="全部" name="1">全部</el-tab-pane>
-      <el-tab-pane label="调班成功" name="2">调班成功</el-tab-pane>
-      <el-tab-pane label="调班失败" name="3">调班失败</el-tab-pane>
+      <el-tab-pane label="全部" name="1"></el-tab-pane>
+      <el-tab-pane label="调班成功" name="2"></el-tab-pane>
+      <el-tab-pane label="调班失败" name="3"></el-tab-pane>
     </el-tabs>
     <!-- search -->
-    <el-form :inline="true" ref="ruleForm" :model="form" :rules="rules">
-      <el-form-item label="添加学员" prop="mobile" v-if="flag == 0">
+    <el-form :inline="true" ref="ruleForm">
+      <el-form-item label="添加学员" prop="mobile">
         <search-phone-or-usernum
           ref="mobile"
           class="manageclass-maxwidth"
@@ -33,7 +33,7 @@ export default {
   data() {
     return {
       loading: false,
-      activeName: '0',
+      activeName: '1',
       tableData: [],
       query: {
         pageSize: 10,
@@ -41,11 +41,7 @@ export default {
       },
     }
   },
-  created() {
-    // boss获取操作ID使用staff   toss获取操作ID teacher
-    const operation = localStorage.getItem('staff')
-    operation && (this.params.operationId = JSON.parse(operation).id)
-  },
+  created() {},
   watch: {},
   mounted() {},
   methods: {

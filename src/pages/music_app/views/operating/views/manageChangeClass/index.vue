@@ -48,7 +48,9 @@
             </el-upload>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="操作日志" name="3"> </el-tab-pane>
+        <el-tab-pane label="操作日志" name="3">
+          <operation />
+        </el-tab-pane>
       </el-tabs>
     </div>
 
@@ -62,11 +64,13 @@
 
 <script>
 import person from './person'
+import operation from './operationLog'
 import changeClassDialog from './changeClassDialog'
 import { getAppSubject } from '@/utils/index'
 export default {
   components: {
     person,
+    operation,
     changeClassDialog,
   },
   data() {
