@@ -37,7 +37,7 @@
                 >选取文件</el-button
               >
               <el-button
-                style="margin-left: 20px;"
+                style="margin-left: 20px"
                 size="small"
                 type="success"
                 @click="submitUpload"
@@ -48,6 +48,7 @@
             </el-upload>
           </div>
         </el-tab-pane>
+        <el-tab-pane label="操作日志" name="3"> </el-tab-pane>
       </el-tabs>
     </div>
 
@@ -66,7 +67,7 @@ import { getAppSubject } from '@/utils/index'
 export default {
   components: {
     person,
-    changeClassDialog
+    changeClassDialog,
   },
   data() {
     return {
@@ -80,8 +81,8 @@ export default {
       params: {
         operationId: '',
         subject: '',
-        form: null
-      }
+        form: null,
+      },
     }
   },
   created() {
@@ -121,8 +122,8 @@ export default {
     },
     submitUpload(file, filelist) {
       this.$refs.upload.submit()
-    }
-  }
+    },
+  },
 }
 </script>
 
