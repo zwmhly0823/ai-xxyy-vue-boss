@@ -3,8 +3,8 @@
  * @Descripttion:
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-22 12:15:41
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-31 11:46:52
  */
  -->
 <template>
@@ -26,18 +26,19 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="点评" width="300" align="center">
+      <el-table-column label="点评" width="100" align="center">
         <template
           slot-scope="scope"
           v-if="scope.row.reviewDataList !== undefined"
         >
+          <p>-</p>
           <div class="review-container">
             <div class="top-container">
-              <div
+              <!-- <div
                 v-for="(item, index) in Object.keys(scope.row.reviewDataList)"
                 :key="index"
-              >
-                <div
+              > -->
+                <!-- <div
                   class="title"
                   v-if="
                     scope.row.reviewDataList[item] !== undefined &&
@@ -61,32 +62,8 @@
                       <span>{{ scoreObj[_item.score] }}</span>
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="bottom-container"
-              v-if="Object.keys(scope.row.reviewDataList).length"
-            >
-              <el-button
-                type="success"
-                @click="syntheticSpeech(scope.$index, scope.row)"
-                >生成</el-button
-              >
-              <div class="audio-container">
-                <audio
-                  v-if="scope.row.showAudio"
-                  :src="scope.row.mp3Url"
-                  controls
-                  ref="audioRef"
-                ></audio>
-              </div>
-              <el-button
-                type="primary"
-                :disabled="!scope.row.mp3Url"
-                @click="generateSpeech(scope.row)"
-                >发送</el-button
-              >
+                </div> -->
+              <!-- </div> -->
             </div>
           </div>
         </template>
@@ -166,6 +143,7 @@ export default {
         )
         if (res.code === 0) {
           const list = res.payload.content
+          this.loading = false
           this.totalElements = Number.parseInt(res.payload.totalElements)
           list.forEach((item, index) => {
             const str = `${item.id}@${item.courseId}`
@@ -177,6 +155,7 @@ export default {
         }
       } catch (error) {
         console.log(error)
+        this.loading = false
       }
     },
     async iniToViewInform(list) {

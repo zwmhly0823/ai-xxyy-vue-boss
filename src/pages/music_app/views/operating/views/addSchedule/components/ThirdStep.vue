@@ -256,6 +256,8 @@ export default {
         { name: 'V2.0', value: 'V2.0' }
       ],
       trialClass: [
+        // { name: '双周体验课-9.9元', value: '505' },
+        // { name: '双周体验课-29元', value: '503' },
         { name: '单周体验课', value: '3' },
         { name: '双周体验课', value: '0' },
         { name: '年系统课', value: '2' },
