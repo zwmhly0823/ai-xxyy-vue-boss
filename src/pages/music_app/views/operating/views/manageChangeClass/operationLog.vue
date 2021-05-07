@@ -7,18 +7,17 @@
     </el-tabs>
     <!-- search -->
     <el-form :inline="true" ref="ruleForm">
-      <el-form-item label="添加学员" prop="mobile">
+      <el-form-item label="学员手机号:" prop="mobile">
         <search-phone-or-usernum
-          ref="mobile"
-          class="manageclass-maxwidth"
-          defaultType="0"
-          :isHidden="false"
-          :name="['mobile']"
-          type="3"
+          style="margin-right: 10px"
+          type="2"
+          :extension="true"
+          user-num-key="user_num"
           tablename="UserExtendsList"
-          @result="getSearchUid('user', arguments)"
+          @result="getSearchData('uid', arguments)"
         />
       </el-form-item>
+      <el-form-item label="操作人:" prop="mobile"> </el-form-item>
     </el-form>
   </el-row>
 </template>
@@ -46,6 +45,7 @@ export default {
   mounted() {},
   methods: {
     handleClick() {},
+    getSearchData(key, res) {},
   },
 }
 </script>
