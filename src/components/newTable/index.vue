@@ -161,7 +161,7 @@
                         }}</span>
                         <span
                           class="primary-text"
-                          @click="openTeam(scope.row.teacher_trial,scope.row.team)"
+                          @click="openTeam(scope.row.team_id,scope.row.team)"
                           >{{
                             `(${
                               scope.row.team ? scope.row.team.team_name : '-'
@@ -191,7 +191,7 @@
                       }}</span>
                       <span
                         class="primary-text"
-                        @click="openTeam(scope.row.teacher_system,scope.row.team)"
+                        @click="openTeam(scope.row.team_id,scope.row.team)"
                         >{{
                           `(${scope.row.team ? scope.row.team.team_name : '-'})`
                         }}</span
@@ -331,8 +331,8 @@ export default {
     },
     // 点击班级名称，打开班级详情
     openTeam(row,row1) {
-      if (!row.id) return
-      const teamId = row.id
+      if (!row) return
+      const teamId = row
       const teamType = row1.team_type || '0'
       const typeUrl = teamType == 2 ? 'teamDetail' : 'teamTrialDetail'
       teamId && openBrowserTab(`/music_app/#/${typeUrl}/${teamId}/${teamType}`)
