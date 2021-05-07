@@ -107,6 +107,13 @@ export default {
   liveBroadcastChatList(params) {
     return axios.get(`/api/ump/live/chat/page/list`, params)
   },
+
+  // 获取评论分页
+   getLiveChatList(params) {
+    return axios.get(
+      `/api/ump/live/chat/page/list?activityId=${params.activityId}&userId=${params.userId}&huoUserId=${params.huoUserId}&pageNum=${params.pageNum}&pageSize=${params.pageSize}`
+    )
+  },
     /**
    * 体验课班级直播活动
    */
@@ -139,6 +146,7 @@ export default {
           number
           content {
             uid
+            huo_user_id
             act_id
             is_in_room_text
             in_room_count
