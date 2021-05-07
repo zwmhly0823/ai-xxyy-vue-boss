@@ -974,7 +974,7 @@ export default {
           }
         }
         if (item && item.terms) {
-          if (item.terms.sup) {
+           if (item.terms.sup) {
             timeType.sup = `${item.terms.sup}`
           }
           // level
@@ -1179,7 +1179,13 @@ export default {
           this.totalPages = +res.data.LogisticsListPageNew.totalPages
 
           this.totalElements = +res.data.LogisticsListPageNew.totalElements // 总条数
-          this.$emit('getTotal',this.totalElements)
+          let total = null;
+          if(this.totalElements ==0) {
+            total = Math.random()
+          }else {
+            total = this.totalElements
+          }
+          this.$emit('getTotal',total)
           // this.getTeacherList(realnameId)
           // this.getStudentTeamList(teamId)
           this.getScheduleList(schedule)

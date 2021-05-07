@@ -4,14 +4,14 @@
  * @Author: YangJiyong
  * @Date: 2020-10-13 21:14:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-31 20:18:11
+ * @LastEditTime: 2021-04-15 21:21:11
  */
 // import { deepClone } from '@/utils'
 /**
  * 美术 - 课程难度更改
  * ‘S1-基础’ 新增S4 ； ‘S1-进阶’ 原S1 ；‘S2-基础’ 原S2； 'S2-进阶' 新增S5； 'S3' 原S3 ；
  */
-export const SUP_LEVEL = {
+ export const SUP_LEVEL = {
   4: 'M1',
   1: 'M2',
   2: 'M3',
@@ -49,19 +49,12 @@ export const Sup_scheduleDownload = {
   2:"系统课"
 }
 export const SUP_LEVEL_LIST_LOWER = [
-  { id: 'M1', text: 'M1' },
-  { id: 'M2', text: 'M2' },
-  { id: 'M3', text: 'M3' },
-  { id: 'M4', text: 'M4' }
+  { id: 'S1', text: 'M1' },
+  { id: 'S2', text: 'M2' },
+  { id: 'S3', text: 'M3' },
+  { id: 'S4', text: 'M4' }
 ]
 export const SUP_LEVEL_LIST_UPPER = [
-  { id: 'M1', text: 'M1' },
-  { id: 'M2', text: 'M2' },
-  { id: 'M3', text: 'M3' },
-  { id: 'M4', text: 'M4' },
-]
-
-export const SUP_LEVEL_LIST_teacher = [
   { id: 'S1', text: 'M1' },
   { id: 'S2', text: 'M2' },
   { id: 'S3', text: 'M3' },

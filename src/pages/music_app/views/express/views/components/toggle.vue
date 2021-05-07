@@ -160,7 +160,7 @@ export default {
     },
     seachTotal(newVal) {
       if(newVal && this.activeIndex !=0 || newVal ==0) {
-        this.toggleList[this.activeIndex].count = newVal
+        this.toggleList[this.activeIndex].count = newVal>0 && newVal<1?0:newVal
         this.$set(this.toggleList,this.activeIndex,this.toggleList[this.activeIndex])
       }
     }
