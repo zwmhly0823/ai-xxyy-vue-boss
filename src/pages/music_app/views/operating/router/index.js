@@ -201,6 +201,26 @@ const operatingRoutes = [{
     import('../views/reviewManagement/components/verificationCode.vue')
 },
 {
+  path: '/regroup',
+  name: 'regroup',
+  meta: {
+    title: '重新分班',
+    keepAlive: false
+  },
+  component: () =>
+    import('../views/reviewManagement/components/regroup.vue')
+},
+{
+  path: '/userResult',
+  name: 'userResult',
+  meta: {
+    title: '用户登陆查询',
+    keepAlive: false
+  },
+  component: () =>
+    import('../views/reviewManagement/components/userResult.vue')
+},
+{
   path: '/labelManage',
   name: 'labelManage',
   meta: {
