@@ -228,7 +228,7 @@ export default {
             search.user_status = { gte: 11, lte: 12 }
           }
           // 已购年课
-          if (search.user_status === 4) {
+          if (search.user_status === 2) {
             search.user_status = { gte: 5, lte: 7 }
           }
         }
