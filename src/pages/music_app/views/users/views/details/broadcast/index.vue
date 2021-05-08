@@ -36,10 +36,18 @@
         </template>
       </el-table-column>
       <!-- <el-table-column prop="addTime" label="进入直播时机"></el-table-column> -->
-      <el-table-column prop="join_at" label="首次进入时间"></el-table-column>
+      <el-table-column prop="first_join_time" label="首次进入时间">
+        <template slot-scope="scope">
+          {{
+            scope.row.first_join_time
+              ? formatTime(scope.row.first_join_time)
+              : '-'
+          }}
+        </template>
+      </el-table-column>
       <el-table-column
-        prop="watch_time"
-        label="观看直播总时长"
+        prop="live_watch_time"
+        label="观看直播总时长/分钟"
       ></el-table-column>
       <!-- <el-table-column prop="addTime" label="观看回放总时长"></el-table-column> -->
       <el-table-column prop="chat_count" label="评论数"></el-table-column>

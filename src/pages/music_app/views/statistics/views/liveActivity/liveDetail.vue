@@ -185,7 +185,7 @@ export default {
         },
         {
           key: 'live_watch_time',
-          title: '观看直播总时长',
+          title: '观看直播总时长/分钟',
           width: '150',
           sort: true,
           escape: (row) => {
