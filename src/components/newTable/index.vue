@@ -161,7 +161,7 @@
                         }}</span>
                         <span
                           class="primary-text"
-                          @click="openTeam(scope.row.teacher_trial)"
+                          @click="openTeam(scope.row.team_id,scope.row.team)"
                           >{{
                             `(${
                               scope.row.team ? scope.row.team.team_name : '-'
@@ -191,7 +191,7 @@
                       }}</span>
                       <span
                         class="primary-text"
-                        @click="openTeam(scope.row.teacher_system)"
+                        @click="openTeam(scope.row.team_id,scope.row.team)"
                         >{{
                           `(${scope.row.team ? scope.row.team.team_name : '-'})`
                         }}</span
@@ -206,7 +206,7 @@
                         }}
                       </div>
                     </div>
-                    <div v-else>{{ '--' }}</div>
+                    <div v-if="column.type != 'classKey'">{{ '--' }}</div>
                   </label>
                   <!-- 字段为数组的情况 -->
                   <span v-else>
@@ -330,10 +330,10 @@ export default {
       return formatData(date, flag)
     },
     // 点击班级名称，打开班级详情
-    openTeam(row) {
-      if (!row.id) return
-      const teamId = row.id
-      const teamType = row.team_type || '0'
+    openTeam(row,row1) {
+      if (!row) return
+      const teamId = row
+      const teamType = row1.team_type || '0'
       const typeUrl = teamType == 2 ? 'teamDetail' : 'teamTrialDetail'
       teamId && openBrowserTab(`/music_app/#/${typeUrl}/${teamId}/${teamType}`)
     },

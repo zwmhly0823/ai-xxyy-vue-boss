@@ -67,8 +67,9 @@
   </el-row>
 </template>
 <script>
+import moment from 'moment';
 import baseTable from '@/components/newTable'
-import { copyText, openBrowserTab, formatData } from '@/utils/index'
+import { openBrowserTab } from '@/utils/index'
 import search from '../../components/liveDetailSeach'
 export default {
   name: 'liveActivityList',
@@ -175,7 +176,7 @@ export default {
           title: '首次进入时间',
           width: '120',
           escape: (row) => {
-            return row.first_join_time ? formatData(row.first_join_time,'s') : '-'
+            return row.first_join_time ? this.formatTime(row.first_join_time) : '-'
           },
         },
         {
@@ -310,6 +311,9 @@ export default {
     },
   },
   methods: {
+    formatTime(str) {
+      return moment(str * 1).format('YYYY-MM-DD HH:mm:ss');
+    },
     async initData(page = 1, sort) {
       this.sortTab = Object.assign(this.sortTab, sort)
       this.paramsToSearch = Object.assign(this.paramsToSearch, {
@@ -374,7 +378,8 @@ export default {
     },
     discussLive(row) {
       this.phoneNumber = row.user.mobile
-      this.tableParam.userId = row.huo_user_id
+      this.tableParam.userId = row.uid
+      this.tableParam.huoUserId = row.huo_user_id
       this.dialogVisible = true
       this.dia_type = 2
       this.headersDialogList = this.headersDiscuss

@@ -61,6 +61,7 @@ export default {
                     chat_count
                     play_status_text
                     in_room_count
+                    team_id
                     live_watch_time
                     join_at
                     playback_watch_time
