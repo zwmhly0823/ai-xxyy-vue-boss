@@ -143,6 +143,7 @@ export default {
         path: '/liveDetail',
         query: {
           activityId: activityId,
+          liveName:row.liveName
         },
       })
     },

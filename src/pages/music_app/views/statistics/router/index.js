@@ -4,6 +4,16 @@
  * @LastEditTime: 2020-10-13 22:07:00
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
+let liveName = window.location.hash;
+let reg = /([^?=&]+)=([^?=&]+)/g
+let obj = {};
+liveName.replace(reg, function (a, b, c) {
+  obj[b] = c
+})
+let name = null
+if(obj.liveName) {
+  name = decodeURI(obj.liveName)
+}
 const routes = [
   {
     path: '/',
@@ -27,7 +37,7 @@ const routes = [
     path: '/liveDetail',
     name: '/liveDetail',
     meta: {
-      title: '直播活动详情',
+      title: `直播活动详情`,
       keepAlive: false
     },
     component: () => import('../views/liveActivity/liveDetail.vue')

@@ -7,6 +7,7 @@
  * @LastEditTime: 2021-01-05 14:03:37
  */
 import { isToss } from '@/utils'
+import ExtendUserInfo from '@/components/BaseUserInfo/Extend.vue'
 
 const teacher = isToss(true)
 export default [
@@ -24,7 +25,17 @@ export default [
     width: '160',
     // 自定义组件
     render(h, data, row) {
-      return `ID: ${data}`
+      const user = {
+        mobile: row.user.mobile,
+        id: row.user.id
+      }
+      return h(ExtendUserInfo, {
+
+        props: {
+          user: user,
+          isHead: true
+        }
+      })
     }
   },
   {
@@ -69,7 +80,7 @@ export default [
   {
     prop: 'chat_count',
     label: '评论数',
-    width: '70',
+    slot: 'chat',
   },
   // {
   //   prop: 'like_count',
@@ -151,6 +162,7 @@ export default [
 
 export const actions = ({
   handleUserDetail,
+  handletest,
 }) => {
   return {
     action: [

@@ -1,4 +1,4 @@
-<!--
+  <!--
  * @Author: songyanan
  * @Email: songyanan@meishubao.com
  * @Date: 2020-08-27 10:44:00
@@ -228,7 +228,7 @@ export default {
             search.user_status = { gte: 11, lte: 12 }
           }
           // 已购年课
-          if (search.user_status === 4) {
+          if (search.user_status === 2) {
             search.user_status = { gte: 5, lte: 7 }
           }
         }

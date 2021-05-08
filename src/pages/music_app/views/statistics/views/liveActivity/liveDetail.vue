@@ -8,7 +8,9 @@
             v-for="(item, index) in showList"
             :key="index"
           >
-            <p>{{ item.value + `${item.desc=='直播总时长'?'分钟':'人'}` }}</p>
+            <p>
+              {{ item.value + `${item.desc == '直播总时长' ? '分钟' : '人'}` }}
+            </p>
             <p>{{ item.desc }}</p>
           </div>
         </div>
@@ -67,7 +69,7 @@
   </el-row>
 </template>
 <script>
-import moment from 'moment';
+import moment from 'moment'
 import baseTable from '@/components/newTable'
 import { openBrowserTab } from '@/utils/index'
 import search from '../../components/liveDetailSeach'
@@ -81,7 +83,7 @@ export default {
   data() {
     return {
       paramsToSearch: {
-        in_room_num:{ gt: 0 }
+        in_room_num: { gt: 0 },
       },
       sortTab: {
         join_date: 'desc',
@@ -171,12 +173,14 @@ export default {
             return row.play_status_text ? row.play_status_text : '-'
           },
         },
-         {
+        {
           key: 'first_join_time',
           title: '首次进入时间',
           width: '120',
           escape: (row) => {
-            return row.first_join_time ? this.formatTime(row.first_join_time*1000) : '-'
+            return row.first_join_time
+              ? this.formatTime(row.first_join_time * 1000)
+              : '-'
           },
         },
         {
@@ -188,7 +192,7 @@ export default {
             return row.live_watch_time ? row.live_watch_time : '-'
           },
         },
-         {
+        {
           key: 'playback_watch_time',
           title: '观看回放总时长',
           width: '150',
@@ -307,12 +311,17 @@ export default {
   },
   watch: {
     paramsToSearch() {
+      if (this.activeName == 1) {
+        this.paramsToSearch.in_room_num = 0
+      } else {
+        this.paramsToSearch.in_room_num = { gt: 0 }
+      }
       this.initData()
     },
   },
   methods: {
     formatTime(str) {
-      return moment(str * 1).format('YYYY-MM-DD HH:mm:ss');
+      return moment(str * 1).format('YYYY-MM-DD HH:mm:ss')
     },
     async initData(page = 1, sort) {
       this.sortTab = Object.assign(this.sortTab, sort)
