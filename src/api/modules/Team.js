@@ -15,8 +15,8 @@ export default {
     return axios.post('/graphql/v1/toss', {
       query: `{
         StudentTrialForTeamStatisticsPage(query:${JSON.stringify(
-          querysData
-        )} , page: ${currentPage}, size: 20,${sortGroup}) {
+        querysData
+      )} , page: ${currentPage}, size: 20,${sortGroup}) {
           empty
           first
           last
@@ -80,8 +80,8 @@ export default {
     return axios.post('/graphql/v1/toss', {
       query: `{
         StudentSystemForTeamStatisticsPage(query:${JSON.stringify(
-          querysData
-        )} , page: ${currentPage}, size: 20,${sortGroup}) {
+        querysData
+      )} , page: ${currentPage}, size: 20,${sortGroup}) {
           empty
           first
           last
@@ -243,7 +243,7 @@ export default {
       size = '20',
       sort = `{"ctime":"desc"}`
     } = params
-    const query = { team_state: teamState.split(','), subject: '3',category:params.category }
+    const query = { team_state: teamState.split(','), subject: '3', category: params.category }
     teamName &&
       Object.assign(query, {
         'team_name.like': { 'team_name.keyword': `*${teamName}*` }
@@ -359,8 +359,8 @@ export default {
     return axios.post('/graphql/user', {
       query: `{
         userListForTeam(query:${JSON.stringify(
-          querysData
-        )} , page: ${currentPage}, size: 20,${sortGroup}) {
+        querysData
+      )} , page: ${currentPage}, size: 20,${sortGroup}) {
           empty
           first
           last
@@ -395,8 +395,8 @@ export default {
     return axios.post('/graphql/express', {
       query: `{
         stuExpressPage(query:${JSON.stringify(
-          querysData
-        )} , page: ${currentPage}, size: 20) {
+        querysData
+      )} , page: ${currentPage}, size: 20) {
         empty
         first
         last
@@ -434,8 +434,8 @@ export default {
     return axios.post('/graphql/getClassLogin', {
       query: `{
     stuLoginPage(query:${JSON.stringify(
-      querysData
-    )}, page: ${currentPage}, size: 20) {
+        querysData
+      )}, page: ${currentPage}, size: 20) {
           first
           last
           number
@@ -596,8 +596,8 @@ export default {
     return axios.post('/graphql/v1/toss', {
       query: `{
         StudentTrialCourseList(query: ${JSON.stringify(
-          injectSubject(query)
-        )}, size: ${size}) {
+        injectSubject(query)
+      )}, size: ${size}) {
           student_id
           team_id
           order_no
@@ -613,8 +613,8 @@ export default {
       query: `
         {
           StudentTeamList(query: ${JSON.stringify(
-            query
-          )}, sort: ${JSON.stringify(sort)}) {
+        query
+      )}, sort: ${JSON.stringify(sort)}) {
             id
             team_name
           }
@@ -630,11 +630,54 @@ export default {
       query: `
         {
           StudentTeamListEx(query: ${JSON.stringify(
-            query
-          )}, sort: ${JSON.stringify(sort)}) {
+        query
+      )}, sort: ${JSON.stringify(sort)}) {
             id
             team_name
             teacher_id
+          }
+        }
+      `
+    })
+  },
+
+  // 获取调班班级 - 模糊搜索
+  getSearchClassName(params = {}) {
+    const { query = {}, page = 1, size = 20,sort = { ctime: 'desc' } } = params
+    let teamName = null;
+    params = JSON.parse(params)
+    if(params.teamName) {
+      
+      teamName = params.teamName
+    }
+    
+    teamName &&
+      Object.assign(query, {
+        'team_name.like': { 'team_name.keyword': `*${teamName}*` }
+      })
+    return axios.post('/graphql/v1/toss', {
+      query: `
+        {
+          StudentTrialTeamStatisticsPage(page: ${page}, size:${size},query: ${JSON.stringify(
+        injectSubject(query)
+      )}, sort: ${JSON.stringify(JSON.stringify(sort))}) {
+            totalPages
+            totalElements
+            content {
+              id
+              ctime
+              utime
+              class_start
+              class_end
+              stop_end_time
+              team_name
+              team_type
+              team_state
+              current_lesson
+              progress
+              sup
+              term
+            }
           }
         }
       `

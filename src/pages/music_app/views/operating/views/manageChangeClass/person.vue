@@ -32,6 +32,7 @@
           ref="teamName2"
           class="manageclass-maxwidth"
           teamnameType="0"
+          name="toTeamId"
           :isMultiple="isCheckbox"
           :term="term_trial"
           :changeClassName="true"
@@ -138,7 +139,7 @@
 </template>
 <script>
 import SearchPhoneOrUsernum from '@/components/MSearch/searchItems/searchPhoneOrUsernum.vue'
-import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
+import SearchTeamName from '@/components/MSearch/searchItems/searchClassName'
 import MPagination from '@/components/MPagination/index.vue'
 import changeClassDialog from './changeClassDialog'
 import { deepClone, getAppSubject } from '@/utils/index'
@@ -322,6 +323,9 @@ export default {
       }
     },
     getTrialTeamName(flagid, flag, res) {
+      if(res[0].toTeamId) {
+        this.rules.toTeamId = res[0].toTeamId
+      }
       if (res[0]?.length === 1) {
         const classData = res[0] && res[0][0]
         classData[flagid] = classData.id
