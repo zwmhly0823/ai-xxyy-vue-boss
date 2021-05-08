@@ -172,7 +172,7 @@
                       <div>
                         {{
                           `${
-                            (scope.row.teacher_trial &&
+                            (scope.row.teacher_trial && scope.row.teacher_trial.departmentInfo &&
                               scope.row.teacher_trial.departmentInfo.name) ||
                             '--'
                           }`
@@ -199,7 +199,7 @@
                       <div>
                         {{
                           `${
-                            (scope.row.teacher_system &&
+                            (scope.row.teacher_system && scope.row.teacher_system.departmentInfo &&
                               scope.row.teacher_system.departmentInfo.name) ||
                             '--'
                           }`

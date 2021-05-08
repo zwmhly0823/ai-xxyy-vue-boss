@@ -176,7 +176,7 @@ export default {
           title: '首次进入时间',
           width: '120',
           escape: (row) => {
-            return row.first_join_time ? this.formatTime(row.first_join_time) : '-'
+            return row.first_join_time ? this.formatTime(row.first_join_time*1000) : '-'
           },
         },
         {
