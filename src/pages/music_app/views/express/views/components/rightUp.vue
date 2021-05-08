@@ -472,7 +472,7 @@ export default {
           '补发原因',
         user_num: '用户短ID',
         last_teacher_name: '带班老师',
-        department_name: '所属部组',
+        'area_name|department_name|group_name': '所属部组',
         receipt_name: '收货人姓名',
         receipt_tel: '收货人手机号',
         province: '省',
