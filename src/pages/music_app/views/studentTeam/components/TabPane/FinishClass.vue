@@ -25,11 +25,11 @@
           >
             <td>
               <img
-                :src="`${item.head}?x-oss-process=image/resize,l_100`"
+                :src="`${item.head}?x-oss-process=image/resize,l_100&t=${+new Date().getTime()}`"
                 alt=""
                 @load="loaded(index)"
                 style="vertical-align:middle;width:51px;height:51px;"
-                crossorigin="anonymous"
+                crossOrigin="anonymous"
               />
               <span> {{ item.username }}</span>
             </td>
