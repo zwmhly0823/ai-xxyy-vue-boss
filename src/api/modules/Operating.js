@@ -29,6 +29,15 @@ export default {
     )
   },
   /**
+   * 获取体验课、系统课列表
+   */
+  trialChangeClass(params) {
+    return axios.post(
+      `/api/ts/v1/teamChange/changeTrialTeamByMobile`,
+      params.data
+    )
+  },
+  /**
    * 新增招生排期第一步-add
    */
   addScheduleFirstStep(params) {

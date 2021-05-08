@@ -41,7 +41,7 @@
           @result="getTrialTeamName('toTeamId', 'toTeam', arguments)"
         />
       </el-form-item>
-      <el-button type="primary" style="margin-top:5px;" size="mini" @click="add"
+      <el-button type="primary" style="margin-top: 5px" size="mini" @click="add"
         >添加</el-button
       >
       <el-button
@@ -58,7 +58,7 @@
       <el-table
         v-if="flag == 0"
         :data="tableData"
-        style="width: 100%;border-top:1px solid #EBEEF5"
+        style="width: 100%; border-top: 1px solid #ebeef5"
       >
         <el-table-column
           label="序号"
@@ -95,7 +95,7 @@
         v-if="flag == 1"
         v-loading="loading"
         :data="tableData"
-        style="width: 100%;border-top:1px solid #EBEEF5"
+        style="width: 100%; border-top: 1px solid #ebeef5"
       >
         <el-table-column
           label="序号"
@@ -149,13 +149,13 @@ export default {
     SearchPhoneOrUsernum,
     SearchTeamName,
     MPagination,
-    changeClassDialog
+    changeClassDialog,
   },
   props: {
     flag: {
       type: String,
-      default: '0'
-    }
+      default: '0',
+    },
   },
   data() {
     return {
@@ -167,13 +167,13 @@ export default {
       form: {
         mobile: '',
         toTeamId: '',
-        fromTeamId: ''
+        fromTeamId: '',
       },
       params: {
         operationId: '',
         subject: '',
         type: '',
-        data: null
+        data: null,
       },
       tableData: [],
       AllTableData: [],
@@ -182,7 +182,7 @@ export default {
       totalElements: 0, // 总条数
       query: {
         pageSize: 10,
-        pageNum: 1
+        pageNum: 1,
       },
       // 当前页数
       rules: {
@@ -191,13 +191,13 @@ export default {
           {
             required: true,
             message: '请添加调出班级',
-            trigger: 'blur'
-          }
+            trigger: 'blur',
+          },
         ],
         toTeamId: [
-          { required: true, message: '请添加调入班级', trigger: 'blur' }
-        ]
-      }
+          { required: true, message: '请添加调入班级', trigger: 'blur' },
+        ],
+      },
     }
   },
   created() {
@@ -213,7 +213,7 @@ export default {
       if (this.AllTableData.length > this.query.pageSize) {
         this.tableData.length = this.query.pageSize
       }
-    }
+    },
   },
   mounted() {},
   methods: {
@@ -275,7 +275,7 @@ export default {
           this.$refs.teamName2.teamName = this.$refs.mobile.value = ''
           return
         }
-        if (arr[i].fromTeamId === this.form.fromTeamId && this.flag === '1') {
+        if (arr[i].toTeamId === this.form.fromTeamId && this.flag === '1') {
           this.$message.error('该班级信息已经添加')
           this.$refs.ruleForm.resetFields()
           this.$refs.teamName1.teamName = this.$refs.teamName2.teamName = ''
@@ -308,7 +308,8 @@ export default {
         if (content && content.length > 0) {
           const _obj = {
             fromTeamId: content[0].team_id,
-            fromTeam: content[0].teamInfo && content[0].teamInfo.team_name
+            toTeamId: content[0].team_id,
+            fromTeam: content[0].teamInfo && content[0].teamInfo.team_name,
           }
           Object.assign(this.form, _obj)
           this.AllTableData.unshift(this.form)
@@ -323,11 +324,9 @@ export default {
       }
     },
     getTrialTeamName(flagid, flag, res) {
-      if(res[0].toTeamId) {
-        this.rules.toTeamId = res[0].toTeamId
-      }
-      if (res[0]?.length === 1) {
-        const classData = res[0] && res[0][0]
+      if (res[0]) {
+        this.rules.toTeamId = res[0].id
+        const classData = res[0]
         classData[flagid] = classData.id
         classData[flag] = classData.team_name
         delete classData.id
@@ -347,8 +346,8 @@ export default {
         this.query.pageNum = val
         this.tableData = this.AllTableData.slice(firstIndex, lastIndex + 1)
       })
-    }
-  }
+    },
+  },
 }
 </script>
 

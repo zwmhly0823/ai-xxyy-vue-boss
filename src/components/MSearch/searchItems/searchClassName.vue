@@ -21,7 +21,7 @@
       @change="onChange"
       @clear="onClear"
     >
-      <el-option v-for="item in teamList" :key="item.id" :label="item.team_name" :value="item.id"></el-option>
+      <el-option v-for="item in teamList" :key="item.id" :label="item.team_name" :value="item"></el-option>
     </el-select>
   </div>
 </template>
@@ -82,7 +82,7 @@ export default {
     },
     // 获取选中的
     onChange(data) {
-      this.$emit('result', data.length > 0 ? { [this.name]: data } : '')
+      this.$emit('result', data? data : '')
     },
     // 清空
     onClear(val) {
