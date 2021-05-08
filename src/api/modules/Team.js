@@ -343,6 +343,10 @@ export default {
   getExperienceStatusList(params) {
     return axios.post(`/graphql/team`, params)
   },
+  // 获取体验课调班班级
+  getTeamChangequeryTeams(params) {
+    return axios.post(`/api/ts/v1/teamChange/queryTeams`, params)
+  },
   // 学员列表获取所有优惠券
   getAllCoupons(params) {
     return axios.get(`/api/s/v1/coupon/getAllCoupons?page=${params}`)
