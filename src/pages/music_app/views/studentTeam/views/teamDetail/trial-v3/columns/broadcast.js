@@ -71,7 +71,7 @@ export default [
   },
   {
     prop: 'live_watch_time',
-    label: '观看直播总时长',
+    label: '观看直播总时长/分钟',
   },
   {
     prop: 'playback_watch_time',
