@@ -219,7 +219,7 @@ export default {
         teamId: this.teamId,
       });
       if(data.code === 0) {
-        this.liveActive = data.payload.splice(0,3);
+        this.liveActive = data.payload;
         this.liveActivityId =data.payload[0] && data.payload[0].activityId;
         this.getLiveCount();
         this.getActiveList();
