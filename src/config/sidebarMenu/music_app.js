@@ -260,16 +260,16 @@ let bearArt = [
           module
         }
       },
-      // {
-      //   path: '/review',
-      //   name: 'review',
-      //   hidden:true,
-      //   meta: {
-      //     title: '作品审核',
-      //     module: 'operating',
-      //     module
-      //   }
-      // },
+      {
+        path: '/review',
+        name: 'review',
+        hidden:true,
+        meta: {
+          title: '作品审核',
+          module: 'operating',
+          module
+        }
+      },
       {
         path: '/channelManagement',
         name: 'channelManagement',
