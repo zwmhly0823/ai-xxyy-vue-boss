@@ -39,6 +39,7 @@
           <toggle
             @result="getStatus"
             :tab="activeName"
+            :seachTotal="seachTotal"
             :regtype="regtype"
             :source_type="source_type"
           />
@@ -53,6 +54,7 @@
                 :regtype="regtype"
                 :source_type="source_type"
                 :hideCol="hideCol"
+                @getTotal="getTotal"
               />
             </div>
           </el-scrollbar>
@@ -75,6 +77,7 @@
           <toggle
             @result="getStatus"
             :tab="activeName"
+            :seachTotal="seachTotal"
             :regtype="regtypeSys"
             :source_type="source_type"
           />
@@ -88,6 +91,7 @@
                 :sortItem="sortItem"
                 :regtype="regtypeSys"
                 :source_type="source_type"
+                @getTotal="getTotal"
                 :hideCol="allExpressHideCol"
               />
             </div>
@@ -108,6 +112,7 @@
           <toggle
             @result="getStatus"
             :tab="activeName"
+            :seachTotal="seachTotal"
             :regtype="`0,${regtypeActivity}`"
             :source_type="source_type"
             :hideToggleBtn="allHideToggleBtn"
@@ -120,13 +125,14 @@
               <rightDown
                 :search="searchActivity"
                 :sortItem="sortItem"
+                @getTotal="getTotal"
                 :regtype="`0,${regtypeActivity}`"
                 :source_type="
                   (searchActivity &&
                     searchActivity[0] &&
                     searchActivity[0].term &&
                     searchActivity[0].term.source_type) ||
-                    source_type
+                  source_type
                 "
                 :hideCol="allExpressHideColActivity"
               />
@@ -149,6 +155,7 @@
           />
           <toggle
             @result="getStatus"
+            :seachTotal="seachTotal"
             :hideToggleBtn="hideToggleBtn"
             :tab="activeName"
             :regtype="`0,${regtype},${regtypeSys},${regtypeActivity}`"
@@ -162,6 +169,7 @@
               <rightDown
                 :search="searchReplenish"
                 :sortItem="sortItem"
+                @getTotal="getTotal"
                 :regtype="`0,${regtype},${regtypeSys},${regtypeActivity}`"
                 :source_type="'5'"
                 :hideCol="replenishHideCol"
@@ -226,9 +234,7 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="immediately">
-          立即发货
-        </el-button>
+        <el-button type="primary" @click="immediately"> 立即发货 </el-button>
         <el-button v-if="!taskStatus" @click="timedTask">
           启用定时发货
         </el-button>
@@ -279,14 +285,14 @@
 import toggle from '../components/toggle'
 import rightDown from '../components/rightDown'
 import rightUp from '../components/rightUp'
-import {courseLevelReplace} from '@/utils/supList.js'
+import { courseLevelReplace } from '@/utils/supList.js'
 const allExpressHideCol = {
   replenishType: false,
   productType: false,
   replenishReason: false,
   applicant: false,
   term: false,
-  courseType: false
+  courseType: false,
 }
 const allExpressHideColActivity = {
   replenishType: false,
@@ -296,19 +302,19 @@ const allExpressHideColActivity = {
   productVersion: false,
   term: false,
   className: false,
-  teacher: false
+  teacher: false,
 }
 const allExpressHideSearchItem = {
   level: '',
   replenishReason: '',
-  replenishMethod: ''
+  replenishMethod: '',
 }
 const allExpressHideSearchItemSystem = {
   // 系统课物流需要显示级别
   level: 'level',
   replenishReason: '',
   replenishMethod: '',
-  teacherTip: '辅导老师'
+  teacherTip: '辅导老师',
 }
 const allExpressHideSearchItemActivity = {
   productName: 'product_name',
@@ -321,7 +327,7 @@ const allExpressHideSearchItemActivity = {
   groupSell: '',
   teamDetail: '',
   // topicType: 'regtype',
-  productType: 'productType'
+  productType: 'productType',
 }
 const replenishHideCol = {
   approvalReissueInfo: true,
@@ -333,7 +339,7 @@ const replenishHideCol = {
   teacher: false,
   courseType: false,
   applicant: false,
-  productType: false
+  productType: false,
 }
 const replenishHideSearchItem = {
   level: 'level',
@@ -342,7 +348,7 @@ const replenishHideSearchItem = {
   groupSell: '',
   teamDetail: '',
   operatorId: 'operator_id',
-  regType: 'regType'
+  regType: 'regType',
 }
 const allExpressSourceType = '0,1,2,3,4,6,7,8'
 const replenishSourceType = '5'
@@ -350,7 +356,7 @@ export default {
   components: {
     toggle,
     rightDown,
-    rightUp
+    rightUp,
   },
   data() {
     return {
@@ -365,23 +371,23 @@ export default {
         {
           type: 'COUNTRY',
           tag: '',
-          status: 'OFF'
+          status: 'OFF',
         },
         {
           type: 'AUTOMATIC',
           tag: '10:00',
-          status: 'OFF'
+          status: 'OFF',
         },
         {
           type: 'AUTOMATIC',
           tag: '14:00',
-          status: 'OFF'
+          status: 'OFF',
         },
         {
           type: 'AUTOMATIC',
           tag: '20:00',
-          status: 'OFF'
-        }
+          status: 'OFF',
+        },
       ],
       taskStatus: false, // 定时发货任务是否开启 true/false
       isDisabledPause: true, // 自动发货弹窗暂停按钮是否可用 true/false
@@ -407,14 +413,14 @@ export default {
       teamClassSys: '1', // 排期组件添加类别区分 系统课传1 体验课传0
       allExpressHideSearchItemActivity,
       allExpressHideSearchItemSystem,
-      replenishHideSearchItem
+      replenishHideSearchItem,
+      seachTotal:0
     }
   },
   mounted() {
     this.$nextTick(() => {
       this.calcSrollHeight()
     })
-    
   },
   methods: {
     handleCommand(command) {
@@ -476,11 +482,11 @@ export default {
       this.$confirm(
         h('div', null, [
           h('p', { style: 'font-weight: 600;' }, title),
-          h('p', null, content)
+          h('p', null, content),
         ]),
         {
           showCancelButton: true,
-          type: 'warning'
+          type: 'warning',
         }
       )
         .then(() => {
@@ -489,7 +495,7 @@ export default {
           )
           const msg = {
             success: '定时发货任务启用成功',
-            error: '定时发货任务启用失败'
+            error: '定时发货任务启用失败',
           }
           this.updateSwitchStatus(params, msg)
         })
@@ -505,11 +511,11 @@ export default {
       this.$confirm(
         h('div', null, [
           h('p', { style: 'font-weight: 600;' }, title),
-          h('p', null, content)
+          h('p', null, content),
         ]),
         {
           showCancelButton: true,
-          type: 'warning'
+          type: 'warning',
         }
       )
         .then(() => {
@@ -534,11 +540,11 @@ export default {
       this.$confirm(
         h('div', null, [
           h('p', { style: 'font-weight: 600;' }, title),
-          h('p', null, content)
+          h('p', null, content),
         ]),
         {
           showCancelButton: true,
-          type: 'warning'
+          type: 'warning',
         }
       )
         .then(() => {
@@ -549,7 +555,7 @@ export default {
           })
           const msg = {
             success: '全部任务已暂停',
-            error: '暂停失败'
+            error: '暂停失败',
           }
           this.updateSwitchStatus(params, msg)
         })
@@ -662,11 +668,11 @@ export default {
       this.$confirm(
         h('div', null, [
           h('p', { style: 'font-weight: 600;' }, title),
-          h('p', null, content)
+          h('p', null, content),
         ]),
         {
           showCancelButton: true,
-          type: 'warning'
+          type: 'warning',
         }
       )
         .then(() => {
@@ -675,7 +681,7 @@ export default {
           )
           const msg = {
             success: `全国自动调拨${isOpen}成功`,
-            error: `全国自动调拨${isOpen}失败`
+            error: `全国自动调拨${isOpen}失败`,
           }
           this.updateSwitchStatus(params, msg)
         })
@@ -720,6 +726,9 @@ export default {
       this.sortItem = val
       this.handleHideCol(val)
     },
+    getTotal(data) {
+      this.seachTotal = data
+    },
     // 展示失败原因
     handleHideCol(val) {
       if (
@@ -761,8 +770,8 @@ export default {
       //   this.hideCol = allExpressHideCol
       //   this.source_type = allExpressSourceType
       // }
-    }
-  }
+    },
+  },
 }
 </script>
 

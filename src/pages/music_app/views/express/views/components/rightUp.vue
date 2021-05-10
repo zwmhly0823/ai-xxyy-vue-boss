@@ -86,7 +86,7 @@
           >选取文件</el-button
         >
         <el-button
-          style="margin-left: 10px;"
+          style="margin-left: 10px"
           size="small"
           type="success"
           @click="submitUpload"
@@ -123,42 +123,42 @@ import MSearch from '@/components/MSearch/index.vue'
 let switchTabSearchIn = {}
 export default {
   props: {
-    addSupS:{
-      type:Boolean,
-      default:false
+    addSupS: {
+      type: Boolean,
+      default: false,
     },
     tab: {
       type: String,
-      default: '0'
+      default: '0',
     },
     status: {
       type: String,
-      default: ''
+      default: '',
     },
     regtype: {
       type: String,
-      default: ''
+      default: '',
     },
     hideSearchItem: {
       type: Object,
       default: () => {
         return {}
-      }
+      },
     },
     source_type: {
       type: String,
-      default: ''
+      default: '',
     },
     hideCol: {
       type: Object,
       default: () => {
         return {}
-      }
+      },
     },
     teamClass: {
       type: String,
-      default: '' // 系统课是1  体验课是0
-    }
+      default: '', // 系统课是1  体验课是0
+    },
   },
   computed: {
     showItem() {
@@ -170,10 +170,10 @@ export default {
     },
     searchInData() {
       return this.$store.state.leftbar.searchInData
-    }
+    },
   },
   components: {
-    MSearch
+    MSearch,
   },
   mounted() {
     switchTabSearchIn = {}
@@ -209,13 +209,13 @@ export default {
           { text: '购买时间', value: 'ctime' },
           { text: '揽收时间', value: 'delivery_collect_time' },
           { text: '签收时间', value: 'signing_time' },
-          { text: '审核时间', value: 'center_ctime' }
+          { text: '审核时间', value: 'center_ctime' },
         ],
         selectAddress: 'province',
         replenishReason: 'replenish_reason',
         replenishMethod: 'replenish_type',
-        packages_id:!this.addSupS?'packages_id':''
-      }
+        packages_id: !this.addSupS ? 'packages_id' : '',
+      },
     }
   },
   watch: {
@@ -227,7 +227,7 @@ export default {
         'result',
         switchTabSearchIn[`searchIn${this.regtype}${this.source_type}`] || []
       )
-    }
+    },
   },
   created() {
     this.teacherId = isToss()
@@ -269,7 +269,7 @@ export default {
             this.$message({
               showClose: true,
               message: '恭喜你，文件上传成功',
-              type: 'success'
+              type: 'success',
             })
           }
           this.dialogVisible = false
@@ -340,16 +340,16 @@ export default {
             if (item.term && item.term.product_name) {
               arrFlag.push({
                 wildcard: {
-                  'product_name.keyword': `*${item.term.product_name}*`
-                }
+                  'product_name.keyword': `*${item.term.product_name}*`,
+                },
               })
               delete item.term.product_name
             }
             if (item.term && item.term.product_type) {
               arrFlag.push({
                 term: {
-                  'product_type.keyword': item.term.product_type
-                }
+                  'product_type.keyword': item.term.product_type,
+                },
               })
               delete item.term.product_type
             }
@@ -357,53 +357,55 @@ export default {
             if (item.term && item.term.productType) {
               arrFlag.push({
                 term: {
-                  product_type: item.term.productType
-                }
+                  product_type: item.term.productType,
+                },
               })
               delete item.term.productType
             }
             if (item.term && item.term.replenish_reason) {
               arrFlag.push({
                 terms: {
-                  replenish_reason: item.term.replenish_reason
-                }
+                  replenish_reason: item.term.replenish_reason,
+                },
               })
               delete item.term.replenish_reason
             }
             if (item.term && item.term.replenish_type) {
               arrFlag.push({
                 terms: {
-                  replenish_type: item.term.replenish_type
-                }
+                  replenish_type: item.term.replenish_type,
+                },
               })
               delete item.term.replenish_type
             }
             if (item.term && item.term.regType) {
               arrFlag.push({
                 terms: {
-                  regtype: item.term.regType.split(',')
-                }
+                  regtype: item.term.regType.split(','),
+                },
               })
               delete item.term.regType
             } else {
               arrFlag.push({
-                terms: { regtype: this.regtype.split(',') }
+                terms: { regtype: this.regtype.split(',') },
               })
             }
             if (item.term && item.term.province) {
               if (item.term.province.provincesCode) {
                 arrFlag.push({
-                  term: { 'province.keyword': item.term.province.provincesCode }
+                  term: {
+                    'province.keyword': item.term.province.provincesCode,
+                  },
                 })
               }
               if (item.term.province.citysCode) {
                 arrFlag.push({
-                  term: { 'city.keyword': item.term.province.citysCode }
+                  term: { 'city.keyword': item.term.province.citysCode },
                 })
               }
               if (item.term.province.areasCode) {
                 arrFlag.push({
-                  term: { 'area.keyword': item.term.province.areasCode }
+                  term: { 'area.keyword': item.term.province.areasCode },
                 })
               }
               delete item.term.province
@@ -422,12 +424,12 @@ export default {
 
         const finaTerm = newTerm.concat([
           {
-            terms: { source_type: this.source_type.split(',') }
+            terms: { source_type: this.source_type.split(',') },
           },
           {
-            terms: { regtype: this.regtype.split(',') }
+            terms: { regtype: this.regtype.split(',') },
           },
-          { terms: { express_status: this.expressStatus.split(',') } }
+          { terms: { express_status: this.expressStatus.split(',') } },
         ])
         let finalmust = []
         finalmust = finaTerm.filter((item) => {
@@ -439,7 +441,7 @@ export default {
         // finalmust = finaTerm
         query = {
           bool: {
-            must: finalmust
+            must: finalmust,
             // filter: {
             //   bool: {
             //     should: [
@@ -447,7 +449,7 @@ export default {
             //     ]
             //   }
             // }
-          }
+          },
         } // 自行通过前端选择的条件进行动态组装
       }
 
@@ -457,23 +459,28 @@ export default {
         id: '物流信息ID',
         user_id: '用户ID',
         out_trade_no: '订单号',
+        express_nu: '快递单号',
+        express_company: '物流公司',
+        express_company_nu: '物流公司编号',
         product_type: '商品类型',
         term: '期名',
         sup: '课程难度',
         level: '课程级别',
         product_name: '物流商品名称',
         product_version: '随材版本',
-        'operator_name|replenish_reason|express_remark': '补发原因',
+        'operator_name|replenish_type|replenish_reason|express_remark':
+          '补发原因',
+        user_num: '用户短ID',
+        last_teacher_name: '带班老师',
+        'area_name|department_name|group_name': '所属部组',
         receipt_name: '收货人姓名',
         receipt_tel: '收货人手机号',
         province: '省',
         city: '市',
         area: '区',
+        street: '街道',
         address_detail: '详细地址',
-        express_nu: '快递单号',
-        express_company: '物流公司',
-        express_company_nu: '物流公司编号',
-        center_express_id:'中台物流Id'
+        center_express_id: '中台物流Id',
       }
       // 补发货列表新增补发原因表头
       if (this.tab === '1') {
@@ -485,7 +492,7 @@ export default {
         name,
         headers,
         query,
-        sort
+        sort,
       }
       this.exportLoading = true
       this.$http.DownloadExcel.exportExpress(params).then(
@@ -536,8 +543,8 @@ export default {
       link.click()
       this.dickUp = false
       this.dosomething()
-    }
-  }
+    },
+  },
 }
 </script>
 

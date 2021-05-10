@@ -18,7 +18,7 @@
       class="item-style"
     >
       <el-option
-        v-for="(item,index) in typeList"
+        v-for="(item, index) in typeList"
         :key="index"
         :value="item.id"
         :label="item.text"
@@ -42,89 +42,107 @@ export default {
   data() {
     return {
       type: null,
-      typeList:[],
+      typeList: [],
       typeList1: [
         {
-          id: ["0","6"],
+          id: ['0', '6'],
           text: '全部',
         },
         {
-          id: ["6"],
+          id: ['6'],
           text: '单周体验课',
         },
         {
-          id: ["0"],
+          id: ['0'],
           text: '双周体验课',
         },
       ],
-       typeList2: [
+      typeList2: [
         {
-          id: ['0','3'],
+          id: ['0', '3'],
           text: '全部',
         },
         {
-          id:["3"],
+          id: ['3'],
           text: '单周体验课',
         },
         {
-          id: ["0"],
+          id: ['0'],
           text: '双周体验课',
         },
       ],
-      // 物流 
-       typeList3: [
+      // 物流
+      typeList3: [
         {
-          id: ['500','502'],
+          id: ['500', '502'],
           text: '全部',
         },
         {
-          id:["502"],
+          id: ['502'],
           text: '单周体验课',
         },
         {
-          id: ["500"],
+          id: ['500'],
           text: '双周体验课',
         },
       ],
       // 体验课学员
-       typeList4: [
+      typeList4: [
         {
-          id: ['0','3'],
+          id: ['0', '3'],
           text: '全部',
         },
         {
-          id:["3"],
+          id: ['3'],
           text: '单周体验课',
         },
         {
-          id: ["0"],
+          id: ['0'],
+          text: '双周体验课',
+        },
+      ],
+      typeList5: [
+        {
+          id: ['0', '2'],
+          text: '全部',
+        },
+        {
+          id: ['2'],
+          text: '单周体验课',
+        },
+        {
+          id: ['0'],
           text: '双周体验课',
         },
       ],
     }
   },
   mounted() {
-
-    console.log("搜索数据",this.name);
-    if(this.name == "category") {
+    console.log('搜索数据', this.name)
+    if (this.name == 'category') {
       this.typeList = this.typeList2
-    }else if(this.name == 'packages_type') {
+    } else if (this.name == 'packages_type') {
       this.typeList = this.typeList1
-    }else if(this.name == 'packages_id') {
+    } else if (this.name == 'packages_id') {
       this.typeList = this.typeList3
-    }else if(this.name == 'team_category') {
+    } else if (this.name == 'team_category') {
       this.typeList = this.typeList4
+    } else if (this.name == 'type') {
+      this.typeList = this.typeList5
     }
   },
   methods: {
     onChange(item) {
-      console.log(item,"选择的值");
-      if(this.name == 'team_category') {
-        this.$emit('result','team_category', item ? [{ [this.name]: item }] : '')
-      }else {
+      console.log(item, '选择的值')
+      if (this.name == 'team_category') {
+        this.$emit(
+          'result',
+          'team_category',
+          item ? [{ [this.name]: item }] : ''
+        )
+      } else {
         this.$emit('result', item ? { [this.name]: item } : '')
       }
-     
     },
   },
 }
