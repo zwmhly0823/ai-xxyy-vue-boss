@@ -23,7 +23,7 @@
         v-for="(item,index) in supList"
         :key="item.id"
         :label="item.text"
-        :value="(index+1)"
+        :value="index+1"
       >
       </el-option>
     </el-select>
