@@ -431,7 +431,7 @@ export default {
     getChannelList() {
       const subject = { subject: this.$store.getters.subjects.subjectCode }
       // const obj = { ...subject, "channel_inner_name.keyword": "兑换码"} channel_class_id\":82
-      const obj = { ...subject, channel_class_id:82}
+      const obj = { ...subject}
       let query = JSON.stringify(JSON.stringify(obj))
       if (query) {
         this.$http.Operating.ChannelDetailStatisticsPage(

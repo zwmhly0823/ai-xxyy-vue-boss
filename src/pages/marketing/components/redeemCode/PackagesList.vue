@@ -62,7 +62,7 @@ export default {
     return {
       // 指定的套餐ID; 前期只有体验课 [5, 3, 10, 18],
       // 新增"美术宝写字精品体验课（id 19）""美术宝写字尊享体验课（id 20）"
-      exIds: [500],
+      exIds: [500,502,503,505],
       dataList: [],
       checkedId: this.currentId || '' // 选中的套餐ID
     }
