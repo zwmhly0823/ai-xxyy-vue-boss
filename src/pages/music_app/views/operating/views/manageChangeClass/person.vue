@@ -297,7 +297,6 @@ export default {
         const { content } = res.data.StudentTrialV2StatisticsPage
         if (content && content.length > 0) {
           const _obj = {
-            fromTeamId: content[0].team_id,
             toTeamId: content[0].team_id,
             fromTeam: content[0].teamInfo && content[0].teamInfo.team_name,
             toTeam: this.form.toTeam,
