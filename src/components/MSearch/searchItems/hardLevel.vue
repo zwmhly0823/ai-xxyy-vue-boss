@@ -20,10 +20,10 @@
       @change="supChange"
     >
       <el-option
-        v-for="(item) in supList"
+        v-for="(item,index) in supList"
         :key="item.id"
         :label="item.text"
-        :value="item.id"
+        :value="index+1"
       >
       </el-option>
     </el-select>
