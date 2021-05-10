@@ -325,7 +325,7 @@ export default {
       }
     }
     return {
-      promotionsRange: '', // 活动范围radio
+      promotionsRange: '2', // 活动范围radio
       isTrial: false, // 体验课checkbox
       isSystem: false, // 系统课checkbox
       isOrder: false, // 按下单时间
