@@ -23,11 +23,11 @@
         </el-alert>
         <div class="item-content">
           <div v-for="(item, i) in returnSuccess" :key="i">
-            {{ item.errorMsg }}
+            {{ item }}
           </div>
         </div>
       </div>
-      <div v-if="returnErr.length" class="changeclass-diaolog-group">
+      <!-- <div v-if="returnErr.length" class="changeclass-diaolog-group">
         <el-alert
           title="导入失败"
           type="error"
@@ -41,7 +41,7 @@
             {{ item.errorMsg }}
           </div>
         </div>
-      </div>
+      </div> -->
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" size="small" @click="$router.go(0)"
           >确 定</el-button
@@ -61,10 +61,7 @@ export default {
     returnSuccess: {
       type: Array
     },
-    returnErr: {
-      type: Array
-    },
-    dialogVisible: {
+   dialogVisible: {
       type: Boolean,
       default: false
     }

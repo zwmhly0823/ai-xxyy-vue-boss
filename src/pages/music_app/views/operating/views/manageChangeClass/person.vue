@@ -133,7 +133,6 @@
     <change-class-dialog
       :dialogVisible="dialogVisible"
       :returnSuccess="successList"
-      :returnErr="errList"
     />
   </el-row>
 </template>
@@ -178,7 +177,6 @@ export default {
       tableData: [],
       AllTableData: [],
       successList: [], // 返回成功数组
-      errList: [], // 返回成功数组
       totalElements: 0, // 总条数
       query: {
         pageSize: 10,
@@ -226,17 +224,9 @@ export default {
       this.loading = true
       this.$http.Operating.trialChangeClass(this.params).then((res) => {
         this.loading = false
-        if (res.length) {
+        if (res.payload.length > 0) {
           this.dialogVisible = true
-          res.forEach((item, i) => {
-            if (item.state === 1) {
-              this.errList.push(item)
-            } else if (item.state === 0) {
-              this.successList.push(item)
-            }
-          })
-        } else {
-          this.$message.error('数据错误')
+          this.successList = res.payload
         }
       })
     },
