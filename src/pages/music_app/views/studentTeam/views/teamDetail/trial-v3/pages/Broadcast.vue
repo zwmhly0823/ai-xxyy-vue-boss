@@ -4,7 +4,7 @@
     <div class="actives">
       <div class="lbl">活动选择</div>
       <el-select class="control" size="small" v-model="liveActivityId">
-        <el-option v-for="(item, index) in liveActive" :key="index" :value="item.liveActivityId" :label="item.liveName">
+        <el-option v-for="(item, index) in liveActive" :key="index" :value="item.activityId" :label="item.liveName">
           <div class="active-option">
             <span>{{ item.liveName }}</span>
             <span style="color: red;font-size:12px;">{{ activeStatus[item.liveStatus] }}</span>
@@ -219,8 +219,8 @@ export default {
         teamId: this.teamId,
       });
       if(data.code === 0) {
-        this.liveActive = data.payload;
-        this.liveActivityId =data.payload[0] && data.payload[0].liveActivityId;
+        this.liveActive = data.payload.splice(0,3);
+        this.liveActivityId =data.payload[0] && data.payload[0].activityId;
         this.getLiveCount();
         this.getActiveList();
       }
