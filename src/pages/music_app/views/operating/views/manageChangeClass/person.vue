@@ -283,8 +283,8 @@ export default {
       // 按班级调班
       if (this.flag === '1') {
         // var obj = deepClone(this.form)
-        this.AllTableData.unshift(this.form[0])
-        this.form = { toTeamId: '', fromTeamId: '',}
+        this.AllTableData.unshift(this.form)
+        this.form = { toTeamId: '', originTeamId: '',}
         this.$nextTick((_) => {
           this.tableData = deepClone(this.AllTableData)
           this.$refs.teamName1.teamName = this.$refs.teamName2.teamName = ''
@@ -300,7 +300,7 @@ export default {
             fromTeamId: content[0].team_id,
             toTeamId: content[0].team_id,
             fromTeam: content[0].teamInfo && content[0].teamInfo.team_name,
-            toTeam:this.form[0].team_name
+            toTeam:this.form.team_name
           }
           Object.assign(this.form, _obj)
           this.AllTableData.unshift(this.form)
@@ -322,13 +322,15 @@ export default {
         if (flagid == 'fromTeamId') {
           this.rules.fromTeamId = res[0].id
         }
-        const classData = res[0]
+        const classData = res[0][0]
         classData[flagid] = classData.id
         classData[flag] = classData.team_name
         delete classData.id
         delete classData.team_name
         delete classData.teacher_id
         Object.assign(this.form, classData)
+
+        console.log(this.form,"this.form");
       }
     },
     getSearchUid(key, res) {
