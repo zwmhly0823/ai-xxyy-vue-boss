@@ -19,57 +19,55 @@
       :remote-method="getTeam"
       :loading="loading"
       @change="onChange"
-      @clear="onClear"
     >
-      <el-option v-for="item in teamList" :key="item.id" :label="item.team_name" :value="item"></el-option>
+      <el-option
+        v-for="item in teamList"
+        :key="item.id"
+        :label="item.team_name"
+        :value="item.id"
+      ></el-option>
     </el-select>
   </div>
 </template>
 
 <script>
-import { debounce } from 'lodash'
 import { courseLevelReplace } from '@/utils/supList.js'
 export default {
   props: {
     name: {
       type: String,
-      default: ''
+      default: '',
     },
     // 需要查询的类型
     teamnameType: {
       type: String,
-      default: '1' // 0：体验课。 >0系统课
+      default: '1', // 0：体验课。 >0系统课
     },
-   },
-  computed: {
-    handleDebounce() {
-      return debounce(this.getTeam, 500)
-    }
   },
+
   data() {
     return {
       loading: false,
       teamName: '',
       teamList: [],
-      courseLevelReplace
+      courseLevelReplace,
     }
   },
   created() {
     this.getTeam()
   },
-  watch:{
-    teamName(newValue,oldValue) {
-      if(newValue || newValue =='') {
-        this.getTeam(newValue)
+  watch: {
+    teamName(newValue, oldValue) {
+      if (newValue || newValue == '') {
+        this.getTeam()
       }
-    }
+    },
   },
   methods: {
     getTeam(query) {
       // if (query !== '') {
       this.loading = true
-      let q = {};
-      q.teamName = query
+      let q = {}
       this.$http.Team.getSearchClassName(JSON.stringify(q))
         .then((res) => {
           this.teamList = res.data.StudentTrialTeamStatisticsPage.content || []
@@ -82,13 +80,18 @@ export default {
     },
     // 获取选中的
     onChange(data) {
-      this.$emit('result', data? data : '')
+      let list = this.teamList.filter((item,index) => {
+         if(item.id == data) {
+           return this.teamList
+         }
+      })
+      this.$emit('result', data ? list : '')
     },
     // 清空
     onClear(val) {
       this.getTeam('')
-    }
-  }
+    },
+  },
 }
 </script>
 
