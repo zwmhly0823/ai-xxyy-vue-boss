@@ -8,7 +8,7 @@
  */
 module.exports = {
   title: '小熊音乐BOSS',
-  version: '1.2.27',
+  version: '1.2.28',
 
   /**
    * @type {boolean} true | false
