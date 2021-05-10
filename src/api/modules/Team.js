@@ -665,18 +665,7 @@ export default {
             totalElements
             content {
               id
-              ctime
-              utime
-              class_start
-              class_end
-              stop_end_time
               team_name
-              team_type
-              team_state
-              current_lesson
-              progress
-              sup
-              term
             }
           }
         }

@@ -224,7 +224,7 @@ export default {
       this.loading = true
       this.$http.Operating.trialChangeClass(this.params).then((res) => {
         this.loading = false
-        if (res.payload.length > 0) {
+        if (res.payload && res.payload.length > 0) {
           this.dialogVisible = true
           this.successList = res.payload
         }
@@ -284,7 +284,7 @@ export default {
       if (this.flag === '1') {
         // var obj = deepClone(this.form)
         this.AllTableData.unshift(this.form)
-        this.form = { toTeamId: '', originTeamId: '',}
+        this.form = { toTeamId: '', originTeamId: '' }
         this.$nextTick((_) => {
           this.tableData = deepClone(this.AllTableData)
           this.$refs.teamName1.teamName = this.$refs.teamName2.teamName = ''
@@ -300,7 +300,7 @@ export default {
             fromTeamId: content[0].team_id,
             toTeamId: content[0].team_id,
             fromTeam: content[0].teamInfo && content[0].teamInfo.team_name,
-            toTeam:this.form.team_name
+            toTeam: this.form.toTeam,
           }
           Object.assign(this.form, _obj)
           this.AllTableData.unshift(this.form)
@@ -329,8 +329,6 @@ export default {
         delete classData.team_name
         delete classData.teacher_id
         Object.assign(this.form, classData)
-
-        console.log(this.form,"this.form");
       }
     },
     getSearchUid(key, res) {
