@@ -82,35 +82,11 @@
         }}</el-col>
       </el-row>
       <!-- 
-        452845563730333696  张丹丹
-        455930731630301184  张奔
-        468157824866848768  宋瑨
-        481157576520765440  何文恺
-        488022954492432384  王亚南
-        492806900967149568  小雪小美女
         469897200621719552  申爽
-        480811548877656064  刘宝
-        490293972040814592  曹华
-        455930591481827328  刘彩屏
-        469159895246180352  张璟辉
-       -->
+      -->
       <el-row
         class="BOTTOM"
-        v-if="
-          drawerGiftDeatail.status === 'PENDING' &&
-            (staffId === '470676591924613120' ||
-              staffId === '452845563730333696' ||
-              staffId === '455930731630301184' ||
-              staffId === '468157824866848768' ||
-              staffId === '481157576520765440' ||
-              staffId === '488022954492432384' ||
-              staffId === '492806900967149568' ||
-              staffId === '469897200621719552' ||
-              staffId === '480811548877656064' ||
-              staffId === '455930591481827328' ||
-              staffId === '469159895246180352' ||
-              staffId === '490293972040814592')
-        "
+        v-if="drawerGiftDeatail.status === 'PENDING' && isPromotions"
       >
         <el-col :span="20" :offset="1" style="margin-top: 40px">
           <el-button type="button" size="small" @click="refuseDialog"
@@ -130,34 +106,43 @@ export default {
   props: {
     drawerGiftDeatail: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     drawerGift: {
       type: Boolean,
-      default: false
+      default: false,
     },
     staffId: {
       type: String,
-      default: ''
+      default: '',
     },
     staffName: {
       type: String,
-      default: ''
+      default: '',
     },
     params_pending: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   created() {
     console.log(this.params_pending, 'params_pending')
+    this.initPromotions()
   },
   data() {
-    return {}
+    return {
+      isPromotions: false,
+    }
   },
   methods: {
     handleClose() {
       this.$emit('close-gift')
+    },
+    async initPromotions() {
+      let result = await this.$http.Backend.isPromotions()
+      if (result.code == 0) {
+        this.isPromotions = result.payload
+      }
     },
     // 同意
     ensureReplenish() {
@@ -165,7 +150,7 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         inputPattern: /\S/,
-        inputErrorMessage: '内容不能为空'
+        inputErrorMessage: '内容不能为空',
       })
         .then(({ value }) => {
           const params = {
@@ -174,7 +159,7 @@ export default {
             isConfirm: true,
             version: '',
             staffId: this.staffId,
-            staffName: this.staffName
+            staffName: this.staffName,
           }
           console.log(params)
           console.log(this.params_pending, 'params_pending')
@@ -185,7 +170,7 @@ export default {
                 this.$emit('check-pending', this.params_pending)
                 this.$message({
                   message: '同意审核通过',
-                  type: 'success'
+                  type: 'success',
                 })
               }
             })
@@ -200,14 +185,14 @@ export default {
     // 拒绝
     refuseDialog() {
       this.$emit('refuse-dialog')
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style lang="scss" scoped>
 .approvallk {
-  padding:0 20px;
+  padding: 0 20px;
   ::v-deep {
     .el-row {
       margin-bottom: 10px;
