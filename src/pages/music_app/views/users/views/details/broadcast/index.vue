@@ -39,7 +39,7 @@
       <el-table-column prop="first_join_time" label="首次进入时间">
         <template slot-scope="scope">
           {{
-            scope.row.first_join_time
+            scope.row.first_join_time && scope.row.first_join_time !=0
               ? formatTime(scope.row.first_join_time * 1000)
               : '-'
           }}

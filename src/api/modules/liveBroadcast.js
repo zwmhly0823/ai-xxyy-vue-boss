@@ -110,19 +110,18 @@ export default {
   },
 
   // 获取评论分页
-   getLiveChatList(params) {
+  getLiveChatList(params) {
     return axios.get(
       `/api/ump/live/chat/page/list?activityId=${params.activityId}&userId=${params.userId}&huoUserId=${params.huoUserId}&pageNum=${params.pageNum}&pageSize=${params.pageSize}`
     )
   },
-    /**
-   * 体验课班级直播活动
-   */
-
-  // 获取直播活动
+  /**
+ * 体验课班级直播活动
+ */
+ // 获取直播活动
   getLiveActive(params) {
     return axios.get(
-      `/api/ump/live/activity/list/byTeam?teamId=${params.teamId}`
+      `/api/ump/live/activity/team/trialcourse/select/list?teamId=${params.teamId}`
     )
   },
   // 获取直播活动统计接口
