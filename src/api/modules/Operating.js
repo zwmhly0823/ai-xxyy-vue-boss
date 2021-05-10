@@ -29,7 +29,7 @@ export default {
     )
   },
   /**
-   * 获取体验课、系统课列表
+   * 体验课按人调班
    */
   trialChangeClass(params) {
     return axios.post(

@@ -59,7 +59,7 @@ export default {
   },
   watch:{
     teamName(newValue,oldValue) {
-      if(newValue) {
+      if(newValue || newValue =='') {
         this.getTeam(newValue)
       }
     }
