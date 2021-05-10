@@ -8,7 +8,7 @@
  */
 import { isToss } from '@/utils'
 import ExtendUserInfo from '@/components/BaseUserInfo/Extend.vue'
-
+import moment from 'moment'
 const teacher = isToss(true)
 export default [
   {
@@ -66,7 +66,7 @@ export default [
     label: '首次进入时间',
     minWidth: '120',
     render(h, data, row) {
-      return data;
+      return data?moment(data * 1000).format('YYYY-MM-DD HH:mm:ss'):'-';
     }
   },
   {

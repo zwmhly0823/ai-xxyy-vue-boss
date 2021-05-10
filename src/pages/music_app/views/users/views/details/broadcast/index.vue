@@ -30,9 +30,9 @@
           {{ scope.row.live ? formatTime(scope.row.live.open_time) : '' }}
         </template>
       </el-table-column>
-      <el-table-column prop="in_room_num" label="进入直播间">
+      <el-table-column prop="is_in_room_text" label="进入直播间">
         <template slot-scope="scope">
-          {{ scope.row.in_room_num > 0 ? '是' : '否' }}
+          {{ scope.row.is_in_room_text }}
         </template>
       </el-table-column>
       <!-- <el-table-column prop="addTime" label="进入直播时机"></el-table-column> -->
@@ -40,7 +40,7 @@
         <template slot-scope="scope">
           {{
             scope.row.first_join_time
-              ? formatTime(scope.row.first_join_time)
+              ? formatTime(scope.row.first_join_time * 1000)
               : '-'
           }}
         </template>
@@ -51,7 +51,11 @@
       ></el-table-column>
       <!-- <el-table-column prop="addTime" label="观看回放总时长"></el-table-column> -->
       <el-table-column prop="chat_count" label="评论数"></el-table-column>
-      <el-table-column prop="like_count" label="点赞数"></el-table-column>
+      <el-table-column prop="like_count" label="点赞数">
+        <template slot-scope="scope">
+          {{ scope.row.like_count ? scope.row.like_count : '-' }}
+        </template>
+      </el-table-column>
       <!-- <el-table-column prop="addTime" label="进入购物袋"></el-table-column> -->
       <!-- <el-table-column prop="addTime" label="查看商品"></el-table-column> -->
       <el-table-column prop="by_shop_flag" label="购买商品">
@@ -61,7 +65,7 @@
       </el-table-column>
       <el-table-column prop="live" label="进入终端">
         <template slot-scope="scope">
-          {{ scope.row.live ? scope.row.live.push_terminal : '' }}
+          {{ scope.row.live ? scope.row.live.push_terminal : '-' }}
         </template>
       </el-table-column>
       <el-table-column prop="user_status" label="系统课转化">
