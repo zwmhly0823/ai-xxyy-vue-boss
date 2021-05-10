@@ -18,15 +18,7 @@
         />
       </el-form-item>
       <el-form-item label="操作人:">
-        <el-select v-model="value" placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          >
-          </el-option>
-        </el-select>
+        <el-input v-model="opeName" placeholder="请输入操作人姓名"></el-input>
       </el-form-item>
     </el-form>
     <div class="coins-table">
@@ -35,23 +27,49 @@
         :data="tableData"
         style="width: 100%; border-top: 1px solid #ebeef5"
       >
-        <el-table-column label="学员" align="center" type="index" width="80px">
+        <el-table-column label="学员" align="center" type="index" width="120px">
+          <template slot-scope="scope">
+            <p>{{ scope.row.mobile }}</p>
+            <p>ID:{{ scope.row.id }}</p>
+          </template>
         </el-table-column>
         <el-table-column label="调班性质" align="center" prop="fromTeam">
+          <template slot-scope="scope">
+            <p>{{ scope.row.change_type == 0 ? '调班' : '调期' }}</p>
+          </template>
         </el-table-column>
         <el-table-column label="调班时间" align="center" prop="toTeam">
+          <template slot-scope="scope">
+            <p>{{ scope.row.ctime }}</p>
+          </template>
         </el-table-column>
-        <el-table-column label="调班方式" align="center" prop="toTeam">
+        <el-table-column label="调班方式" align="center" prop="import_type">
+          <template slot-scope="scope">
+            <p>
+              {{
+                scope.row.import_type == 0
+                  ? '按人导入'
+                  : scope.row.import_type == 1
+                  ? '按班导入'
+                  : '批量导入'
+              }}
+            </p>
+          </template>
         </el-table-column>
-        <el-table-column label="原有班级" align="center" prop="toTeam">
+        <el-table-column label="原有班级" align="center" prop="originTeamName">
         </el-table-column>
-        <el-table-column label="调入班级" align="center" prop="toTeam">
+        <el-table-column label="调入班级" align="center" prop="currentTeamName">
         </el-table-column>
-        <el-table-column label="调班结果" align="center" prop="toTeam">
+        <el-table-column label="调班结果" align="center" prop="executeResult">
+          <template slot-scope="scope">
+            <p>
+              {{ scope.row.executeResult == 'SUCCESS' ? '成功' : '失败' }}
+            </p>
+          </template>
         </el-table-column>
-        <el-table-column label="操作人" align="center" prop="toTeam">
+        <el-table-column label="操作人" align="center" prop="operator">
         </el-table-column>
-        <el-table-column label="操作时间" align="center" prop="toTeam">
+        <el-table-column label="操作时间" align="center" prop="utime">
         </el-table-column>
       </el-table>
       <m-pagination
@@ -68,6 +86,7 @@
 <script>
 import SearchPhoneOrUsernum from '@/components/MSearch/searchItems/searchPhoneOrUsernum.vue'
 import MPagination from '@/components/MPagination/index.vue'
+import { formatData } from '@/utils/index.js'
 export default {
   name: 'operationLog',
   components: {
@@ -77,25 +96,70 @@ export default {
   props: {},
   data() {
     return {
-      loading:false,
+      loading: false,
       activeName: '1',
       options: [],
       value: '',
       tableData: [],
       query: {
         pageSize: 10,
-        pageNum: 1,
+        pageNumber: 1,
       },
+      opeName: '',
       totalElements: 0, // 总条数
     }
   },
   created() {},
   watch: {},
-  mounted() {},
+  mounted() {
+    this.initData()
+  },
+  watch: {
+    opeName(newValue) {
+      console.log(newValue)
+      if (newValue || newValue == '') {
+        this.query.staffName = newValue
+        this.initData()
+      }
+    },
+  },
   methods: {
-    handleClick() {},
-    getSearchData(key, res) {},
-    handleCurrentChange(val) {},
+    async initData() {
+      let result = await this.$http.Operating.operationClassList(this.query)
+      if (result.code == 0) {
+        this.tableData = result.payload.content
+        this.totalElements = result.payload.totalElements
+        this.tableData.forEach((item, index) => {
+          item.ctime = formatData(item.ctime, 's')
+          item.utime = formatData(item.utime, 's')
+        })
+        console.log(this.tableData, 'this.tableData')
+      }
+    },
+    handleClick() {
+      if (this.activeName == 2) {
+        this.query.execute = 'SUCCESS'
+      }
+      if (this.activeName == 3) {
+        this.query.execute = 'FAIL'
+      }
+      if (this.activeName == 1) {
+        this.query.execute = null
+      }
+      this.initData()
+    },
+    getSearchData(key, res) {
+      if (res[0]) {
+        Object.assign(this.query, res[0])
+      }else {
+        this.query.uid = ''
+      }
+      this.initData()
+    },
+    handleCurrentChange(val) {
+      this.query.pageNumber = val
+      this.initData()
+    },
   },
 }
 </script>

@@ -98,31 +98,42 @@ export default {
   methods: {
     /** 导入数据上传 */
     uploadFile(params) {
-      this.loading = true
-      const formdata = new FormData()
-      const { file } = params
-      formdata.append('file', file)
-      this.params.form = formdata
-      this.uploading = true
-      this.$http.Operating.trialChangeClassFile(this.params)
+       // 添加菊花
+      const loadingInstance = this.$loading({
+        target: '.app-main',
+        lock: true,
+        text: '正在上传...',
+        fullscreen: true
+      })
+      var formData = new FormData()
+      const file = params.file
+      formData.append('file', file)
+      formData.append('operatorId', this.params.operationId)
+      this.$http.Operating.changeTeamByImport(formData)
         .then((res) => {
-          this.loading = false
-          if (res.length) {
-            this.dialogVisible = true
-            res.forEach((item, i) => {
-              if (item.state === 1) {
-                this.errList.push(item)
-              } else if (item.state === 0) {
-                this.successList.push(item)
-              }
-            })
+          if (res.status === 420) {
+            console.log('无权限执行')
           } else {
-            this.$message.error('数据错误')
+            const blob = new Blob([res])
+            const fileName = '上传调班.xls'
+            const elink = document.createElement('a')
+            elink.download = fileName
+            elink.style.display = 'none'
+            elink.href = URL.createObjectURL(blob)
+            document.body.appendChild(elink)
+            elink.click()
+            URL.revokeObjectURL(elink.href) // 释放URL 对象
+            document.body.removeChild(elink)
           }
         })
-        .finally(() => {
-          this.uploading = false
+        .catch(() => {
+          this.$message.error('无法下载此文件')
         })
+        .finally(function() {
+          loadingInstance.close()
+        })
+
+      this.fileTemp = params.file
     },
     submitUpload(file, filelist) {
       this.$refs.upload.submit()
