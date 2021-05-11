@@ -51,16 +51,16 @@
       ></el-table-column>
       <!-- <el-table-column prop="addTime" label="观看回放总时长"></el-table-column> -->
       <el-table-column prop="chat_count" label="评论数"></el-table-column>
-      <el-table-column prop="like_count" label="点赞数">
+      <!-- <el-table-column prop="like_count" label="点赞数">
         <template slot-scope="scope">
           {{ scope.row.like_count ? scope.row.like_count : '-' }}
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <!-- <el-table-column prop="addTime" label="进入购物袋"></el-table-column> -->
       <!-- <el-table-column prop="addTime" label="查看商品"></el-table-column> -->
       <el-table-column prop="by_shop_flag" label="购买商品">
         <template slot-scope="scope">
-          {{ scope.row.by_shop_flag > 0 ? '是' : '否' }}
+          {{ scope.row.packages_name  ? scope.row.packages_name : '-' }}
         </template>
       </el-table-column>
       <el-table-column prop="live" label="进入终端">
