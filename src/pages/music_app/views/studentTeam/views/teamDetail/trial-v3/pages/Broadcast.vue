@@ -82,7 +82,12 @@
           @handle-intention="handleIntention"
         />
       </template>
-
+      <!-- 评论数 -->
+      <template slot-scope="scope" slot="chat">
+        <div class="user-info-dialog" @click="handleChatCount(scope.row)">
+          <span class="link">{{ scope.row.chat_count }}</span>
+        </div>
+      </template>
       <!-- 标签 -->
       <template slot-scope="scope" slot="tags">
         <user-tags
@@ -138,6 +143,28 @@
       ref="wechatGroupTag"
       @wxLabel="getData"
     ></wechat-group-tag>
+     <!-- 评论数dialog -->
+    <el-dialog title="直播评论" :visible.sync="chatDialogVisible" width="30%">
+      <div class="">学员：{{phoneNumber}}</div>
+      <el-table
+        :data="chatList"
+      >
+      <el-table-column label="评论时间" prop="chatTime"></el-table-column>
+      <el-table-column label="评论内容" prop="chatContent"></el-table-column>
+      </el-table>
+      <div class="chat-pagination">
+        <el-pagination
+          layout="prev,pager,next,total,sizes,jumper"
+          :page-size="chatPageSize"
+          :current-page="chatCurrentPage"
+          :total="chatTotalElements"
+          :page-sizes="[10, 20, 30]"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        >
+        </el-pagination>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -168,6 +195,12 @@ export default {
         // 'sort-change': this.sortChange,
         'selection-change': this.handleSelectionChange,
       },
+      phoneNumber: '-',
+      chatTotalElements: 0,
+      chatPageSize: 10,
+      chatCurrentPage: 1,
+      chatList: [],
+      chatDialogVisible: false,
       selectUsers: [], // 批量选择的用户
       loading: false,
       userList: [],
@@ -208,6 +241,15 @@ export default {
     },
   },
   methods: {
+     handleCurrentChange(val) {
+      this.chatCurrentPage = val;
+      this.getchatList();
+    },
+    handleSizeChange(val) {
+      this.chatCurrentPage = 1 // 处理当前第30页-页容量5=>改页容量100后,页码不归1的组件内部问题
+      this.chatPageSize = val;
+      this.getchatList();
+    },
     handleUserDetail(uid) {
       if (!uid) {
         this.$message.error('缺少用户信息')
@@ -468,6 +510,25 @@ export default {
         return
       }
       this.$refs.wechatGroupTag.open(this.selectUsers)
+    },
+    handleChatCount(row) {
+      this.activeRow = row
+      this.phoneNumber = row.user.mobile
+      this.getchatList()
+      this.chatDialogVisible = true
+    },
+    async getchatList() {
+      const res = await this.$http.liveBroadcast.getLiveChatList({
+        userId: this.activeRow.uid,
+        huoUserId: this.activeRow.huo_user_id,
+        activityId: this.liveActivityId,
+        pageNum: this.chatCurrentPage,
+        pageSize: this.chatPageSize,
+      })
+      if (res.code === 0) {
+        this.chatTotalElements = res.payload.totalElements * 1
+        this.chatList = res.payload.content
+      }
     },
     getData() {
       const loading = this.$loading({
