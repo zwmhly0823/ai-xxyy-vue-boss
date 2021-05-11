@@ -168,6 +168,7 @@ export default {
         toTeamId: '',
         fromTeamId: '',
       },
+      toTeamIdPerson:null,
       params: {
         operationId: '',
         subject: '',
@@ -223,6 +224,7 @@ export default {
       this.params.type = this.flag === '0' ? '1' : null
       this.loading = true
       if (this.flag === '0') {
+        this.params.data[0].toTeamId = this.toTeamIdPerson
         this.$http.Operating.trialChangeClass(this.params).then((res) => {
           this.loading = false
           if (res.payload && res.payload.length > 0) {
@@ -324,19 +326,21 @@ export default {
       }
     },
     getTrialTeamName(flagid, flag, res) {
+      console.log(res[0][0],"传入的id")
       if (res[0]) {
         if (flagid == 'toTeamId') {
-          this.rules.toTeamId = res[0].id
+          this.rules.toTeamId = res[0].toTeamId
         }
         if (flagid == 'fromTeamId') {
-          this.rules.fromTeamId = res[0].id
+          this.rules.fromTeamId = res[0].toTeamId
         }
         const classData = res[0][0]
+        if(classData.id) {
+          this.toTeamIdPerson = classData.id
+        }
+        console.log(classData,"classData")
         classData[flagid] = classData.id
         classData[flag] = classData.team_name
-        delete classData.id
-        delete classData.team_name
-        delete classData.teacher_id
         Object.assign(this.form, classData)
       }
     },
