@@ -57,7 +57,6 @@
     <change-class-dialog
       :dialogVisible="dialogVisible"
       :returnSuccess="successList"
-      :returnErr="errList"
     />
   </div>
 </template>
@@ -97,7 +96,10 @@ export default {
   },
   methods: {
     /** 导入数据上传 */
-    uploadFile(params) {
+    async uploadFile(params) {
+      if (!params.file) {
+        this.$message.error('')
+      }
       // 添加菊花
       const loadingInstance = this.$loading({
         target: '.app-main',
@@ -108,26 +110,17 @@ export default {
       var formData = new FormData()
       const file = params.file
       formData.append('file', file)
-      this.$http.Operating.changeTeamByImport(formData)
-        .then((res) => {
-          this.loading = false
-          if (res.length) {
-            this.dialogVisible = true
-            res.forEach((item, i) => {
-              if (item.state === 1) {
-                this.errList.push(item)
-              } else if (item.state === 0) {
-                this.successList.push(item)
-              }
-            })
-          } else {
-            this.$message.error('数据错误')
-          }
-        })
-        .finally(() => {
-          this.uploading = false
-        })
+      let result = await this.$http.Operating.changeTeamByImport(formData)
+      this.$refs.upload.clearFiles()
+      if (result.code == 0) {
+        this.$message.success('上传成功')
 
+        if (result.payload && result.payload.length > 0) {
+          this.dialogVisible = true
+          this.successList = result.payload
+        }
+      }
+      loadingInstance.close()
       this.fileTemp = params.file
     },
     submitUpload(file, filelist) {
