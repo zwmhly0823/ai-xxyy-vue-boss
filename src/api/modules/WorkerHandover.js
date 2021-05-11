@@ -2,8 +2,8 @@
  * @Descripttion:
  * @Author: songyanan
  * @Date: 2020-05-22 19:12:45
- * @LastEditors: panjian
- * @LastEditTime: 2020-07-25 11:11:35
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-04-06 18:15:58
  */
 import axios from '../axiosConfig'
 
@@ -83,7 +83,7 @@ export default {
   // 兼职交接
   dispatchAjax(query) {
     return axios.post(
-      `/api/tm/v1/teacher/manager/manual/dispatch?teacherId=${query.teacherId}&newTeacherId=${query.newTeacherId}${query.userIdList}`
+      `/api/tm/v1/teacher/manager/manual/dispatch?teacherId=${query.teacherId}&newTeacherId=${query.newTeacherId}&teamIdList=${query.teamIdList}`
     )
   }
 }

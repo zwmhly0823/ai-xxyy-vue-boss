@@ -105,6 +105,20 @@ export default {
           text: '双周体验课',
         },
       ],
+      typeList5: [
+        {
+          id: ['0', '2'],
+          text: '全部',
+        },
+        {
+          id: ['2'],
+          text: '单周体验课',
+        },
+        {
+          id: ['0'],
+          text: '双周体验课',
+        },
+      ],
     }
   },
   mounted() {
@@ -117,6 +131,8 @@ export default {
       this.typeList = this.typeList3
     } else if (this.name == 'team_category') {
       this.typeList = this.typeList4
+    } else if (this.name == 'type') {
+      this.typeList = this.typeList5
     }
   },
   methods: {

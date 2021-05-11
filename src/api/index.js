@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-15 22:09:19
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-03-29 10:51:38
  */
 /**
  * 美术宝写字 专有。 业务代码中引用： this.$http.writeApp.User(params).then()
@@ -49,6 +49,7 @@ import Complaint from './modules/complaint/complaint.js' // 投诉中心
 import SystemMenu from './modules/SystemMenu.js' // 菜单资源
 import SystemRole from './modules/SystemRole.js' // 角色管理
 import liveBroadcast from './modules/liveBroadcast'
+import ReviewManage from './modules/ReviewManage'
 export default Object.assign(
   {},
   // { writeApp },
@@ -147,6 +148,9 @@ export default Object.assign(
   },
   {
     TeamV3
+  },
+  {
+    ReviewManage
   },
   {
     liveBroadcast
