@@ -88,17 +88,9 @@ export default [
   //   width: '70',
   // },
   {
-    prop: 'by_shop_flag',
+    prop: 'packages_name',
     label: '购买商品',
     width: '70',
-    render(h, data, row) {
-      if (data > 0) {
-        return "是"
-      }
-      else {
-        return "否"
-      }
-    }
   },
   {
     prop: 'userIntention',

@@ -58,7 +58,7 @@
         </el-table-column>
         <el-table-column prop="packages_name" label="购买商品">
           <template slot-scope="scope">
-            {{ scope.row.packages_name || scope.row.product_name || '-' }}
+            {{ scope.row.packages_name || scope.row.packages_name || '-' }}
           </template>
         </el-table-column>
         <el-table-column
