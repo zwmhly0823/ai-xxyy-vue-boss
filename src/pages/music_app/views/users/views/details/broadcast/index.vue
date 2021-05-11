@@ -22,7 +22,7 @@
       <el-table-column prop="act_id" label="活动ID"></el-table-column>
       <el-table-column prop="live" label="直播活动名称">
         <template slot-scope="scope">
-          {{ scope.row.live ? formatTime(scope.row.live.open_time) : '' }}
+          {{ scope.row.live ? scope.row.live.live_name : '-' }}
         </template>
       </el-table-column>
       <el-table-column prop="live" label="活动开启时间">
@@ -187,6 +187,7 @@ export default {
     changeType(newVal, oldVal) {
       if (newVal === -1) {
         this.in_room_num = undefined
+        this.getActiveList()
       } else if (newVal === 0) {
         this.in_room_num = 0
         this.getActiveList()

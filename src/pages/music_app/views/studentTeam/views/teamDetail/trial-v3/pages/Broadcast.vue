@@ -4,10 +4,17 @@
     <div class="actives">
       <div class="lbl">活动选择</div>
       <el-select class="control" size="small" v-model="liveActivityId">
-        <el-option v-for="(item, index) in liveActive" :key="index" :value="item.activityId" :label="item.liveName">
+        <el-option
+          v-for="(item, index) in liveActive"
+          :key="index"
+          :value="item.activityId"
+          :label="item.liveName"
+        >
           <div class="active-option">
             <span>{{ item.liveName }}</span>
-            <span style="color: red;font-size:12px;">{{ activeStatus[item.liveStatus] }}</span>
+            <span style="color: red; font-size: 12px">{{
+              activeStatus[item.liveStatus]
+            }}</span>
           </div>
         </el-option>
       </el-select>
@@ -17,7 +24,11 @@
     <statistics :list="statisticsList" @result="getStatisticData" />
 
     <!-- 搜索 -->
-    <broadcast-search ref="search" @search="getSearch" :activeId="liveActivityId" />
+    <broadcast-search
+      ref="search"
+      @search="getSearch"
+      :activeId="liveActivityId"
+    />
     <!-- 操作区 -->
     <!-- <div class="act">
       <el-button
@@ -113,8 +124,8 @@
           <span
             :class="[
               {
-                danger: scope.row.user_status_name !== '未转化'
-              }
+                danger: scope.row.user_status_name !== '未转化',
+              },
             ]"
           >
             {{ scope.row.user_status_name }}
@@ -150,12 +161,12 @@ export default {
     UserTags,
   },
   data() {
-    return{
+    return {
       table: { stripe: false, border: false },
       columns,
       events: {
         // 'sort-change': this.sortChange,
-        'selection-change': this.handleSelectionChange
+        'selection-change': this.handleSelectionChange,
       },
       selectUsers: [], // 批量选择的用户
       loading: false,
@@ -165,7 +176,7 @@ export default {
         totalElements: 0,
         totalPages: 0,
         pageSize: 20,
-        pageSizeArr: [20, 50, 100, 200, 500]
+        pageSizeArr: [20, 50, 100, 200, 500],
       },
       actionFunction: actions({
         handleUserDetail: this.handleUserDetail,
@@ -175,18 +186,18 @@ export default {
       liveStatistics: [],
       liveActivityId: null,
       activeStatus: {
-        0: "--",
-        1: "直播中",
-        2: "预告",
-        3: "回放",
-        4: "结束",
-        5: "关闭",
-      }
+        0: '--',
+        1: '直播中',
+        2: '预告',
+        3: '回放',
+        4: '结束',
+        5: '关闭',
+      },
     }
   },
   computed: {
     statisticsList() {
-      return this.liveStatistics.map(item => {
+      return this.liveStatistics.map((item) => {
         return {
           name: item.name,
           label: item.desc,
@@ -194,7 +205,7 @@ export default {
           unit: '人',
         }
       })
-    }
+    },
   },
   methods: {
     handleUserDetail(uid) {
@@ -209,20 +220,20 @@ export default {
       const data = await this.$http.liveBroadcast.getLiveCount({
         teamId: this.teamId,
         activityId: this.liveActivityId,
-      });
-      if(data.code === 0) {
-        this.liveStatistics = data.payload;
+      })
+      if (data.code === 0) {
+        this.liveStatistics = data.payload
       }
     },
     async getLiveActive() {
       const data = await this.$http.liveBroadcast.getLiveActive({
         teamId: this.teamId,
-      });
-      if(data.code === 0) {
-        this.liveActive = data.payload.splice(0,3);
-        this.liveActivityId =data.payload[0] && data.payload[0].activityId;
-        this.getLiveCount();
-        this.getActiveList();
+      })
+      if (data.code === 0) {
+        this.liveActive = data.payload
+        this.liveActivityId = data.payload[0] && data.payload[0].activityId
+        this.getLiveCount()
+        this.getActiveList()
       }
     },
     async tagPopoverShow(val) {
@@ -249,7 +260,7 @@ export default {
       const query = {
         userId: uid,
         teacherId: this.teacherId,
-        teacherIds: [this.teacherId]
+        teacherIds: [this.teacherId],
       }
       return this.$http.Setting.getTeacherLabel(query)
         .then((res) => {
@@ -320,7 +331,7 @@ export default {
       const query = {
         teacherId: this.teacherId,
         userId: userArr,
-        totalNum: len
+        totalNum: len,
       }
       this.$refs.wechatGroupMessageV2.openWechatDrawer(query)
     },
@@ -331,26 +342,29 @@ export default {
     getStatisticData(index) {
       this.$refs.search.nowDate = Date.now()
       this.searchParams = {}
-      const name = this.liveStatistics[index].name;
-      const value = this.liveStatistics[index].value
+      const name = this.liveStatistics[index] && this.liveStatistics[index].name
+      const value =
+        this.liveStatistics[index] && this.liveStatistics[index].value
       const query = {}
       switch (name) {
-        case 'enteredLiveRoomNum':  //进入直播间人数
+        case 'enteredLiveRoomNum': //进入直播间人数
           Object.assign(query, { in_room_num: { gt: 0 } })
-          break;
+          break
         case 'notEnteredLiveRoomNum': //未进入直播间人数
           Object.assign(query, { in_room_num: 0 })
-          break;
-        case 'watchLiveNum':  //观看过直播人数
+          break
+        case 'watchLiveNum': //观看过直播人数
           Object.assign(query, { live_watch_time: { gt: 0 } })
-          break;
+          break
+        case 'watchReplayNum': //观看过回放人数
+          Object.assign(query, { playback_watch_time: { gt: 0 } })
+          break
         case 'buyGoodsNum': //购买商品人数
-          const by_shop_flag = value === 0 ? value : { gt: 0 };
-          Object.assign(query, { by_shop_flag: by_shop_flag })
-          break;
+          Object.assign(query, { by_shop_flag: { gt: 0 } })
+          break
 
         default:
-          break;
+          break
       }
 
       this.statisticsParams = query
@@ -365,7 +379,7 @@ export default {
       // reset page, size
       Object.assign(this.listQuery, {
         currentPage: page,
-        pageSize: size
+        pageSize: size,
       })
 
       this.loading = true
@@ -380,25 +394,23 @@ export default {
         statisticsParams,
         searchParams
       )
-      this.$http.liveBroadcast.getActiveList(
-        params,
-        {
+      this.$http.liveBroadcast
+        .getActiveList(params, {
           page,
-          size
-        },
-      )
-      .then((res) => {
-        const { content = [], totalElements = 0, totalPages = 0 } =
-          res?.data?.ActivityUserStatisticsPage || {}
-        this.userList = this.formatUserData(content)
-        Object.assign(this.listQuery, {
-          totalElements: +totalElements,
-          totalPages: +totalPages
+          size,
         })
-      })
-      .finally(() => {
-        this.loading = false
-      })
+        .then((res) => {
+          const { content = [], totalElements = 0, totalPages = 0 } =
+            res?.data?.ActivityUserStatisticsPage || {}
+          this.userList = this.formatUserData(content)
+          Object.assign(this.listQuery, {
+            totalElements: +totalElements,
+            totalPages: +totalPages,
+          })
+        })
+        .finally(() => {
+          this.loading = false
+        })
     },
     // format data
     formatUserData(list = []) {
@@ -462,14 +474,14 @@ export default {
         lock: true,
         text: '加载中',
         spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.1)'
+        background: 'rgba(0, 0, 0, 0.1)',
       })
       // 如果搜索销售，用获取的老师id替换权限老师id
       const teacher = {}
       // TODO: 注意放开
       if (!Object.keys(this.searchParams).includes('teacher_id')) {
         Object.assign(teacher, {
-          teacher_id: this.teacherIds
+          teacher_id: this.teacherIds,
         })
       }
 
@@ -479,8 +491,8 @@ export default {
       if (Object.keys(this.searchParams).includes('user_label')) {
         label = {
           'user_label.like': {
-            'user_label.keyword': `*${this.searchParams.user_label}*`
-          }
+            'user_label.keyword': `*${this.searchParams.user_label}*`,
+          },
         }
         delete obj.user_label
       }
@@ -513,7 +525,7 @@ export default {
             const {
               totalElements,
               totalPages,
-              content
+              content,
             } = res.data.StudentTrialV2StatisticsPage
             defTotalElements = totalElements
             defTotalPages = totalPages
@@ -537,11 +549,11 @@ export default {
   },
   watch: {
     liveActivityId(newVal, oldVal) {
-      if(newVal !== oldVal) {
-        this.getLiveCount();
-        this.getActiveList();
+      if (newVal !== oldVal) {
+        this.getLiveCount()
+        this.getActiveList()
       }
-    }
+    },
   },
   created() {
     const { id } = this.$route.params
@@ -549,25 +561,25 @@ export default {
     if (id) {
       this.getLiveActive()
     }
-  }
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-  .actives{
-    display: flex;
-    align-items: center;
-    margin: 5px 0 15px;
-    .control{
-      margin-left: 10px;
-    }
+.actives {
+  display: flex;
+  align-items: center;
+  margin: 5px 0 15px;
+  .control {
+    margin-left: 10px;
   }
-  .act{
-    margin-bottom: 10px;
-  }
-  .active-option{
-    display: flex;
-    justify-content: space-between;
-  }
+}
+.act {
+  margin-bottom: 10px;
+}
+.active-option {
+  display: flex;
+  justify-content: space-between;
+}
 </style>
 
