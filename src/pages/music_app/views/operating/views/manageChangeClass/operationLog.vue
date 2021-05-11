@@ -35,7 +35,7 @@
         </el-table-column>
         <el-table-column label="调班性质" align="center" prop="fromTeam">
           <template slot-scope="scope">
-            <p>{{ scope.row.change_type == 0 ? '调班' : '调期' }}</p>
+            <p>{{ scope.row.change_type == 1 ? '调期' : '调班' }}</p>
           </template>
         </el-table-column>
         <el-table-column label="调班时间" align="center" prop="toTeam">

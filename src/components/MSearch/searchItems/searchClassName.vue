@@ -85,7 +85,7 @@ export default {
            return this.teamList
          }
       })
-      this.$emit('result', data ? list : '')
+     this.$emit('result', data ? list : '')
     },
     // 清空
     onClear(val) {
