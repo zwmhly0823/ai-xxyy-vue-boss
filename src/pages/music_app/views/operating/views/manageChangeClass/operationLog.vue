@@ -35,7 +35,7 @@
         </el-table-column>
         <el-table-column label="调班性质" align="center" prop="fromTeam">
           <template slot-scope="scope">
-            <p>{{ scope.row.change_type == 1 ? '调期' : '调班' }}</p>
+            <p>{{ typeClass[scope.row.changeType] }}</p>
           </template>
         </el-table-column>
         <el-table-column label="调班时间" align="center" prop="toTeam">
@@ -46,7 +46,7 @@
         <el-table-column label="调班方式" align="center" prop="importType">
           <template slot-scope="scope">
             <p>
-              {{type[scope.row.importType]}}
+              {{ type[scope.row.importType] }}
             </p>
           </template>
         </el-table-column>
@@ -92,9 +92,13 @@ export default {
   data() {
     return {
       type: {
-        "0": '按人导入',
-        "1": '按班导入',
-        "2": '批量导入',
+        0: '按人导入',
+        1: '按班导入',
+        2: '批量导入',
+      },
+      typeClass: {
+        0: '调班',
+        1: '调期',
       },
       loading: false,
       activeName: '1',
