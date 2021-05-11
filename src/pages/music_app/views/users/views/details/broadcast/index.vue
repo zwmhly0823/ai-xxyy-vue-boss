@@ -58,7 +58,7 @@
       </el-table-column> -->
       <!-- <el-table-column prop="addTime" label="进入购物袋"></el-table-column> -->
       <!-- <el-table-column prop="addTime" label="查看商品"></el-table-column> -->
-      <el-table-column prop="by_shop_flag" label="购买商品">
+      <el-table-column prop="packages_name" label="购买商品">
         <template slot-scope="scope">
           {{ scope.row.packages_name  ? scope.row.packages_name : '-' }}
         </template>
