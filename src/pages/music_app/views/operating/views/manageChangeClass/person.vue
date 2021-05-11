@@ -222,7 +222,7 @@ export default {
       this.params.data = this.AllTableData
       this.params.type = this.flag === '0' ? '1' : null
       this.loading = true
-      if (this.flag == 1) {
+      if (this.flag === '0') {
         this.$http.Operating.trialChangeClass(this.params).then((res) => {
           this.loading = false
           if (res.payload && res.payload.length > 0) {

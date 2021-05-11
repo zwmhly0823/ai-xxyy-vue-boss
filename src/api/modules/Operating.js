@@ -104,9 +104,9 @@ export default {
   * 体验课按班级调班
   */
   changeTrialTeam(params) {
-    return axios.get(
+    return axios.post(
       `/api/ts/v1/teamChange/changeTrialTeam`,
-      params
+      params.data
     )
   },
   /**
