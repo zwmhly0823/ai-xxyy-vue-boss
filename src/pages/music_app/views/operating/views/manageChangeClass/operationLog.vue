@@ -76,6 +76,7 @@
         :current-page="query.pageNum"
         :page-size="query.pageSize"
         @current-change="handleCurrentChange"
+        show-pager
         :total="+totalElements"
         open="calc(100vw - 195px)"
         close="calc(100vw - 75px)"
