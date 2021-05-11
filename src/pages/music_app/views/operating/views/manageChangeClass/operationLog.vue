@@ -133,7 +133,6 @@ export default {
           item.ctime = formatData(item.ctime, 's')
           item.utime = formatData(item.utime, 's')
         })
-        console.log(this.tableData, 'this.tableData')
       }
     },
     handleClick() {

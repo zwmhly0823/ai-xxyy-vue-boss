@@ -222,13 +222,23 @@ export default {
       this.params.data = this.AllTableData
       this.params.type = this.flag === '0' ? '1' : null
       this.loading = true
-      this.$http.Operating.trialChangeClass(this.params).then((res) => {
-        this.loading = false
-        if (res.payload && res.payload.length > 0) {
-          this.dialogVisible = true
-          this.successList = res.payload
-        }
-      })
+      if (this.flag == 1) {
+        this.$http.Operating.trialChangeClass(this.params).then((res) => {
+          this.loading = false
+          if (res.payload && res.payload.length > 0) {
+            this.dialogVisible = true
+            this.successList = res.payload
+          }
+        })
+      } else {
+        this.$http.Operating.changeTrialTeam(this.params).then((res) => {
+          this.loading = false
+          if (res.payload && res.payload.length > 0) {
+            this.dialogVisible = true
+            this.successList = res.payload
+          }
+        })
+      }
     },
     // 删除条目
     deleteItem(i) {

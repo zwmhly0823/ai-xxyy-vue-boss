@@ -57,7 +57,6 @@
     <change-class-dialog
       :dialogVisible="dialogVisible"
       :returnSuccess="successList"
-      :returnErr="errList"
     />
   </div>
 </template>
@@ -97,42 +96,31 @@ export default {
   },
   methods: {
     /** 导入数据上传 */
-    uploadFile(params) {
-       // 添加菊花
+    async uploadFile(params) {
+      if (!params.file) {
+        this.$message.error('')
+      }
+      // 添加菊花
       const loadingInstance = this.$loading({
         target: '.app-main',
         lock: true,
         text: '正在上传...',
-        fullscreen: true
+        fullscreen: true,
       })
       var formData = new FormData()
       const file = params.file
       formData.append('file', file)
-      formData.append('operatorId', this.params.operationId)
-      this.$http.Operating.changeTeamByImport(formData)
-        .then((res) => {
-          if (res.status === 420) {
-            console.log('无权限执行')
-          } else {
-            const blob = new Blob([res])
-            const fileName = '上传调班.xls'
-            const elink = document.createElement('a')
-            elink.download = fileName
-            elink.style.display = 'none'
-            elink.href = URL.createObjectURL(blob)
-            document.body.appendChild(elink)
-            elink.click()
-            URL.revokeObjectURL(elink.href) // 释放URL 对象
-            document.body.removeChild(elink)
-          }
-        })
-        .catch(() => {
-          this.$message.error('无法下载此文件')
-        })
-        .finally(function() {
-          loadingInstance.close()
-        })
+      let result = await this.$http.Operating.changeTeamByImport(formData)
+      this.$refs.upload.clearFiles()
+      if (result.code == 0) {
+        this.$message.success('上传成功')
 
+        if (result.payload && result.payload.length > 0) {
+          this.dialogVisible = true
+          this.successList = result.payload
+        }
+      }
+      loadingInstance.close()
       this.fileTemp = params.file
     },
     submitUpload(file, filelist) {

@@ -91,7 +91,7 @@ export default {
       return axiosSelf({
         method: 'POST',
         url: '/api/ts/v1/teamChange/changeTeamByImport',
-        responseType: 'blob',
+        // responseType: 'blob',
         headers: getHeaders(),
         // data: {
         //   ...params
