@@ -43,16 +43,10 @@
             <p>{{ scope.row.ctime }}</p>
           </template>
         </el-table-column>
-        <el-table-column label="调班方式" align="center" prop="import_type">
+        <el-table-column label="调班方式" align="center" prop="importType">
           <template slot-scope="scope">
             <p>
-              {{
-                scope.row.import_type == 0
-                  ? '按人导入'
-                  : scope.row.import_type == 1
-                  ? '按班导入'
-                  : '批量导入'
-              }}
+              {{type[scope.row.importType]}}
             </p>
           </template>
         </el-table-column>
@@ -97,6 +91,11 @@ export default {
   props: {},
   data() {
     return {
+      type: {
+        "0": '按人导入',
+        "1": '按班导入',
+        "2": '批量导入',
+      },
       loading: false,
       activeName: '1',
       options: [],
@@ -151,7 +150,7 @@ export default {
     getSearchData(key, res) {
       if (res[0]) {
         Object.assign(this.query, res[0])
-      }else {
+      } else {
         this.query.uid = ''
       }
       this.initData()
