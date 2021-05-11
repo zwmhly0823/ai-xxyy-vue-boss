@@ -74,6 +74,7 @@
             <div class="search-group">
               <trial-course-type
                 name="category"
+                typeB="1"
                 @result="getSearchData('category', arguments)"
               />
               <search-stage
