@@ -39,7 +39,7 @@
       <el-table-column prop="first_join_time" label="首次进入时间">
         <template slot-scope="scope">
           {{
-            scope.row.first_join_time && scope.row.first_join_time !=0
+            scope.row.first_join_time && scope.row.first_join_time != 0
               ? formatTime(scope.row.first_join_time * 1000)
               : '-'
           }}
@@ -50,7 +50,16 @@
         label="观看直播总时长/分钟"
       ></el-table-column>
       <!-- <el-table-column prop="addTime" label="观看回放总时长"></el-table-column> -->
-      <el-table-column prop="chat_count" label="评论数"></el-table-column>
+      <el-table-column prop="chat_count" label="评论数">
+        <template slot-scope="scope">
+          <p
+            style="color: #2a75ed; cursor: pointer"
+            @click="handleChatCount(scope.row)"
+          >
+            {{ scope.row.chat_count ? scope.row.chat_count : '-' }}
+          </p>
+        </template>
+      </el-table-column>
       <!-- <el-table-column prop="like_count" label="点赞数">
         <template slot-scope="scope">
           {{ scope.row.like_count ? scope.row.like_count : '-' }}
@@ -60,12 +69,16 @@
       <!-- <el-table-column prop="addTime" label="查看商品"></el-table-column> -->
       <el-table-column prop="packages_name" label="购买商品">
         <template slot-scope="scope">
-          {{ scope.row.packages_name  ? scope.row.packages_name : '-' }}
+          {{ scope.row.packages_name ? scope.row.packages_name : '-' }}
         </template>
       </el-table-column>
       <el-table-column prop="live" label="进入终端">
         <template slot-scope="scope">
-          {{ scope.row.live &&  scope.row.live.push_terminal? scope.row.live.push_terminal : '-' }}
+          {{
+            scope.row.live && scope.row.live.push_terminal
+              ? scope.row.live.push_terminal
+              : '-'
+          }}
         </template>
       </el-table-column>
       <el-table-column prop="user_status" label="系统课转化">
@@ -85,6 +98,27 @@
       >
       </el-pagination>
     </div>
+
+    <!-- 评论数dialog -->
+    <el-dialog title="直播评论" :visible.sync="chatDialogVisible" width="30%">
+      <div class="">学员：{{ phoneNumber }}</div>
+      <el-table :data="chatList">
+        <el-table-column label="评论时间" prop="chatTime"></el-table-column>
+        <el-table-column label="评论内容" prop="chatContent"></el-table-column>
+      </el-table>
+      <div class="chat-pagination">
+        <el-pagination
+          layout="prev,pager,next,total,sizes,jumper"
+          :page-size="chatPageSize"
+          :current-page="chatCurrentPage"
+          :total="chatTotalElements"
+          :page-sizes="[10, 20, 30]"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange1"
+        >
+        </el-pagination>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -103,6 +137,13 @@ export default {
       uid: '',
       in_room_num: undefined,
       changeType: -1,
+      phoneNumber: '-',
+      chatTotalElements: 0,
+      chatPageSize: 10,
+      chatCurrentPage: 1,
+      chatList: [],
+      liveActivityId: null,
+      chatDialogVisible: false,
       tableData: [],
       listQuery: {
         currentPage: 1,
@@ -181,6 +222,30 @@ export default {
     handleCurrentChange(val) {
       this.listQuery.currentPage = val
       this.getActiveList()
+    },
+    handleCurrentChange1(val) {
+      this.chatCurrentPage = val
+      this.getchatList()
+    },
+    handleChatCount(row) {
+      this.activeRow = row
+      this.phoneNumber = row.user.mobile
+      this.liveActivityId = row.act_id
+      this.getchatList()
+      this.chatDialogVisible = true
+    },
+    async getchatList() {
+      const res = await this.$http.liveBroadcast.getLiveChatList({
+        userId: this.activeRow.uid,
+        huoUserId: this.activeRow.huo_user_id,
+        activityId: this.liveActivityId,
+        pageNum: this.chatCurrentPage,
+        pageSize: this.chatPageSize,
+      })
+      if (res.code === 0) {
+        this.chatTotalElements = res.payload.totalElements * 1
+        this.chatList = res.payload.content
+      }
     },
   },
   watch: {

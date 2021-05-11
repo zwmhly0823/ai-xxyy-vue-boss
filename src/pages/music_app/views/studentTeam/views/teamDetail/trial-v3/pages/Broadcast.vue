@@ -85,7 +85,7 @@
       <!-- 评论数 -->
       <template slot-scope="scope" slot="chat">
         <div class="user-info-dialog" @click="handleChatCount(scope.row)">
-          <span class="link">{{ scope.row.chat_count }}</span>
+          <span class="link" style="color: #2a75ed;cursor: pointer;">{{ scope.row.chat_count }}</span>
         </div>
       </template>
       <!-- 标签 -->
