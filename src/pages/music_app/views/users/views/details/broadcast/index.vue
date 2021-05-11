@@ -27,7 +27,7 @@
       </el-table-column>
       <el-table-column prop="live" label="活动开启时间">
         <template slot-scope="scope">
-          {{ scope.row.live ? formatTime(scope.row.live.open_time) : '' }}
+          {{ scope.row.live ? formatTime(scope.row.live.open_time) : '-' }}
         </template>
       </el-table-column>
       <el-table-column prop="is_in_room_text" label="进入直播间">
@@ -65,7 +65,7 @@
       </el-table-column>
       <el-table-column prop="live" label="进入终端">
         <template slot-scope="scope">
-          {{ scope.row.live ? scope.row.live.push_terminal : '-' }}
+          {{ scope.row.live &&  scope.row.live.push_terminal? scope.row.live.push_terminal : '-' }}
         </template>
       </el-table-column>
       <el-table-column prop="user_status" label="系统课转化">
