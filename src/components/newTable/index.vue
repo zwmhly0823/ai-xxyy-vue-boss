@@ -186,10 +186,10 @@
                       "
                     >
                       <span>{{
-                        (scope.row.system_team &&
-                          scope.row.system_team.team_name) ||
-                        '--'
-                      }}</span>
+                          (scope.row.teacher_system &&
+                            scope.row.teacher_system.realname) ||
+                          '--'
+                        }}</span>
                       <span
                         class="primary-text"
                         @click="
