@@ -23,11 +23,11 @@
     <el-form-item label="订单类型:">
       <div class="row_colum">
         <simple-select
-          name="order_type"
+          name="content_type"
           :data-list="orderTypeList"
           :multiple="false"
           placeholder="全部"
-          @result="getSearchData('order_type', arguments)"
+          @result="getSearchData('content_type', arguments)"
         ></simple-select>
       </div>
     </el-form-item>
@@ -109,15 +109,15 @@ export default {
       orderTypeList: [
         {
           id: 0,
-          text: '无'
-        },
-        {
-          id: 1,
           text: '课程订单'
         },
         {
-          id: 2,
+          id: 1,
           text: '器材订单'
+        },
+        {
+          id: [0, 1],
+          text: '全部'
         }
       ]
     }

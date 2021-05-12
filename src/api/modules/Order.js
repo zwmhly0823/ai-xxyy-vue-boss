@@ -674,6 +674,7 @@ export default {
             uniq_id
             complete_time
             isImport
+            content_type
             userInfo {
               user_num
               username
