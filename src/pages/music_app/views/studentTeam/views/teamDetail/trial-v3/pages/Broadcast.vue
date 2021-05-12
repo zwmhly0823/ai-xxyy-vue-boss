@@ -75,24 +75,22 @@
       </template>
 
       <!-- 跟进 slot -->
-       <template slot-scope="scope" slot="follow">
-          <user-follow
-            :row="scope.row"
-            :index="scope.$index"
-            @handle-intention="handleIntention"
-          />
-        </template>
+      <template slot-scope="scope" slot="follow">
+        <user-follow
+          :row="scope.row"
+          :index="scope.$index"
+          @handle-intention="handleIntention"
+        />
+      </template>
       <!-- 评论数 -->
-      <el-table-column prop="chat_count" label="评论数">
-        <template slot-scope="scope">
-          <p
-            :class="scope.row.chat_count ? 'liveActive' : ''"
-            @click="scope.row.chat_count ? handleChatCount(scope.row) : ''"
-          >
-            {{ scope.row.chat_count ? scope.row.chat_count : '-' }}
-          </p>
-        </template>
-      </el-table-column>
+      <template slot-scope="scope" slot="chat">
+        <p
+          :class="scope.row.chat_count ? 'liveActive' : ''"
+          @click="scope.row.chat_count ? handleChatCount(scope.row) : ''"
+        >
+          {{ scope.row.chat_count ? scope.row.chat_count : '-' }}
+        </p>
+      </template>
       <!-- 标签 -->
       <template slot-scope="scope" slot="tags">
         <user-tags
@@ -229,16 +227,16 @@ export default {
         4: '结束',
         5: '关闭',
       },
-       userIntentionMap: {
+      userIntentionMap: {
         1: '低意向',
         2: '中意向',
         3: '高意向',
-        4: '无意向'
+        4: '无意向',
       },
       userIntentionClassMap: {
         1: 'main-text',
         2: 'success',
-        3: 'danger'
+        3: 'danger',
       },
     }
   },
@@ -349,7 +347,7 @@ export default {
     },
     // 创建或修改意向度&跟进记录
     // @type: 'create'，'update'
-     // 跟进
+    // 跟进
     handleFollow(uid, data, index) {
       const type = data.userIntention ? 'update' : 'create'
       this.handleIntention(index, uid, type)
@@ -647,8 +645,8 @@ export default {
   justify-content: space-between;
 }
 .liveActive {
-  color: #2a75ed; 
-  cursor: pointer
+  color: #2a75ed;
+  cursor: pointer;
 }
 </style>
 
