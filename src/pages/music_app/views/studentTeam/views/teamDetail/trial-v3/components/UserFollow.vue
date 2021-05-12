@@ -9,10 +9,11 @@
 <template>
   <div class="d-flex align-center user-follow">
     <template v-if="!row.userIntention">
-      <i
+      <!-- <i
         class="el-icon-circle-plus-outline"
         @click="handleIntention(index, row.id, 'create')"
-      ></i>
+      ></i> -->
+      <p>-</p>
     </template>
     <template v-else>
       <div class="flex-1">
@@ -46,7 +47,7 @@
           </p>
         </el-popover>
       </div>
-      <i
+      <!-- <i
         class="el-icon-edit"
         @click="
           handleIntention(
@@ -55,7 +56,7 @@
             !row.userIntention ? 'create' : 'update'
           )
         "
-      ></i>
+      ></i> -->
     </template>
   </div>
 </template>
