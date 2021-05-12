@@ -194,7 +194,7 @@ export default {
                     watch_time
                     user_status
                     packages_name
-                    like_count
+                    user_num_text
                     chat_count
                     user {
                       id
