@@ -52,12 +52,12 @@
       width="30%"
       :before-close="closeDialog"
     >
-      <i class="el-icon-warning dialog-icon"></i>   
-      <span class="dialog-text"> 确定删除？</span>
+      <i class="el-icon-warning dialog-icon"></i>  
+      <span class="dialog-text">确定删除?</span>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="deleteDialog = false">取 消</el-button>
-          <el-button type="primary" @click="deleteDialog = false">确 定</el-button>
+          <el-button @click="closeDialog">取 消</el-button>
+          <el-button type="primary" @click="deleteConfirm">确 定</el-button>
         </span>
       </template>
     </el-dialog>
@@ -148,13 +148,19 @@ export default {
       this.$refs.modifyWechat.visible = true
     },
 
-    //删除
+    //删除 弹出提示框
     deleteWeChat(row) {
       this.currentWechat = row
       this.deleteDialog = true
     },
-    closeDialog(done) {
+    // 关闭弹出框
+    closeDialog() {
+      this.currentWechat = null
       this.deleteDialog = false
+    },
+    // 确定删除
+    deleteConfirm() {
+      this.currentWechat = null
     },
 
     handleClose() {
@@ -206,6 +212,7 @@ export default {
   }
   .dialog-text {
     font-size: 18px;
+    margin-left: 10px;
   } 
   .dialog-icon {
     color: rgb(230, 161, 70);
