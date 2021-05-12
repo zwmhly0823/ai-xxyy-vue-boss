@@ -46,7 +46,7 @@ export default [
       if (data > 0) {
         return "是"
       }
-      else{
+      else {
         return "否"
       }
     }
@@ -56,17 +56,17 @@ export default [
     label: '进入直播间次数',
     width: '150',
   },
-  {
-    prop: 'play_status_text',
-    label: '进入直播间时机',
-    width: '150',
-  },
+  // {
+  //   prop: 'play_status_text',
+  //   label: '进入直播间时机',
+  //   width: '150',
+  // },
   {
     prop: 'first_join_time',
     label: '首次进入时间',
     minWidth: '120',
     render(h, data, row) {
-      return data?moment(data * 1000).format('YYYY-MM-DD HH:mm:ss'):'-';
+      return data ? moment(data * 1000).format('YYYY-MM-DD HH:mm:ss') : '-';
     }
   },
   {
@@ -95,18 +95,18 @@ export default [
   {
     prop: 'userIntention',
     label: '跟进',
-    width: '70',
+    minWidth: '120',
   },
-  // {
-  //   prop: 'live',
-  //   label: '进入终端',
-  //   width: '70',
-  //   render(h, data, row) {
-  //     if(data) {
-  //       return data.push_terminal
-  //     }
-  //   }
-  // },
+  {
+    prop: 'live',
+    label: '进入终端',
+    width: '70',
+    render(h, data, row) {
+      if (data) {
+        return data.push_terminal ? data.push_terminal : '-'
+      }
+    }
+  },
   {
     prop: 'user_status',
     label: '系统课转化',

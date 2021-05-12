@@ -35,6 +35,11 @@
           {{ scope.row.is_in_room_text }}
         </template>
       </el-table-column>
+       <el-table-column prop="in_room_count" label="进入直播间次数">
+        <template slot-scope="scope">
+          {{ scope.row.in_room_count }}
+        </template>
+      </el-table-column>
       <!-- <el-table-column prop="addTime" label="进入直播时机"></el-table-column> -->
       <el-table-column prop="first_join_time" label="首次进入时间">
         <template slot-scope="scope">
@@ -53,8 +58,8 @@
       <el-table-column prop="chat_count" label="评论数">
         <template slot-scope="scope">
           <p
-            style="color: #2a75ed; cursor: pointer"
-            @click="handleChatCount(scope.row)"
+            :class="scope.row.chat_count?'liveActive':''"
+            @click="scope.row.chat_count ? handleChatCount(scope.row) : ''"
           >
             {{ scope.row.chat_count ? scope.row.chat_count : '-' }}
           </p>
@@ -283,4 +288,10 @@ export default {
   justify-content: flex-end;
   align-items: center;
 }
+.liveActive {
+  color: #2a75ed; 
+  cursor: pointer
+}
+
+
 </style>
