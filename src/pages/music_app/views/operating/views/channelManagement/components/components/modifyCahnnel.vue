@@ -78,6 +78,11 @@
           clearable
         >
           <el-option
+            label="1v1美术宝9.9元双周体验课模版"
+            :value="'/channel91v1/index'"
+            >1v1美术宝9.9元双周体验课模版</el-option
+          >
+          <el-option
             label="9.9元双周体验课模版"
             :value="'/channel9/index?channelId='"
             >9.9元体验课模版</el-option
@@ -212,6 +217,8 @@ export default {
               ? '年系统课'
               : item.channel_link.includes('/channel9/index')
               ? '9.9元双周体验课模版'
+              : item.channel_link.includes('/channel91v1/index')
+              ? '1v1美术宝9.9元双周体验课模版'
               : '49元双周体验课模版'),
               (this.ruleForm.status = item.status.toString())
             this.ruleForm.channelLevel = item.channel_level
