@@ -76,7 +76,8 @@ const routes = [{
     ...finance,
     ...complaint,
     ...outbound,
-    ...express
+    ...express,
+    ...statistics
 ]
 const router = new VueRouter({
     base: process.env.BASE_URL,

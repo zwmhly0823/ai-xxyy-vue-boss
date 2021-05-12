@@ -119,7 +119,7 @@ const operatingRoutes = [{
         path: '/reviewManagement',
         name: 'reviewManagement',
         meta: {
-            title: '点评管理',
+            title: '作品点评',
             keepAlive: false
         },
         component: () =>
@@ -134,6 +134,85 @@ const operatingRoutes = [{
         },
         component: () =>
             import ('../views/reviewManagement/components/audioAdd.vue')
+    },
+    {
+        path: '/schedule',
+        name: 'schedule',
+        meta: {
+            title: '兼职老师分配',
+            keepAlive: false
+        },
+        component: () =>
+            import ('../views/parttimeSchedule/index.vue')
+    },
+
+    // type: add, edit
+    {
+        path: '/scheduleSet/:type',
+        name: 'parttimeScheduleSet',
+        meta: {
+            title: '兼职老师分配',
+            keepAlive: true
+        },
+        hidden: true,
+        component: () =>
+            import ('../views/parttimeSchedule/add/teamSet.vue')
+    },
+    // term:期数，type:add-新增，edit-编辑
+    {
+        path: '/scheduleTeacherSet/:term/:type',
+        name: 'parttimeScheduleTeacherSet',
+        meta: {
+            title: '兼职老师分配',
+            keepAlive: false
+        },
+        hidden: true,
+        component: () =>
+            import ('../views/parttimeSchedule/add/teacherSet.vue')
+    },
+    {
+        path: '/parttimeHandover',
+        name: 'parttimeHandover',
+        meta: {
+            title: '兼职老师移交班级',
+            keepAlive: false
+        },
+        component: () =>
+            import ('../views/parttimeHandover/index.vue')
+    },
+    {
+        path: '/dataprepare',
+        name: 'dataprepare',
+        meta: {
+            title: '兼职老师数据看板',
+            keepAlive: false
+        },
+        component: () =>
+            import ('../views/parttimeDataPrepare/index.vue')
+    },
+    // 查看详情-班级配置
+    {
+        path: '/scheduleSetView/:term',
+        name: 'parttimeScheduleSetView',
+        meta: {
+            title: '兼职老师分配',
+            keepAlive: true
+        },
+        hidden: true,
+        component: () =>
+            import ('../views/parttimeSchedule/view/teamSet.vue')
+    },
+    // 查看详情-兼职老师配置
+    {
+        path: '/scheduleTeacherSetView/:term',
+        name: 'parttimeScheduleTeacherSetView',
+        meta: {
+            title: '兼职老师分配',
+            keepAlive: false
+        },
+        hidden: true,
+        component: () =>
+            import ('../views/parttimeSchedule/view/teacherSet.vue')
     },
     {
         path: '/verificationCode',
@@ -164,36 +243,6 @@ const operatingRoutes = [{
         },
         component: () =>
             import ('../views/reviewManagement/components/userResult.vue')
-    },
-    {
-        path: '/regroup',
-        name: 'regroup',
-        meta: {
-            title: '重新分班',
-            keepAlive: false
-        },
-        component: () =>
-            import ('../views/reviewManagement/components/regroup.vue')
-    },
-    {
-        path: '/userResult',
-        name: 'userResult',
-        meta: {
-            title: '用户登陆查询',
-            keepAlive: false
-        },
-        component: () =>
-            import ('../views/reviewManagement/components/userResult.vue')
-    },
-    {
-        path: '/manageChangeClass',
-        name: 'manageChangeClass',
-        meta: {
-            title: '体验课调班',
-            keepAlive: false
-        },
-        component: () =>
-            import ('../views/manageChangeClass/index.vue')
     },
     {
         path: '/labelManage',
@@ -246,7 +295,16 @@ const operatingRoutes = [{
         component: () =>
             import ('../views/recommend/changeRecommend.vue')
     },
-
+    {
+        path: '/manageChangeClass',
+        name: 'manageChangeClass',
+        meta: {
+            title: '体验课调班',
+            keepAlive: false
+        },
+        component: () =>
+            import ('../views/manageChangeClass/index.vue')
+    },
 ]
 const operatingUploadList = [{
     path: '/uploadFile',
