@@ -185,15 +185,15 @@
                       "
                     >
                       <span>{{
-                        (scope.row.teacher_system &&
-                          scope.row.teacher_system.realname) ||
+                        (scope.row.system_team &&
+                          scope.row.system_team.team_name) ||
                         '--'
                       }}</span>
                       <span
                         class="primary-text"
-                        @click="openTeam(scope.row.team_id,scope.row.team)"
+                        @click="openTeam(scope.row.system_team_id,scope.row.system_team)"
                         >{{
-                          `(${scope.row.team ? scope.row.team.team_name : '-'})`
+                          `(${scope.row.system_team ? scope.row.system_team.team_name : '-'})`
                         }}</span
                       >
                       <div>
@@ -206,7 +206,7 @@
                         }}
                       </div>
                     </div>
-                    <div v-if="column.type != 'classKey'">{{ '--' }}</div>
+                    <div v-if="!scope.row.teacher_system || !scope.row.teacher_trial">{{ '--' }}</div>
                   </label>
                   <!-- 字段为数组的情况 -->
                   <span v-else>

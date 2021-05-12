@@ -75,19 +75,24 @@
       </template>
 
       <!-- 跟进 slot -->
-      <template slot-scope="scope" slot="follow">
-        <user-follow
-          :row="scope.row"
-          :index="scope.$index"
-          @handle-intention="handleIntention"
-        />
-      </template>
+       <template slot-scope="scope" slot="follow">
+          <user-follow
+            :row="scope.row"
+            :index="scope.$index"
+            @handle-intention="handleIntention"
+          />
+        </template>
       <!-- 评论数 -->
-      <template slot-scope="scope" slot="chat">
-        <div class="user-info-dialog" @click="handleChatCount(scope.row)">
-          <span class="link" style="color: #2a75ed;cursor: pointer;">{{ scope.row.chat_count }}</span>
-        </div>
-      </template>
+      <el-table-column prop="chat_count" label="评论数">
+        <template slot-scope="scope">
+          <p
+            :class="scope.row.chat_count ? 'liveActive' : ''"
+            @click="scope.row.chat_count ? handleChatCount(scope.row) : ''"
+          >
+            {{ scope.row.chat_count ? scope.row.chat_count : '-' }}
+          </p>
+        </template>
+      </el-table-column>
       <!-- 标签 -->
       <template slot-scope="scope" slot="tags">
         <user-tags
@@ -143,14 +148,12 @@
       ref="wechatGroupTag"
       @wxLabel="getData"
     ></wechat-group-tag>
-     <!-- 评论数dialog -->
+    <!-- 评论数dialog -->
     <el-dialog title="直播评论" :visible.sync="chatDialogVisible" width="30%">
-      <div class="">学员：{{phoneNumber}}</div>
-      <el-table
-        :data="chatList"
-      >
-      <el-table-column label="评论时间" prop="chatTime"></el-table-column>
-      <el-table-column label="评论内容" prop="chatContent"></el-table-column>
+      <div class="">学员：{{ phoneNumber }}</div>
+      <el-table :data="chatList">
+        <el-table-column label="评论时间" prop="chatTime"></el-table-column>
+        <el-table-column label="评论内容" prop="chatContent"></el-table-column>
       </el-table>
       <div class="chat-pagination">
         <el-pagination
@@ -226,6 +229,17 @@ export default {
         4: '结束',
         5: '关闭',
       },
+       userIntentionMap: {
+        1: '低意向',
+        2: '中意向',
+        3: '高意向',
+        4: '无意向'
+      },
+      userIntentionClassMap: {
+        1: 'main-text',
+        2: 'success',
+        3: 'danger'
+      },
     }
   },
   computed: {
@@ -241,14 +255,14 @@ export default {
     },
   },
   methods: {
-     handleCurrentChange(val) {
-      this.chatCurrentPage = val;
-      this.getchatList();
+    handleCurrentChange(val) {
+      this.chatCurrentPage = val
+      this.getchatList()
     },
     handleSizeChange(val) {
       this.chatCurrentPage = 1 // 处理当前第30页-页容量5=>改页容量100后,页码不归1的组件内部问题
-      this.chatPageSize = val;
-      this.getchatList();
+      this.chatPageSize = val
+      this.getchatList()
     },
     handleUserDetail(uid) {
       if (!uid) {
@@ -335,20 +349,10 @@ export default {
     },
     // 创建或修改意向度&跟进记录
     // @type: 'create'，'update'
-    handleIntention(index, uid, type = 'update') {
-      console.log(index, uid, type)
-
-      this.curModifyItem.index = index
-      this.curModifyItem.uid = uid
-      this.curModifyItem.type = type
-      if (type === 'update') {
-        this.$refs.intentionDialog.showDialog(
-          this.userList[index].userIntention
-        )
-      }
-      if (type === 'create') {
-        this.$refs.intentionDialog.showDialog()
-      }
+     // 跟进
+    handleFollow(uid, data, index) {
+      const type = data.userIntention ? 'update' : 'create'
+      this.handleIntention(index, uid, type)
     },
     // 多选
     handleSelectionChange(data) {
@@ -459,8 +463,8 @@ export default {
       const res = list.map((item) => {
         if (item.userIntention?.type) {
           const { type } = item.userIntention
-          item.userIntention.typeClass = this.userIntentionClassMap[type] || ''
-          item.userIntention.typeText = this.userIntentionMap[type] || ''
+          item.userIntention = this.userIntentionClassMap[type] || ''
+          item.userIntention = this.userIntentionMap[type] || ''
         }
 
         switch (+item.user_status) {
@@ -641,6 +645,10 @@ export default {
 .active-option {
   display: flex;
   justify-content: space-between;
+}
+.liveActive {
+  color: #2a75ed; 
+  cursor: pointer
 }
 </style>
 
