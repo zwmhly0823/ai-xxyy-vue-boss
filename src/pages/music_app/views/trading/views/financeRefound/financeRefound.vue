@@ -93,6 +93,7 @@
                 { label: '降一年包' },
                 { label: '降一年半包' },
                 { label: '预付款优惠券退款' },
+                { label: '器材退款' },
               ]"
               :label="item.label"
               :value="index"
