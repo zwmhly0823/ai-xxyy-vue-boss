@@ -79,6 +79,13 @@
                     <span v-if="scope.row.invoice_type === 2">专票</span>
                   </template>
                 </el-table-column>
+                <el-table-column label="订单类型" align="center">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.invoice_type === 0">无</span>
+                    <span v-if="scope.row.invoice_type === 1">课程订单</span>
+                    <span v-if="scope.row.invoice_type === 2">器材订单</span>
+                  </template>
+                </el-table-column>
                 <el-table-column label="发票金额" align="center">
                   <template slot-scope="scope">
                     <span>{{ scope.row.money }}</span>
@@ -170,6 +177,7 @@ export default {
   methods: {
     // 获取search
     getSearch(data) {
+      console.log(data)
       this.queryObj = data
       this.sourchParams.page = 1
       this.invoiceData(this.queryObj, 1)
