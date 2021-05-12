@@ -30,7 +30,7 @@
         <el-table-column label="学员" align="center" type="index" width="120px">
           <template slot-scope="scope">
             <p>{{ scope.row.mobile }}</p>
-            <p>ID:{{ scope.row.id }}</p>
+            <p>ID:{{ scope.row.userId }}</p>
           </template>
         </el-table-column>
         <el-table-column label="调班性质" align="center" prop="fromTeam">
