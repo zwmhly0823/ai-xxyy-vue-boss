@@ -85,7 +85,7 @@ export default [
     fixed: 'right',
     prop: 'id',
     label: '操作',
-    width: '60',
+    width: '90',
     slot: 'handle'
   }
 ]

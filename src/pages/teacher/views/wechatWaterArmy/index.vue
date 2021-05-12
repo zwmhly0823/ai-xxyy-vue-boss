@@ -34,6 +34,7 @@
         </template>
         <template slot-scope="scope" slot="handle">
           <el-button type="text" @click="handleEdit(scope.row)">编辑</el-button>
+          <el-button type="text" @click="deleteWeChat(scope.row)">删除</el-button>
         </template>
       </basics-table>
     </div>
@@ -44,6 +45,22 @@
       @success="handleReset"
       @close="handleClose"
     />
+    <!-- 删除确认框 -->
+    <el-dialog
+      title="提示"
+      :visible="deleteDialog"
+      width="30%"
+      :before-close="closeDialog"
+    >
+      <i class="el-icon-warning dialog-icon"></i>   
+      <span class="dialog-text"> 确定删除？</span>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="deleteDialog = false">取 消</el-button>
+          <el-button type="primary" @click="deleteDialog = false">确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -61,6 +78,7 @@ export default {
   },
   data() {
     return {
+      deleteDialog: false, // 删除弹出框
       defaultHead,
       loading: false,
       columns,
@@ -130,6 +148,15 @@ export default {
       this.$refs.modifyWechat.visible = true
     },
 
+    //删除
+    deleteWeChat(row) {
+      this.currentWechat = row
+      this.deleteDialog = true
+    },
+    closeDialog(done) {
+      this.deleteDialog = false
+    },
+
     handleClose() {
       this.currentWechat = null
     }
@@ -176,6 +203,13 @@ export default {
       padding: 10px 0;
       background-color: #fff;
     }
+  }
+  .dialog-text {
+    font-size: 18px;
+  } 
+  .dialog-icon {
+    color: rgb(230, 161, 70);
+    font-size: 20px;
   }
 }
 </style>
