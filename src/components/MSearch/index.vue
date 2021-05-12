@@ -111,6 +111,10 @@
           @result="supCallBack"
         />-->
       </el-form-item>
+      <el-form-item v-if="product_type_0">
+        <!-- 盒子及硬件搜索 -->
+        <boxSearch @result="getSearchBox" :name="product_type_0" :LevelArr="LevelArr" />
+      </el-form-item>
       <el-form-item v-if="schedule">
         <!-- 排期 -->
         <Schedule
@@ -120,11 +124,6 @@
           :teamClass="teamClass"
         />
       </el-form-item>
-      <el-form-item  v-if="product_type_0">
-        <!-- 盒子及硬件搜索 -->
-        <boxSearch @result="getSearchBox" :name="product_type_0" />
-      </el-form-item>
-
       <el-form-item v-if="teacherphone">
         <!-- 老师模块手机号搜索 -->
         <teacher-phone
@@ -816,6 +815,7 @@ export default {
   data() {
     return {
       showErr: false,
+      LevelArr: [],
       errTips: '搜索条件不能为空',
       must: [],
       should: [],
@@ -867,7 +867,8 @@ export default {
     },
     // 级别
     levelCallBack(res) {
-      console.log(res, 'res')
+      console.log(res, 'res111')
+      this.LevelArr = res.level
       this.setSeachParmas(res, [this.level || 'current_level'], 'terms')
     },
     // 选择订单下单时间

@@ -12,12 +12,13 @@
       v-model="result"
       size="mini"
       clearable
+      :disabled="isLevel"
       placeholder="盒子及硬件"
       @change="onChange"
       class="item-style"
     >
       <el-option
-        v-for="(item,index) in typeList"
+        v-for="(item, index) in typeList"
         :key="index"
         :value="item.id"
         :label="item.text"
@@ -33,21 +34,34 @@ export default {
       type: String,
       default: '',
     },
+    LevelArr: {
+      type: Array,
+      default: () => [],
+    },
+  },
+  watch: {
+    LevelArr(newVal) {
+      if (newVal) {
+        this.isLevel = !newVal.some((item, index) => {
+          return item.includes('L1')
+        })
+      }
+    },
   },
   data() {
     return {
-      isMultipe: false,
-      result:'硬件及盒子',
+      isLevel: true,
+      result: '硬件及盒子',
       typeList: [
         {
-          id:['10','6'],
+          id: ['10', '6'],
           text: '硬件及盒子',
         },
         {
-          id:[ '10'],
+          id: ['10'],
           text: '硬件',
         },
-         {
+        {
           id: ['6'],
           text: '盒子',
         },

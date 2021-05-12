@@ -511,7 +511,7 @@ export default {
   },
   watch: {
     search(val) {
-      console.log(val, 'val===')
+      console.log(val, 'val===11')
       this.currentPage = 1
       this.searchIn = val
       if (sessionStorage.getItem('val')) {
@@ -906,13 +906,18 @@ export default {
     },
     // 传的id值为状态
     getExpressList() {
-      let timeType = {}
+      let timeType = {
+        product_type_0:["10","6"]
+      }
       if (this.teacherId) {
         this.teacherId && (timeType.teacher_id = this.teacherIds.join())
       }
       this.searchIn.forEach((item) => {
         console.log(item, 'item===物流参数')
         if (item && item.term) {
+            if (item.term.product_type_0) {
+            timeType.product_type_0 = item.term.product_type_0
+          }
           if (item.term.regType) {
             timeType.regtype = item.term.regType
           }
