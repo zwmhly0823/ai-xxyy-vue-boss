@@ -74,7 +74,12 @@
 
       <el-form-item label="模版" prop="experience">
         <el-select v-model="ruleForm.experience" placeholder="请选择" clearable>
-           <el-option
+          <el-option
+            label="1v1美术宝9.9元双周体验课模版"
+            :value="'/channel91v1/index?channelId='"
+            >1v1美术宝9.9元双周体验课模版</el-option
+          >
+          <el-option
             label="9.9元双周体验课模版"
             :value="'/channel9/index?channelId='"
             >9.9元双周体验课模版</el-option
@@ -84,7 +89,9 @@
             :value="'/channel29/index?channelId='"
             >29元双周体验课模版</el-option
           >
-          <el-option label="49元双周体验课模版" :value="'/channel/index?channelId='"
+          <el-option
+            label="49元双周体验课模版"
+            :value="'/channel/index?channelId='"
             >49元双周体验课模版</el-option
           >
           <el-option
