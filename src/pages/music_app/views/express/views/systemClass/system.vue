@@ -142,6 +142,7 @@ export default {
     },
     // 获取物流搜索的条件值
     getSearch(val) {
+      console.log(val,"最终获取的参数")
       this.search = val
     },
     getStatus(val) {

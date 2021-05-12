@@ -33,6 +33,7 @@
         :regType="showItem.regType"
         :channel="showItem.channel"
         :packages_id="showItem.packages_id"
+        :product_type_0="showItem.product_type_0"
       />
     </div>
     <!-- v-if="!teacherId" TOSS -->
@@ -215,6 +216,7 @@ export default {
         replenishReason: 'replenish_reason',
         replenishMethod: 'replenish_type',
         packages_id: !this.addSupS ? 'packages_id' : '',
+        product_type_0:this.addSupS?'product_type_0':''
       },
     }
   },
