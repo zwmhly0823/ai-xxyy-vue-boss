@@ -182,7 +182,7 @@ export default {
       }
       const q = JSON.stringify(query)
 
-      const sort = `{"id":"desc"}`
+      const sort = `{"join_date":"desc"}`
       axios
         .post('/graphql/v1/toss', {
           query: `{
