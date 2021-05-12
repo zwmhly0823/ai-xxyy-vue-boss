@@ -39,17 +39,9 @@ export default [
     }
   },
   {
-    prop: 'in_room_num',
+    prop: 'is_in_room_text',
     label: '是否进入直播间',
     width: '190',
-    render(h, data, row) {
-      if (data > 0) {
-        return "是"
-      }
-      else {
-        return "否"
-      }
-    }
   },
   {
     prop: 'in_room_count',
