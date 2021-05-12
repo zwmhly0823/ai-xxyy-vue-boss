@@ -161,7 +161,7 @@
                         }}</span>
                         <span
                           class="primary-text"
-                          @click="openTeam(scope.row.team_id,scope.row.team)"
+                          @click="openTeam(scope.row.team_id, scope.row.team)"
                           >{{
                             `(${
                               scope.row.team ? scope.row.team.team_name : '-'
@@ -172,7 +172,8 @@
                       <div>
                         {{
                           `${
-                            (scope.row.teacher_trial && scope.row.teacher_trial.departmentInfo &&
+                            (scope.row.teacher_trial &&
+                              scope.row.teacher_trial.departmentInfo &&
                               scope.row.teacher_trial.departmentInfo.name) ||
                             '--'
                           }`
@@ -181,32 +182,55 @@
                     </div>
                     <div
                       v-if="
-                        scope.row.teacher_system && column.type === 'classKey1'
+                        scope.row.system_team && column.type === 'classKey1'
                       "
                     >
                       <span>{{
-                        (scope.row.system_team &&
-                          scope.row.system_team.team_name) ||
-                        '--'
-                      }}</span>
+                          (scope.row.teacher_system &&
+                            scope.row.teacher_system.realname) ||
+                          '--'
+                        }}</span>
                       <span
                         class="primary-text"
-                        @click="openTeam(scope.row.system_team_id,scope.row.system_team)"
+                        @click="
+                          openTeam(
+                            scope.row.system_team_id,
+                            scope.row.system_team
+                          )
+                        "
                         >{{
-                          `(${scope.row.system_team ? scope.row.system_team.team_name : '-'})`
+                          `(${
+                            scope.row.system_team
+                              ? scope.row.system_team.team_name
+                              : '-'
+                          })`
                         }}</span
                       >
                       <div>
                         {{
                           `${
-                            (scope.row.teacher_system && scope.row.teacher_system.departmentInfo &&
+                            (scope.row.teacher_system &&
+                              scope.row.teacher_system.departmentInfo &&
                               scope.row.teacher_system.departmentInfo.name) ||
                             '--'
                           }`
                         }}
                       </div>
                     </div>
-                    <div v-if="!scope.row.teacher_system || !scope.row.teacher_trial">{{ '--' }}</div>
+                    <div
+                      v-if="
+                        !scope.row.teacher_trial && column.type === 'classKey'
+                      "
+                    >
+                      {{ '--' }}
+                    </div>
+                    <div
+                      v-if="
+                        !scope.row.system_team && column.type === 'classKey1'
+                      "
+                    >
+                      {{ '--' }}
+                    </div>
                   </label>
                   <!-- 字段为数组的情况 -->
                   <span v-else>
@@ -318,7 +342,7 @@ export default {
     return {
       direction: '',
       sortName: '',
-      sortData:{},
+      sortData: {},
     }
   },
   methods: {
@@ -330,7 +354,7 @@ export default {
       return formatData(date, flag)
     },
     // 点击班级名称，打开班级详情
-    openTeam(row,row1) {
+    openTeam(row, row1) {
       if (!row) return
       const teamId = row
       const teamType = row1.team_type || '0'
@@ -359,9 +383,9 @@ export default {
       if (data.order == 'descending') {
         direction = 'desc'
       }
-     let obj = { [data.prop]: direction };
-     this.sortData = obj;
-     this.$emit('getList',1,this.sortData)
+      let obj = { [data.prop]: direction }
+      this.sortData = obj
+      this.$emit('getList', 1, this.sortData)
     },
     clearSort() {
       this.direction = ''
