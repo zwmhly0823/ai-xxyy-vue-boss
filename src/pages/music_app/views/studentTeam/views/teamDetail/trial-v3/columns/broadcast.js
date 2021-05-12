@@ -88,6 +88,7 @@ export default [
     prop: 'userIntention',
     label: '跟进',
     minWidth: '120',
+    slot:"follow"
   },
   {
     prop: 'live',

@@ -79,6 +79,7 @@
         <user-follow
           :row="scope.row"
           :index="scope.$index"
+          :liveType="1"
           @handle-intention="handleIntention"
         />
       </template>
@@ -352,6 +353,7 @@ export default {
       const type = data.userIntention ? 'update' : 'create'
       this.handleIntention(index, uid, type)
     },
+    handleIntention() {},
     // 多选
     handleSelectionChange(data) {
       console.log(data, 'selection')
@@ -461,8 +463,8 @@ export default {
       const res = list.map((item) => {
         if (item.userIntention?.type) {
           const { type } = item.userIntention
-          item.userIntention = this.userIntentionClassMap[type] || ''
-          item.userIntention = this.userIntentionMap[type] || ''
+          item.userIntention.typeClass = this.userIntentionClassMap[type] || ''
+          item.userIntention.typeText = this.userIntentionMap[type] || ''
         }
 
         switch (+item.user_status) {
