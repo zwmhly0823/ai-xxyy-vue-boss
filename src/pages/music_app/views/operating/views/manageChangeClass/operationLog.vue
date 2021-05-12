@@ -57,7 +57,7 @@
         <el-table-column label="调班结果" align="center" prop="executeResult">
           <template slot-scope="scope">
             <p>
-              {{ scope.row.executeResult == 'SUCCESS' ? '成功' : '失败' }}
+              {{ scope.row.executeResult == 'SUCCESS' ? '成功' : `失败-${scope.row.message}` }}
             </p>
           </template>
         </el-table-column>
