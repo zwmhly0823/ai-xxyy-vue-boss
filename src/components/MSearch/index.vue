@@ -111,7 +111,6 @@
           @result="supCallBack"
         />-->
       </el-form-item>
-
       <el-form-item v-if="schedule">
         <!-- 排期 -->
         <Schedule
@@ -120,6 +119,10 @@
           :name="schedule"
           :teamClass="teamClass"
         />
+      </el-form-item>
+      <el-form-item  v-if="product_type_0">
+        <!-- 盒子及硬件搜索 -->
+        <boxSearch @result="getSearchBox" :name="product_type_0" />
       </el-form-item>
 
       <el-form-item v-if="teacherphone">
@@ -235,12 +238,6 @@
           :name="searchTrialTeamName"
         />
       </el-form-item>
-
-      <el-form-item v-if="searchStage">
-        <!-- 系统课排期搜索 -->
-        <search-stage @result="getSearchStage" :name="searchStage" />
-      </el-form-item>
-
       <el-form-item v-if="searchTrialStage">
         <!-- 体验课排期搜索 -->
         <search-stage
@@ -396,6 +393,8 @@ import employeesRole from './searchItems/role.vue'
 import staffName from './searchItems/staffName.vue'
 import SearchCourseware from './searchItems/searchCourseware'
 import trialClasstype from './searchItems/trialClassType'
+// 硬件及盒子
+import boxSearch from './searchItems/boxSearch'
 export default {
   props: {
     // 物流体验课0 系统课1
@@ -767,6 +766,11 @@ export default {
       type: String,
       default: '',
     },
+    //硬件及盒子
+    product_type_0: {
+      type: String,
+      default: '',
+    },
   },
   components: {
     trialClasstype,
@@ -807,6 +811,7 @@ export default {
     staffName,
     expressType,
     SearchCourseware,
+    boxSearch,
   },
   data() {
     return {
@@ -845,6 +850,10 @@ export default {
     selectSchedule(res) {
       console.log(res, 'res')
       this.setSeachParmas(res, [this.schedule || 'id'])
+    },
+    // 硬件及盒子
+    getSearchBox(res) {
+      this.setSeachParmas(res, [this.product_type_0 || 'product_type_0'])
     },
     // 难度
     supCallBack(res) {
@@ -1012,7 +1021,7 @@ export default {
       this.sendSeachParams(res, this.employees)
     },
     gerEmployeesPhone(res) {
-      this.sendSeachParams(res, this.phoneNumber,"terms")
+      this.sendSeachParams(res, this.phoneNumber, 'terms')
     },
     getReplenishProduct(res) {
       this.setSeachParmas(res, [this.replenishProduct || 'product_type'])
