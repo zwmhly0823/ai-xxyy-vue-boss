@@ -2,7 +2,7 @@
   <div class="boradcast-page">
     <!-- 活动列表 -->
     <div class="actives">
-      <div class="lbl">活动选择</div>
+      <div class="lbl">活动选择:</div>
       <el-select class="control" size="small" v-model="liveActivityId">
         <el-option
           v-for="(item, index) in liveActive"

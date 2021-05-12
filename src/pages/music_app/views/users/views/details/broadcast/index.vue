@@ -228,6 +228,11 @@ export default {
       this.listQuery.currentPage = val
       this.getActiveList()
     },
+     handleSizeChange(val) {
+      this.chatCurrentPage = 1 // 处理当前第30页-页容量5=>改页容量100后,页码不归1的组件内部问题
+      this.chatPageSize = val
+      this.getchatList()
+    },
     handleCurrentChange1(val) {
       this.chatCurrentPage = val
       this.getchatList()
