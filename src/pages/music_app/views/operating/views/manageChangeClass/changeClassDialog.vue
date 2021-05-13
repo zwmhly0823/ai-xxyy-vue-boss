@@ -12,7 +12,7 @@
       :center="true"
       width="30%"
     >
-      <div v-if="returnSuccess.length" class="changeclass-diaolog-group">
+      <div v-if="returnSuccess && returnSuccess.length>0" class="changeclass-diaolog-group">
         <el-alert
           title="导入成功"
           type="success"
@@ -27,7 +27,7 @@
           </div>
         </div>
       </div>
-      <div v-if="returnErr.length" class="changeclass-diaolog-group">
+      <div v-if="returnErr && returnErr.length>0" class="changeclass-diaolog-group">
         <el-alert
           title="导入失败"
           type="error"
