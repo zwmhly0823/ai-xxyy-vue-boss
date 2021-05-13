@@ -9,6 +9,10 @@
 
 import axios from '../axiosConfig'
 export default {
+  // 查询子订单
+  getChildOrder(item) {
+    return axios.post('/api/o/v1/orderSub/query/orderSubListByParentOrderId', item)
+  },
   // 获取支付渠道(assert→IMPORT终止)
   getPaymentPay(query = '') {
     console.warn('我来查支付渠道', query)
@@ -74,6 +78,10 @@ export default {
     // return new Promise((resolve, reject) => {
     //   resolve({ code: 0, data: { bala: 54188 } })
     // })
+  },
+  //获取子订单的剩余金额
+  getSubResidueFee(data) {
+    return  axios.post('/api/o/v1/orderSub/getSubOrderRemainingAmount', data)
   },
   // 优惠券订单检测
   checkCouponOrderStatus({ orderId }) {
