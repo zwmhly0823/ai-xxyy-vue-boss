@@ -182,7 +182,7 @@ export default {
       }
       const q = JSON.stringify(query)
 
-      const sort = `{"id":"desc"}`
+      const sort = `{"join_date":"desc"}`
       axios
         .post('/graphql/v1/toss', {
           query: `{
@@ -194,7 +194,7 @@ export default {
                     watch_time
                     user_status
                     packages_name
-                    like_count
+                    user_num_text
                     chat_count
                     user {
                       id
