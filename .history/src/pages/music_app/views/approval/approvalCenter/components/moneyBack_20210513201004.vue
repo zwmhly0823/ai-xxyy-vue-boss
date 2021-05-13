@@ -493,7 +493,6 @@ export default {
         if (newValue.order !== oldValue.order) {
           this.childOrderOptions = ''
           this.refundForm.signTime = ''
-          this.refundForm.childOrder = ''
           newValue.childOrder = ''
           this.sonItem = false
         }
