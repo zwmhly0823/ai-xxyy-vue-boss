@@ -217,6 +217,9 @@
           <el-tab-pane label="用户触达" name="notifyRecord">
             <ivr :pUserId="studentId" />
           </el-tab-pane>
+            <el-tab-pane label="直播活动" name="broadcast">
+            <broadcast />
+          </el-tab-pane>
         </el-tabs>
       </div>
     </el-scrollbar>
@@ -239,6 +242,7 @@ import ivr from './ivrComponents/ivrCon.vue'
 import studyWeekly from './studyWeekly/index.vue'
 import behaviorLocus from './behaviorLocus/index.vue'
 import changeRecommend from './changeRecommend/index.vue'
+import broadcast from './broadcast/index.vue'
 import approvalRecord from '../../components/approvalRecord'
 import {
   GetAgeByBrithday,
@@ -263,7 +267,8 @@ export default {
     CouponPopover,
     studyWeekly,
     behaviorLocus,
-    approvalRecord
+    approvalRecord,
+    broadcast,
   },
   data() {
     return {

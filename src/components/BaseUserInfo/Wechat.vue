@@ -1,6 +1,6 @@
 <template>
   <div class="wechat-info">
-    <template v-if="wechat.wechat_id">
+    <template v-if="wechat&&wechat.wechat_id">
       <div class="wechat-info-head">
         <img :src="head" alt="" />
       </div>

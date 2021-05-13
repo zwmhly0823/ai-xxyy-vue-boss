@@ -71,7 +71,7 @@ export default {
   computed: {
     // 微信头像
     head() {
-      const head = this?.user?.weixinUser?.avatar || this.defaultHead
+      const head = this?.user?.weixinUser?.avatar || this?.user?.head || this.defaultHead
       return `${head}`
     },
     // 是不是vip标签 - 固定标签: vip

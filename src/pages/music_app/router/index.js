@@ -33,6 +33,8 @@ import complaint from '../views/complaint/router'
 // 呼叫中心
 import outbound from '../views/outbound/router'
 import express from '../views/express/router'
+// 数据中心
+import statistics from '../views/statistics/router'
 const staff = JSON.parse(localStorage.getItem('staff'))
 
 let superOperatingRouter = []
@@ -75,7 +77,8 @@ const routes = [
   ...finance,
   ...complaint,
   ...outbound,
-  ...express
+  ...express,
+  ...statistics
 ]
 const router = new VueRouter({
   base: process.env.BASE_URL,
