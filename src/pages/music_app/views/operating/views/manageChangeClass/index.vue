@@ -57,6 +57,7 @@
     <change-class-dialog
       :dialogVisible="dialogVisible"
       :returnSuccess="successList"
+      :returnErr="errList"
     />
   </div>
 </template>
@@ -117,7 +118,8 @@ export default {
 
         if (result.payload && result.payload.length > 0) {
           this.dialogVisible = true
-          this.successList = result.payload
+          this.successList = res.payload[1]
+          this.errList = res.payload[0]
         }
       }
       loadingInstance.close()
