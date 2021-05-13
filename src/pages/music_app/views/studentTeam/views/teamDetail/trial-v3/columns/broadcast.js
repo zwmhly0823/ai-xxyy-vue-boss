@@ -104,6 +104,7 @@ export default [
     prop: 'user_status',
     label: '系统课转化',
     width: '70',
+    fixed: 'right',
     render(h, data, row) {
       switch (+data) {
         case 0:
