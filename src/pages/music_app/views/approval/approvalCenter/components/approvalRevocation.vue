@@ -441,6 +441,7 @@
                 4: '降1年包',
                 5: '降1年半包',
                 6: '系统课预付款优惠券退款',
+                7: '硬件乐器退款'
               }[drawerApprovalDeatail.refundType]
             }}</el-col>
           </el-row>
