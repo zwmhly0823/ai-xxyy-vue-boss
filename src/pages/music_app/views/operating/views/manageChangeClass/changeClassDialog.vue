@@ -23,11 +23,11 @@
         </el-alert>
         <div class="item-content">
           <div v-for="(item, i) in returnSuccess" :key="i">
-            {{ item }}
+            {{ item.result }}
           </div>
         </div>
       </div>
-      <!-- <div v-if="returnErr.length" class="changeclass-diaolog-group">
+      <div v-if="returnErr.length" class="changeclass-diaolog-group">
         <el-alert
           title="导入失败"
           type="error"
@@ -38,10 +38,10 @@
         </el-alert>
         <div class="item-content">
           <div v-for="(item, i) in returnErr" :key="i">
-            {{ item.errorMsg }}
+            {{ item.result }}
           </div>
         </div>
-      </div> -->
+      </div>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" size="small" @click="$router.go(0)"
           >确 定</el-button
@@ -54,19 +54,22 @@
 export default {
   data() {
     return {
-      currentMenu: null
+      currentMenu: null,
     }
   },
   props: {
     returnSuccess: {
-      type: Array
+      type: Array,
     },
-   dialogVisible: {
+    returnErr: {
+      type: Array,
+    },
+    dialogVisible: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
-  methods: {}
+  methods: {},
 }
 </script>
 <style lang="scss">

@@ -133,6 +133,7 @@
     <change-class-dialog
       :dialogVisible="dialogVisible"
       :returnSuccess="successList"
+      :returnErr="errList"
     />
   </el-row>
 </template>
@@ -168,7 +169,7 @@ export default {
         toTeamId: '',
         fromTeamId: '',
       },
-      toTeamIdPerson:null,
+      toTeamIdPerson: null,
       params: {
         operationId: '',
         subject: '',
@@ -178,6 +179,7 @@ export default {
       tableData: [],
       AllTableData: [],
       successList: [], // 返回成功数组
+      errList: [], // 返回成功数组
       totalElements: 0, // 总条数
       query: {
         pageSize: 10,
@@ -227,20 +229,19 @@ export default {
         this.params.data[0].toTeamId = this.toTeamIdPerson
         this.$http.Operating.trialChangeClass(this.params).then((res) => {
           this.loading = false
-          if (res.payload && res.payload.length > 0) {
-            this.dialogVisible = true
-            this.successList = res.payload
-          }
+          this.dialogVisible = true
+          this.successList = res.payload[1]
+          this.errList = res.payload[0]
         })
       } else {
         this.$http.Operating.changeTrialTeam(this.params).then((res) => {
           this.loading = false
-          if (res.payload && res.payload.length > 0) {
-            this.dialogVisible = true
-            this.successList = res.payload
-          }
+          this.dialogVisible = true
+          this.successList = res.payload[1]
+          this.errList = res.payload[0]
         })
       }
+      console.log(this.successList, this.errList)
     },
     // 删除条目
     deleteItem(i) {
@@ -326,7 +327,7 @@ export default {
       }
     },
     getTrialTeamName(flagid, flag, res) {
-      console.log(res[0][0],"传入的id")
+      console.log(res[0][0], '传入的id')
       if (res[0]) {
         if (flagid == 'toTeamId') {
           this.rules.toTeamId = res[0].toTeamId
@@ -335,10 +336,10 @@ export default {
           this.rules.fromTeamId = res[0].toTeamId
         }
         const classData = res[0][0]
-        if(classData.id) {
+        if (classData.id) {
           this.toTeamIdPerson = classData.id
         }
-        console.log(classData,"classData")
+        console.log(classData, 'classData')
         classData[flagid] = classData.id
         classData[flag] = classData.team_name
         Object.assign(this.form, classData)
