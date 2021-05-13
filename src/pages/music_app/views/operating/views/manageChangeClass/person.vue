@@ -169,7 +169,7 @@ export default {
         toTeamId: '',
         fromTeamId: '',
       },
-      toTeamIdPerson: null,
+      toTeamIdPerson:[],
       params: {
         operationId: '',
         subject: '',
@@ -222,11 +222,19 @@ export default {
       return index + 1 + (this.query.pageNum - 1) * this.query.pageSize
     },
     submit() {
+      this.AllTableData.forEach((item,index) => {
+         this.toTeamIdPerson.forEach((item1,) => {
+            if(item.id == item1) {
+              this.AllTableData[index].toTeamId = item1
+            }
+         })
+      })
       this.params.data = this.AllTableData
+      console.log(this.AllTableData,"this.AllTableData")
       this.params.type = this.flag === '0' ? '1' : null
       this.loading = true
       if (this.flag === '0') {
-        this.params.data[0].toTeamId = this.toTeamIdPerson
+        // this.params.data[0].toTeamId = this.toTeamIdPerson
         this.$http.Operating.trialChangeClass(this.params).then((res) => {
           this.loading = false
           this.dialogVisible = true
@@ -337,7 +345,7 @@ export default {
         }
         const classData = res[0][0]
         if (classData.id) {
-          this.toTeamIdPerson = classData.id
+          this.toTeamIdPerson.push(classData.id)
         }
         console.log(classData, 'classData')
         classData[flagid] = classData.id
