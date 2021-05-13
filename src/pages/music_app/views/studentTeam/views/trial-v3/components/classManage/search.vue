@@ -43,7 +43,7 @@
       <span>体验课类型：</span>
       <trial-course-type
         class="inline-block"
-        name="type"
+        name="category"
         @result="getTrialCourseType"
       />
     </div>
@@ -83,7 +83,7 @@ export default {
       teamName: '',
       categoryType: [0, 2],
       searchParams: {},
-      isDisabled:false,
+      isDisabled: false,
     }
   },
   computed: {
@@ -114,16 +114,16 @@ export default {
       let category = ''
       // 当数组为全部的时候直接赋值
       if (val) {
-         this.categoryType = val.type
-        if (val.type.length == 2) {
-          category = val.type;
+        this.categoryType = val.category
+        if (val.category.length == 2) {
+          category = val.category
           this.isDisabled = true
         } else {
-          category = val.type.join('');
+          category = val.category.join('')
           this.isDisabled = false
         }
       }
-      this.searchRes(val, 'type')
+      this.searchRes(val.category, 'category')
     },
     teacherRes(val) {
       let teacherId = ''
