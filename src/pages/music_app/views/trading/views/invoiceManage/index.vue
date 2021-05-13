@@ -81,9 +81,9 @@
                 </el-table-column>
                 <el-table-column label="订单类型" align="center">
                   <template slot-scope="scope">
-                    <span v-if="scope.row.content_type === 0">课程订单</span>
-                    <span v-if="scope.row.content_type === 1">器材订单</span>
-                    <span v-if="scope.row.content_type !== 0 && scope.row.content_type !== 1">--</span>
+                    <span v-if="scope.row.content_type === 1">课程订单</span>
+                    <span v-if="scope.row.content_type === 2">器材订单</span>
+                    <span v-if="scope.row.content_type !== 1 && scope.row.content_type !== 2">--</span>
                   </template>
                 </el-table-column>
                 <el-table-column label="发票金额" align="center">

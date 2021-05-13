@@ -108,15 +108,15 @@ export default {
       ],
       orderTypeList: [
         {
-          id: 0,
+          id: 1,
           text: '课程订单'
         },
         {
-          id: 1,
+          id: 2,
           text: '器材订单'
         },
         {
-          id: [0, 1],
+          id: [1, 2],
           text: '全部'
         }
       ]
