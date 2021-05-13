@@ -83,7 +83,7 @@ export default {
       teamName: '',
       categoryType: [0, 2],
       searchParams: {},
-      isDisabled:false,
+      isDisabled: false,
     }
   },
   computed: {
@@ -111,19 +111,24 @@ export default {
     // 体验课类型
     getTrialCourseType(val) {
       console.log(val, '体验课类型')
-      let category = ''
       // 当数组为全部的时候直接赋值
       if (val) {
-         this.categoryType = val.type
+        this.categoryType = val.type
         if (val.type.length == 2) {
-          category = val.type;
           this.isDisabled = true
         } else {
-          category = val.type.join('');
           this.isDisabled = false
         }
       }
-      this.searchRes(val, 'type')
+      let lesssonArr = []
+      if (val.type.length == 2) {
+        lesssonArr = ['0', '3', '503', '505']
+      } else if (val.type[0] == '0') {
+        lesssonArr = ['0', '503', '505']
+      } else if (val.type[0] == '2') {
+        lesssonArr = ['3']
+      }
+      this.searchRes(lesssonArr, 'category')
     },
     teacherRes(val) {
       let teacherId = ''
