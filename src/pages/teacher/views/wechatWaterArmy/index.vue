@@ -160,7 +160,17 @@ export default {
     },
     // 确定删除
     deleteConfirm() {
-      this.currentWechat = null
+      if (!this.currentWechat?.id) {
+        this.$message.error('删除失败，未能获取微信用户id或老师id')
+        this.deleteDialog = false
+        return
+      }
+      const { id } = this.currentWechat
+      this.$http.Teacher.Zhiqun.deleteWaterArmy({ id, del: 1 }).then((res) => {
+            this.$message.success('删除成功')
+            this.listQuery.currentPage = 1
+            this.getDataList()
+      })
     },
 
     handleClose() {
