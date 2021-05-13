@@ -131,7 +131,8 @@ export default {
           type: 'moreKey',
           key: 'user',
           title: '学员',
-          width: '150',
+          width: '200',
+          fixed: "left",
         },
         {
           key: 'teacher_trial',
@@ -243,6 +244,7 @@ export default {
         {
           key: 'user_status',
           title: '系统课转化',
+          fixed: "right",
           escape: (row) => {
             switch (+row.user_status) {
               case 0:
@@ -276,6 +278,7 @@ export default {
         {
           type: 'operate',
           title: '操作',
+          fixed: "right",
           operates: [
             {
               emitKey: 'operateEdit',
