@@ -186,7 +186,7 @@ export default {
         {
           key: 'live_watch_time',
           title: '观看直播总时长/分钟',
-          width: '150',
+          width: '200',
           sort: true,
           escape: (row) => {
             return row.live_watch_time ? row.live_watch_time : '-'
@@ -195,7 +195,7 @@ export default {
         {
           key: 'playback_watch_time',
           title: '观看回放总时长',
-          width: '150',
+          width: '200',
           sort: true,
           escape: (row) => {
             return row.playback_watch_time ? row.playback_watch_time : '-'
@@ -386,6 +386,9 @@ export default {
       this.headersDialogList = this.headersEnter
     },
     discussLive(row) {
+      if(!row.chat_count) {
+        return false
+      }
       this.phoneNumber = row.user.mobile
       this.tableParam.userId = row.uid
       this.tableParam.huoUserId = row.huo_user_id
