@@ -569,7 +569,12 @@
 
           <el-row>
             <el-col :span="5">关联订单:</el-col>
-            <el-col :span="18" :offset="1">{{drawerApprovalDeatail.associatedOrderOutTradeNo && drawerApprovalDeatail.associatedOrderOutTradeNo!=0?`${drawerApprovalDeatail.associatedPackagesName},金额${drawerApprovalDeatail.associatedOrderAmout},订单号${drawerApprovalDeatail.associatedOrderOutTradeNo}`:'无关联'}}</el-col>
+            <el-col :span="18" :offset="1">{{
+              drawerApprovalDeatail.associatedOrderOutTradeNo &&
+              drawerApprovalDeatail.associatedOrderOutTradeNo != 0
+                ? `${drawerApprovalDeatail.associatedPackagesName},金额${drawerApprovalDeatail.associatedOrderAmout},订单号${drawerApprovalDeatail.associatedOrderOutTradeNo}`
+                : '无关联'
+            }}</el-col>
           </el-row>
           <el-row>
             <el-col :span="5">关单赠品:</el-col>
@@ -1209,7 +1214,11 @@ export default {
         SINGLE_QUALITY: '产品质量问题',
         // SINGLE_PIGMENT_LEAKAGE: '颜料撒漏'
       },
-      courseOptions: { TESTCOURSE: '体验课', SYSTEMCOURSE: '系统课', TESTCOURSE_SINGLE:'体验课'},
+      courseOptions: {
+        TESTCOURSE: '体验课',
+        SYSTEMCOURSE: '系统课',
+        TESTCOURSE_SINGLE: '体验课',
+      },
       currentType: '',
       type_lk: '',
       changeVersionList: [],
@@ -1220,14 +1229,14 @@ export default {
     // 身份类型，4是财务，具体见wiki
     const roleList = JSON.parse(localStorage.getItem('staff')).roleList
 
-    console.log(roleList,"roleList");
+    console.log(roleList, 'roleList')
     let roleId = roleList ? roleList[0] : ''
     this.roleId = roleId
     this.getRoleIdList()
   },
   mounted() {
     const staff = getStaffInfo()
-    console.log(staff,"staff");
+    console.log(staff, 'staff')
     this.resetParams = staff
     this.staffId = staff.staffId // storage体验或系统课老师id
     this.isStaffId = staff.isStaffId // 只有boss且position==='1' 为true
@@ -1557,7 +1566,9 @@ export default {
     },
     // 拒绝弹窗（赠品）
     refuseDialog() {
+      this.form_checkbox.reason = ''
       this.dialogFormVisible_checkbox = true
+      this.drawerApprovalDeatail.flowApprovalId=''
     },
     // 同意申请
     ensureReplenish() {

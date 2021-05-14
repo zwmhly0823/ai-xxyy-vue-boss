@@ -101,7 +101,9 @@ export default {
   },
   watch: {
     category(val, oldValue) {
-      this.getData()
+      if (val) {
+        this.getData()
+      }
     },
     record(val) {
       this.stage = val
@@ -124,9 +126,14 @@ export default {
       const query = { teacher_id: this.teacherId }
       const teamType =
         this.type === '0' ? { team_type: 0 } : { team_type: { gt: 0 } }
-      Object.assign(query, teamType, {
-        subject: this.$store.getters.subjects.subjectCode,
-      },{type: `${this.category.length==0?this.type:this.category}`})
+      Object.assign(
+        query,
+        teamType,
+        {
+          subject: this.$store.getters.subjects.subjectCode,
+        },
+        { type: `${this.category.length == 0 ? this.type : this.category}` }
+      )
 
       const q = JSON.stringify(query)
       axios
@@ -156,7 +163,11 @@ export default {
         },
       }
       if (this.type) {
-        queryParams.bool.must.push({ term: { type: `${this.category.length==0?this.type:this.category}` } })
+        queryParams.bool.must.push({
+          term: {
+            type: `${this.category.length == 0 ? this.type : this.category}`,
+          },
+        })
       }
       if (this.record.length > 0) {
         console.log(this.period)

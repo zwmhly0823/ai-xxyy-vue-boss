@@ -260,16 +260,16 @@ let bearArt = [
           module
         }
       },
-      // {
-      //   path: '/review',
-      //   name: 'review',
-      //   hidden:true,
-      //   meta: {
-      //     title: '作品审核',
-      //     module: 'operating',
-      //     module
-      //   }
-      // },
+      {
+        path: '/review',
+        name: 'review',
+        hidden:true,
+        meta: {
+          title: '作品审核',
+          module: 'operating',
+          module
+        }
+      },
       {
         path: '/channelManagement',
         name: 'channelManagement',
@@ -396,6 +396,14 @@ let bearArt = [
           // module: 'operating'
           module
         }
+      },
+      {
+        path: '/manageChangeClass',
+        name: 'manageChangeClass',
+        meta: {
+          title: '体验课调班',
+          module
+        },
       },
     ]
   },
@@ -577,6 +585,26 @@ let bearArt = [
       icon: 'icon-tubiao-',
       module: module,
     },
+  },
+  {
+    path: '/statistics',
+    name: 'statistics',
+    // hidden: true,
+    meta: {
+      title: '数据中心',
+      icon: 'icontongjifenxi',
+      module,
+    },
+    children: [
+      {
+        path: '/liveActivity',
+        name: 'liveActivity',
+        meta: {
+          title: '直播活动',
+          module,
+        }
+      },
+    ],
   },
 ]
 

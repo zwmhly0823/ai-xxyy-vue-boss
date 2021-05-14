@@ -57,7 +57,7 @@ const menuItems = [
   },
   {
     link: 'statistics',
-    text: '统计分析',
+    text: '数据中心',
     isShow: true
   },
   {

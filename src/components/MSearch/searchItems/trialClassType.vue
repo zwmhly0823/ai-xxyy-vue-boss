@@ -34,6 +34,10 @@ export default {
       type: String,
       default: '',
     },
+    typeB: {
+      type: Number,
+      default: 0,
+    },
     placeholder: {
       type: String,
       default: '体验课类型',
@@ -59,7 +63,7 @@ export default {
       ],
       typeList2: [
         {
-          id: ['0', '3'],
+          id: ['0', '3', '503', '505'],
           text: '全部',
         },
         {
@@ -67,29 +71,37 @@ export default {
           text: '单周体验课',
         },
         {
-          id: ['0'],
+          id: ['0', '503', '505'],
           text: '双周体验课',
         },
       ],
       // 物流
       typeList3: [
         {
-          id: ['500', '502'],
+          id: ['500', '502', '503', '505'],
           text: '全部',
         },
         {
           id: ['502'],
-          text: '单周体验课',
+          text: '29元单周体验课',
+        },
+        {
+          id: ['505'],
+          text: '9.9元双周体验课',
+        },
+        {
+          id: ['503'],
+          text: '29元双周体验课',
         },
         {
           id: ['500'],
-          text: '双周体验课',
+          text: '49元双周体验课',
         },
       ],
       // 体验课学员
       typeList4: [
         {
-          id: ['0', '3'],
+          id: ['0', '3', '503', '505'],
           text: '全部',
         },
         {
@@ -97,7 +109,7 @@ export default {
           text: '单周体验课',
         },
         {
-          id: ['0'],
+          id: ['0', '503', '505'],
           text: '双周体验课',
         },
       ],
@@ -115,11 +127,26 @@ export default {
           text: '双周体验课',
         },
       ],
+      // 火山直播的体验课类型
+       typeList6: [
+        {
+          id: ['0', '3'],
+          text: '全部',
+        },
+        {
+          id: ['3'],
+          text: '单周体验课',
+        },
+        {
+          id: ['0'],
+          text: '双周体验课',
+        },
+      ],
     }
   },
   mounted() {
     console.log('搜索数据', this.name)
-    if (this.name == 'category') {
+    if (this.name == 'category' && this.typeB !=1) {
       this.typeList = this.typeList2
     } else if (this.name == 'packages_type') {
       this.typeList = this.typeList1
@@ -129,6 +156,8 @@ export default {
       this.typeList = this.typeList4
     } else if (this.name == 'type') {
       this.typeList = this.typeList5
+    }else if(this.name == 'category' && this.typeB ==1) {
+      this.typeList = this.typeList6
     }
   },
   methods: {

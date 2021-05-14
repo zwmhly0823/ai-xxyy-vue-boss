@@ -24,7 +24,7 @@
           <el-form-item
             prop="promotionsName"
             label="活动名称"
-            style="width:320px;"
+            style="width: 320px"
           >
             <el-input
               v-model="activityFrom.promotionsName"
@@ -34,7 +34,7 @@
           <el-form-item
             prop="promotionsType"
             label="活动类型"
-            style="width:320px;"
+            style="width: 320px"
           >
             <el-select
               class="item-style"
@@ -104,19 +104,17 @@
             </el-row>
           </el-form-item> -->
 
-          <el-form-item label="活动范围" prop="trialTerms">
-            <el-row style="display:flex;margin-bottom: 10px;">
+          <el-form-item v-if="false" label="活动范围" prop="trialTerms">
+            <el-row>
               <el-radio
                 v-model="promotionsRange"
                 label="1"
                 class="Schedule"
-                style="display: flex;align-items: center;"
+                style="display: flex; align-items: center"
               >
-                <span style="width:80px;">
-                  按排期
-                </span>
+                <span style="width: 80px"> 按排期 </span>
                 <search-stage
-                  style="margin-right:20px;"
+                  style="margin-right: 20px"
                   :record="activityFrom.trialTerms"
                   class="search-group-item"
                   name="term0"
@@ -137,10 +135,10 @@
               </el-radio>
             </el-row>
           </el-form-item>
-          <el-form-item label="" prop="payOrderDate">
-            <el-row style="display:flex;margin-bottom: 10px;">
+          <el-form-item label="活动范围" prop="payOrderDate">
+            <el-row style="display: flex; margin-bottom: 10px">
               <el-radio v-model="promotionsRange" label="2">
-                <span style="width:80px;margin-right:10px;">按下单时间</span>
+                <span style="width: 80px; margin-right: 10px">按下单时间</span>
                 <el-date-picker
                   v-model="activityFrom.payOrderDate"
                   type="daterange"
@@ -157,7 +155,7 @@
           <el-form-item
             prop="businessType"
             label="业务类型"
-            style="width:320px;"
+            style="width: 320px"
           >
             <el-select
               class="item-style"
@@ -242,7 +240,7 @@
           <el-form-item label="活动说明">
             <el-input
               type="textarea"
-              style="width:400px"
+              style="width: 400px"
               v-model="activityFrom.desc"
               :autosize="{ minRows: 2, maxRows: 4 }"
               placeholder="请输入内容"
@@ -327,7 +325,7 @@ export default {
       }
     }
     return {
-      promotionsRange: '', // 活动范围radio
+      promotionsRange: '2', // 活动范围radio
       isTrial: false, // 体验课checkbox
       isSystem: false, // 系统课checkbox
       isOrder: false, // 按下单时间
@@ -337,14 +335,18 @@ export default {
       promotionsType: [
         {
           value: 'GIFT',
-          label: '关单赠品'
-        }
+          label: '关单赠品',
+        },
       ], // 活动类型列表
       businessType: [
         // 业务类型
         {
           value: '0',
-          label: '首单年课'
+          label: '首单年课',
+        },
+        {
+          value: '1',
+          label: '首单半年课',
         },
         // {
         //   value: '1',
@@ -376,50 +378,50 @@ export default {
         payOrderDate: [], // 下单时间
         trialTerms: [], // 体验课
         systemTerms: [], // 系统课
-        desc: '' // 活动说明
+        desc: '', // 活动说明
       },
       productList: [],
       rules: {
         promotionsName: [
-          { required: true, message: '请输入任务名称', trigger: 'blur' }
+          { required: true, message: '请输入任务名称', trigger: 'blur' },
         ],
         promotionsType: [
-          { required: true, message: '请选择计划模板', trigger: 'change' }
+          { required: true, message: '请选择计划模板', trigger: 'change' },
         ],
         businessType: [
-          { required: true, message: '请选择业务类型', trigger: 'blur' }
+          { required: true, message: '请选择业务类型', trigger: 'blur' },
         ],
         promotionsDate: [
           {
             required: true,
             message: '请选择时间范围',
-            trigger: 'change'
-          }
+            trigger: 'change',
+          },
         ],
         trialTerms: [
-          { required: true, validator: expvalidator, trigger: 'blur' }
+          { required: true, validator: expvalidator, trigger: 'blur' },
         ],
         systemTerms: [
-          { required: true, validator: sysvalidator, trigger: 'blur' }
+          { required: true, validator: sysvalidator, trigger: 'blur' },
         ],
         payOrderDate: [
-          { required: true, validator: payvalidator, trigger: 'blur' }
+          { required: true, validator: payvalidator, trigger: 'blur' },
         ],
         giftOptionCheck: [
-          { required: true, validator: giftOptionvalidator, trigger: 'blur' }
-        ]
+          { required: true, validator: giftOptionvalidator, trigger: 'blur' },
+        ],
       },
       expireTimeOption: {
         disabledDate(date) {
           return date.getTime() <= Date.now() - 24 * 60 * 60 * 1000
-        }
-      }
+        },
+      },
     }
   },
   components: {
     EleTable,
     SearchStage,
-    ChooseProduct
+    ChooseProduct,
   },
   watch: {
     // trialTerms(val, old) {
@@ -447,7 +449,7 @@ export default {
         this.activityFrom.systemTerms = []
       }
       console.log(val, old, 'val-old-payOrderDate')
-    }
+    },
   },
   created() {
     // 获取商品
@@ -514,7 +516,7 @@ export default {
     async getPromotionsById(promotionsId) {
       try {
         const tmpInfo = await this.$http.Operating.getPromotionsById({
-          promotionsId
+          promotionsId,
         })
         return tmpInfo
       } catch (err) {
@@ -529,14 +531,14 @@ export default {
         giftsType: '',
         giftsPrice: 0,
         expressCount: 0,
-        products: []
+        products: [],
       }
 
       // let giftsType
       for (let i = 0; i < this.productList.length; i++) {
         for (let j = 0; j < data.length; j++) {
           const product = {
-            id: ''
+            id: '',
           }
           if (data[j] === this.productList[i].key) {
             obj.giftsName = obj.giftsName + '+' + this.productList[i].name
@@ -627,7 +629,7 @@ export default {
             systemTerms: this.activityFrom.systemTerms.join(','),
             orderTypes: this.activityFrom.businessType.join(','),
             gifts: this.tableData,
-            promotionsRange: this.promotionsRange
+            promotionsRange: this.promotionsRange,
           }
 
           if (this.promotionsId) {
@@ -638,7 +640,7 @@ export default {
               this.$message.success('保存成功')
               console.log(res)
               this.$router.push({
-                path: '/activityManagement/'
+                path: '/activityManagement/',
               })
             }
             console.log(res)
@@ -684,8 +686,8 @@ export default {
         const tableHeight = document.body.clientHeight - tableTopHeight - 120
         this.tableHeight = tableHeight + ''
       })
-    }
-  }
+    },
+  },
 }
 </script>
 <style rel="stylesheet/scss" lang="scss">

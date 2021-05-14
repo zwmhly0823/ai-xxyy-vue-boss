@@ -5,7 +5,11 @@
         <span
           v-if="item.redirect === 'noRedirect' || index == levelList.length - 1"
           class="no-redirect"
-          >{{ item.meta.title }}</span
+          >{{
+            item.meta.title == '直播活动详情'
+              ? `直播活动详情-${name}`
+              : item.meta.title
+          }}</span
         >
         <a v-else @click.prevent="handleLink(item)">{{ item.meta.title }}</a>
       </el-breadcrumb-item>
@@ -19,16 +23,39 @@ import { compile } from 'path-to-regexp'
 export default {
   data() {
     return {
-      levelList: null
+      levelList: null,
+      name: null,
+      timer:null,
     }
   },
   watch: {
     $route() {
       this.getBreadcrumb()
-    }
+    },
+    name(newVal) {
+      if (newVal) {
+        this.name = newVal
+      }
+    },
   },
   created() {
     this.getBreadcrumb()
+  },
+  destroyed() {
+    this.timer = null
+  },
+  mounted() {
+   this.timer = setInterval(() => {
+      let liveName = window.location.hash
+      let reg = /([^?=&]+)=([^?=&]+)/g
+      let obj = {}
+      liveName.replace(reg, function (a, b, c) {
+        obj[b] = c
+      })
+      if (obj.liveName) {
+        this.name = decodeURI(obj.liveName)
+      }
+    })
   },
   methods: {
     getBreadcrumb() {
@@ -69,8 +96,8 @@ export default {
         return
       }
       this.$router.push(this.pathCompile(path))
-    }
-  }
+    },
+  },
 }
 </script>
 
