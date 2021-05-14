@@ -90,6 +90,7 @@
                 :search="searchSystem"
                 :sortItem="sortItem"
                 :regtype="regtypeSys"
+                :isType="true"
                 :source_type="source_type"
                 @getTotal="getTotal"
                 :hideCol="allExpressHideCol"
