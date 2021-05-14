@@ -661,7 +661,7 @@ export default {
         }
         if (targetItem && targetItem.id) {
           // 获取关单赠品列表
-          this.$http.Approval.findOrderGiftInfo(targetItem.id).then((res) => {
+          this.$http.Approval.findOrderGiftInfo(targetItem.parentOrderId || targetItem.id).then((res) => {
             this.productData = res.payload.itemInfoModelList
             this.giftsPrice = +res.payload.productPrice
           })
