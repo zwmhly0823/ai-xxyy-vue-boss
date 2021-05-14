@@ -27,7 +27,9 @@
                 <div v-if="selectNum > 1">
                   <el-dropdown-item>
                     <div>
-                      <el-button type="text" @click="handleBatchPass()">批量审核通过</el-button>
+                      <el-button type="text" @click="handleBatchPass()"
+                        >批量审核通过</el-button
+                      >
                     </div>
                   </el-dropdown-item>
                 </div>
@@ -61,15 +63,24 @@
           </el-dropdown>
         </template>
       </el-table-column>
-      <el-table-column label="用户及注册时间" min-width="200" fixed v-if="showCol.userAddDate">
+      <el-table-column
+        label="用户及注册时间"
+        min-width="200"
+        fixed
+        v-if="showCol.userAddDate"
+      >
         <template slot-scope="scope">
           <div class="user" if="scope.row.user">
             <div class="name">
-              <el-button type="text" class="trail" @click="userHandle(scope.row.user)">
+              <el-button
+                type="text"
+                class="trail"
+                @click="userHandle(scope.row.user)"
+              >
                 {{
-                (scope.row.user &&
-                `${scope.row.user.mobile} ${scope.row.user.username}`) ||
-                ''
+                  (scope.row.user &&
+                    `${scope.row.user.mobile} ${scope.row.user.username}`) ||
+                  ''
                 }}
               </el-button>
             </div>
@@ -77,12 +88,19 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="商品信息" min-width="200" v-if="showCol.productName">
+      <el-table-column
+        label="商品信息"
+        min-width="200"
+        v-if="showCol.productName"
+      >
         <template slot-scope="scope">
           <div class="product">
             <span>{{ scope.row.center_product_code || '-' }}</span>
           </div>
-          <div class="gray-text">{{ courseLevelReplace(scope.row.product_name) }} {{ scope.row.product_version }}</div>
+          <div class="gray-text">
+            {{ courseLevelReplace(scope.row.product_name) }}
+            {{ scope.row.product_version }}
+          </div>
         </template>
       </el-table-column>
       <el-table-column
@@ -95,22 +113,32 @@
           <div class="product">
             <span>
               {{
-              +regtype === 1 || regtype === '2,3'
-              ? scope.row.sup
-              : scope.row.product_name
+                +regtype === 1 || regtype === '2,3'
+                  ? scope.row.sup
+                  : scope.row.product_name
               }}
             </span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column v-if="showCol.level" label="级别" min-width="120" :key="1">
+      <el-table-column
+        v-if="showCol.level"
+        label="级别"
+        min-width="120"
+        :key="1"
+      >
         <template slot-scope="scope">
           <div class="product">
             <span>{{ scope.row.level || '--' }}</span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="物流类型" min-width="200" v-if="showCol.replenishType" :key="2">
+      <el-table-column
+        label="物流类型"
+        min-width="200"
+        v-if="showCol.replenishType"
+        :key="2"
+      >
         <template slot-scope="scope">
           <div class="product">
             <span>{{ regtypeEnum[scope.row.regtype] || '--' }}</span>
@@ -120,14 +148,24 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="补发类别" min-width="200" v-if="showCol.replenishFamily" :key="3">
+      <el-table-column
+        label="补发类别"
+        min-width="200"
+        v-if="showCol.replenishFamily"
+        :key="3"
+      >
         <template slot-scope="scope">
           <div class="product">
             <span>{{ scope.row.regtype_text || '--' }}</span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="补发原因" min-width="200" v-if="showCol.replenishReason" :key="4">
+      <el-table-column
+        label="补发原因"
+        min-width="200"
+        v-if="showCol.replenishReason"
+        :key="4"
+      >
         <template slot-scope="scope">
           <div class="product">
             <span>{{ scope.row.operator_name || '--' }}申请</span>
@@ -135,20 +173,30 @@
           <div class="gray-text">
             <span>
               {{ scope.row.replenish_reason_text || '--' }}&nbsp;&nbsp;&nbsp;{{
-              scope.row.express_remark || '--'
+                scope.row.express_remark || '--'
               }}
             </span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="申请人" min-width="180" v-if="showCol.applicant" :key="5">
+      <el-table-column
+        label="申请人"
+        min-width="180"
+        v-if="showCol.applicant"
+        :key="5"
+      >
         <template slot-scope="scope">
           <div class="product">
             <span>{{ scope.row.operator_name }}</span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="活动类型" min-width="180" v-if="showCol.courseType" :key="6">
+      <el-table-column
+        label="活动类型"
+        min-width="180"
+        v-if="showCol.courseType"
+        :key="6"
+      >
         <template slot-scope="scope">
           <div class="product">
             <span>{{ scope.row.regtype_text }}</span>
@@ -167,7 +215,12 @@
           </div>
         </template>
       </el-table-column>-->
-      <el-table-column label="收货信息" width="280" v-if="showCol.receiptInfo" :key="8">
+      <el-table-column
+        label="收货信息"
+        width="280"
+        v-if="showCol.receiptInfo"
+        :key="8"
+      >
         <template slot-scope="scope">
           <div class="address">
             <div class="take">
@@ -189,7 +242,7 @@
               v-if="sortItem.id === '6' || sortItem.id === '0'"
               :class="{
                 edit_0: sortItem.id === '0',
-                edit_6: sortItem.id === '6'
+                edit_6: sortItem.id === '6',
               }"
               @click="editAddress(scope.row)"
             >
@@ -199,30 +252,42 @@
                 size="mini"
                 type="primary"
                 plain
-              >修改地址</el-button>
+                >修改地址</el-button
+              >
               <el-button
                 v-show="sortItem.id === '0'"
                 icon="el-icon-edit"
                 size="mini"
                 type="primary"
                 plain
-              >填写地址</el-button>
+                >填写地址</el-button
+              >
             </div>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="期数" min-width="150" v-if="showCol.term" :key="10">
+      <el-table-column
+        label="期数"
+        min-width="150"
+        v-if="showCol.term"
+        :key="10"
+      >
         <template slot-scope="scope">
           <div class="product">
             <span>
               {{
-              ManagementList[`${scope.row.newtype}${scope.row.term}`] || '-'
+                ManagementList[`${scope.row.newtype}${scope.row.term}`] || '-'
               }}
             </span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="班级信息" min-width="150" v-if="showCol.className" :key="11">
+      <el-table-column
+        label="班级信息"
+        min-width="150"
+        v-if="showCol.className"
+        :key="11"
+      >
         <template slot-scope="scope">
           <!-- <div class="product">
             <span>{{
@@ -231,16 +296,23 @@
           </div>-->
           <div class="product">
             {{
-            scope.row.lastTeamInfo ? courseLevelReplace(scope.row.lastTeamInfo.team_name) : '--'
+              scope.row.lastTeamInfo
+                ? courseLevelReplace(scope.row.lastTeamInfo.team_name)
+                : '--'
             }}
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="班级" min-width="150" v-if="showCol.classNameBf" :key="19">
+      <el-table-column
+        label="班级"
+        min-width="150"
+        v-if="showCol.classNameBf"
+        :key="19"
+      >
         <template slot-scope="scope">
           <div>
             {{
-            scope.row.lastTeamInfo ? scope.row.lastTeamInfo.team_name : '--'
+              scope.row.lastTeamInfo ? scope.row.lastTeamInfo.team_name : '--'
             }}
           </div>
         </template>
@@ -254,41 +326,66 @@
         <template slot-scope="scope">
           <div class="product">
             {{
-            scope.row.lastTeacherInfo
-            ? scope.row.lastTeacherInfo.realname
-            : ''
+              scope.row.lastTeacherInfo
+                ? scope.row.lastTeacherInfo.realname
+                : ''
             }}
           </div>
           <div class="gray-text">
             {{
-            scope.row.lastTeacherInfo
-            ? scope.row.lastTeacherInfo.group_name
-            : '--'
+              scope.row.lastTeacherInfo
+                ? scope.row.lastTeacherInfo.group_name
+                : '--'
             }}
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="物流状态" min-width="200" v-if="showCol.expressStatus" :key="13">
+      <el-table-column
+        label="物流状态"
+        min-width="200"
+        v-if="showCol.expressStatus"
+        :key="13"
+      >
         <template slot-scope="scope">
           <div class="express">
-            <div :class="'wait_' + scope.row.express_status">{{ scope.row.express_status_chinese }}</div>
+            <div :class="'wait_' + scope.row.express_status">
+              {{ scope.row.express_status_chinese }}
+            </div>
             <div
               v-if="
                 scope.row.express_status == 0 || scope.row.express_status == 6
               "
-            >追踪</div>
-            <el-button type="text" class="trail" v-else @click="Express(scope.row)">追踪</el-button>
+            >
+              追踪
+            </div>
+            <el-button
+              type="text"
+              class="trail"
+              v-else
+              @click="Express(scope.row)"
+              >追踪</el-button
+            >
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="失败原因" min-width="200" v-if="showCol.expressRemark" :key="9">
+      <el-table-column
+        label="失败原因"
+        min-width="200"
+        v-if="showCol.expressRemark"
+        :key="9"
+      >
         <template slot-scope="scope">
           <div class="gray-text">
             <span>{{ scope.row.express_remark || '--' }}</span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="物流时效" min-width="200" v-if="showCol.expressInfo" :key="14">
+      <el-table-column
+        label="物流时效"
+        min-width="200"
+        v-if="showCol.expressInfo"
+        :key="14"
+      >
         <template slot-scope="scope">
           <div class="gray-text">
             <div>创建: {{ scope.row.crtime }}</div>
@@ -298,14 +395,25 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="附件详情" min-width="200" v-if="showCol.approvalReissueInfo" :key="20">
+      <el-table-column
+        label="附件详情"
+        min-width="200"
+        v-if="showCol.approvalReissueInfo"
+        :key="20"
+      >
         <template slot-scope="scope">
-          <el-button type="text" @click="showEnclosureDialog(scope.row)">详情</el-button>
+          <el-button type="text" @click="showEnclosureDialog(scope.row)"
+            >详情</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
     <div class="drawer-body">
-      <express-detail :transferExpress="transferExpress" @refresh="getExpressList" ref="zi" />
+      <express-detail
+        :transferExpress="transferExpress"
+        @refresh="getExpressList"
+        ref="zi"
+      />
     </div>
 
     <div class="dialog-shenhe">
@@ -321,12 +429,16 @@
             <div>物流商品类型：</div>
             <div class="mess">
               <div class="ms">
-                <ul class="infinite-list" v-infinite-scroll style="overflow:auto">
+                <ul
+                  class="infinite-list"
+                  v-infinite-scroll
+                  style="overflow: auto"
+                >
                   <li
                     :key="item.id"
                     v-for="item in checkBatchParams"
                     class="infinite-list-item"
-                    style="list-style:none"
+                    style="list-style: none"
                   >
                     {{ +item.term > 10 ? item.term : `0${item.term}` }}期
                     {{ item.sup }} {{ item.product_name }}
@@ -338,13 +450,19 @@
           <div class="message" v-else>
             <div>物流商品类型：</div>
             <div class="mess" :key="i" v-for="(item, i) in checkParams">
-              <div class="ms">{{ item.term }}期 {{ item.sup }} {{ item.product_name }}</div>
+              <div class="ms">
+                {{ item.term }}期 {{ item.sup }} {{ item.product_name }}
+              </div>
             </div>
           </div>
           <div class="choose-product">
             <div>选择承运商：</div>
             <div class="dropdown">
-              <el-select v-model="value1" placeholder="请选择承运商" @change="selectExpress">
+              <el-select
+                v-model="value1"
+                placeholder="请选择承运商"
+                @change="selectExpress"
+              >
                 <el-option
                   v-for="item in options"
                   :key="item.value1"
@@ -416,10 +534,17 @@
       <el-button
         v-if="enclosureimg"
         @click="downloadImg(enclosureimg, '图片')"
-        style="position: absolute;top:44px;"
+        style="position: absolute; top: 44px"
         type="text"
-      >下载图片</el-button>
-      <img v-if="enclosureimg" id="girlImg" style="width:100%;" :src="enclosureimg" alt />
+        >下载图片</el-button
+      >
+      <img
+        v-if="enclosureimg"
+        id="girlImg"
+        style="width: 100%"
+        :src="enclosureimg"
+        alt
+      />
       <video v-if="enclosurevideo" width="100%" height="300" controls>
         <source :src="enclosurevideo" type="video/mp4" />
       </video>
@@ -434,7 +559,7 @@ import {
   isToss,
   formatData,
   openBrowserTab,
-  injectSubject
+  injectSubject,
 } from '@/utils/index'
 import { mapState } from 'vuex'
 import dayjs from 'dayjs'
@@ -446,17 +571,17 @@ import {
   replenishReasonSearchList,
   expressToggleList,
   productTopicListBf,
-  productTypeList
+  productTypeList,
 } from '@/utils/expressItemConfig'
-import {courseLevelReplace} from '@/utils/supList.js'
+import { courseLevelReplace } from '@/utils/supList.js'
 let supList = []
 const regtypeEnum = {
-  '1': '体验课补发',
-  '2': '系统课补发',
-  '3': '系统课补发',
-  '4': '活动补发',
-  '5': '活动补发',
-  '6': '活动补发'
+  1: '体验课补发',
+  2: '系统课补发',
+  3: '系统课补发',
+  4: '活动补发',
+  5: '活动补发',
+  6: '活动补发',
 }
 const LEVEL_ENUM = {
   L1: 0,
@@ -470,7 +595,7 @@ const LEVEL_ENUM = {
   L9: 28 * 8,
   L10: 28 * 9,
   L11: 28 * 10,
-  L12: 28 * 11
+  L12: 28 * 11,
 }
 export default {
   props: {
@@ -479,35 +604,39 @@ export default {
       type: Object,
       default: () => {
         return expressToggleList[0]
-      }
+      },
     },
     regtype: { type: String, default: '' },
     source_type: {
       type: String,
-      default: ''
+      default: '',
+    },
+    isType: {
+      type: Boolean,
+      default: false,
     },
     hideCol: {
       type: Object,
       default: () => {
         return {}
-      }
-    }
+      },
+    },
   },
   components: {
     MPagination,
     expressDetail,
     modifyAddress,
-    logisticsForm
+    logisticsForm,
   },
   computed: {
     ...mapState({
       whackId: (state) => {
         return state.leftbar.whackId
-      }
+      },
     }),
     showCol() {
       return { ...this.defaultCol, ...this.hideCol }
-    }
+    },
   },
   watch: {
     search(val) {
@@ -532,7 +661,7 @@ export default {
     source_type() {
       this.initTableData()
       this.getExpressList()
-    }
+    },
   },
   created() {
     const staff = localStorage.getItem('staff')
@@ -564,28 +693,28 @@ export default {
       options: [
         {
           value1: '0',
-          label: '不指定承运商'
+          label: '不指定承运商',
         },
         {
           value1: '4',
-          label: '京东快递'
+          label: '京东快递',
         },
         {
           value1: '5',
-          label: '圆通云仓'
+          label: '圆通云仓',
         },
         {
           value1: '1',
-          label: '京东云仓'
+          label: '京东云仓',
         },
         {
           value1: '2',
-          label: '中通云仓'
+          label: '中通云仓',
         },
         {
           value1: '3',
-          label: '百世物流'
-        }
+          label: '百世物流',
+        },
       ],
       value1: '0',
       dialogVisiblePass: false,
@@ -614,7 +743,7 @@ export default {
       expressDetail: [],
       expressTitle: {
         nu: '',
-        company: ''
+        company: '',
       },
       tableData: [],
       multipleSelection: [],
@@ -643,11 +772,11 @@ export default {
         productType: true,
         replenishReason: true,
         applicant: true,
-        courseType: true
+        courseType: true,
       },
       showModifyAddress: false,
       modifyFormData: {},
-      courseLevelReplace
+      courseLevelReplace,
     }
   },
   methods: {
@@ -676,7 +805,7 @@ export default {
       const x = new XMLHttpRequest() // 禁止浏览器缓存；否则会报跨域的错误
       x.open('GET', src + '?t=' + new Date().getTime(), true)
       x.responseType = 'blob'
-      x.onload = function(e) {
+      x.onload = function (e) {
         var url = window.URL.createObjectURL(x.response)
         var a = document.createElement('a')
         a.href = url
@@ -747,14 +876,14 @@ export default {
             term: item.term,
             sup: item.sup,
             level: item.level,
-            productName: item.product_name
+            productName: item.product_name,
           }
           return temp
         })
         const params = {
           operatorId: this.staffId,
           supplierId: this.value1,
-          deliverys: deliverys
+          deliverys: deliverys,
         }
         this.check(params)
       } else {
@@ -764,14 +893,14 @@ export default {
             term: item.term,
             sup: item.sup,
             level: item.level,
-            productName: item.product_name
+            productName: item.product_name,
           }
           return temp
         })
         const params = {
           operatorId: this.staffId,
           supplierId: this.value1,
-          deliverys: deliverys
+          deliverys: deliverys,
         }
         this.check(params)
       }
@@ -793,7 +922,7 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         inputValidator: this.inputValidator,
-        inputErrorMessage: '请输入失效原因'
+        inputErrorMessage: '请输入失效原因',
       })
         .then(({ value }) => {
           if (!value) {
@@ -803,7 +932,7 @@ export default {
             (res) => {
               this.$message({
                 type: 'success',
-                message: '操作成功'
+                message: '操作成功',
               })
               setTimeout(() => {
                 this.getExpressList()
@@ -835,7 +964,7 @@ export default {
           if (payload.length === 0) {
             this.$message({
               type: 'success',
-              message: '审核成功!'
+              message: '审核成功!',
             })
             setTimeout(() => {
               this.getExpressList()
@@ -853,7 +982,7 @@ export default {
               duration: 5000,
               showClose: 'true',
               dangerouslyUseHTMLString: true,
-              message: errorMsg.join('')
+              message: errorMsg.join(''),
             })
           }
         })
@@ -898,7 +1027,7 @@ export default {
       const teacherId = this.teacherId
       if (!teacherId) return
       this.$http.Permission.getAllTeacherByRole({
-        teacherId
+        teacherId,
       }).then((res) => {
         this.teacherIds = res
         this.getExpressList()
@@ -906,8 +1035,9 @@ export default {
     },
     // 传的id值为状态
     getExpressList() {
-      let timeType = {
-        product_type_0:["10","6"]
+      let timeType = {}
+      if (this.isType) {
+        timeType.product_type_0 = ['10', '6']
       }
       if (this.teacherId) {
         this.teacherId && (timeType.teacher_id = this.teacherIds.join())
@@ -915,7 +1045,7 @@ export default {
       this.searchIn.forEach((item) => {
         console.log(item, 'item===物流参数')
         if (item && item.term) {
-            if (item.term.product_type_0) {
+          if (item.term.product_type_0) {
             timeType.product_type_0 = item.term.product_type_0
           }
           if (item.term.regType) {
@@ -979,7 +1109,7 @@ export default {
           }
         }
         if (item && item.terms) {
-           if (item.terms.sup) {
+          if (item.terms.sup) {
             timeType.sup = `${item.terms.sup}`
           }
           // level
@@ -1002,7 +1132,7 @@ export default {
             ...timeType,
             [resKey[0]]: 1,
             start_time: gte,
-            end_time: lte
+            end_time: lte,
           }
         }
         if (item.wildcard && item.wildcard.express_nu) {
@@ -1014,7 +1144,7 @@ export default {
         ...timeType,
         express_status: this.sortItem.id || expressToggleList[0].id,
         regtype: timeType.regtype || this.regtype,
-        source_type: this.source_type
+        source_type: this.source_type,
       }
       // 筛选下单失败
       this.sortItem.center_express_id &&
@@ -1133,7 +1263,7 @@ export default {
               delivery_type
             }
           }
-        }`
+        }`,
       }).then((res) => {
         this.tableData = []
         if (res.data.LogisticsListPageNew) {
@@ -1184,13 +1314,13 @@ export default {
           this.totalPages = +res.data.LogisticsListPageNew.totalPages
 
           this.totalElements = +res.data.LogisticsListPageNew.totalElements // 总条数
-          let total = null;
-          if(this.totalElements ==0) {
+          let total = null
+          if (this.totalElements == 0) {
             total = Math.random()
-          }else {
+          } else {
             total = this.totalElements
           }
-          this.$emit('getTotal',total)
+          this.$emit('getTotal', total)
           // this.getTeacherList(realnameId)
           // this.getStudentTeamList(teamId)
           this.getScheduleList(schedule)
@@ -1257,7 +1387,7 @@ export default {
             id
             team_name
           }
-        }`
+        }`,
       }).then((res) => {
         const obj = {}
         res.data.StudentTeamList.forEach((item) => {
@@ -1273,7 +1403,7 @@ export default {
             id
             realname
           }
-        }`
+        }`,
       }).then((res) => {
         const obj = {}
         res.data.TeacherList.forEach((item) => {
@@ -1292,7 +1422,7 @@ export default {
             period_name
             type
           }
-        }`
+        }`,
       }).then((res) => {
         const obj = {}
         res.data.ManagementList.forEach((item) => {
@@ -1333,7 +1463,7 @@ export default {
         id,
         userid,
         orderid,
-        row: { ...rowData, mobile: rowData.receipt_tel }
+        row: { ...rowData, mobile: rowData.receipt_tel },
       }
       this.modifyFormData = modifyFormData
       this.showModifyAddress = true
@@ -1345,13 +1475,13 @@ export default {
       } else {
         this.modifyFormData = {}
       }
-    }
+    },
   },
 
   beforeDestroy() {
     const type = { disableClick: false }
     this.$store.dispatch('getShowStatus', type)
-  }
+  },
 }
 </script>
 <style lang="scss" module>
