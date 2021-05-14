@@ -748,6 +748,10 @@ export default {
               message: '系统课剩余信息未获取或为0,无法计算退款',
               type: 'warning',
             })
+            setTimeout(() => {
+                  location.reload()
+            }, 4000)
+            return
           }
         }
         // 显示订单金额
