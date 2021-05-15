@@ -102,14 +102,6 @@
             class="margin_l10"
             style="width: 140px"
           />
-          <search-stage
-            :teacher-id="teacherscope_trial || teacherscope"
-            class="margin_l10"
-            name="stage"
-            placeholder="全部体验课排期"
-            type="0"
-            @result="selectScheduleTrial"
-          />
           <hardLevel
             :class="['margin_l10']"
             placeholder="体验课难度"
@@ -130,8 +122,16 @@
           <!-- BOSS 显示单双周选择 -->
           <trial-course-type
             class="margin_l10"
-            name="packages_type"
+            name="packages_id"
             @result="getTrialCourseType"
+          />
+          <search-stage
+            :teacher-id="teacherscope_trial || teacherscope"
+            class="margin_l10"
+            name="stage"
+            placeholder="体验课排期"
+            type="0"
+            @result="selectScheduleTrial"
           />
         </div>
       </el-form-item>
@@ -367,7 +367,7 @@ export default {
     getExpressStatus(res) {
       this.setSeachParmas(res, ['express_status'])
     },
-    getDepartment(res,res1) {
+    getDepartment(res, res1) {
       this.teacherscope = res1.pay_teacher_id || null
       this.setSeachParmas(res, ['last_teacher_id'], 'terms')
     },

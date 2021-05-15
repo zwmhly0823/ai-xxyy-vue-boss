@@ -21,7 +21,7 @@
         v-for="(item, index) in typeList"
         :key="index"
         :value="item.id"
-        :label="item.text"
+        :label="item.text || item.name"
       ></el-option>
     </el-select>
   </div>
