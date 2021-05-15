@@ -21,7 +21,7 @@
         v-for="(item, index) in typeList"
         :key="index"
         :value="item.id"
-        :label="item.name"
+        :label="item.text"
       ></el-option>
     </el-select>
   </div>
@@ -172,11 +172,11 @@ export default {
     } else if (this.name == 'packages_id') {
       this.initData()
     } else if (this.name == 'team_category') {
-      this.typeList = this.typeList4
+      this.getClassType()
     } else if (this.name == 'type') {
       this.typeList = this.typeList5
     }else if(this.name == 'category' && this.typeB ==1) {
-      this.getClassType()
+      this.typeList = this.typeList6
     }
   },
   methods: {
@@ -194,7 +194,7 @@ export default {
     },
     getClassType() {
       this.type = null
-      this.$http.Order.getClassName(JSON.stringify({type: this.classType})).then(({ data }) => 
+      this.$http.Order.getClassName('trialCourseCategoryList', JSON.stringify({type: this.classType})).then(({ data }) => 
         this.typeList = data.trialCourseCategoryList.map(item => {
           item.text = item.name
           delete item.name
@@ -204,7 +204,7 @@ export default {
     },
     initData() {
       let query = { type: this.exType==2 ? 0 : 2 }
-      let result = this.$http.Order.getClassName(JSON.stringify(query)).then((res) => {
+      let result = this.$http.Order.getClassName('trialExpressPackageList', JSON.stringify(query)).then((res) => {
         if (res.data.trialExpressPackageList) {
           this.typeList = res.data.trialExpressPackageList
         }

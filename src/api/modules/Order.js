@@ -29,10 +29,10 @@ export default {
   /**
    * ##根据用户ID，查询用户登录信息
    * */
-  getClassName(item) {
+  getClassName(url,item) {
     return axios.post('/graphql/filter', {
       query: `{
-        trialExpressPackageList(query: ${JSON.stringify(item)}){
+        ${url}(query: ${JSON.stringify(item)}){
           id
           name
         }
