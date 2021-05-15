@@ -119,11 +119,17 @@
             :class="['margin_l10']"
             style="width: 140px"
           />
+          <setMealName
+            class="margin_l10"
+            name="packages_id"
+            @result="getTrialCourseType"
+          />
           <!-- BOSS 显示单双周选择 -->
           <trial-course-type
             class="margin_l10"
             name="packages_id"
             @result="getTrialCourseType"
+            placeholder="体验课套餐"
           />
           <search-stage
             :teacher-id="teacherscope_trial || teacherscope"
@@ -188,6 +194,8 @@ import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
 // 单双周搜索  体验课类型
 import TrialCourseType from '@/components/MSearch/searchItems/trialClassType'
+// 体验课类型 选单双周
+import setMealName from '@/components/MSearch/searchItems/setMealName'
 import { downloadHandle } from '@/utils/download'
 import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
@@ -214,6 +222,7 @@ export default {
     SearchPhoneAndUsername,
     SimpleSelect,
     TrialCourseType,
+    setMealName,
   },
 
   data() {
