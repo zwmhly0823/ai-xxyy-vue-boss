@@ -55,6 +55,7 @@
                 :regtype="regtype"
                 :source_type="source_type"
                 :hideCol="hideCol"
+                :exType="2"
                 @getTotal="getTotal"
               />
             </div>
@@ -95,6 +96,7 @@
                 :source_type="source_type"
                 :hideCol="hideCol"
                 @getTotal="getTotal"
+                :exType="1"
               />
             </div>
           </el-scrollbar>

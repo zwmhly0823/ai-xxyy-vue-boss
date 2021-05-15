@@ -32,7 +32,7 @@ export default {
   getClassName(item) {
     return axios.post('/graphql/filter', {
       query: `{
-        trialCourseCategoryList(query: ${JSON.stringify(item)}){
+        trialExpressPackageList(query: ${JSON.stringify(item)}){
           id
           name
         }

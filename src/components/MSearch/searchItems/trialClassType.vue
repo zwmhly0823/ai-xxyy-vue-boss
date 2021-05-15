@@ -171,22 +171,22 @@ export default {
   },
   methods: {
     onChange(item) {
-      console.log(item, '选择的值')
-      if (this.name == 'team_category') {
+     if (this.name == 'team_category') {
         this.$emit(
           'result',
           'team_category',
           item ? [{ [this.name]: item }] : ''
         )
       } else {
+         console.log({ [this.name]: item }, '选择的值')
         this.$emit('result', item ? { [this.name]: item } : '')
       }
     },
     initData() {
-      let query = { type: this.exType==2 ? 0 : 1 }
+      let query = { type: this.exType==2 ? 0 : 2 }
       let result = this.$http.Order.getClassName(JSON.stringify(query)).then((res) => {
-        if (res.data.trialCourseCategoryList) {
-          this.typeList = res.data.trialCourseCategoryList
+        if (res.data.trialExpressPackageList) {
+          this.typeList = res.data.trialExpressPackageList
         }
       })
     },
