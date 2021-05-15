@@ -73,7 +73,7 @@
             :source_type="source_type"
             :hideCol="hideCol"
             :hideSearchItem="hideSearchItem"
-            :teamClass="teamClass"
+            :teamClass="'2'"
             :addSupS="false"
             :exType="1"
           />
@@ -762,6 +762,9 @@ export default {
           break
         case '3':
           this.searchReplenish = val
+          break
+        case '4':
+          this.search = val
           break
       }
     },
