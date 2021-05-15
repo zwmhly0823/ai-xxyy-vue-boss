@@ -1097,7 +1097,9 @@ export default {
     giftsFlag: {
       immediate: true,
       handler(newValue) {
-        this.fontPrice = newValue ? this.giftsPrice : 0
+        // 关单赠品改价格
+        // this.fontPrice = newValue ? this.giftsPrice : 0
+        this.fontPrice = newValue ? 0.01 : 0
       },
     },
   },
@@ -1342,7 +1344,9 @@ export default {
           // 不保留次月
           return (
             this.refundForm.refundAmount -
-            ((this.jsonDate3.deductMaterial === 1 ? 100 : 0) +
+            // 改价格
+            // ((this.jsonDate3.deductMaterial === 1 ? 100 : 0) +
+            ((this.jsonDate3.deductMaterial === 1 ? 0.01 : 0) +
               this.fontPrice +
               instrument)
           )
