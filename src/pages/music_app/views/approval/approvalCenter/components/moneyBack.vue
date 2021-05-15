@@ -748,6 +748,10 @@ export default {
               message: '系统课剩余信息未获取或为0,无法计算退款',
               type: 'warning',
             })
+            setTimeout(() => {
+                  location.reload()
+            }, 4000)
+            return
           }
         }
         // 显示订单金额
@@ -1093,7 +1097,9 @@ export default {
     giftsFlag: {
       immediate: true,
       handler(newValue) {
-        this.fontPrice = newValue ? this.giftsPrice : 0
+        // 关单赠品改价格
+        // this.fontPrice = newValue ? this.giftsPrice : 0
+        this.fontPrice = newValue ? 0.01 : 0
       },
     },
   },
@@ -1338,7 +1344,9 @@ export default {
           // 不保留次月
           return (
             this.refundForm.refundAmount -
-            ((this.jsonDate3.deductMaterial === 1 ? 100 : 0) +
+            // 改价格
+            // ((this.jsonDate3.deductMaterial === 1 ? 100 : 0) +
+            ((this.jsonDate3.deductMaterial === 1 ? 0.01 : 0) +
               this.fontPrice +
               instrument)
           )
