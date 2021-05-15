@@ -69,7 +69,7 @@ export default {
       this.$emit('result', item ? { [this.name]: item } : '')
     },
     onClear() {
-       this.$emit('result',{ [this.name]:[''] })
+       this.$emit('result',{ [this.name]:[500, 503, 505, 508,502, 506, 507] })
     }
   },
 }

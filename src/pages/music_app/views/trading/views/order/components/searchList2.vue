@@ -128,6 +128,7 @@
           <trial-course-type
             class="margin_l10"
             name="packages_id"
+            :exType="exType"
             @result="getTrialCourseType"
             placeholder="体验课套餐"
           />
@@ -137,6 +138,7 @@
             name="stage"
             placeholder="体验课排期"
             type="0"
+            :exType="exType"
             @result="selectScheduleTrial"
           />
         </div>
@@ -256,6 +258,7 @@ export default {
       hasSendId: true,
       showChooseDialog: false,
       chooseExport: '1',
+      exType:2
     }
   },
   computed: {
@@ -417,6 +420,11 @@ export default {
 
     // 体验课类型
     getTrialCourseType(res) {
+      if(res.packages_id && res.packages_id.length>3) {
+        this.exType = 2
+      }else {
+        this.exType = 1
+      }
       this.setSeachParmas(res, ['packages_type'], 'terms')
     },
 

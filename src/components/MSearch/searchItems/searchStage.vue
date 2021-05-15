@@ -52,6 +52,11 @@ export default {
       type: String,
       default: '1',
     },
+    // 体验课类型 2是双周 1是单周
+    exType: {
+      type: Number,
+      default: 2,
+    },
     // 是否多选
     isMultiple: {
       type: Boolean,
@@ -85,6 +90,7 @@ export default {
       stage: this.isMultiple ? this.record : '',
       dataList: [],
       period: [], // 期数
+      params:1,   // 排期联动数据
     }
   },
   computed: {
@@ -104,6 +110,10 @@ export default {
       if (val) {
         this.getData()
       }
+    },
+    exType(val) {
+      this.params = this.exType==2 ? 0 : 2
+      this.getData()
     },
     record(val) {
       this.stage = val
@@ -165,7 +175,8 @@ export default {
       if (this.type) {
         queryParams.bool.must.push({
           term: {
-            type: `${this.category.length == 0 ? this.type : this.category}`,
+            //  区分单周和双周联动
+            type: `${this.params}`,
           },
         })
       }

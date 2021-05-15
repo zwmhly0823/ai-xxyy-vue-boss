@@ -1775,6 +1775,7 @@ export default {
                   id
                   address_id
                   order_id
+                  product_type_text
                   source_type
                   product_name
                   replenish_type

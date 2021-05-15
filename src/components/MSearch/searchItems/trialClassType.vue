@@ -161,6 +161,9 @@ export default {
   watch: {
     classType() {
       this.getClassType()
+    },
+    exType() {
+      this.initData()
     }
   },
   mounted() {

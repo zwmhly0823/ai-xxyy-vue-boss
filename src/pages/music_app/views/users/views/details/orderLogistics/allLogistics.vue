@@ -24,7 +24,9 @@
       <el-table-column label="物流类型" prop="product_name">
         <template slot-scope="scope">
           <div>
-            {{ sourceData[scope.row.source_type] }}
+            {{
+              scope.row.product_type_text ? scope.row.product_type_text : '-'
+            }}
           </div>
         </template>
       </el-table-column>
@@ -40,8 +42,8 @@
             <el-button
               v-show="
                 scope.row.id === current.id &&
-                  scope.row.address_id !== '0' &&
-                  scope.row.express_status === '6'
+                scope.row.address_id !== '0' &&
+                scope.row.express_status === '6'
               "
               icon="el-icon-edit"
               size="mini"
@@ -73,7 +75,7 @@
           <span
             v-if="
               statusList.indexOf(+scope.row.express_status) > -1 &&
-                scope.row.express_remark
+              scope.row.express_remark
             "
           >
             {{ scope.row.express_remark }}
@@ -144,11 +146,11 @@ import logisticsForm from '@/pages/music_app/views/studentTeam/components/TabPan
 export default {
   name: 'logistics',
   props: {
-    Tabledata: {}
+    Tabledata: {},
   },
   components: {
     modifyAddress,
-    logisticsForm
+    logisticsForm,
   },
   mounted() {},
   data() {
@@ -166,8 +168,8 @@ export default {
         4: '赠品物流',
         5: '补发物流',
         7: '兑换物流',
-        8: '兑换物流'
-      }
+        8: '兑换物流',
+      },
     }
   },
   methods: {
@@ -188,7 +190,7 @@ export default {
         id,
         userid,
         orderid,
-        row: { ...rowData, mobile: rowData.receipt_tel }
+        row: { ...rowData, mobile: rowData.receipt_tel },
       }
       this.modifyFormData = modifyFormData
       this.showModifyAddress = true
@@ -203,9 +205,9 @@ export default {
     },
     goTrack(val) {
       this.$emit('goTrack', val)
-    }
+    },
   },
-  computed: {}
+  computed: {},
 }
 </script>
 
