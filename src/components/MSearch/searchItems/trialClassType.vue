@@ -42,6 +42,11 @@ export default {
       type: String,
       default: '体验课类型',
     },
+    // 排期班级类型
+    classType: {
+      type: String,
+      default: '0'
+    }
   },
   data() {
     return {
@@ -144,6 +149,11 @@ export default {
       ],
     }
   },
+  watch: {
+    classType() {
+      this.getClassType()
+    }
+  },
   mounted() {
     console.log('搜索数据', this.name)
     if (this.name == 'category' && this.typeB !=1) {
@@ -157,7 +167,7 @@ export default {
     } else if (this.name == 'type') {
       this.typeList = this.typeList5
     }else if(this.name == 'category' && this.typeB ==1) {
-      this.typeList = this.typeList6
+      this.getClassType()
     }
   },
   methods: {
@@ -167,12 +177,22 @@ export default {
         this.$emit(
           'result',
           'team_category',
-          item ? [{ [this.name]: item }] : ''
+          item !== undefined ? [{ [this.name]: item }] : ''
         )
       } else {
         this.$emit('result', item ? { [this.name]: item } : '')
       }
     },
+    getClassType() {
+      this.type = null
+      this.$http.Order.getClassName(JSON.stringify({type: this.classType})).then(({ data }) => 
+        this.typeList = data.trialCourseCategoryList.map(item => {
+          item.text = item.name
+          delete item.name
+          return item
+        })
+      )
+    }
   },
 }
 </script>
