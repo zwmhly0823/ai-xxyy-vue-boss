@@ -46,29 +46,30 @@ export default {
   props: {
     visible: {
       type: Boolean,
-      default: false
+      default: false,
     },
     // 更换商品里的回显选中ID
     currentId: {
       type: String,
-      default: ''
+      default: '',
     },
     toBody: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
       // 指定的套餐ID; 前期只有体验课 [5, 3, 10, 18],
       // 新增"美术宝写字精品体验课（id 19）""美术宝写字尊享体验课（id 20）"
-      exIds: [500,502,503,505],
+      exIds: [],
       dataList: [],
-      checkedId: this.currentId || '' // 选中的套餐ID
+      checkedId: this.currentId || '', // 选中的套餐ID
     }
   },
-  mounted() {
+  async mounted() {
     this.checkedId = this.currentId
+    await this.initData()
     this.getPackageList()
   },
   methods: {
@@ -78,6 +79,13 @@ export default {
         return
       }
       this.result()
+    },
+    // 获取兑换码ids
+    async initData() {
+      let result = await this.$http.Marketing.getAllTrialIds()
+      if (result.code == 0) {
+        this.exIds = result.payload
+      }
     },
     handleCancel() {
       if (!this.currentId) this.checkedId = ''
@@ -95,17 +103,18 @@ export default {
     // 获取商品套餐 - 体验课、系统课、半年系统课
     getPackageList() {
       const params = {
-        id: this.exIds
+        id: this.exIds,
       }
       this.$http.Marketing.getPackageList(params).then((res) => {
         const list = res?.data?.PackagesList || []
         this.dataList = list.map((item) => {
           item.price = item.price > 0 ? (+item.price).toFixed(2) : item.price
+          item.name = item.name+'-'+item.text+'元'
           return item
         })
       })
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -1045,13 +1045,17 @@ export default {
       if (this.isType) {
         timeType.product_type_0 = ['10', '6']
       }
-      if(this.exType ==2) {
+      if (this.exType == 2) {
         // 双周
-        timeType.packages_id = [500,503,505,508,]
+        timeType.packages_id = [500, 503, 505, 508]
+      } else {
+        delete timeType.packages_id
       }
-      if(this.exType ==1) {
+      if (this.exType == 1) {
         // 单周
-        timeType.packages_id = [502,506,507,]
+        timeType.packages_id = [502, 506, 507]
+      } else {
+        delete timeType.packages_id
       }
       if (this.teacherId) {
         this.teacherId && (timeType.teacher_id = this.teacherIds.join())
