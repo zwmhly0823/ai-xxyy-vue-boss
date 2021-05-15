@@ -21,7 +21,7 @@
         v-for="(item, index) in typeList"
         :key="index"
         :value="item.id"
-        :label="item.name"
+        :label="item.text"
       ></el-option>
     </el-select>
   </div>
@@ -45,6 +45,11 @@ export default {
     placeholder: {
       type: String,
       default: '体验课类型',
+    },
+    // 排期班级类型
+    classType: {
+      type: String,
+      default: '0'
     },
     // 体验课类型 2是双周 1是单周
     exType: {
@@ -153,6 +158,11 @@ export default {
       ],
     }
   },
+  watch: {
+    classType() {
+      this.getClassType()
+    }
+  },
   mounted() {
     console.log('搜索数据', this.name)
     if (this.name == 'category' && this.typeB != 1) {
@@ -162,10 +172,10 @@ export default {
     } else if (this.name == 'packages_id') {
       this.initData()
     } else if (this.name == 'team_category') {
-      this.typeList = this.typeList4
+      this.getClassType()
     } else if (this.name == 'type') {
       this.typeList = this.typeList5
-    } else if (this.name == 'category' && this.typeB == 1) {
+    }else if(this.name == 'category' && this.typeB ==1) {
       this.typeList = this.typeList6
     }
   },
@@ -175,16 +185,26 @@ export default {
         this.$emit(
           'result',
           'team_category',
-          item ? [{ [this.name]: item }] : ''
+          item !== undefined ? [{ [this.name]: item }] : ''
         )
       } else {
          console.log({ [this.name]: item }, '选择的值')
         this.$emit('result', item ? { [this.name]: item } : '')
       }
     },
+    getClassType() {
+      this.type = null
+      this.$http.Order.getClassName('trialCourseCategoryList', JSON.stringify({type: this.classType})).then(({ data }) => 
+        this.typeList = data.trialCourseCategoryList.map(item => {
+          item.text = item.name
+          delete item.name
+          return item
+        })
+      )
+    },
     initData() {
       let query = { type: this.exType==2 ? 0 : 2 }
-      let result = this.$http.Order.getClassName(JSON.stringify(query)).then((res) => {
+      let result = this.$http.Order.getClassName('trialExpressPackageList', JSON.stringify(query)).then((res) => {
         if (res.data.trialExpressPackageList) {
           this.typeList = res.data.trialExpressPackageList
         }
