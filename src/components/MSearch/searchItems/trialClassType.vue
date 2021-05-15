@@ -21,7 +21,7 @@
         v-for="(item, index) in typeList"
         :key="index"
         :value="item.id"
-        :label="item.text"
+        :label="item.text || item.name"
       ></el-option>
     </el-select>
   </div>
@@ -38,9 +38,23 @@ export default {
       type: Number,
       default: 0,
     },
+    addSupS: {
+      type: Boolean,
+      default: false,
+    },
     placeholder: {
       type: String,
       default: '体验课类型',
+    },
+    // 排期班级类型
+    classType: {
+      type: String,
+      default: '0'
+    },
+    // 体验课类型 2是双周 1是单周
+    exType: {
+      type: Number,
+      default: 2,
     },
   },
   data() {
@@ -128,7 +142,7 @@ export default {
         },
       ],
       // 火山直播的体验课类型
-       typeList6: [
+      typeList6: [
         {
           id: ['0', '3'],
           text: '全部',
@@ -144,16 +158,21 @@ export default {
       ],
     }
   },
+  watch: {
+    classType() {
+      this.getClassType()
+    }
+  },
   mounted() {
     console.log('搜索数据', this.name)
-    if (this.name == 'category' && this.typeB !=1) {
+    if (this.name == 'category' && this.typeB != 1) {
       this.typeList = this.typeList2
     } else if (this.name == 'packages_type') {
       this.typeList = this.typeList1
     } else if (this.name == 'packages_id') {
-      this.typeList = this.typeList3
+      this.initData()
     } else if (this.name == 'team_category') {
-      this.typeList = this.typeList4
+      this.getClassType()
     } else if (this.name == 'type') {
       this.typeList = this.typeList5
     }else if(this.name == 'category' && this.typeB ==1) {
@@ -162,16 +181,34 @@ export default {
   },
   methods: {
     onChange(item) {
-      console.log(item, '选择的值')
-      if (this.name == 'team_category') {
+     if (this.name == 'team_category') {
         this.$emit(
           'result',
           'team_category',
-          item ? [{ [this.name]: item }] : ''
+          item !== undefined ? [{ [this.name]: item }] : ''
         )
       } else {
+         console.log({ [this.name]: item }, '选择的值')
         this.$emit('result', item ? { [this.name]: item } : '')
       }
+    },
+    getClassType() {
+      this.type = null
+      this.$http.Order.getClassName('trialCourseCategoryList', JSON.stringify({type: this.classType})).then(({ data }) => 
+        this.typeList = data.trialCourseCategoryList.map(item => {
+          item.text = item.name
+          delete item.name
+          return item
+        })
+      )
+    },
+    initData() {
+      let query = { type: this.exType==2 ? 0 : 2 }
+      let result = this.$http.Order.getClassName('trialExpressPackageList', JSON.stringify(query)).then((res) => {
+        if (res.data.trialExpressPackageList) {
+          this.typeList = res.data.trialExpressPackageList
+        }
+      })
     },
   },
 }

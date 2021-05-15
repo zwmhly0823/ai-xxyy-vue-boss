@@ -85,6 +85,16 @@
             >9.9元双周体验课模版</el-option
           >
           <el-option
+            label="9.9元单周体验课模版"
+            :value="'/channel/single/507/index/0?channelId='"
+            >9.9元单周体验课模版</el-option
+          >
+          <el-option
+            label="19元单周体验课模版"
+            :value="'/channel/single/506/index/0?channelId='"
+            >19元单周体验课模版</el-option
+          >
+          <el-option
             label="29元双周体验课模版"
             :value="'/channel29/index?channelId='"
             >29元双周体验课模版</el-option
