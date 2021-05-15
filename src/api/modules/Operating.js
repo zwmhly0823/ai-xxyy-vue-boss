@@ -726,6 +726,14 @@ export default {
     )
   },
   /**
+ * @description 查询排期
+ */
+  getAllCategory() {
+    return axios.get(
+      `/api/s/v1/management/getAllCategory`,
+    )
+  },
+  /**
    * @description 编辑微信保存按钮
    */
   saveEditTeacherWeChat(params) {
