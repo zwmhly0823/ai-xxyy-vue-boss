@@ -15,6 +15,7 @@
       clearable
       :placeholder="placeholder"
       @change="onChange"
+      @clear="onClear"
       class="item-style"
     >
       <el-option
@@ -67,6 +68,9 @@ export default {
     onChange(item) {
       this.$emit('result', item ? { [this.name]: item } : '')
     },
+    onClear() {
+       this.$emit('result',{ [this.name]:[''] })
+    }
   },
 }
 </script>
