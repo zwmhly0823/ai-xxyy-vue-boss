@@ -195,7 +195,7 @@ export default {
         },
         {
           key: 'playback_watch_time',
-          title: '观看回放总时长',
+          title: '观看回放总时长/分钟',
           width: '200',
           sort: true,
           escape: (row) => {
