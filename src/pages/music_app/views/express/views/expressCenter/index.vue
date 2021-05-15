@@ -35,6 +35,7 @@
             :hideSearchItem="hideSearchItem"
             :teamClass="teamClass"
             :addSupS="false"
+            :exType="2"
           />
           <toggle
             @result="getStatus"
@@ -73,6 +74,7 @@
             :hideSearchItem="hideSearchItem"
             :teamClass="teamClass"
             :addSupS="false"
+            :exType="1"
           />
           <toggle
             @result="getStatus"

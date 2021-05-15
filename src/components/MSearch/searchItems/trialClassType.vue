@@ -21,7 +21,7 @@
         v-for="(item, index) in typeList"
         :key="index"
         :value="item.id"
-        :label="item.text"
+        :label="item.name"
       ></el-option>
     </el-select>
   </div>
@@ -38,9 +38,18 @@ export default {
       type: Number,
       default: 0,
     },
+    addSupS: {
+      type: Boolean,
+      default: false,
+    },
     placeholder: {
       type: String,
       default: '体验课类型',
+    },
+    // 体验课类型 2是双周 1是单周
+    exType: {
+      type: Number,
+      default: 2,
     },
   },
   data() {
@@ -128,7 +137,7 @@ export default {
         },
       ],
       // 火山直播的体验课类型
-       typeList6: [
+      typeList6: [
         {
           id: ['0', '3'],
           text: '全部',
@@ -146,17 +155,17 @@ export default {
   },
   mounted() {
     console.log('搜索数据', this.name)
-    if (this.name == 'category' && this.typeB !=1) {
+    if (this.name == 'category' && this.typeB != 1) {
       this.typeList = this.typeList2
     } else if (this.name == 'packages_type') {
       this.typeList = this.typeList1
     } else if (this.name == 'packages_id') {
-      this.typeList = this.typeList3
+      this.initData()
     } else if (this.name == 'team_category') {
       this.typeList = this.typeList4
     } else if (this.name == 'type') {
       this.typeList = this.typeList5
-    }else if(this.name == 'category' && this.typeB ==1) {
+    } else if (this.name == 'category' && this.typeB == 1) {
       this.typeList = this.typeList6
     }
   },
@@ -172,6 +181,14 @@ export default {
       } else {
         this.$emit('result', item ? { [this.name]: item } : '')
       }
+    },
+    initData() {
+      let query = { type: this.exType==2 ? 0 : 1 }
+      let result = this.$http.Order.getClassName(JSON.stringify(query)).then((res) => {
+        if (res.data.trialCourseCategoryList) {
+          this.typeList = res.data.trialCourseCategoryList
+        }
+      })
     },
   },
 }

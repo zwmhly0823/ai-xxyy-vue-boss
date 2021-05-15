@@ -33,6 +33,7 @@
         :regType="showItem.regType"
         :channel="showItem.channel"
         :packages_id="showItem.packages_id"
+        :exType="exType"
         :product_type_0="showItem.product_type_0"
       />
     </div>
@@ -127,6 +128,11 @@ export default {
     addSupS: {
       type: Boolean,
       default: false,
+    },
+    // 体验课类型 2是双周 1是单周
+    exType: {
+      type:Number,
+      default:2
     },
     tab: {
       type: String,
