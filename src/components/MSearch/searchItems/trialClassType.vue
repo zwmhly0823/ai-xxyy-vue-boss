@@ -54,7 +54,7 @@ export default {
     // 体验课类型 2是双周 1是单周
     exType: {
       type: Number,
-      default: 2,
+      default: null,
     },
     // 套餐类型类型
     classArr: {
@@ -188,7 +188,7 @@ export default {
     } else if (this.name == 'packages_id') {
       if (this.exType) {
         let type = this.exType == 2 ? 0 : 2
-        this.getClassType(JSON.stringify({ type}))
+        this.getClassType(JSON.stringify({ type }))
       } else {
         this.getClassType()
       }
@@ -202,17 +202,19 @@ export default {
       this.getClassType()
     }
   },
-  // created() {
-  //   setTimeout(() => {
-  //     this.getClassType()
-  //   })
-  // },
+  created() {
+    if (!this.exType) {
+      setTimeout(() => {
+        this.getClassType()
+      })
+    }
+  },
   methods: {
     onChange(item) {
       if (!item && item !== 0 && !this.classArr) {
         this.getClassType()
       }
-     if (this.name == 'team_category') {
+      if (this.name == 'team_category') {
         this.$emit(
           'result',
           'team_category',
