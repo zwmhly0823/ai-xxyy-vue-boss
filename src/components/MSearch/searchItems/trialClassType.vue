@@ -166,7 +166,7 @@ export default {
   },
   watch: {
     exType(val) {
-      this.initData()
+      this.getClassType(JSON.stringify({type:val}))
       this.typeList = []
     },
     classType(val) {
