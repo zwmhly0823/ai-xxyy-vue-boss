@@ -61,11 +61,11 @@ export default {
       type: Array,
       default: () => [],
     },
-    isExpress: {
+    isOrder: {
       type: Boolean,
       default: false,
     },
-    isOrder: {
+    isExpress: {
       type: Boolean,
       default: false,
     },
@@ -193,8 +193,8 @@ export default {
       this.typeList = this.typeList2
     } else if (this.name == 'packages_type') {
       this.typeList = this.typeList1
-    } else if (this.name == 'packages_id' && !this.isExpress) {
-      if (this.exType) {
+    } else if (this.name == 'packages_id') {
+      if (this.exType && !this.isOrder) {
         let type = this.exType == 2 ? 0 : 2
         this.initData(JSON.stringify({ type }))
       } else {
@@ -214,11 +214,11 @@ export default {
     }
   },
   created() {
-    if (!this.exType && !this.isExpress) {
-      setTimeout(() => {
-        this.getClassType()
-      })
-    }
+    // if (!this.exType && !this.isExpress) {
+    //   setTimeout(() => {
+    //     this.getClassType()
+    //   })
+    // }
   },
   methods: {
     onChange(item) {

@@ -146,6 +146,7 @@
             :multiple="false"
             @result="getTrialCourseType"
             :classArr="classArr"
+            :isOrder="true"
           />
         </div>
       </el-form-item>
@@ -459,21 +460,21 @@ export default {
     // 请求单双周的类型以及套餐
     getTrialClass() {
       this.$http.Order.getClassName(
-        'trialCourseCategoryList',
+        'trialExpressPackageList',
         JSON.stringify({ type: 0 })
       ).then(
         ({ data }) =>
-          (this.doubleWeekTrial = data.trialCourseCategoryList.map((item) => {
+          (this.doubleWeekTrial = data.trialExpressPackageList.map((item) => {
             item.text = item.name
             delete item.name
             return item
           }))
       )
       this.$http.Order.getClassName(
-        'trialCourseCategoryList',
+        'trialExpressPackageList',
         JSON.stringify({ type: 2 })
       ).then(({ data }) => {
-        this.oddWeekTrial = data.trialCourseCategoryList.map((item) => {
+        this.oddWeekTrial = data.trialExpressPackageList.map((item) => {
           item.text = item.name
           delete item.name
           return item
