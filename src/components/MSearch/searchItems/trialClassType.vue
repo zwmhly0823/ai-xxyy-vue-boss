@@ -175,9 +175,9 @@ export default {
       this.type = null
       this.typeList = val
     },
-    exType(val) {
-      this.getClassType(JSON.stringify({ type: val }))
-    }
+    // exType(val) {
+    //   this.getClassType(JSON.stringify({ type: val }))
+    // }
   },
   mounted() {
     console.log('搜索数据', this.name)
@@ -188,7 +188,7 @@ export default {
     } else if (this.name == 'packages_id') {
       if (this.exType) {
         let type = this.exType == 2 ? 0 : 2
-        this.getClassType(JSON.stringify(type))
+        this.getClassType(JSON.stringify({ type}))
       } else {
         this.getClassType()
       }
