@@ -342,6 +342,7 @@ export default {
             }, 500)
             this.renderSearchAndTable()
             this.manageMentList = []
+            this.term = ''
             return
           }
 
