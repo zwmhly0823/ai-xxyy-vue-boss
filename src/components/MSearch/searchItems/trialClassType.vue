@@ -56,6 +56,11 @@ export default {
       type: Number,
       default: 2,
     },
+     // 套餐类型类型
+    classArr: {
+      type: Array,
+      default: () => []
+    },
   },
   data() {
     return {
@@ -159,8 +164,12 @@ export default {
     }
   },
   watch: {
-    classType() {
-      this.getClassType()
+    classType(val) {
+      this.getClassType(JSON.stringify({type: val}))
+    },
+    classArr(val) {
+      this.type = null
+      this.typeList = val
     }
   },
   mounted() {
@@ -172,11 +181,13 @@ export default {
     } else if (this.name == 'packages_id') {
       this.initData()
     } else if (this.name == 'team_category') {
-      this.getClassType()
+      this.getClassType(JSON.stringify({type: this.classType}))
     } else if (this.name == 'type') {
       this.typeList = this.typeList5
     }else if(this.name == 'category' && this.typeB ==1) {
       this.typeList = this.typeList6
+    } else if (this.name == 'class_list') {
+      this.getClassType()
     }
   },
   methods: {
@@ -189,12 +200,12 @@ export default {
         )
       } else {
          console.log({ [this.name]: item }, '选择的值')
-        this.$emit('result', item ? { [this.name]: item } : '')
+        this.$emit('result', item !== undefined ? { [this.name]: item } : '')
       }
     },
-    getClassType() {
+    getClassType(type = '') {
       this.type = null
-      this.$http.Order.getClassName('trialCourseCategoryList', JSON.stringify({type: this.classType})).then(({ data }) => 
+      this.$http.Order.getClassName('trialCourseCategoryList', type).then(({ data }) => 
         this.typeList = data.trialCourseCategoryList.map(item => {
           item.text = item.name
           delete item.name
