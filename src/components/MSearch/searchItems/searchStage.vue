@@ -55,7 +55,7 @@ export default {
     // 体验课类型 2是双周 1是单周
     exType: {
       type: Number,
-      default: 2,
+      default: 1,
     },
     // 是否多选
     isMultiple: {
@@ -112,6 +112,9 @@ export default {
       }
     },
     exType(val) {
+      if(this.category.length>0) {
+        this.params = this.type
+      }
       this.params = this.exType == 2 ? 0 : 2
       this.getData()
     },
@@ -142,7 +145,7 @@ export default {
         {
           subject: this.$store.getters.subjects.subjectCode,
         },
-        { type: `${this.category.length == 0 ? this.type : this.category}` }
+        { type: `${this.category.length == 0 ? this.params : this.category}` }
       )
 
       const q = JSON.stringify(query)
@@ -175,7 +178,7 @@ export default {
       if (this.type) {
         queryParams.bool.must.push({
           term: {
-            type: `${this.category.length == 0 ? this.type : this.category}`,
+            type: `${this.category.length == 0 ? this.params : this.category}`,
           },
         })
       }
