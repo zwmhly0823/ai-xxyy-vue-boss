@@ -174,7 +174,7 @@ export default {
     },
      // 接收单双周体验课类型
     stageTypeRes(val) {
-      if(!val.category) {
+      if(!val.category || val.category.length > 5) {
         this.classArr = []
         this.stageDisabled = true
       } else {
