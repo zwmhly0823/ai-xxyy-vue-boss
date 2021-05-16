@@ -175,6 +175,9 @@ export default {
       this.type = null
       this.typeList = val
     },
+    exType(val) {
+      this.getClassType(JSON.stringify({ type: val }))
+    }
   },
   mounted() {
     console.log('搜索数据', this.name)
@@ -199,11 +202,11 @@ export default {
       this.getClassType()
     }
   },
-  created() {
-    setTimeout(() => {
-      this.getClassType()
-    })
-  },
+  // created() {
+  //   setTimeout(() => {
+  //     this.getClassType()
+  //   })
+  // },
   methods: {
     onChange(item) {
       if (this.name == 'team_category') {
