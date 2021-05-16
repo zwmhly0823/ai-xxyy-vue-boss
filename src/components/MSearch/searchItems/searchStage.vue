@@ -124,7 +124,8 @@ export default {
     },
     isDisabled(val) {
       if (val) {
-        this.stage = []
+        this.$emit('result', '')
+        this.stage = ''
       }
       console.log(val, '123123')
     },

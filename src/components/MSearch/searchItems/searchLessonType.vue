@@ -66,7 +66,7 @@ export default {
       ]
     },
     stageTypeChange(item) {
-      if (!item) {
+      if (!item && this.name == 'packages_id') {
         item = [500, 503, 505, 508, 502, 506, 507]
       }
       if (this.name) {
