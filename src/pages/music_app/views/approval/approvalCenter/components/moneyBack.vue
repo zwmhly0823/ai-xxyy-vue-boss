@@ -122,6 +122,11 @@
               >课程退款</el-radio
             >
             <el-radio
+              :label="8"
+              v-show="this.refundForm.businessType === '体验课'"
+              >退差价</el-radio
+            >
+            <el-radio
               :label="6"
               v-show="this.refundForm.businessType === '预付款优惠券'"
               >系统课预付款优惠券退款</el-radio
@@ -272,7 +277,16 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="退款金额：" prop="refundAmount">
+        <el-form-item v-if="refundForm.refundType === 8" label="退款金额：" prop="refundAmount">
+          <el-select v-if="refundForm.refundAmount === 49" v-model="priceDiff" placeholder="">
+            <el-option :key="20" :value="20">49元双周退29双周差价</el-option>
+            <el-option :key="39.1" :value="39.1">49元双周退9.9双周差价</el-option>
+          </el-select>
+          <el-select v-if="refundForm.refundAmount === 0.01" v-model="priceDiff" placeholder="">
+            <el-option :key="19.1" :value="19.1">29元双周退9.9双周差价</el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-else label="退款金额：" prop="refundAmount">
           <el-input
             v-model="refundAmountComputed"
             disabled
@@ -280,7 +294,16 @@
           ></el-input>
         </el-form-item>
         <el-form-item
-          v-if="refundForm.refundType"
+          v-if="refundForm.refundType === 8"
+          label="退款原因："
+          prop="reason"
+        >
+          <el-radio-group v-model="refundForm.reason">
+            <el-radio label="退课程差价">退课程差价</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item
+          v-else-if="refundForm.refundType"
           label="退款原因："
           prop="reason"
         >
@@ -1011,6 +1034,7 @@ export default {
       }
     }
     return {
+      priceDiff: 0,
       // 是否扣除赠品
       giftsFlag: 0,
       giftsPrice: 0,
