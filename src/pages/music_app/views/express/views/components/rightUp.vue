@@ -33,6 +33,8 @@
         :regType="showItem.regType"
         :channel="showItem.channel"
         :packages_id="showItem.packages_id"
+        :exType="exType"
+        :product_type_0="showItem.product_type_0"
       />
     </div>
     <!-- v-if="!teacherId" TOSS -->
@@ -127,6 +129,11 @@ export default {
       type: Boolean,
       default: false,
     },
+    // 体验课类型 2是双周 1是单周
+    exType: {
+      type:Number,
+      default:2
+    },
     tab: {
       type: String,
       default: '0',
@@ -215,6 +222,7 @@ export default {
         replenishReason: 'replenish_reason',
         replenishMethod: 'replenish_type',
         packages_id: !this.addSupS ? 'packages_id' : '',
+        product_type_0:this.addSupS?'product_type_0':''
       },
     }
   },

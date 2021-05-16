@@ -46,7 +46,8 @@ export default {
   data() {
     return {
       productVersion: [
-        { name: '体验课', value: 'EXPERIENCE_COURSE' },
+        { name: '双周体验课', value: 'EXPERIENCE_COURSE' },
+        { name: '单周体验课', value: 'TESTCOURSE_SINGLE' },
         { name: '系统课', value: 'SYSTEM_COURSE' }
       ],
       packageDataInner: ''

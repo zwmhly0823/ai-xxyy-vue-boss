@@ -167,6 +167,16 @@ const operatingRoutes = [{
     import('../views/reviewManagement/components/userResult.vue')
 },
 {
+  path: '/manageChangeClass',
+  name: 'manageChangeClass',
+  meta: {
+    title: '体验课调班',
+    keepAlive: false
+  },
+  component: () =>
+    import('../views/manageChangeClass/index.vue')
+},
+{
   path: '/labelManage',
   name: 'labelManage',
   meta: {

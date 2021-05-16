@@ -53,7 +53,6 @@
               <group-sell
                 name="system_teacher_id"
                 :teacherscope="teacherscope"
-                
                 tip="选择教辅人员"
                 @result="getSearchData('system_teacher_id', arguments, 2)"
               />
@@ -75,12 +74,9 @@
             <div class="search-group">
               <trial-course-type
                 name="category"
+                :typeB="1"
                 @result="getSearchData('category', arguments)"
               />
-            </div>
-          </el-form-item>
-          <el-form-item label="体验课排期:" label-width="80px">
-            <div class="search-group">
               <search-stage
                 :category="categoryType"
                 :isDisabled="isDisabled"
@@ -91,11 +87,9 @@
               />
             </div>
           </el-form-item>
-
           <el-form-item label="进入直播时机:" label-width="100px">
             <div class="search-group">
               <enterTime
-                :category="categoryType"
                 @result="getSearchData('play_status', arguments)"
                 name="play_status"
                 type="0"
@@ -106,7 +100,6 @@
           <el-form-item label="是否购买商品:" label-width="100px">
             <div class="search-group">
               <buyGoods
-                :category="categoryType"
                 @result="getSearchData('by_shop_flag', arguments)"
                 name="by_shop_flag"
                 type="0"
@@ -212,6 +205,7 @@ export default {
       }
       const search = res && res[0]
       if (search) {
+        this.categoryType = res[0].category
         if (type == 1) {
           this.departStatus = false
         } else if (type == 2) {

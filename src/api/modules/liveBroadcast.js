@@ -90,6 +90,12 @@ export default {
                         name
                       }
                     }
+                    system_team_id
+                     system_team {
+                      team_name
+                      team_type
+                      team_state
+                    }
                     live {
                       open_time
                       live_name
@@ -187,6 +193,13 @@ export default {
               live_name
               live_status
               push_terminal
+            }
+            userIntention {
+              type
+              describe
+              is_track
+              today
+              tomorrow
             }
           }
         }

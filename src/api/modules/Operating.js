@@ -7,9 +7,44 @@
  * @LastEditTime: 2021-04-09 18:45:17
  */
 import axios from '../axiosConfig'
+import axiosSelf from '../axios'
+import { getToken } from '@/utils/auth'
+import defaultSetting from '@/settings';
 import { injectSubject, getAppSubjectCode } from '@/utils/index'
 const subjectCode = getAppSubjectCode()
+const getPlateformByUa = () => {
+  const ua = window.navigator.userAgent;
+  const reg = /\((.*?)\)/;
+  const result = ua.match(reg);
+  return result[1];
+}
+const platform = getPlateformByUa();
+const judgeToken = () => {
+  const token = getHeaders().Authorization
+  const needToken = location.href.indexOf('login') === -1
 
+  if (needToken && !token) {
+    // location.href = `${baseUrl}login/#/`
+    location.href = `/login/#/`
+    return 0
+  }
+  return 1
+}
+const getHeaders = () => {
+  const token = getToken() || ''
+  const headers = {
+    'Content-Type': 'application/json;charset=UTF-8',
+    'subject': 'music_app',
+    'version': defaultSetting.version,
+    'os-type': platform,
+  }
+  if (token) {
+    headers.Authorization = token.includes('Bearer ')
+      ? token
+      : 'Bearer ' + token
+  }
+  return headers
+}
 export default {
   /**
    * @description 获取版本号
@@ -26,6 +61,52 @@ export default {
     return axios.get(
       `/api/s/v1/management/enroll/count/page?courseType=${params.courseType}&pageSize=${params.size}&pageNumber=` +
       page
+    )
+  },
+  /**
+   * 体验课按人调班
+   */
+  trialChangeClass(params) {
+    return axios.post(
+      `/api/ts/v1/teamChange/changeTrialTeamByMobile`,
+      params.data
+    )
+  },
+
+  /**
+   * 查询体验课调班操作记录列表
+   */
+  operationClassList(params) {
+    return axios.post(
+      `/api/ts/v1/teamChange/queryChangeTeamLog`,
+      params
+    )
+  },
+
+  /**
+   * 批量导入
+   */
+  changeTeamByImport(params) {
+    if (judgeToken()) {
+      return axiosSelf({
+        method: 'POST',
+        url: '/api/ts/v1/teamChange/changeTeamByImport',
+        // responseType: 'blob',
+        headers: getHeaders(),
+        // data: {
+        //   ...params
+        // }
+        data: params
+      })
+    }
+  },
+  /**
+  * 体验课按班级调班
+  */
+  changeTrialTeam(params) {
+    return axios.post(
+      `/api/ts/v1/teamChange/changeTrialTeam`,
+      params.data
     )
   },
   /**
@@ -620,7 +701,7 @@ export default {
     return axios.get(`/api/t/v1/teacher/course/teacherLevelByType?level=0`)
   },
   // 招生排期获取招生状态
-  getStatusByperiods(periods,courseType) {
+  getStatusByperiods(periods, courseType) {
     return axios.get(`/api/t/v1/enroll/getStatusByperiods?periods=${periods}&courseType=${courseType}`)
   },
   // 招生排期切换状态
@@ -642,6 +723,14 @@ export default {
     return axios.post(
       `/api/t/v1/wechat/teacher/getTeacherByDepartmentIdAndTeacherId?teacherId=${params.teacherId}&departmentId=${params.departmentId}`,
       params
+    )
+  },
+  /**
+ * @description 查询排期
+ */
+  getAllCategory() {
+    return axios.get(
+      `/api/s/v1/management/getAllCategory`,
     )
   },
   /**

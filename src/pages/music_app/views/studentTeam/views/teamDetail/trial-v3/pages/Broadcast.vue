@@ -2,12 +2,19 @@
   <div class="boradcast-page">
     <!-- 活动列表 -->
     <div class="actives">
-      <div class="lbl">活动选择</div>
+      <div class="lbl">活动选择:</div>
       <el-select class="control" size="small" v-model="liveActivityId">
-        <el-option v-for="(item, index) in liveActive" :key="index" :value="item.liveActivityId" :label="item.liveName">
+        <el-option
+          v-for="(item, index) in liveActive"
+          :key="index"
+          :value="item.activityId"
+          :label="item.liveName"
+        >
           <div class="active-option">
             <span>{{ item.liveName }}</span>
-            <span style="color: red;font-size:12px;">{{ activeStatus[item.liveStatus] }}</span>
+            <span style="color: red; font-size: 12px">{{
+              activeStatus[item.liveStatus]
+            }}</span>
           </div>
         </el-option>
       </el-select>
@@ -17,7 +24,11 @@
     <statistics :list="statisticsList" @result="getStatisticData" />
 
     <!-- 搜索 -->
-    <broadcast-search ref="search" @search="getSearch" :activeId="liveActivityId" />
+    <broadcast-search
+      ref="search"
+      @search="getSearch"
+      :activeId="liveActivityId"
+    />
     <!-- 操作区 -->
     <!-- <div class="act">
       <el-button
@@ -68,10 +79,19 @@
         <user-follow
           :row="scope.row"
           :index="scope.$index"
+          :liveType="1"
           @handle-intention="handleIntention"
         />
       </template>
-
+      <!-- 评论数 -->
+      <template slot-scope="scope" slot="chat">
+        <p
+          :class="scope.row.chat_count ? 'liveActive' : ''"
+          @click="scope.row.chat_count ? handleChatCount(scope.row) : ''"
+        >
+          {{ scope.row.chat_count ? scope.row.chat_count : '-' }}
+        </p>
+      </template>
       <!-- 标签 -->
       <template slot-scope="scope" slot="tags">
         <user-tags
@@ -113,8 +133,8 @@
           <span
             :class="[
               {
-                danger: scope.row.user_status_name !== '未转化'
-              }
+                danger: scope.row.user_status_name !== '未转化',
+              },
             ]"
           >
             {{ scope.row.user_status_name }}
@@ -127,6 +147,26 @@
       ref="wechatGroupTag"
       @wxLabel="getData"
     ></wechat-group-tag>
+    <!-- 评论数dialog -->
+    <el-dialog title="直播评论" :visible.sync="chatDialogVisible" width="30%">
+      <div class="">学员：{{ phoneNumber }}</div>
+      <el-table :data="chatList">
+        <el-table-column label="评论时间" prop="chatTime"></el-table-column>
+        <el-table-column label="评论内容" prop="chatContent"></el-table-column>
+      </el-table>
+      <div class="chat-pagination">
+        <el-pagination
+          layout="prev,pager,next,total,sizes,jumper"
+          :page-size="chatPageSize"
+          :current-page="chatCurrentPage"
+          :total="chatTotalElements"
+          :page-sizes="[10, 20, 30]"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        >
+        </el-pagination>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -150,13 +190,19 @@ export default {
     UserTags,
   },
   data() {
-    return{
+    return {
       table: { stripe: false, border: false },
       columns,
       events: {
         // 'sort-change': this.sortChange,
-        'selection-change': this.handleSelectionChange
+        'selection-change': this.handleSelectionChange,
       },
+      phoneNumber: '-',
+      chatTotalElements: 0,
+      chatPageSize: 10,
+      chatCurrentPage: 1,
+      chatList: [],
+      chatDialogVisible: false,
       selectUsers: [], // 批量选择的用户
       loading: false,
       userList: [],
@@ -165,7 +211,7 @@ export default {
         totalElements: 0,
         totalPages: 0,
         pageSize: 20,
-        pageSizeArr: [20, 50, 100, 200, 500]
+        pageSizeArr: [20, 50, 100, 200, 500],
       },
       actionFunction: actions({
         handleUserDetail: this.handleUserDetail,
@@ -175,18 +221,29 @@ export default {
       liveStatistics: [],
       liveActivityId: null,
       activeStatus: {
-        0: "--",
-        1: "直播中",
-        2: "预告",
-        3: "回放",
-        4: "结束",
-        5: "关闭",
-      }
+        0: '--',
+        1: '直播中',
+        2: '预告',
+        3: '回放',
+        4: '结束',
+        5: '关闭',
+      },
+      userIntentionMap: {
+        1: '低意向',
+        2: '中意向',
+        3: '高意向',
+        4: '无意向',
+      },
+      userIntentionClassMap: {
+        1: 'main-text',
+        2: 'success',
+        3: 'danger',
+      },
     }
   },
   computed: {
     statisticsList() {
-      return this.liveStatistics.map(item => {
+      return this.liveStatistics.map((item) => {
         return {
           name: item.name,
           label: item.desc,
@@ -194,9 +251,18 @@ export default {
           unit: '人',
         }
       })
-    }
+    },
   },
   methods: {
+    handleCurrentChange(val) {
+      this.chatCurrentPage = val
+      this.getchatList()
+    },
+    handleSizeChange(val) {
+      this.chatCurrentPage = 1 // 处理当前第30页-页容量5=>改页容量100后,页码不归1的组件内部问题
+      this.chatPageSize = val
+      this.getchatList()
+    },
     handleUserDetail(uid) {
       if (!uid) {
         this.$message.error('缺少用户信息')
@@ -209,20 +275,20 @@ export default {
       const data = await this.$http.liveBroadcast.getLiveCount({
         teamId: this.teamId,
         activityId: this.liveActivityId,
-      });
-      if(data.code === 0) {
-        this.liveStatistics = data.payload;
+      })
+      if (data.code === 0) {
+        this.liveStatistics = data.payload
       }
     },
     async getLiveActive() {
       const data = await this.$http.liveBroadcast.getLiveActive({
         teamId: this.teamId,
-      });
-      if(data.code === 0) {
-        this.liveActive = data.payload;
-        this.liveActivityId =data.payload[0] && data.payload[0].liveActivityId;
-        this.getLiveCount();
-        this.getActiveList();
+      })
+      if (data.code === 0) {
+        this.liveActive = data.payload
+        this.liveActivityId = data.payload[0] && data.payload[0].activityId
+        this.getLiveCount()
+        this.getActiveList()
       }
     },
     async tagPopoverShow(val) {
@@ -249,7 +315,7 @@ export default {
       const query = {
         userId: uid,
         teacherId: this.teacherId,
-        teacherIds: [this.teacherId]
+        teacherIds: [this.teacherId],
       }
       return this.$http.Setting.getTeacherLabel(query)
         .then((res) => {
@@ -282,21 +348,12 @@ export default {
     },
     // 创建或修改意向度&跟进记录
     // @type: 'create'，'update'
-    handleIntention(index, uid, type = 'update') {
-      console.log(index, uid, type)
-
-      this.curModifyItem.index = index
-      this.curModifyItem.uid = uid
-      this.curModifyItem.type = type
-      if (type === 'update') {
-        this.$refs.intentionDialog.showDialog(
-          this.userList[index].userIntention
-        )
-      }
-      if (type === 'create') {
-        this.$refs.intentionDialog.showDialog()
-      }
+    // 跟进
+    handleFollow(uid, data, index) {
+      const type = data.userIntention ? 'update' : 'create'
+      this.handleIntention(index, uid, type)
     },
+    handleIntention() {},
     // 多选
     handleSelectionChange(data) {
       console.log(data, 'selection')
@@ -320,7 +377,7 @@ export default {
       const query = {
         teacherId: this.teacherId,
         userId: userArr,
-        totalNum: len
+        totalNum: len,
       }
       this.$refs.wechatGroupMessageV2.openWechatDrawer(query)
     },
@@ -331,26 +388,29 @@ export default {
     getStatisticData(index) {
       this.$refs.search.nowDate = Date.now()
       this.searchParams = {}
-      const name = this.liveStatistics[index].name;
-      const value = this.liveStatistics[index].value
+      const name = this.liveStatistics[index] && this.liveStatistics[index].name
+      const value =
+        this.liveStatistics[index] && this.liveStatistics[index].value
       const query = {}
       switch (name) {
-        case 'enteredLiveRoomNum':  //进入直播间人数
+        case 'enteredLiveRoomNum': //进入直播间人数
           Object.assign(query, { in_room_num: { gt: 0 } })
-          break;
+          break
         case 'notEnteredLiveRoomNum': //未进入直播间人数
           Object.assign(query, { in_room_num: 0 })
-          break;
-        case 'watchLiveNum':  //观看过直播人数
+          break
+        case 'watchLiveNum': //观看过直播人数
           Object.assign(query, { live_watch_time: { gt: 0 } })
-          break;
+          break
+        case 'watchReplayNum': //观看过回放人数
+          Object.assign(query, { playback_watch_time: { gt: 0 } })
+          break
         case 'buyGoodsNum': //购买商品人数
-          const by_shop_flag = value === 0 ? value : { gt: 0 };
-          Object.assign(query, { by_shop_flag: by_shop_flag })
-          break;
+          Object.assign(query, { by_shop_flag: { gt: 0 } })
+          break
 
         default:
-          break;
+          break
       }
 
       this.statisticsParams = query
@@ -365,7 +425,7 @@ export default {
       // reset page, size
       Object.assign(this.listQuery, {
         currentPage: page,
-        pageSize: size
+        pageSize: size,
       })
 
       this.loading = true
@@ -380,25 +440,23 @@ export default {
         statisticsParams,
         searchParams
       )
-      this.$http.liveBroadcast.getActiveList(
-        params,
-        {
+      this.$http.liveBroadcast
+        .getActiveList(params, {
           page,
-          size
-        },
-      )
-      .then((res) => {
-        const { content = [], totalElements = 0, totalPages = 0 } =
-          res?.data?.ActivityUserStatisticsPage || {}
-        this.userList = this.formatUserData(content)
-        Object.assign(this.listQuery, {
-          totalElements: +totalElements,
-          totalPages: +totalPages
+          size,
         })
-      })
-      .finally(() => {
-        this.loading = false
-      })
+        .then((res) => {
+          const { content = [], totalElements = 0, totalPages = 0 } =
+            res?.data?.ActivityUserStatisticsPage || {}
+          this.userList = this.formatUserData(content)
+          Object.assign(this.listQuery, {
+            totalElements: +totalElements,
+            totalPages: +totalPages,
+          })
+        })
+        .finally(() => {
+          this.loading = false
+        })
     },
     // format data
     formatUserData(list = []) {
@@ -457,19 +515,38 @@ export default {
       }
       this.$refs.wechatGroupTag.open(this.selectUsers)
     },
+    handleChatCount(row) {
+      this.activeRow = row
+      this.phoneNumber = row.user.mobile
+      this.getchatList()
+      this.chatDialogVisible = true
+    },
+    async getchatList() {
+      const res = await this.$http.liveBroadcast.getLiveChatList({
+        userId: this.activeRow.uid,
+        huoUserId: this.activeRow.huo_user_id,
+        activityId: this.liveActivityId,
+        pageNum: this.chatCurrentPage,
+        pageSize: this.chatPageSize,
+      })
+      if (res.code === 0) {
+        this.chatTotalElements = res.payload.totalElements * 1
+        this.chatList = res.payload.content
+      }
+    },
     getData() {
       const loading = this.$loading({
         lock: true,
         text: '加载中',
         spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.1)'
+        background: 'rgba(0, 0, 0, 0.1)',
       })
       // 如果搜索销售，用获取的老师id替换权限老师id
       const teacher = {}
       // TODO: 注意放开
       if (!Object.keys(this.searchParams).includes('teacher_id')) {
         Object.assign(teacher, {
-          teacher_id: this.teacherIds
+          teacher_id: this.teacherIds,
         })
       }
 
@@ -479,8 +556,8 @@ export default {
       if (Object.keys(this.searchParams).includes('user_label')) {
         label = {
           'user_label.like': {
-            'user_label.keyword': `*${this.searchParams.user_label}*`
-          }
+            'user_label.keyword': `*${this.searchParams.user_label}*`,
+          },
         }
         delete obj.user_label
       }
@@ -513,7 +590,7 @@ export default {
             const {
               totalElements,
               totalPages,
-              content
+              content,
             } = res.data.StudentTrialV2StatisticsPage
             defTotalElements = totalElements
             defTotalPages = totalPages
@@ -537,11 +614,11 @@ export default {
   },
   watch: {
     liveActivityId(newVal, oldVal) {
-      if(newVal !== oldVal) {
-        this.getLiveCount();
-        this.getActiveList();
+      if (newVal !== oldVal) {
+        this.getLiveCount()
+        this.getActiveList()
       }
-    }
+    },
   },
   created() {
     const { id } = this.$route.params
@@ -549,25 +626,29 @@ export default {
     if (id) {
       this.getLiveActive()
     }
-  }
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-  .actives{
-    display: flex;
-    align-items: center;
-    margin: 5px 0 15px;
-    .control{
-      margin-left: 10px;
-    }
+.actives {
+  display: flex;
+  align-items: center;
+  margin: 5px 0 15px;
+  .control {
+    margin-left: 10px;
   }
-  .act{
-    margin-bottom: 10px;
-  }
-  .active-option{
-    display: flex;
-    justify-content: space-between;
-  }
+}
+.act {
+  margin-bottom: 10px;
+}
+.active-option {
+  display: flex;
+  justify-content: space-between;
+}
+.liveActive {
+  color: #2a75ed;
+  cursor: pointer;
+}
 </style>
 

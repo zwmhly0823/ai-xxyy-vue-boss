@@ -39,43 +39,37 @@ export default [
     }
   },
   {
-    prop: 'in_room_num',
+    prop: 'is_in_room_text',
     label: '是否进入直播间',
     width: '190',
-    render(h, data, row) {
-      if (data > 0) {
-        return "是"
-      }
-      else{
-        return "否"
-      }
-    }
   },
   {
     prop: 'in_room_count',
     label: '进入直播间次数',
     width: '150',
   },
-  {
-    prop: 'play_status_text',
-    label: '进入直播间时机',
-    width: '150',
-  },
+  // {
+  //   prop: 'play_status_text',
+  //   label: '进入直播间时机',
+  //   width: '150',
+  // },
   {
     prop: 'first_join_time',
     label: '首次进入时间',
     minWidth: '120',
     render(h, data, row) {
-      return data?moment(data * 1000).format('YYYY-MM-DD HH:mm:ss'):'-';
+      return data ? moment(data * 1000).format('YYYY-MM-DD HH:mm:ss') : '-';
     }
   },
   {
     prop: 'live_watch_time',
     label: '观看直播总时长/分钟',
+    width:"200"
   },
   {
     prop: 'playback_watch_time',
-    label: '观看回放总时长',
+    label: '观看回放总时长/分钟',
+    width:"200"
   },
   {
     prop: 'chat_count',
@@ -88,37 +82,31 @@ export default [
   //   width: '70',
   // },
   {
-    prop: 'by_shop_flag',
+    prop: 'packages_name',
     label: '购买商品',
     width: '70',
-    render(h, data, row) {
-      if (data > 0) {
-        return "是"
-      }
-      else {
-        return "否"
-      }
-    }
   },
   {
     prop: 'userIntention',
     label: '跟进',
-    width: '70',
+    minWidth: '120',
+    slot:"follow"
   },
-  // {
-  //   prop: 'live',
-  //   label: '进入终端',
-  //   width: '70',
-  //   render(h, data, row) {
-  //     if(data) {
-  //       return data.push_terminal
-  //     }
-  //   }
-  // },
+  {
+    prop: 'live',
+    label: '进入终端',
+    width: '70',
+    render(h, data, row) {
+      if (data) {
+        return data.push_terminal ? data.push_terminal : '-'
+      }
+    }
+  },
   {
     prop: 'user_status',
     label: '系统课转化',
     width: '70',
+    fixed: 'right',
     render(h, data, row) {
       switch (+data) {
         case 0:

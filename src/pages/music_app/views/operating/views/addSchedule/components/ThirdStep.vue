@@ -16,7 +16,9 @@
           :key="index"
           :class="{ active: index == levelIndex }"
           @click="levelClickHandle(tab, index)"
-        >{{ tab.text }}</div>
+        >
+          {{ tab.text }}
+        </div>
         <div class="tip">tip：切换前请先保存当前级别下更改的内容哟~</div>
       </div>
       <!-- 随材版本和课程类型先不做 -->
@@ -39,13 +41,40 @@
         @pageChange="pageChange_handler"
         class="mytable"
       >
-        <el-table-column type="index" label="序号" width="70" align="center"></el-table-column>
-        <el-table-column prop="teacherRealName" label="真实姓名" min-width="100" align="center"></el-table-column>
-        <el-table-column prop="departmentName" label="所属部门" min-width="150" align="center"></el-table-column>
-        <el-table-column prop="levelName" label="销售等级" min-width="120" align="center">
-          <template slot-scope="scope">{{ scope.row.levelName || '' }}</template>
+        <el-table-column
+          type="index"
+          label="序号"
+          width="70"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="teacherRealName"
+          label="真实姓名"
+          min-width="100"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="departmentName"
+          label="所属部门"
+          min-width="150"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="levelName"
+          label="销售等级"
+          min-width="120"
+          align="center"
+        >
+          <template slot-scope="scope">{{
+            scope.row.levelName || ''
+          }}</template>
         </el-table-column>
-        <el-table-column prop="teacherWechatNo" label="绑定微信" min-width="130" align="center">
+        <el-table-column
+          prop="teacherWechatNo"
+          label="绑定微信"
+          min-width="130"
+          align="center"
+        >
           <template slot-scope="scope">
             {{ scope.row.teacherWechatNo || '' }}
             <i
@@ -54,16 +83,30 @@
             ></i>
           </template>
         </el-table-column>
-        <el-table-column prop="lastPeriod" label="最近接生期数" min-width="100" align="center"></el-table-column>
-        <el-table-column prop="address" label="招生级别" min-width="80" align="center">
+        <el-table-column
+          prop="lastPeriod"
+          label="最近接生期数"
+          min-width="100"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="address"
+          label="招生级别"
+          min-width="80"
+          align="center"
+        >
           <template slot-scope="scope">
-            <div
-              v-for="(leve, l_index) in scope.row.enroll"
-              :key="l_index"
-            >{{ levelObj[leve.courseDifficulty] }}</div>
+            <div v-for="(leve, l_index) in scope.row.enroll" :key="l_index">
+              {{ levelObj[leve.courseDifficulty] }}
+            </div>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="打开开关" min-width="100" align="center">
+        <el-table-column
+          prop="address"
+          label="打开开关"
+          min-width="100"
+          align="center"
+        >
           <template slot-scope="scope">
             <div
               v-for="(swicth, s_index) in scope.row.enroll"
@@ -92,7 +135,12 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="计划招生" min-width="100" align="center">
+        <el-table-column
+          prop="address"
+          label="计划招生"
+          min-width="100"
+          align="center"
+        >
           <template slot-scope="scope">
             <div v-for="(p, t_index) in scope.row.enroll" :key="t_index">
               <el-input
@@ -105,9 +153,18 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="课程材料版本" min-width="130" align="center">
+        <el-table-column
+          prop="address"
+          label="课程材料版本"
+          min-width="130"
+          align="center"
+        >
           <template slot-scope="scope">
-            <div v-for="(v, v_index) in scope.row.enroll" :key="v_index" class="select-container">
+            <div
+              v-for="(v, v_index) in scope.row.enroll"
+              :key="v_index"
+              class="select-container"
+            >
               <el-select
                 :disabled="!Boolean(+v.status)"
                 v-model="v.courseVersion"
@@ -124,7 +181,12 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="体验课类型" min-width="240" align="center">
+        <el-table-column
+          prop="address"
+          label="体验课类型"
+          min-width="240"
+          align="center"
+        >
           <template slot-scope="scope">
             <div v-for="(v, v_index) in scope.row.enroll" :key="v_index">
               <el-select
@@ -148,14 +210,21 @@
         </el-table-column>
         <el-table-column prop="address" label min-width="70" align="center">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="saveRow(scope.$index, scope.row)">保存</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="saveRow(scope.$index, scope.row)"
+              >保存</el-button
+            >
           </template>
         </el-table-column>
       </ele-table>
 
       <!-- 取消、下一步 -->
       <div class="operate-btn">
-        <el-button size="small" type="warning" @click="backList">取消</el-button>
+        <el-button size="small" type="warning" @click="backList"
+          >取消</el-button
+        >
         <!-- <el-button size="small" type="primary" @click="stepOpt(1)"
           >提交保存</el-button
         >-->
@@ -186,7 +255,11 @@
         <div class="row-cell">
           <div>
             <span class="label">选择微信号：</span>
-            <el-select v-model="currentTeacherWenum" placeholder="请选择" size="mini">
+            <el-select
+              v-model="currentTeacherWenum"
+              placeholder="请选择"
+              size="mini"
+            >
               <el-option
                 v-for="item in currentTeacherWechatList"
                 :key="item.weixinId"
@@ -199,7 +272,9 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button size="mini" @click="dialogHandleClose">取 消</el-button>
-        <el-button size="mini" type="primary" @click="saveEditHandle">确 定</el-button>
+        <el-button size="mini" type="primary" @click="saveEditHandle"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
   </div>
@@ -209,7 +284,11 @@ import _ from 'lodash'
 import EleTable from '@/components/Table/EleTable'
 // import TableSearch from '../../../components/tableSearch/index'
 import { mapGetters } from 'vuex'
-import { SUP_LEVEL_ALL,Sup_scheduleSubmit } from '@/utils/supList'
+import {
+  SUP_LEVEL_ALL,
+  Sup_scheduleSubmit,
+  Sup_scheduleIndex,
+} from '@/utils/supList'
 export default {
   props: ['stepStatus'],
   data() {
@@ -224,27 +303,27 @@ export default {
       levelList: [
         {
           text: 'M1',
-          id: 'S1'
+          id: 'S1',
         },
         {
           text: 'M2',
-          id: 'S2'
+          id: 'S2',
         },
         {
           text: 'M3',
-          id: 'S3'
+          id: 'S3',
         },
         {
           text: 'M4',
-          id: 'S4'
-        }
+          id: 'S4',
+        },
       ],
       levelObj: {},
       tableData: [],
       isValidate: true,
       totalElements: 0,
       flags: {
-        loading: true
+        loading: true,
       },
       productVersion: [
         { name: 'V1.4', value: 'V1.4' },
@@ -253,33 +332,27 @@ export default {
         { name: 'V1.7', value: 'V1.7' },
         { name: 'V1.8', value: 'V1.8' },
         { name: 'V1.9', value: 'V1.9' },
-        { name: 'V2.0', value: 'V2.0' }
+        { name: 'V2.0', value: 'V2.0' },
       ],
-      trialClass: [
-        { name: '双周体验课-9.9元', value: '505' },
-        { name: '双周体验课-29元', value: '503' },
-        { name: '单周体验课', value: '3' },
-        { name: '双周体验课-49元', value: '0' },
-        { name: '年系统课', value: '2' },
-        { name: '半年系统课', value: '4' }
-      ],
+      trialClass: [],
       tabQuery: {
         size: 2,
-        pageNum: 1
+        pageNum: 1,
       },
       params: {
         courseDifficulty: 'S1',
         departmentIds: '',
         teacherWechatIds: '',
-        levels: ''
-      }
+        levels: '',
+      },
+      courseType: null,
     }
   },
   computed: {
-    ...mapGetters(['scheduleTeacherId', 'schedulePeriod'])
+    ...mapGetters(['scheduleTeacherId', 'schedulePeriod']),
   },
   components: {
-    EleTable
+    EleTable,
     // TableSearch
   },
   watch: {},
@@ -287,28 +360,43 @@ export default {
     console.log(this.$route.params)
     let { courseType = '0' } = this.$route.params // courseType = '0' 体验课
     // 根据老师ids获取招生排期设置中老师配置信息 TODO:
-
+    this.courseType = Sup_scheduleIndex[courseType]
     this.levelObj = SUP_LEVEL_ALL
     if (courseType !== '0') {
       // this.levelList = SUP_LEVEL_LIST_UPPER
       this.params.courseDifficulty = 'S1'
     }
     Object.assign(this.params, {
-      courseType:Sup_scheduleSubmit[courseType],
+      courseType: Sup_scheduleSubmit[courseType],
       period: this.schedulePeriod,
-      ids: this.scheduleTeacherId
+      ids: this.scheduleTeacherId,
     })
     await this.getCourseVersion()
     this.scheduleTeacherId.length && this.getTeacherConfigList()
   },
+  mounted() {
+    this.initData()
+  },
   methods: {
+    async initData() {
+      let result = await this.$http.Operating.getAllCategory()
+      if (result.code == 0) {
+        if (this.courseType == '2') {
+          this.trialClass = result.payload.singleWeek;
+        } else if (this.courseType == '0') {
+          this.trialClass = result.payload.doubleWeek
+        } else if (this.courseType == '1') {
+          this.trialClass = result.payload.systemWeek
+        }
+      }
+    },
     // 顶部tabs点击事件
     levelClickHandle(tab, index) {
       const callback = () => {
         this.levelIndex = index
 
         Object.assign(this.params, {
-          courseDifficulty: tab.id
+          courseDifficulty: tab.id,
         })
 
         this.getTeacherConfigList()
@@ -323,7 +411,7 @@ export default {
       this.currentRowIndex = curIndex
       this.getTeacherAllWechatByDept({
         departmentId,
-        teacherId
+        teacherId,
       })
     },
     /** 根据老师id和部门id查询老师关联微信号 */
@@ -344,8 +432,8 @@ export default {
         currentEidtRow: {
           teacherWechatId: oldWeixinId,
           teacherWechatNo,
-          teacherId
-        } = {}
+          teacherId,
+        } = {},
       } = this
 
       if (!weixinId) {
@@ -359,7 +447,7 @@ export default {
         oldWeixinNo: teacherWechatNo,
         teacherId,
         courseType,
-        period
+        period,
       }
 
       for (let i = 0; i < crtWc.length; i++) {
@@ -374,7 +462,7 @@ export default {
     saveEditTeacherWeChat(params) {
       this.$http.Operating.saveEditTeacherWeChat(params).then((res) => {
         const {
-          payload: { wechatId = '', wechatNo = '' }
+          payload: { wechatId = '', wechatNo = '' },
         } = res
 
         this.tableData[this.currentRowIndex].teacherWechatNo = wechatNo
@@ -384,7 +472,7 @@ export default {
           type: 'success',
           message: '更改成功',
           duration: 1000,
-          onClose: this.dialogHandleClose
+          onClose: this.dialogHandleClose,
         })
       })
     },
@@ -399,13 +487,13 @@ export default {
         department = [],
         groupSell = '',
         level = [],
-        teacherWechatIds = ''
+        teacherWechatIds = '',
       } = search
       Object.assign(this.params, {
         departmentIds: department.join(),
         teacherWechatIds,
         levels: level.join(),
-        ids: groupSell ? [groupSell] : this.scheduleTeacherId
+        ids: groupSell ? [groupSell] : this.scheduleTeacherId,
       })
       this.getTeacherConfigList()
     },
@@ -428,7 +516,7 @@ export default {
               teamSize: '',
               sumTeamSize: '',
               courseVersion: '',
-              courseCategory: []
+              courseCategory: [],
             })
             // }
           } else {
@@ -444,7 +532,7 @@ export default {
       } catch (err) {
         this.$message({
           message: '获取列表出错',
-          type: 'warning'
+          type: 'warning',
         })
       }
       this.flags.loading = false
@@ -453,13 +541,13 @@ export default {
     async getCourseVersion() {
       try {
         const { payload = [] } = await this.$http.Operating.getCourseVersion({
-          type: 'courseVersion'
+          type: 'courseVersion',
         })
         this.productVersion = payload
       } catch (err) {
         this.$message({
           message: '获取随材版本出错',
-          type: 'warning'
+          type: 'warning',
         })
       }
     },
@@ -469,7 +557,7 @@ export default {
         target: '.app-main',
         lock: true,
         text: '正在保存...',
-        fullscreen: true
+        fullscreen: true,
       })
 
       try {
@@ -481,7 +569,7 @@ export default {
       } catch (err) {
         this.$message({
           message: '获取列表出错',
-          type: 'warning'
+          type: 'warning',
         })
       } finally {
         loadingInstance.close()
@@ -531,9 +619,9 @@ export default {
       this.validateTableForm(tableData)
       if (this.isValidate) {
         const params = {
-          courseType:Sup_scheduleSubmit[courseType],
+          courseType: Sup_scheduleSubmit[courseType],
           period: this.schedulePeriod,
-          body: tableData
+          body: tableData,
         }
         await this.saveScheduleConfig(params)
       }
@@ -552,7 +640,7 @@ export default {
         const params = {
           courseType,
           period: this.schedulePeriod,
-          body: tableData
+          body: tableData,
         }
         const callback = () => {
           this.$emit('listenStepStatus', type)
@@ -563,10 +651,10 @@ export default {
     warningMessage(message) {
       this.$message({
         message,
-        type: 'warning'
+        type: 'warning',
       })
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>
