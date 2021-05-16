@@ -15,14 +15,13 @@
       clearable
       :placeholder="placeholder"
       @change="onChange"
-      @clear="onClear"
       class="item-style"
     >
       <el-option
         v-for="(item, index) in typeList"
         :key="index"
         :value="item.id"
-        :label="item.text || item.name"
+        :label="item.text"
       ></el-option>
     </el-select>
   </div>
@@ -55,7 +54,7 @@ export default {
     // 体验课类型 2是双周 1是单周
     exType: {
       type: Number,
-      default: 0,
+      default: 2,
     },
     // 套餐类型类型
     classArr: {
@@ -165,14 +164,14 @@ export default {
     }
   },
   watch: {
-    exType(val) {
-      this.getClassType(JSON.stringify({type:val}))
-      this.typeList = []
-    },
     classType(val) {
       this.getClassType(JSON.stringify({ type: val }))
     },
     classArr(val) {
+      if (val.length === 0) {
+        this.getClassType()
+        return
+      }
       this.type = null
       this.typeList = val
     },
@@ -199,6 +198,11 @@ export default {
     } else if (this.name == 'class_list') {
       this.getClassType()
     }
+  },
+  created() {
+    setTimeout(() => {
+      this.getClassType()
+    })
   },
   methods: {
     onChange(item) {
@@ -233,9 +237,6 @@ export default {
           this.typeList = res.data.trialExpressPackageList
         }
       })
-    },
-    onClear() {
-      this.typeList = []
     },
   },
 }

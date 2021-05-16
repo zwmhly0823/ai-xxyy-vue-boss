@@ -1,19 +1,19 @@
 <template>
   <el-select
-      v-model="type"
-      size="mini"
-      clearable
-      :placeholder="placeholder"
-      @change="stageTypeChange"
-      class="item-style"
-    >
-      <el-option
-        v-for="(item,index) in stageTypeOption"
-        :key="index"
-        :value="item.value"
-        :label="item.label"
-      ></el-option>
-    </el-select>
+    v-model="type"
+    size="mini"
+    clearable
+    :placeholder="placeholder"
+    @change="stageTypeChange"
+    class="item-style"
+  >
+    <el-option
+      v-for="(item, index) in stageTypeOption"
+      :key="index"
+      :value="item.value"
+      :label="item.label"
+    ></el-option>
+  </el-select>
 </template>
 
 <script>
@@ -22,6 +22,10 @@ export default {
     placeholder: {
       type: String,
       default: '体验课类型',
+    },
+    name: {
+      type: String,
+      default: '',
     },
     odd: {
       type: Array,
@@ -36,7 +40,7 @@ export default {
     return {
       type: null,
       now: new Date().getTime(),
-      stageTypeOption: []
+      stageTypeOption: [],
     }
   },
   created() {
@@ -44,27 +48,34 @@ export default {
   },
   methods: {
     initList() {
-      let oddArr = this.odd.map(item => {
+      let oddArr = this.odd.map((item) => {
         return item.id
       })
-      let doubleArr = this.double.map(item => {
+      let doubleArr = this.double.map((item) => {
         return item.id
-      })  
+      })
       this.stageTypeOption = [
         {
           label: '双周体验课',
-          value: doubleArr
+          value: doubleArr,
         },
         {
           label: '单周体验课',
-          value: oddArr
+          value: oddArr,
         },
       ]
     },
     stageTypeChange(item) {
-      this.$emit('stageTypeRes', {category: item})
-    }
-  }
+      if (!item) {
+        item = [500, 503, 505, 508, 502, 506, 507]
+      }
+      if (this.name) {
+        this.$emit('stageTypeRes', { packages_id: item })
+      } else {
+        this.$emit('stageTypeRes', { category: item })
+      }
+    },
+  },
 }
 </script>
 

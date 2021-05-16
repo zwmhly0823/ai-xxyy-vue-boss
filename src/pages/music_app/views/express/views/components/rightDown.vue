@@ -619,7 +619,7 @@ export default {
     // 体验课类型 2是双周 1是单周
     exType: {
       type: Number,
-      default: 2,
+      default:null,
     },
     hideCol: {
       type: Object,
@@ -1048,13 +1048,12 @@ export default {
       if (this.exType == 2) {
         // 双周
         timeType.packages_id = [500, 503, 505, 508]
-      } else {
-        delete timeType.packages_id
       }
       if (this.exType == 1) {
         // 单周
         timeType.packages_id = [502, 506, 507]
-      } else {
+      }
+      if (!this.exType) {
         delete timeType.packages_id
       }
       if (this.teacherId) {

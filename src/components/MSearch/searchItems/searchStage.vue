@@ -115,6 +115,7 @@ export default {
       if(this.category.length>0) {
         this.params = this.type
       }
+      console.log(this.params,"this.params");
       this.params = this.exType == 2 ? 0 : 2
       this.getData()
     },
