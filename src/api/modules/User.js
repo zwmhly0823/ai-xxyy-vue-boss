@@ -1178,13 +1178,16 @@ export default {
     team_state = [1, 2],
     team_type = 0,
     category = [],
+    trial_management_type = 0
+
   } = {}) {
     const query = {
       // teacher_id,
       team_state,
       team_type,
       subject,
-      category
+      category,
+      trial_management_type
     }
     // const params = JSON.stringify(query)
     const params = injectSubject(query)
