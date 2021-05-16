@@ -320,6 +320,7 @@ export default {
       } else {
         params.category = [0, 503, 505, 508]
       }
+      params.trial_management_type = +this.trialTypeVal
       this.$http.User.ManagementForTeacherList(params).then((res) => {
         // console.log(res)
         if (res && res.data && res.data.ManagementForTeacherList) {
@@ -400,7 +401,7 @@ export default {
       // 学员列表全选项
       if (!this.searchParams.team_category && this.searchParams.team_category != 0) {
         if (this.trialTypeVal === '2') {
-          query.team_category = [0, 506, 507]
+          query.team_category = [3, 506, 507]
         } else {
           query.team_category = [0, 503, 505, 508]
         }
