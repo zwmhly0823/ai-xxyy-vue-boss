@@ -130,7 +130,6 @@
           </search-lesson-type>
           <search-stage
             class="inline-block"
-            :class="['margin_l10']"
             :category="categoryType"
             @result="selectScheduleTrial"
             name="stage"
@@ -141,7 +140,6 @@
 
           <trial-classtype
             class="class-list"
-            :class="['margin_l10']"
             name="packages_id"
             placeholder="套餐名称"
             :my-style="{ width: '100px' }"
