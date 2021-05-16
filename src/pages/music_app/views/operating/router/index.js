@@ -102,7 +102,7 @@ const operatingRoutes = [{
   path: '/reviewManagement',
   name: 'reviewManagement',
   meta: {
-    title: '作品点评',
+    title: '点评管理',
     keepAlive: false
   },
   component: () => import('../views/reviewManagement/index.vue')
@@ -117,80 +117,6 @@ const operatingRoutes = [{
   component: () => import('../views/reviewManagement/components/audioAdd.vue')
 },
 {
-  path: '/schedule',
-  name: 'schedule',
-  meta: {
-    title: '兼职老师分配',
-    keepAlive: false
-  },
-  component: () => import('../views/parttimeSchedule/index.vue')
-},
-
-// type: add, edit
-{
-  path: '/scheduleSet/:type',
-  name: 'parttimeScheduleSet',
-  meta: {
-    title: '兼职老师分配',
-    keepAlive: true
-  },
-  hidden: true,
-  component: () => import('../views/parttimeSchedule/add/teamSet.vue')
-},
-// term:期数，type:add-新增，edit-编辑
-{
-  path: '/scheduleTeacherSet/:term/:type',
-  name: 'parttimeScheduleTeacherSet',
-  meta: {
-    title: '兼职老师分配',
-    keepAlive: false
-  },
-  hidden: true,
-  component: () => import('../views/parttimeSchedule/add/teacherSet.vue')
-},
-{
-  path: '/parttimeHandover',
-  name: 'parttimeHandover',
-  meta: {
-    title: '兼职老师移交班级',
-    keepAlive: false
-  },
-  component: () => import('../views/parttimeHandover/index.vue')
-},
-{
-  path: '/dataprepare',
-  name: 'dataprepare',
-  meta: {
-    title: '兼职老师数据看板',
-    keepAlive: false
-  },
-  component: () => import('../views/parttimeDataPrepare/index.vue'
-  )
-},
-// 查看详情-班级配置
-{
-  path: '/scheduleSetView/:term',
-  name: 'parttimeScheduleSetView',
-  meta: {
-    title: '兼职老师分配',
-    keepAlive: true
-  },
-  hidden: true,
-  component: () => import('../views/parttimeSchedule/view/teamSet.vue')
-},
-// 查看详情-兼职老师配置
-{
-  path: '/scheduleTeacherSetView/:term',
-  name: 'parttimeScheduleTeacherSetView',
-  meta: {
-    title: '兼职老师分配',
-    keepAlive: false
-  },
-  hidden: true,
-  component: () =>
-    import('../views/parttimeSchedule/view/teacherSet.vue')
-},
-{
   path: '/verificationCode',
   name: 'verificationCode',
   meta: {
@@ -199,6 +125,26 @@ const operatingRoutes = [{
   },
   component: () =>
     import('../views/reviewManagement/components/verificationCode.vue')
+},
+{
+  path: '/regroup',
+  name: 'regroup',
+  meta: {
+    title: '重新分班',
+    keepAlive: false
+  },
+  component: () =>
+    import('../views/reviewManagement/components/regroup.vue')
+},
+{
+  path: '/userResult',
+  name: 'userResult',
+  meta: {
+    title: '用户登陆查询',
+    keepAlive: false
+  },
+  component: () =>
+    import('../views/reviewManagement/components/userResult.vue')
 },
 {
   path: '/regroup',
@@ -279,26 +225,26 @@ const operatingRoutes = [{
 
 ]
 const operatingUploadList = [{
-  path: '/uploadFile',
-  name: 'uploadFile',
-  meta: {
-    title: '上传素材',
-    keepAlive: false
-  },
-  component: () => import('../views/uploadFile/index.vue')
+path: '/uploadFile',
+name: 'uploadFile',
+meta: {
+  title: '上传素材',
+  keepAlive: false
+},
+component: () => import('../views/uploadFile/index.vue')
 }]
 const operatingMobile = [{
-  path: '/changePhoneNumber',
-  name: 'changePhoneNumber',
-  meta: {
-    title: '手机号替换',
-    keepAlive: false
-  },
-  component: () => import('../views/changePhoneNumber/index.vue')
+path: '/changePhoneNumber',
+name: 'changePhoneNumber',
+meta: {
+  title: '手机号替换',
+  keepAlive: false
+},
+component: () => import('../views/changePhoneNumber/index.vue')
 }]
 export {
-  operatingRoutes,
-  operatingSchedule,
-  operatingUploadList,
-  operatingMobile
+operatingRoutes,
+operatingSchedule,
+operatingUploadList,
+operatingMobile
 }

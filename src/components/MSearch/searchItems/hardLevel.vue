@@ -31,6 +31,7 @@
 </template>
 
 <script>
+// 这个只针对订单管理的
 // import axios from '@/api/axiosConfig'
 import { mapState } from 'vuex'
 import {

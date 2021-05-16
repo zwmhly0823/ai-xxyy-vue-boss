@@ -589,7 +589,7 @@ let bearArt = [
   {
     path: '/statistics',
     name: 'statistics',
-    // hidden: true,
+    // hidden: true ,
     meta: {
       title: '数据中心',
       icon: 'icontongjifenxi',
