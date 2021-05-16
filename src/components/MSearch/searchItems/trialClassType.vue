@@ -15,6 +15,7 @@
       clearable
       :placeholder="placeholder"
       @change="onChange"
+      @clear="onClear"
       class="item-style"
     >
       <el-option
@@ -164,8 +165,9 @@ export default {
     }
   },
   watch: {
-    exType() {
+    exType(val) {
       this.initData()
+      this.typeList = []
     },
     classType(val) {
       this.getClassType(JSON.stringify({ type: val }))
@@ -227,6 +229,9 @@ export default {
           this.typeList = res.data.trialExpressPackageList
         }
       })
+    },
+    onClear() {
+      this.typeList = []
     },
   },
 }

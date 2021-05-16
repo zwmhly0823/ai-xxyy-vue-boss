@@ -124,14 +124,6 @@
             name="packages_id"
             @result="getTrialCourseType"
           />
-          <!-- BOSS 显示单双周选择 -->
-          <trial-course-type
-            class="margin_l10"
-            name="packages_id"
-            :exType="exType"
-            @result="getTrialCourseType"
-            placeholder="体验课套餐"
-          />
           <search-stage
             :teacher-id="teacherscope_trial || teacherscope"
             class="margin_l10"
@@ -139,7 +131,16 @@
             placeholder="体验课排期"
             type="0"
             :exType="exType"
+            :isDisabled="stageDisabled"
             @result="selectScheduleTrial"
+          />
+          <!-- BOSS 显示单双周选择 -->
+          <trial-course-type
+            class="margin_l10"
+            name="packages_id"
+            :exType="exType"
+            @result="getTrialCourseType"
+            placeholder="体验课套餐"
           />
         </div>
       </el-form-item>
@@ -229,6 +230,7 @@ export default {
 
   data() {
     return {
+      stageDisabled:true,
       cur0: false,
       cur1: false,
       cur2: false,
@@ -258,7 +260,7 @@ export default {
       hasSendId: true,
       showChooseDialog: false,
       chooseExport: '1',
-      exType:2
+      exType: null,
     }
   },
   computed: {
@@ -420,10 +422,15 @@ export default {
 
     // 体验课类型
     getTrialCourseType(res) {
-      if(res.packages_id && res.packages_id.length>3) {
+      if (res.packages_id && res.packages_id.length > 3) {
         this.exType = 2
-      }else {
+        this.stageDisabled = false
+      } else {
         this.exType = 1
+        this.stageDisabled = false
+      }
+      if(!this.exType) {
+        this.stageDisabled = false
       }
       this.setSeachParmas(res, ['packages_type'], 'terms')
     },
