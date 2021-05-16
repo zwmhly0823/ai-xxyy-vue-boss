@@ -282,9 +282,10 @@
             <el-option :key="20" :value="20">49元双周退29双周差价</el-option>
             <el-option :key="39.1" :value="39.1">49元双周退9.9双周差价</el-option>
           </el-select>
-          <el-select v-if="refundForm.refundAmount === 0.01" v-model="priceDiff" placeholder="">
+          <el-select v-else-if="refundForm.refundAmount === 29" v-model="priceDiff" placeholder="">
             <el-option :key="19.1" :value="19.1">29元双周退9.9双周差价</el-option>
           </el-select>
+          <span v-else>此订单不符合退差价规则，如有疑问请联系客服或运营</span>
         </el-form-item>
         <el-form-item v-else label="退款金额：" prop="refundAmount">
           <el-input
@@ -1034,7 +1035,7 @@ export default {
       }
     }
     return {
-      priceDiff: 0,
+      priceDiff: null,
       // 是否扣除赠品
       giftsFlag: 0,
       giftsPrice: 0,
@@ -1241,7 +1242,11 @@ export default {
           console.warn('注意！这是体验课,无需选择是否保留次月')
           return this.refundForm.refundAmount
         }
-      } else {
+      }
+      else if(this.refundForm.refundType === 8) {
+        return this.priceDiff;
+      }
+      else {
         // 退款类型-其他
         return this.refundForm.refundAmount
       }
@@ -1346,6 +1351,12 @@ export default {
     onSubmit(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          if(this.refundForm.refundType === 8) { //退差价
+            if(this.refundForm.refundAmount !== 49 || this.refundForm.refundAmount !== 29) {
+              this.$message.error('此订单不符合退差价规则，如有疑问请联系客服或运营')
+              return;
+            }
+          }
           const params1 = {
             refundRule:
               this.refundForm.isRules === '符合'
