@@ -55,7 +55,7 @@ export default {
     // 体验课类型 2是双周 1是单周
     exType: {
       type: Number,
-      default: 2,
+      default: 0,
     },
     // 套餐类型类型
     classArr: {
@@ -184,7 +184,12 @@ export default {
     } else if (this.name == 'packages_type') {
       this.typeList = this.typeList1
     } else if (this.name == 'packages_id') {
-      this.initData()
+      if (this.exType) {
+        let type = this.exType == 2 ? 0 : 2
+        this.getClassType(JSON.stringify(type))
+      } else {
+        this.getClassType()
+      }
     } else if (this.name == 'team_category') {
       this.getClassType(JSON.stringify({ type: this.classType }))
     } else if (this.name == 'type') {
@@ -219,11 +224,10 @@ export default {
           }))
       )
     },
-    initData() {
-      let query = { type: this.exType == 2 ? 0 : 2 }
+    initData(type = '') {
       let result = this.$http.Order.getClassName(
         'trialExpressPackageList',
-        JSON.stringify(query)
+        type
       ).then((res) => {
         if (res.data.trialExpressPackageList) {
           this.typeList = res.data.trialExpressPackageList
