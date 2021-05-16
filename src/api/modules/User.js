@@ -1705,6 +1705,7 @@ export default {
             trialOfStudentDetails {
               course_state
               current_super
+              team_category_text
               current_progress
               send_course_count
               join_course_count
