@@ -983,7 +983,7 @@ export default {
 
             break
           case 'SINGLE':
-            if (this.formRepair.packagesType === 'EXPERIENCE_COURSE') {
+            if (this.formRepair.packagesType === 'EXPERIENCE_COURSE' || this.formRepair.packagesType === 'TESTCOURSE_SINGLE') {
               this.formRepair.level = 'LEVEL1'
             }
             if (this.formRepair.sup && this.formRepair.packagesType) {
