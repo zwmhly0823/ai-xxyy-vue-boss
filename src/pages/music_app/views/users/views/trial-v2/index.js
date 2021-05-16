@@ -315,6 +315,11 @@ export default {
         teacher_id: [],
         team_state: [0, 1]
       }
+      if (this.trialTypeVal === '2') {
+        params.category = [3, 506, 507]
+      } else {
+        params.category = [0, 503, 505, 508]
+      }
       this.$http.User.ManagementForTeacherList(params).then((res) => {
         // console.log(res)
         if (res && res.data && res.data.ManagementForTeacherList) {
@@ -336,6 +341,7 @@ export default {
               this.getTodayCount('tomorrow')
             }, 500)
             this.renderSearchAndTable()
+            this.manageMentList = []
             return
           }
 
