@@ -175,6 +175,7 @@ export default {
      // 接收单双周体验课类型
     stageTypeRes(val) {
       if(!val.category) {
+        this.classArr = []
         this.stageDisabled = true
       } else {
         this.stageDisabled = false

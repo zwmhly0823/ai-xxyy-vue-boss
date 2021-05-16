@@ -168,6 +168,10 @@ export default {
       this.getClassType(JSON.stringify({type: val}))
     },
     classArr(val) {
+      if (val.length == 0) {
+        this.getClassType()
+        return
+      }
       this.type = null
       this.typeList = val
     }
@@ -192,6 +196,9 @@ export default {
   },
   methods: {
     onChange(item) {
+      if (!item && item !== 0 && !this.classArr) {
+        this.getClassType()
+      }
      if (this.name == 'team_category') {
         this.$emit(
           'result',
