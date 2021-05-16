@@ -1176,13 +1176,15 @@ export default {
   ManagementForTeacherList({
     // teacher_id = [],
     team_state = [1, 2],
-    team_type = 0
+    team_type = 0,
+    category = [],
   } = {}) {
     const query = {
       // teacher_id,
       team_state,
       team_type,
-      subject
+      subject,
+      category
     }
     // const params = JSON.stringify(query)
     const params = injectSubject(query)
