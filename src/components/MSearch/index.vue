@@ -302,6 +302,7 @@
           :name="packages_id"
           :addSupS="addSupS"
           :exType="exType"
+          :isExpress="isExpress"
         />
       </el-form-item>
       <el-form-item>
@@ -783,6 +784,11 @@ export default {
     exType: {
       type: Number,
       default: 2,
+    },
+    // 是否是物流管理页面
+    isExpress: {
+      type: Boolean,
+      default: false,
     },
   },
   components: {

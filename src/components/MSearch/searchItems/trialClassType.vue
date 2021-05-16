@@ -61,6 +61,14 @@ export default {
       type: Array,
       default: () => [],
     },
+    isExpress: {
+      type: Boolean,
+      default: false,
+    },
+    isOrder: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -185,12 +193,12 @@ export default {
       this.typeList = this.typeList2
     } else if (this.name == 'packages_type') {
       this.typeList = this.typeList1
-    } else if (this.name == 'packages_id') {
+    } else if (this.name == 'packages_id' && !this.isExpress) {
       if (this.exType) {
         let type = this.exType == 2 ? 0 : 2
-        this.getClassType(JSON.stringify({ type }))
+        this.initData(JSON.stringify({ type }))
       } else {
-        this.getClassType()
+        this.initData()
       }
     } else if (this.name == 'team_category') {
       this.getClassType(JSON.stringify({ type: this.classType }))
@@ -200,10 +208,13 @@ export default {
       this.typeList = this.typeList6
     } else if (this.name == 'class_list') {
       this.getClassType()
+    } else if (this.isExpress) {
+      let type = this.exType == 2 ? 0 : 2
+      this.initData(JSON.stringify({ type }))
     }
   },
   created() {
-    if (!this.exType) {
+    if (!this.exType && !this.isExpress) {
       setTimeout(() => {
         this.getClassType()
       })
@@ -242,7 +253,11 @@ export default {
         type
       ).then((res) => {
         if (res.data.trialExpressPackageList) {
-          this.typeList = res.data.trialExpressPackageList
+          this.typeList = res.data.trialExpressPackageList.map((item) => {
+            item.text = item.name
+            delete item.name
+            return item
+          })
         }
       })
     },

@@ -35,6 +35,7 @@
         :packages_id="showItem.packages_id"
         :exType="exType"
         :product_type_0="showItem.product_type_0"
+        :isExpress="true"
       />
     </div>
     <!-- v-if="!teacherId" TOSS -->
