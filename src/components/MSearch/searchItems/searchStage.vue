@@ -90,7 +90,7 @@ export default {
       stage: this.isMultiple ? this.record : '',
       dataList: [],
       period: [], // 期数
-      params:1,   // 排期联动数据
+      params: 1, // 排期联动数据
     }
   },
   computed: {
@@ -112,7 +112,7 @@ export default {
       }
     },
     exType(val) {
-      this.params = this.exType==2 ? 0 : 2
+      this.params = this.exType == 2 ? 0 : 2
       this.getData()
     },
     record(val) {
@@ -175,8 +175,7 @@ export default {
       if (this.type) {
         queryParams.bool.must.push({
           term: {
-            //  区分单周和双周联动
-            type: `${this.params}`,
+            type: `${this.category.length == 0 ? this.type : this.category}`,
           },
         })
       }
