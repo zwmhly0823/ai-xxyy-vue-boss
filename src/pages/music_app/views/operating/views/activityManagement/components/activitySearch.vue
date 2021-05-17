@@ -10,7 +10,7 @@
         @change="setPromotionsName"
       ></el-input>
     </div>
-    <div class="comp-cell">
+    <div class="comp-cell" v-if="false">
       <search-stage
         class="search-group-item"
         name="trialTerms"
@@ -20,7 +20,7 @@
         @result="getSearchData('trialTerms', arguments)"
       />
     </div>
-    <div class="comp-cell">
+    <div class="comp-cell" v-if="false">
       <search-stage
         class="search-group-item"
         name="systemTerms"

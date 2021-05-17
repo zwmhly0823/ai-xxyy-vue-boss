@@ -78,11 +78,23 @@
           clearable
         >
           <el-option
-            label="29元体验课模版"
+            label="1v1美术宝9.9元双周体验课模版"
+            :value="'/channel91v1/index'"
+            >1v1美术宝9.9元双周体验课模版</el-option
+          >
+          <el-option
+            label="9.9元双周体验课模版"
+            :value="'/channel9/index?channelId='"
+            >9.9元体验课模版</el-option
+          >
+          <el-option
+            label="29元双周体验课模版"
             :value="'/channel29/index?channelId= '"
             >29元体验课模版</el-option
           >
-          <el-option label="49元体验课模版" :value="'/channel/index?channelId='"
+          <el-option
+            label="49元双周体验课模版"
+            :value="'/channel/index?channelId='"
             >49元体验课模版</el-option
           >
           <el-option
@@ -198,12 +210,20 @@ export default {
             this.ruleForm.sort = item.channel_sort
             this.ruleForm.desc = item.remarks
             ;(this.ruleForm.experience = item.channel_link.includes('29')
-              ? '29元体验课模版'
+              ? '29元双周体验课模版'
               : item.channel_link.includes('twoHundred')
               ? '200抵500代金券'
               : item.channel_link.includes('newSystemYear')
               ? '年系统课'
-              : '49元体验课模版'),
+              : item.channel_link.includes('/channel9/index')
+              ? '9.9元双周体验课模版'
+              : item.channel_link.includes('/channel91v1/index')
+              ? '1v1美术宝9.9元双周体验课模版'
+              : item.channel_link.includes('/channel/single/507/index')
+              ? '9.9元单周体验课模版'
+              : item.channel_link.includes('/channel/single/506/index')
+              ? '19元单周体验课模版'
+              : '49元双周体验课模版'),
               (this.ruleForm.status = item.status.toString())
             this.ruleForm.channelLevel = item.channel_level
           })

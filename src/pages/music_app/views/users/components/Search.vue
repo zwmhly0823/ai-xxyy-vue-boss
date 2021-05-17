@@ -275,6 +275,7 @@
                 :my-style="{ width: '100px' }"
                 :multiple="false"
                 @result="getSearchData"
+                :classType="classType"
               />
             </div>
           </el-form-item>
@@ -339,6 +340,11 @@ export default {
       default: () => {
         return {}
       }
+    },
+    // 排期班级类型
+    classType: {
+      type: String,
+      default: '0'
     }
   },
   data() {

@@ -15,10 +15,10 @@ import active from '../views/active/index.vue';
 import approval from '../views/approval/router';
 // 运营管理
 import {
-  operatingRoutes,
-  operatingSchedule,
-  operatingUploadList,
-  operatingMobile
+    operatingRoutes,
+    operatingSchedule,
+    operatingUploadList,
+    operatingMobile
 } from '../views/operating/router';
 // 体验课系统班级（新版）、班级管理
 import studentTeam from '../views/studentTeam/router';
@@ -33,54 +33,56 @@ import complaint from '../views/complaint/router'
 // 呼叫中心
 import outbound from '../views/outbound/router'
 import express from '../views/express/router'
+// 数据中心
+import statistics from '../views/statistics/router'
 const staff = JSON.parse(localStorage.getItem('staff'))
 
 let superOperatingRouter = []
 let uploadFilePeimission = []
-// 管理员、
+    // 管理员、
 const adminRouter = []
 
-  uploadFilePeimission = operatingUploadList
-// 超级管理员权限
-// if (staff.roleId === '7') {
-  superOperatingRouter = [
-    ...operatingSchedule,
-    ...operatingMobile
-  ]
-// }
-// 管理员权限
-// if (staff.roleId === '1') {
-  adminRouter.push(operatingMobile[0])
-// }
+uploadFilePeimission = operatingUploadList
+    // 超级管理员权限
+    // if (staff.roleId === '7') {
+superOperatingRouter = [
+        ...operatingSchedule,
+        ...operatingMobile
+    ]
+    // }
+    // 管理员权限
+    // if (staff.roleId === '1') {
+adminRouter.push(operatingMobile[0])
+    // }
 Vue.use(VueRouter)
 
-const routes = [
-  {
-    path: '/Active',
-    name: 'Active',
-    meta: {
-      title: '小度活动',
-      style: 'line'
+const routes = [{
+        path: '/Active',
+        name: 'Active',
+        meta: {
+            title: '小度活动',
+            style: 'line'
+        },
+        component: active
     },
-    component: active
-  },
-  ...uploadFilePeimission,
-  ...superOperatingRouter,
-  ...adminRouter,
-  ...approval,
-  ...operatingRoutes,
-  ...studentTeam,
-  ...trad,
-  ...users,
-  ...finance,
-  ...complaint,
-  ...outbound,
-  ...express
+    ...uploadFilePeimission,
+    ...superOperatingRouter,
+    ...adminRouter,
+    ...approval,
+    ...operatingRoutes,
+    ...studentTeam,
+    ...trad,
+    ...users,
+    ...finance,
+    ...complaint,
+    ...outbound,
+    ...express,
+    ...statistics
 ]
 const router = new VueRouter({
-  base: process.env.BASE_URL,
-  moudle: 'music_app',
-  routes
+    base: process.env.BASE_URL,
+    moudle: 'music_app',
+    routes
 })
 
 export default router

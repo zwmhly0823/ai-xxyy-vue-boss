@@ -14,6 +14,7 @@
       :placeholder="placeholder"
       :options="departmentList"
       :disabled="isDisabled"
+      v-model="departData"
       :props="{
         multiple,
         value: 'id',
@@ -24,6 +25,7 @@
       :show-all-levels="false"
       clearable
       @change="onSelect"
+      :clearCheckedNodes="clearCheckedNodes"
       ref="dept"
     ></el-cascader>
   </div>
@@ -73,14 +75,35 @@ export default {
       type: Object,
       default: () => {},
     },
+    departStatus: {
+      type: Boolean,
+      default: false,
+    },
+    groupStatus: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
       departmentList: [],
+      departData: [],
     }
   },
   created() {
     this.getDepartment()
+  },
+  watch: {
+    departStatus(newValue) {
+      if (newValue) {
+        this.departData = []
+      }
+    },
+    groupStatus(newValue) {
+      if (newValue) {
+        this.departData = []
+      }
+    },
   },
   methods: {
     getDepartment() {
@@ -123,6 +146,9 @@ export default {
           { [this.name]: allNodesId }
         )
       }
+    },
+    clearCheckedNodes() {
+      console.log(123123)
     },
     handle(property) {
       return function (a, b) {

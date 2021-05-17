@@ -198,7 +198,8 @@ export default {
       showMode: 'trialUserListMode',
       // 群发优惠券的学员id
       sendGroupCouponIds: [],
-      couponData: []
+      couponData: [],
+      trialTypeVal: '0'
     }
   },
   watch: {
@@ -215,6 +216,11 @@ export default {
       this.$refs.searchC && this.$refs.searchC.changeTerm(val)
       // 切换期数时清空筛选项
       this.$refs.searchC && this.$refs.searchC.resetFilter()
+    },
+     // 切换班级类型
+     async trialTypeVal(val) {
+      await this.getManagement()
+      this.getData()
     },
     searchParams(params, oldval) {
       console.log(params, oldval, 'sdgasdgasg')
@@ -309,6 +315,12 @@ export default {
         teacher_id: [],
         team_state: [0, 1]
       }
+      if (this.trialTypeVal === '2') {
+        params.category = [3, 506, 507]
+      } else {
+        params.category = [0, 503, 505, 508]
+      }
+      params.trial_management_type = +this.trialTypeVal
       this.$http.User.ManagementForTeacherList(params).then((res) => {
         // console.log(res)
         if (res && res.data && res.data.ManagementForTeacherList) {
@@ -330,6 +342,8 @@ export default {
               this.getTodayCount('tomorrow')
             }, 500)
             this.renderSearchAndTable()
+            this.manageMentList = []
+            this.term = ''
             return
           }
 
@@ -384,6 +398,14 @@ export default {
         Object.assign(obj, this.teamParams)
       }
       const query = Object.assign({}, obj)
+      // 学员列表全选项
+      if (!this.searchParams.team_category && this.searchParams.team_category != 0) {
+        if (this.trialTypeVal === '2') {
+          query.team_category = [3, 506, 507]
+        } else {
+          query.team_category = [0, 503, 505, 508]
+        }
+      }
       // 学员列表筛掉特价课的
       // query.team_category = [0, 5, 6, 7]
 

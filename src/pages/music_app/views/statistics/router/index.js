@@ -4,20 +4,33 @@
  * @LastEditTime: 2020-10-13 22:07:00
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-
-Vue.use(VueRouter)
-
 const routes = [
   {
     path: '/',
     name: 'statistics',
     meta: {
-      title: '统计分析',
+      title: '数据中心',
       icon: 'el-icon-s-platform'
     },
-    redirect: '/priodPerformance'
+    redirect: '/liveActivity'
+  },
+  {
+    path: '/liveActivity',
+    name: 'liveActivity',
+    meta: {
+      title: '直播活动',
+      keepAlive: false
+    },
+    component: () => import('../views/liveActivity/index.vue')
+  },
+  {
+    path: '/liveDetail',
+    name: '/liveDetail',
+    meta: {
+      title: `直播活动详情`,
+      keepAlive: false
+    },
+    component: () => import('../views/liveActivity/liveDetail.vue')
   },
   {
     path: '/priodPerformance',
@@ -92,12 +105,4 @@ const routes = [
     component: () => import('../views/systemJoinCourseLog/index.vue')
   }
 ]
-
-const router = new VueRouter({
-  // mode: 'history',
-  base: process.env.BASE_URL,
-  module: 'teacher',
-  routes
-})
-
-export default router
+export default routes

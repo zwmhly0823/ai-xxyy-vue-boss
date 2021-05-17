@@ -298,7 +298,7 @@ export default {
     async getOrderList(page = this.currentPage, status) {
       // const statisticsQuery = []
       this.loading = true
-      const queryObj = {}
+      const queryObj = {topic_id:4}
       // TOSS
       if (this.teacherId) {
         Object.assign(queryObj, {

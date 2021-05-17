@@ -42,35 +42,35 @@ export default {
   props: {
     name: {
       type: String,
-      default: 'pay_teacher_id'
+      default: 'pay_teacher_id',
     },
     tip: {
       type: String,
-      default: '社群销售'
+      default: '社群销售',
     },
     isMultiple: {
       type: Boolean,
-      default: false
+      default: false,
     },
     isDisabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     teacherscope: {
       type: Array,
       default: () => {
         return null
-      }
+      },
     },
     // 是否需要返回 teacherList 列表
     returnList: {
       type: Boolean,
-      default: false
+      default: false,
     },
     myStyle: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   components: {},
   data() {
@@ -78,7 +78,7 @@ export default {
       loading: false,
       input: '',
       teacherId: '',
-      teacherList: []
+      teacherList: [],
     }
   },
   created() {
@@ -93,7 +93,7 @@ export default {
       if (val !== old && !val) {
         this.$emit('result', '')
       }
-    }
+    },
   },
   methods: {
     clearData() {
@@ -119,21 +119,21 @@ export default {
             : [
                 {
                   wildcard: {
-                    'subject.keyword': `*${this.$store.getters.subjects.subjectCode}*`
-                  }
-                }
-              ]
-        }
+                    'subject.keyword': `*${this.$store.getters.subjects.subjectCode}*`,
+                  },
+                },
+              ],
+        },
       }
       console.log(q)
-      if (this.teacherscope&&this.teacherscope.length) {
+      if (this.teacherscope && this.teacherscope.length) {
         q.bool.must.push({ terms: { department_id: this.teacherscope } })
       }
       // q.bool.must.push({ terms: { id: this.teacherscope || '' } })
       getDepartmentTeacherEx(JSON.stringify(q))
         .then((res) => {
           this.teacherList = res.data.TeacherListEx || []
-           this.loading = false
+          this.loading = false
         })
         .catch(() => {
           this.loading = false
@@ -141,20 +141,20 @@ export default {
     },
     onChange(item) {
       const obj = {
-        [this.name]: item
+        [this.name]: item,
       }
       if (this.returnList) {
         Object.assign(obj, {
-          teacherList: this.teacherList
+          teacherList: this.teacherList,
         })
       }
       this.$emit('result', item ? obj : '')
     },
     onClear() {
-      this.teacherscope = null
+      // this.teacherscope = null
       this.getTeacher()
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>
