@@ -725,7 +725,16 @@ export default {
   },
   /**
    * @description 编辑微信保存按钮
+<<<<<<< HEAD
    */
+   * /**
+  * @description 查询排期
+  */
+  getAllCategory() {
+    return axios.get(
+      `/api/s/v1/management/getAllCategory`,
+    )
+  },
   saveEditTeacherWeChat(params) {
     return axios.post(
       `/api/t/v1/wechat/teacher/saveTeacherChangeWeixinRecord?teacherId=${params.teacherId}&oldWeixinNo=${params.oldWeixinNo}&oldWeixinId=${params.oldWeixinId}&weixinId=${params.weixinId}&weixinNo=${params.weixinNo}&courseType=${params.courseType}&period=${params.period}`
