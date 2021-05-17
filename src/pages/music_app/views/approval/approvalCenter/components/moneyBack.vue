@@ -138,6 +138,11 @@
               >课程退款</el-radio
             >
             <el-radio
+              :label="8"
+              v-show="this.refundForm.businessType === '体验课' && this.exprienceType === 2"
+              >退差价</el-radio
+            >
+            <el-radio
               :label="6"
               v-show="refundForm.businessType === '预付款优惠券'"
               >系统课预付款优惠券退款</el-radio
@@ -293,7 +298,17 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="退款金额：" prop="refundAmount">
+        <el-form-item v-if="refundForm.refundType === 8" label="退款金额：" prop="refundAmount">
+          <el-select v-if="refundForm.refundAmount === 0.04" v-model="priceDiff" placeholder="">
+            <el-option :key="20" :value="0.02">49元双周退29双周差价</el-option>
+            <el-option :key="39.1" :value="0.03">49元双周退9.9双周差价</el-option>
+          </el-select>
+          <el-select v-else-if="refundForm.refundAmount === 0.02" v-model="priceDiff" placeholder="">
+            <el-option :key="19.1" :value="0.01">29元双周退9.9双周差价</el-option>
+          </el-select>
+          <span v-else style="color: red; font-size: 16px">此订单不符合退差价规则，如有疑问请联系客服或运营</span>
+        </el-form-item>
+        <el-form-item v-else label="退款金额：" prop="refundAmount">
           <el-input
             v-model="refundAmountComputed"
             disabled
@@ -301,7 +316,16 @@
           ></el-input>
         </el-form-item>
         <el-form-item
-          v-if="refundForm.refundType"
+          v-if="refundForm.refundType === 8"
+          label="退款原因："
+          prop="reason"
+        >
+          <el-radio-group v-model="refundForm.reason">
+            <el-radio label="退课程差价">退课程差价</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item
+          v-else-if="refundForm.refundType"
           label="退款原因："
           prop="reason"
         >
@@ -440,7 +464,8 @@ export default {
       immediate: true,
       deep: true,
       handler(newValue) {
-        this.refundForm.signTime = ''
+        this.refundForm.signTime = '',
+        this.priceDiff = null,
         this.refundForm.isRules = ''
         this.refundForm.businessType = ''
         this.refundForm.payChannel = ''
@@ -576,6 +601,7 @@ export default {
         }
         // 导入订单红色显示(只限体验课)
         if (targetItem && targetItem.regtype === 'EXPERIENCE') {
+          this.exprienceType = targetItem.packagesType == 'EXPERIENCE_ONEWEEK_COURSE' ? 1 : 2
           this.isThird =
             Number(targetItem.importTime) > 0 && targetItem.importTime ? 1 : 0
           console.info(this.isThird)
@@ -1056,7 +1082,13 @@ export default {
                 location.reload()
               }, 4000)
             }
-          }
+          } else if (newValue === 8) {
+            // 改9.9
+            if(this.refundForm.residueFee == 0.01) {
+              this.priceDiff = 0
+              console.log(this.refundAmountComputed, 111111)
+            }
+          } 
           // 补偿
           // else if (newValue === 3) {
           //   this.refundForm.refundAmount = '' // 退款额
@@ -1157,6 +1189,8 @@ export default {
       }
     }
     return {
+      exprienceType: 0, //区分单双周
+      priceDiff: null,
       // 是否扣除赠品
       musical: false, //判断是否是乐器硬件退款
       sonItem: false, //是否显示关联订单的子订单
@@ -1370,7 +1404,11 @@ export default {
           console.warn('注意！这是体验课,无需选择是否保留次月')
           return this.refundForm.refundAmount
         }
-      } else {
+      }
+      else if(this.refundForm.refundType === 8) {
+        return this.priceDiff;
+      }
+      else {
         // 退款类型-其他
         return this.refundForm.refundAmount
       }
@@ -1480,6 +1518,13 @@ export default {
     onSubmit(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          // 改9.9
+          if(this.refundForm.refundType === 8) { //退差价
+            if(this.refundForm.refundAmount !== 0.04 && this.refundForm.refundAmount !== 0.02) {
+              this.$message.error('此订单不符合退差价规则，如有疑问请联系客服或运营')
+              return;
+            }
+          }
           const params1 = {
             refundRule:
               this.refundForm.isRules === '符合'
@@ -1491,6 +1536,7 @@ export default {
             subOrderType: this.selectOrder.subOrderType || 0,
             fromSource: 'boss',    
             channelOuterName: this.refundForm.orderSource, // 第三方导入订单来源
+            fromSource: 'boss',
             channelId: this.refundForm.orderSourceId, // 第三方导入订单来源id
             isImport: this.isThird, // 1是0否
             userId: this.refundForm.name, // userId(选择用户取)
