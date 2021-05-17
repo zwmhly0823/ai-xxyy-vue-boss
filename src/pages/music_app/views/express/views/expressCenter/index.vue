@@ -22,7 +22,7 @@
       </el-dropdown>
     </div>
     <el-tabs v-model="activeName" type="border-card" @tab-click="switchTab">
-      <el-tab-pane label="体验课" name="0">
+      <el-tab-pane label="双周体验课" name="0">
         <div v-if="activeName == '0'">
           <rightUp
             ref="right0"
@@ -35,6 +35,47 @@
             :hideSearchItem="hideSearchItem"
             :teamClass="teamClass"
             :addSupS="false"
+            :exType="2"
+          />
+          <toggle
+            @result="getStatus"
+            :tab="activeName"
+            :seachTotal="seachTotal"
+            :regtype="regtype"
+            :source_type="source_type"
+          />
+          <el-scrollbar
+            wrap-class="scrollbar-wrapper-first"
+            id="express-right-scroll-first"
+          >
+            <div class="scroll" ref="scroll" :style="{ height: scrollHeight }">
+              <rightDown
+                :search="search"
+                :sortItem="sortItem"
+                :regtype="regtype"
+                :source_type="source_type"
+                :hideCol="hideCol"
+                :exType="2"
+                @getTotal="getTotal"
+              />
+            </div>
+          </el-scrollbar>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="单周体验课" name="4">
+        <div v-if="activeName == '4'">
+          <rightUp
+            ref="right0"
+            :tab="activeName"
+            @result="getSearch"
+            :regtype="regtype"
+            :status="sortItem.id"
+            :source_type="source_type"
+            :hideCol="hideCol"
+            :hideSearchItem="hideSearchItem"
+            :teamClass="'2'"
+            :addSupS="false"
+            :exType="1"
           />
           <toggle
             @result="getStatus"
@@ -55,6 +96,7 @@
                 :source_type="source_type"
                 :hideCol="hideCol"
                 @getTotal="getTotal"
+                :exType="1"
               />
             </div>
           </el-scrollbar>
@@ -90,6 +132,7 @@
                 :search="searchSystem"
                 :sortItem="sortItem"
                 :regtype="regtypeSys"
+                :isType="true"
                 :source_type="source_type"
                 @getTotal="getTotal"
                 :hideCol="allExpressHideCol"
@@ -414,7 +457,7 @@ export default {
       allExpressHideSearchItemActivity,
       allExpressHideSearchItemSystem,
       replenishHideSearchItem,
-      seachTotal:0
+      seachTotal: 0,
     }
   },
   mounted() {
@@ -719,6 +762,9 @@ export default {
           break
         case '3':
           this.searchReplenish = val
+          break
+        case '4':
+          this.search = val
           break
       }
     },

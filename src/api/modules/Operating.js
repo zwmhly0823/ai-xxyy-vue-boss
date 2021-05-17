@@ -39,9 +39,9 @@ const getHeaders = () => {
     'os-type': platform,
   }
   if (token) {
-    headers.Authorization = token.includes('Bearer ')
-      ? token
-      : 'Bearer ' + token
+    headers.Authorization = token.includes('Bearer ') ?
+      token :
+      'Bearer ' + token
   }
   return headers
 }
@@ -101,8 +101,8 @@ export default {
     }
   },
   /**
-  * 体验课按班级调班
-  */
+   * 体验课按班级调班
+   */
   changeTrialTeam(params) {
     return axios.post(
       `/api/ts/v1/teamChange/changeTrialTeam`,
@@ -181,12 +181,11 @@ export default {
     console.warn('接口-导出excel')
     return axios.post(
       `/api/s/v1/management/enroll/exportDetail?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&level=${params.level}&courseType=${params.courseType}&period=${params.period}&courseDifficulties=${params.courseDifficulties}`,
-      params,
-      {
-        responseType: 'blob' // 跟headers同级的
-        // 给文件流加个字段,excel就不会有内部错误了
-        // 二进制大对象(表示一个不可变、原始数据的类文件对象)
-      }
+      params, {
+      responseType: 'blob' // 跟headers同级的
+      // 给文件流加个字段,excel就不会有内部错误了
+      // 二进制大对象(表示一个不可变、原始数据的类文件对象)
+    }
     )
   },
   /**
@@ -456,8 +455,7 @@ export default {
   channelUpload(file) {
     // const token = getToken()
     const headers = {
-      token:
-        'Bearer ' +
+      token: 'Bearer ' +
         'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI0NTgwNTIyOTY3NzgwNTk3NzYiLCJzdWIiOiI0NTgwNTIyOTY3NzgwNTk3NzYiLCJpYXQiOjE1ODkzNzQ2NDMsImF1ZCI6InVzZXIiLCJleHAiOjE1OTgwMTQ2NDN9.VMeHKQHHOHb_9Hd764BjDGQwYLwHrgbavqHcvisKGeFu5ZWAFGckS60dkNVHo20x_tU8vGlnDS8AC97IKTBFEw',
       responseType: 'blob'
     }
@@ -727,7 +725,14 @@ export default {
   },
   /**
    * @description 编辑微信保存按钮
-   */
+   * /**
+  * @description 查询排期
+  */
+  getAllCategory() {
+    return axios.get(
+      `/api/s/v1/management/getAllCategory`,
+    )
+  },
   saveEditTeacherWeChat(params) {
     return axios.post(
       `/api/t/v1/wechat/teacher/saveTeacherChangeWeixinRecord?teacherId=${params.teacherId}&oldWeixinNo=${params.oldWeixinNo}&oldWeixinId=${params.oldWeixinId}&weixinId=${params.weixinId}&weixinNo=${params.weixinNo}&courseType=${params.courseType}&period=${params.period}`
@@ -745,5 +750,17 @@ export default {
       '/api/u/v2/user/cancelMobile',
       params
     )
-  }
+  },
+  // 机型管理添加
+  addPhoneType(query) {
+    return axios.get(
+      `/api/home/v1/config/addPhoneModel?phoneModel=${query.phoneModel}`
+    )
+  },
+  // 机型管理list
+  getPhoneTypeList() {
+    return axios.get(
+      `/api/home/v1/config/getPhoneModel`
+    )
+  },
 }

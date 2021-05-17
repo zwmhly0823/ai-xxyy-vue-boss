@@ -219,6 +219,10 @@ export default {
               ? '9.9元双周体验课模版'
               : item.channel_link.includes('/channel91v1/index')
               ? '1v1美术宝9.9元双周体验课模版'
+              : item.channel_link.includes('/channel/single/507/index')
+              ? '9.9元单周体验课模版'
+              : item.channel_link.includes('/channel/single/506/index')
+              ? '19元单周体验课模版'
               : '49元双周体验课模版'),
               (this.ruleForm.status = item.status.toString())
             this.ruleForm.channelLevel = item.channel_level

@@ -41,11 +41,15 @@ export default {
           name
           price
           course_week
+          text
         }
       }`
     })
   },
-
+  // 创建兑换码获取数据
+  getAllTrialIds() {
+    return axios.get('/api/s/v1/exchange/code/getAllTrialIds')
+  },
   // 创建兑换码
   addRedeemCode(data) {
     if (!data) return

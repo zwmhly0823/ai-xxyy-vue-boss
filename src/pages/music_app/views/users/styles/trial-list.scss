@@ -4,6 +4,19 @@
  @import './list.scss';
  .user-list {
    position: relative;
+   .trial-type-content {
+    padding: 10px 20px 0;
+    background-color: #fff;
+    margin-bottom: -12px;
+    /deep/ {
+      .el-tabs__item {
+        background-color: #f7f8fa;
+      }
+      .el-tabs__item.is-active {
+        background-color: #fff;
+      }
+    }
+  }
    .trial-header {
      padding: 0 20px;
      border-bottom: 10px solid #f0f1f2;

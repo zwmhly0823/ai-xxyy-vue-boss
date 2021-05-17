@@ -18,8 +18,7 @@
 bearboss / bearnb123
 bearboss /MsbNB123
 
-### [BOSS default环境](https://ai-xxyy-default-boss-h5.yinyuebao.com/login/#/  )
-
+### [BOSS default环境](https://ai-xxyy-default-boss-h5.xiaoxiongyinyue.com/login/#/  )
 
 账号：13501224231 密码 xxnb123
 

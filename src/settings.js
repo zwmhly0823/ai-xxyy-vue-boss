@@ -7,18 +7,18 @@
  * @FilePath: /ai-xxyy-vue-boss/src/settings.js
  */
 module.exports = {
-  title: '小熊音乐BOSS',
-  version: '1.3.0',
+    title: '小熊音乐BOSS',
+    version: '1.4.2',
 
-  /**
-   * @type {boolean} true | false
-   * @description Whether fix the header
-   */
-  fixedHeader: true,
+    /**
+     * @type {boolean} true | false
+     * @description Whether fix the header
+     */
+    fixedHeader: true,
 
-  /**
-   * @type {boolean} true | false
-   * @description Whether show the logo in sidebar
-   */
-  sidebarLogo: true
+    /**
+     * @type {boolean} true | false
+     * @description Whether show the logo in sidebar
+     */
+    sidebarLogo: true
 }
