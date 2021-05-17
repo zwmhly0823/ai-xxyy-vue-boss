@@ -306,7 +306,7 @@
           <el-select v-else-if="refundForm.refundAmount === 0.02" v-model="priceDiff" placeholder="">
             <el-option :key="19.1" :value="0.01">29元双周退9.9双周差价</el-option>
           </el-select>
-          <span v-else>此订单不符合退差价规则，如有疑问请联系客服或运营</span>
+          <span v-else style="color: red; font-size: 16px">此订单不符合退差价规则，如有疑问请联系客服或运营</span>
         </el-form-item>
         <el-form-item v-else label="退款金额：" prop="refundAmount">
           <el-input
