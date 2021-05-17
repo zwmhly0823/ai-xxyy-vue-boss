@@ -1223,8 +1223,8 @@ export default {
       type_lk: '',
       changeVersionList: [],
       roleId: '',
-      checkType:null,
-      checkStatus:false
+      checkType: null,
+      checkStatus: false,
     }
   },
   created() {
@@ -1278,11 +1278,9 @@ export default {
       })
     },
     // 获取审批权限
-   async initData() {
-      let result = this.$http.Backend.checkpriviles({type:this.checkType})
-      if(result.code == '0') {
-        this.checkStatus = result.payload
-      }
+    async initData() {
+      let result = this.$http.Backend.checkpriviles({ type: this.checkType })
+      this.checkStatus = result.payload
     },
     getSearchData1(val) {
       console.info('选择部门获取值:', val)
@@ -1577,7 +1575,7 @@ export default {
     refuseDialog() {
       this.form_checkbox.reason = ''
       this.dialogFormVisible_checkbox = true
-      this.drawerApprovalDeatail.flowApprovalId=''
+      this.drawerApprovalDeatail.flowApprovalId = ''
     },
     // 同意申请
     ensureReplenish() {
