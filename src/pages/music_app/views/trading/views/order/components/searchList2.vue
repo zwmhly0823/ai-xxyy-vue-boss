@@ -125,6 +125,7 @@
             :odd="oddWeekTrial"
             :double="doubleWeekTrial"
             name="packages_id"
+            style="width: 120px"
             @stageTypeRes="stageTypeRes"
           >
           </search-lesson-type>
