@@ -1373,8 +1373,9 @@ export default {
                 ? 0
                 : this.refundForm.isRules === '不符合'
                 ? 1
-                : null, // 符合规则
+                : null, // 符合规则    
             channelOuterName: this.refundForm.orderSource, // 第三方导入订单来源
+            fromSource: 'boss',
             channelId: this.refundForm.orderSourceId, // 第三方导入订单来源id
             isImport: this.isThird, // 1是0否
             userId: this.refundForm.name, // userId(选择用户取)
