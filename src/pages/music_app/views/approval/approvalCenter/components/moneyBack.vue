@@ -1361,8 +1361,8 @@ export default {
           return (
             this.refundForm.refundAmount -
             // 改价格
-            // ((this.jsonDate3.deductMaterial === 1 ? 100 : 0) +
-            ((this.jsonDate3.deductMaterial === 1 ? 0.01 : 0) +
+            ((this.jsonDate3.deductMaterial === 1 ? 100 : 0) +
+            // ((this.jsonDate3.deductMaterial === 1 ? 0.01 : 0) +
               this.fontPrice +
               instrument)
           )
