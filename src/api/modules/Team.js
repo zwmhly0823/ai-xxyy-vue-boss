@@ -648,6 +648,7 @@ export default {
   // 获取调班班级 - 模糊搜索
   getSearchClassName(params = {}) {
     const { query = {}, page = 1, size = 20,sort = { ctime: 'desc' } } = params
+    query.team_state = ['0']
     let teamName = null;
     params = JSON.parse(params)
     if(params.teamName) {

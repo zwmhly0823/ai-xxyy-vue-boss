@@ -39,17 +39,9 @@ export default [
     }
   },
   {
-    prop: 'in_room_num',
+    prop: 'is_in_room_text',
     label: '是否进入直播间',
     width: '190',
-    render(h, data, row) {
-      if (data > 0) {
-        return "是"
-      }
-      else {
-        return "否"
-      }
-    }
   },
   {
     prop: 'in_room_count',
@@ -72,10 +64,12 @@ export default [
   {
     prop: 'live_watch_time',
     label: '观看直播总时长/分钟',
+    width:"200"
   },
   {
     prop: 'playback_watch_time',
-    label: '观看回放总时长',
+    label: '观看回放总时长/分钟',
+    width:"200"
   },
   {
     prop: 'chat_count',
@@ -96,6 +90,7 @@ export default [
     prop: 'userIntention',
     label: '跟进',
     minWidth: '120',
+    slot:"follow"
   },
   {
     prop: 'live',
@@ -111,6 +106,7 @@ export default [
     prop: 'user_status',
     label: '系统课转化',
     width: '70',
+    fixed: 'right',
     render(h, data, row) {
       switch (+data) {
         case 0:

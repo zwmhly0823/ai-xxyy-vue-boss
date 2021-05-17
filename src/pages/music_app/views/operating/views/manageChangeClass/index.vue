@@ -57,6 +57,7 @@
     <change-class-dialog
       :dialogVisible="dialogVisible"
       :returnSuccess="successList"
+      :returnErr="errList"
     />
   </div>
 </template>
@@ -114,14 +115,12 @@ export default {
       this.$refs.upload.clearFiles()
       if (result.code == 0) {
         this.$message.success('上传成功')
-
-        if (result.payload && result.payload.length > 0) {
-          this.dialogVisible = true
-          this.successList = result.payload
-        }
+        this.dialogVisible = true
+        this.successList = result.payload[1]
+        this.errList = result.payload[0]
       }
-      loadingInstance.close()
-      this.fileTemp = params.file
+      // loadingInstance.close()
+      // this.fileTemp = params.file
     },
     submitUpload(file, filelist) {
       this.$refs.upload.submit()

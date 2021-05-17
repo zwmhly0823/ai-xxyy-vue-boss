@@ -19,7 +19,7 @@
     </el-radio-group>
     <!-- 数据table -->
     <el-table :data="tableData" style="width: 100%">
-      <el-table-column prop="act_id" label="活动ID"></el-table-column>
+      <el-table-column prop="act_id" label="活动ID" fixed="left"></el-table-column>
       <el-table-column prop="live" label="直播活动名称">
         <template slot-scope="scope">
           {{ scope.row.live ? scope.row.live.live_name : '-' }}
@@ -86,7 +86,7 @@
           }}
         </template>
       </el-table-column>
-      <el-table-column prop="user_status" label="系统课转化">
+      <el-table-column prop="user_status" label="系统课转化" fixed="left">
         <template slot-scope="scope">
           {{ transformStatus(scope.row.user_status) }}
         </template>
@@ -227,6 +227,11 @@ export default {
     handleCurrentChange(val) {
       this.listQuery.currentPage = val
       this.getActiveList()
+    },
+     handleSizeChange(val) {
+      this.chatCurrentPage = 1 // 处理当前第30页-页容量5=>改页容量100后,页码不归1的组件内部问题
+      this.chatPageSize = val
+      this.getchatList()
     },
     handleCurrentChange1(val) {
       this.chatCurrentPage = val

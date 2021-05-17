@@ -8,6 +8,10 @@
 -->
 <template>
   <div class="user-list">
+     <el-tabs class="trial-type-content" v-model="trialTypeVal" type="card">
+      <el-tab-pane label="双周体验课学员" name="0"></el-tab-pane>
+      <el-tab-pane label="单周体验课学员" name="2"></el-tab-pane>
+    </el-tabs>
     <div class="trial-header" v-if="!teamIdProp">
       <el-tabs v-model="term">
         <el-tab-pane
@@ -45,6 +49,7 @@
           @search="getSearchQuery"
           :searchProp="searchProp"
           :paramsToSearch="paramsToSearch"
+          :classType="trialTypeVal"
         />
 
         <!-- 操作区 -->
