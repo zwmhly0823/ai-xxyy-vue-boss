@@ -1018,7 +1018,7 @@ export default {
       this.clearAllData()
     },
     confirmButton(formName) {
-      console.log((this.formRepair.attsUrl = 'sssssssssssssss'))
+      // console.log((this.formRepair.attsUrl = 'sssssssssssssss'))
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (!this.formRepair.reissueMsg.trim()) {
