@@ -125,6 +125,7 @@
             :odd="oddWeekTrial"
             :double="doubleWeekTrial"
             name="packages_id"
+            style="width: 120px"
             @stageTypeRes="stageTypeRes"
           >
           </search-lesson-type>
@@ -147,6 +148,7 @@
             @result="getTrialCourseType"
             :classArr="classArr"
             :isOrder="true"
+            style="width: 120px"
           />
         </div>
       </el-form-item>

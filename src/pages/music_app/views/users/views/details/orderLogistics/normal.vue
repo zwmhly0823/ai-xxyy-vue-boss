@@ -22,7 +22,7 @@
       <el-table-column label="商品类型" prop="product_name">
         <template slot-scope="scope">
           <div>
-            {{ regData[scope.row.product_type] }}
+          {{scope.row.product_type_text ? scope.row.product_type_text : '-'}}  
           </div>
         </template>
       </el-table-column>
