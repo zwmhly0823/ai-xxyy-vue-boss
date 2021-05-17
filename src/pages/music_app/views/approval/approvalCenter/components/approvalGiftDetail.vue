@@ -139,7 +139,8 @@ export default {
       this.$emit('close-gift')
     },
     async initPromotions() {
-      let result = this.$http.Backend.checkpriviles({ type: 'PROMOTIONS' })
+      let result = await this.$http.Backend.checkpriviles({ type: 'PROMOTIONS' })
+      if(result.status =='OK')
       this.isPromotions = result.payload
     },
     // 同意
