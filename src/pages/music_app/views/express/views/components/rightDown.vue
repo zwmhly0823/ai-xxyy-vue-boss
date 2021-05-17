@@ -574,6 +574,7 @@ import {
   productTypeList,
 } from '@/utils/expressItemConfig'
 import { courseLevelReplace } from '@/utils/supList.js'
+import eventBus from './bug'
 let supList = []
 const regtypeEnum = {
   1: '体验课补发',
@@ -1188,6 +1189,7 @@ export default {
         const type = { disableClick: true, stage: null }
         this.$store.dispatch('getShowStatus', type)
       }
+      eventBus.$emit('getSearchData',injectSubject(query))
       this.$http.Express.getLogisticsList({
         query: `{LogisticsListPageNew(query:${JSON.stringify(
           injectSubject(query)
@@ -1331,14 +1333,7 @@ export default {
           this.totalPages = +res.data.LogisticsListPageNew.totalPages
 
           this.totalElements = +res.data.LogisticsListPageNew.totalElements // 总条数
-          let total = null
-          if (this.totalElements == 0) {
-            total = Math.random()
-          } else {
-            total = this.totalElements
-          }
-          this.$emit('getTotal', total)
-          // this.getTeacherList(realnameId)
+        // this.getTeacherList(realnameId)
           // this.getStudentTeamList(teamId)
           this.getScheduleList(schedule)
         }
