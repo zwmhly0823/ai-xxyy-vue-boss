@@ -94,9 +94,10 @@
                 { label: '降一年半包' },
                 { label: '预付款优惠券退款' },
                 { label: '器材退款' },
+                { label: '退差价', value: 8},
               ]"
               :label="item.label"
-              :value="index"
+              :value="item.value ? item.value : index"
               :key="index"
             ></el-option>
 
