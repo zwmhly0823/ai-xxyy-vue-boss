@@ -1040,6 +1040,22 @@ export default {
             }
           } else if (newValue === 6) {
             this.refundForm.refundAmount = this.refundForm.residueFee
+          } else if (newValue === 7) {
+            this.refundForm.refundAmount = ''
+            if (this.refundForm.residueFee && this.refundForm.residueFee > 0) {
+              this.refundForm.refundAmount = this.refundForm.residueFee
+              this.refundForm.refundType = 7
+            } else {
+              this.$message({
+                message:
+                  '退款金额不满足条件',
+                type: 'warning'
+              })
+              // this.onCancel('refundForm')
+              setTimeout(() => {
+                location.reload()
+              }, 4000)
+            }
           }
           // 补偿
           // else if (newValue === 3) {

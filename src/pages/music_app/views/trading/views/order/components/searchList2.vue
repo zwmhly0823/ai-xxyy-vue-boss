@@ -119,19 +119,34 @@
             :class="['margin_l10']"
             style="width: 140px"
           />
-          <!-- BOSS 显示单双周选择 -->
-          <trial-course-type
-            class="margin_l10"
+         <search-lesson-type
+            :class="['margin_l10']"
+            v-if="oddWeekTrial.length !== 0 && doubleWeekTrial.length !== 0"
+            :odd="oddWeekTrial"
+            :double="doubleWeekTrial"
             name="packages_id"
-            @result="getTrialCourseType"
-          />
+            @stageTypeRes="stageTypeRes"
+          >
+          </search-lesson-type>
           <search-stage
-            :teacher-id="teacherscope_trial || teacherscope"
-            class="margin_l10"
-            name="stage"
-            placeholder="体验课排期"
-            type="0"
+            class="inline-block"
+            :category="categoryType"
             @result="selectScheduleTrial"
+            name="stage"
+            type="0"
+            placeholder="体验课排期"
+            :isDisabled="stageDisabled"
+          />
+
+          <trial-classtype
+            class="class-list"
+            name="packages_id"
+            placeholder="套餐名称"
+            :my-style="{ width: '100px' }"
+            :multiple="false"
+            @result="getTrialCourseType"
+            :classArr="classArr"
+            :isOrder="true"
           />
         </div>
       </el-form-item>
@@ -187,7 +202,9 @@ import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
 // 单双周搜索  体验课类型
-import TrialCourseType from '@/components/MSearch/searchItems/trialClassType'
+import TrialClasstype from '@/components/MSearch/searchItems/trialClassType.vue'
+import SearchLessonType from '@/components/MSearch/searchItems/searchLessonType.vue'
+// 体验课类型 选单双周
 import { downloadHandle } from '@/utils/download'
 import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
@@ -213,11 +230,17 @@ export default {
     SearchStage,
     SearchPhoneAndUsername,
     SimpleSelect,
-    TrialCourseType,
+    TrialClasstype,
+    SearchLessonType,
   },
 
   data() {
     return {
+      stageDisabled: true, //排期不可选状态
+      classArr: [],
+      oddWeekTrial: [], // 单周体验课
+      doubleWeekTrial: [], // 双周周体验课
+      categoryType: [0, 2],
       cur0: false,
       cur1: false,
       cur2: false,
@@ -247,6 +270,7 @@ export default {
       hasSendId: true,
       showChooseDialog: false,
       chooseExport: '1',
+      exType: null,
     }
   },
   computed: {
@@ -387,6 +411,13 @@ export default {
       }
       this.setSeachParmas(res, ['last_teacher_id'], 'terms')
     },
+    // 接收套餐类型
+    getTrialCourseType(res) {
+      if(!res.packages_id) {
+        res.packages_id = [500, 503, 505, 508, 502, 506, 507]
+      }
+      this.setSeachParmas(res, ['packages_id'], 'terms')
+    },
     // 体验课排期
     selectScheduleTrial(res) {
       if (res) {
@@ -406,11 +437,50 @@ export default {
       this.setSeachParmas(res, ['team_id'], 'terms')
     },
 
-    // 体验课类型
-    getTrialCourseType(res) {
-      this.setSeachParmas(res, ['packages_type'], 'terms')
+    // 接收单双周体验课类型
+    stageTypeRes(val) {
+      if (!val.packages_id) {
+        this.stageDisabled = true
+      } else {
+        this.stageDisabled = false
+      }
+      if (val.packages_id.length > 5) {
+        this.classArr = []
+        this.stageDisabled = true
+      }
+      if (val.packages_id[0] == this.doubleWeekTrial[0].id) {
+        this.categoryType = [0]
+        this.classArr = this.doubleWeekTrial
+      } else if (val.packages_id[0] == this.oddWeekTrial[0].id) {
+        this.categoryType = [2]
+        this.classArr = this.oddWeekTrial
+      }
+      this.setSeachParmas(val, ['packages_id'], 'terms')
     },
-
+    // 请求单双周的类型以及套餐
+    getTrialClass() {
+      this.$http.Order.getClassName(
+        'trialExpressPackageList',
+        JSON.stringify({ type: 0 })
+      ).then(
+        ({ data }) =>
+          (this.doubleWeekTrial = data.trialExpressPackageList.map((item) => {
+            item.text = item.name
+            delete item.name
+            return item
+          }))
+      )
+      this.$http.Order.getClassName(
+        'trialExpressPackageList',
+        JSON.stringify({ type: 2 })
+      ).then(({ data }) => {
+        this.oddWeekTrial = data.trialExpressPackageList.map((item) => {
+          item.text = item.name
+          delete item.name
+          return item
+        })
+      })
+    },
     async getSendUser(res) {
       this.setSeachParmas(res, ['first_order_send_id'], 'terms')
     },
@@ -601,6 +671,7 @@ export default {
     },
   },
   created() {
+    this.getTrialClass()
     const teacherId = isToss()
     if (teacherId) {
       this.teacherId = teacherId

@@ -52,6 +52,11 @@ export default {
       type: String,
       default: '1',
     },
+    // 体验课类型 2是双周 1是单周
+    exType: {
+      type: Number,
+      default: 1,
+    },
     // 是否多选
     isMultiple: {
       type: Boolean,
@@ -85,6 +90,7 @@ export default {
       stage: this.isMultiple ? this.record : '',
       dataList: [],
       period: [], // 期数
+      params: 1, // 排期联动数据
     }
   },
   computed: {
@@ -105,12 +111,21 @@ export default {
         this.getData()
       }
     },
+    exType(val) {
+      if(this.category.length>0) {
+        this.params = this.type
+      }
+      console.log(this.params,"this.params");
+      this.params = this.exType == 2 ? 0 : 2
+      this.getData()
+    },
     record(val) {
       this.stage = val
     },
     isDisabled(val) {
       if (val) {
-        this.stage = []
+        this.$emit('result', '')
+        this.stage = ''
       }
       console.log(val, '123123')
     },
@@ -132,7 +147,7 @@ export default {
         {
           subject: this.$store.getters.subjects.subjectCode,
         },
-        { type: `${this.category.length == 0 ? this.type : this.category}` }
+        { type: `${this.category.length == 0 ? this.params : this.category}` }
       )
 
       const q = JSON.stringify(query)
@@ -165,7 +180,7 @@ export default {
       if (this.type) {
         queryParams.bool.must.push({
           term: {
-            type: `${this.category.length == 0 ? this.type : this.category}`,
+            type: `${this.category.length == 0 ? this.params : this.category}`,
           },
         })
       }
