@@ -148,6 +148,7 @@
             @result="getTrialCourseType"
             :classArr="classArr"
             :isOrder="true"
+            style="width: 120px"
           />
         </div>
       </el-form-item>
