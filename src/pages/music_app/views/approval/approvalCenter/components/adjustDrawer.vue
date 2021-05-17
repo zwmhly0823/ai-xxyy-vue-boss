@@ -105,7 +105,15 @@
         </template>
       </el-form-item>
     </el-form>
-    <div v-if="isStaffId && checkStatus" class="adjust-drawer-button-box">
+    <div
+      v-if="
+        adjustDrawerData.type === 'notDone' &&
+        isStaffId &&
+        !adjustDrawerData.packagePower &&
+        checkStatus
+      "
+      class="adjust-drawer-button-box"
+    >
       <el-button @click="adjustDrawerPass('reject')">拒绝</el-button>
       <el-button type="primary" @click="adjustDrawerPass('pass')"
         >同 意</el-button

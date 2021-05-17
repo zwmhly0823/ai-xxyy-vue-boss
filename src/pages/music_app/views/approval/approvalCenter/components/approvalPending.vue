@@ -1279,8 +1279,10 @@ export default {
     },
     // 获取审批权限
     async initData() {
-      let result = this.$http.Backend.checkpriviles({ type: this.checkType })
-      this.checkStatus = result.payload
+      let result = await this.$http.Backend.checkpriviles({ type: this.checkType })
+      if(result.status =='OK') {
+        this.checkStatus = result.payload
+      }
     },
     getSearchData1(val) {
       console.info('选择部门获取值:', val)
