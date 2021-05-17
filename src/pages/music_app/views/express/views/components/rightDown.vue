@@ -611,9 +611,15 @@ export default {
       type: String,
       default: '',
     },
+    // 判断是否是系统课
     isType: {
       type: Boolean,
       default: false,
+    },
+    // 体验课类型 2是双周 1是单周
+    exType: {
+      type: Number,
+      default:null,
     },
     hideCol: {
       type: Object,
@@ -1038,6 +1044,17 @@ export default {
       let timeType = {}
       if (this.isType) {
         timeType.product_type_0 = ['10', '6']
+      }
+      if (this.exType == 2) {
+        // 双周
+        timeType.packages_id = [500, 503, 505, 508]
+      }
+      if (this.exType == 1) {
+        // 单周
+        timeType.packages_id = [502, 506, 507]
+      }
+      if (!this.exType) {
+        delete timeType.packages_id
       }
       if (this.teacherId) {
         this.teacherId && (timeType.teacher_id = this.teacherIds.join())

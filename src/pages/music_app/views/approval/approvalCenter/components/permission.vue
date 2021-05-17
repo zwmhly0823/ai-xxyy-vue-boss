@@ -34,7 +34,7 @@
             <i class="el-icon-s-claim color-3"></i>
             <span class="item-text">调期申请</span>
           </div>
-          <div class="adjust-item" @click="jumpAdjustPage(2)">
+          <div v-if="false"  class="adjust-item" @click="jumpAdjustPage(2)">
             <i class="el-icon-s-claim color-3"></i>
             <span class="item-text">调级申请</span>
           </div>
