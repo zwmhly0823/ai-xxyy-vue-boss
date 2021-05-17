@@ -879,6 +879,7 @@
       ref="adjustDrawerCom"
       :adjustDrawerData="adjustDrawerData"
       :isStaffId="isStaffId"
+      :checkStatus="checkStatus"
       @result="adjustDrawerPass"
     ></adjust-drawer>
     <!-- 调班调级备注弹窗 -->
@@ -901,7 +902,7 @@
       <p class="adjust-dialog-p">
         请确认是否{{
           adjustDialogType === 'reject'
-            ? '拒绝'
+            ? '拒123123123绝'
             : adjustDialogType === 'pass'
             ? '同意'
             : ''
