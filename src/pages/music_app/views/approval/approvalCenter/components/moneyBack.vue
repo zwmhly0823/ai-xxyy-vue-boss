@@ -251,7 +251,6 @@
           </el-form-item>
           <el-form-item label="是否扣除赠品金额">
             <el-radio-group
-              :disabled="jsonDate3.boxAble"
               v-model="giftsFlag"
               @change="handlerGiftsFlag"
             >
@@ -299,12 +298,12 @@
           </el-select>
         </el-form-item>
         <el-form-item v-if="refundForm.refundType === 8" label="退款金额：" prop="refundAmount">
-          <el-select v-if="refundForm.refundAmount === 49" v-model="priceDiff" placeholder="">
-            <el-option :key="20" :value="20">49元双周退29双周差价</el-option>
-            <el-option :key="39.1" :value="39.1">49元双周退9.9双周差价</el-option>
+          <el-select v-if="refundForm.refundAmount === 0.04" v-model="priceDiff" placeholder="">
+            <el-option :key="20" :value="0.01">49元双周退29双周差价</el-option>
+            <el-option :key="39.1" :value="0.03">49元双周退9.9双周差价</el-option>
           </el-select>
-          <el-select v-else-if="refundForm.refundAmount === 29" v-model="priceDiff" placeholder="">
-            <el-option :key="19.1" :value="19.1">29元双周退9.9双周差价</el-option>
+          <el-select v-else-if="refundForm.refundAmount === 0.02" v-model="priceDiff" placeholder="">
+            <el-option :key="19.1" :value="0.01">29元双周退9.9双周差价</el-option>
           </el-select>
           <span v-else style="color: red; font-size: 16px">此订单不符合退差价规则，如有疑问请联系客服或运营</span>
         </el-form-item>
@@ -763,7 +762,7 @@ export default {
               type: 'error',
             })
           })
-          if (remainingWeek) {
+          if (remainingWeek && targetItem.subOrderType == 1) {
             this.pureWeekS = remainingWeek
             this.pureWeekY = reduceWeek
             console.info(
@@ -1441,12 +1440,10 @@ export default {
       if (r === 1) {
         this.jsonDate3.boxAble = true
         this.jsonDate3.deductMaterial = 0
-        this.giftsFlag = 1
       } else if (r === 0) {
         // 不保留 随材盒子自由选择
         this.jsonDate3.boxAble = false
         this.jsonDate3.deductMaterial = ''
-        this.giftsFlag = ''
       }
     },
 
