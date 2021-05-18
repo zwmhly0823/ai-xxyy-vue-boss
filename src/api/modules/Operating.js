@@ -766,7 +766,7 @@ export default {
   // 体验课定向排期列表
   getTrialOperPeroid(params) {
     return axios.get(
-      `/api/s/v1/managementChannel/getConfigPage?channelIds=${params.channelIds
+      `/v1/managementChannel/getConfigPage?channelIds=${params.channelIds
       }&pageNumber=${params.pageNumber}&pageSize=${params.pageSize}&type=${params.type
       }&category=${params.category}&channelId=${params.channelId
       }&periods=${params.periods || ''}`

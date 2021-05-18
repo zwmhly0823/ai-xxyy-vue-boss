@@ -20,7 +20,7 @@
           class="btn-directed"
           @click="exportExcel('artBiweekly')"
         >
-          批量配置/修改
+          批量配置/修改/停用
         </el-button>
       </div>
     </table-search>
