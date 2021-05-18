@@ -295,16 +295,7 @@ const operatingRoutes = [{
         component: () =>
             import ('../views/recommend/changeRecommend.vue')
     },
-    {
-        path: '/contract',
-        name: 'contract',
-        meta: {
-            title: '合同管理',
-            keepAlive: false
-        },
-        component: () =>
-            import ('../views/contract/index.vue')
-    },
+
 
 ]
 const operatingUploadList = [{
