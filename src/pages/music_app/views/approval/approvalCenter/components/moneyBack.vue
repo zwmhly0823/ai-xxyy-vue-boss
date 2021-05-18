@@ -848,6 +848,7 @@ export default {
       immediate: true,
       deep: true,
       async handler(newValue) {
+        this.jsonDate3.boxAble = false
         // 初始就触发,执行前确认关联订单已选择
         if (this.selectOrder && Object.keys(this.selectOrder).length) {
           // newValue:0 选中优惠券时-获取优惠券列表
