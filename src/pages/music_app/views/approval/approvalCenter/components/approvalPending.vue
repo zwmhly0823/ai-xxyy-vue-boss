@@ -879,6 +879,7 @@
       ref="adjustDrawerCom"
       :adjustDrawerData="adjustDrawerData"
       :isStaffId="isStaffId"
+      :checkStatus="checkStatus"
       @result="adjustDrawerPass"
     ></adjust-drawer>
     <!-- 调班调级备注弹窗 -->
@@ -901,7 +902,7 @@
       <p class="adjust-dialog-p">
         请确认是否{{
           adjustDialogType === 'reject'
-            ? '拒绝'
+            ? '拒123123123绝'
             : adjustDialogType === 'pass'
             ? '同意'
             : ''
@@ -1222,6 +1223,8 @@ export default {
       type_lk: '',
       changeVersionList: [],
       roleId: '',
+      checkType: null,
+      checkStatus: false,
     }
   },
   created() {
@@ -1273,6 +1276,13 @@ export default {
       this.$http.Backend.getStaffIds().then((res) => {
         this.roleIdList = res.payload.approvalIdSet
       })
+    },
+    // 获取审批权限
+    async initData() {
+      let result = await this.$http.Backend.checkpriviles({ type: this.checkType })
+      if(result.status =='OK') {
+        this.checkStatus = result.payload
+      }
     },
     getSearchData1(val) {
       console.info('选择部门获取值:', val)
@@ -1567,7 +1577,7 @@ export default {
     refuseDialog() {
       this.form_checkbox.reason = ''
       this.dialogFormVisible_checkbox = true
-      this.drawerApprovalDeatail.flowApprovalId=''
+      this.drawerApprovalDeatail.flowApprovalId = ''
     },
     // 同意申请
     ensureReplenish() {
@@ -1668,6 +1678,8 @@ export default {
     },
     // 打开抽屉 传进来4个参数 申请单type 申请单id  申请单申请人id 申请单tag
     getApprovalDeatail(type, id, applyId, tag) {
+      this.checkType = type
+      this.initData()
       console.log(arguments)
       this.currentType = type // 全局配置:申请单类型
       console.log(type)
