@@ -251,7 +251,6 @@
           </el-form-item>
           <el-form-item label="是否扣除赠品金额">
             <el-radio-group
-              :disabled="jsonDate3.boxAble"
               v-model="giftsFlag"
               @change="handlerGiftsFlag"
             >
@@ -300,7 +299,7 @@
         </el-form-item>
         <el-form-item v-if="refundForm.refundType === 8" label="退款金额：" prop="refundAmount">
           <el-select v-if="refundForm.refundAmount === 0.04" v-model="priceDiff" placeholder="">
-            <el-option :key="20" :value="0.02">49元双周退29双周差价</el-option>
+            <el-option :key="20" :value="0.01">49元双周退29双周差价</el-option>
             <el-option :key="39.1" :value="0.03">49元双周退9.9双周差价</el-option>
           </el-select>
           <el-select v-else-if="refundForm.refundAmount === 0.02" v-model="priceDiff" placeholder="">
@@ -763,7 +762,7 @@ export default {
               type: 'error',
             })
           })
-          if (remainingWeek) {
+          if (remainingWeek && targetItem.subOrderType == 1) {
             this.pureWeekS = remainingWeek
             this.pureWeekY = reduceWeek
             console.info(
@@ -1084,9 +1083,9 @@ export default {
             }
           } else if (newValue === 8) {
             // 改9.9
-            if(this.refundForm.residueFee == 0.01) {
+            if(this.refundForm.residueFee == 9.9) {
               this.priceDiff = 0
-              console.log(this.refundAmountComputed, 111111)
+              // console.log(this.refundAmountComputed, 111111)
             }
           } 
           // 补偿
@@ -1441,12 +1440,10 @@ export default {
       if (r === 1) {
         this.jsonDate3.boxAble = true
         this.jsonDate3.deductMaterial = 0
-        this.giftsFlag = 1
       } else if (r === 0) {
         // 不保留 随材盒子自由选择
         this.jsonDate3.boxAble = false
         this.jsonDate3.deductMaterial = ''
-        this.giftsFlag = ''
       }
     },
 
@@ -1520,7 +1517,7 @@ export default {
         if (valid) {
           // 改9.9
           if(this.refundForm.refundType === 8) { //退差价
-            if(this.refundForm.refundAmount !== 0.04 && this.refundForm.refundAmount !== 0.02) {
+            if(this.refundForm.refundAmount !== 29 && this.refundForm.refundAmount !== 49) {
               this.$message.error('此订单不符合退差价规则，如有疑问请联系客服或运营')
               return;
             }
@@ -1533,8 +1530,7 @@ export default {
                 ? 1
                 : null, // 符合规则
             subOrderId: this.selectOrder.parentOrderId ? this.selectOrder.id : 0,    
-            subOrderType: this.selectOrder.subOrderType || 0,
-            fromSource: 'boss',    
+            subOrderType: this.selectOrder.subOrderType || 0,   
             channelOuterName: this.refundForm.orderSource, // 第三方导入订单来源
             fromSource: 'boss',
             channelId: this.refundForm.orderSourceId, // 第三方导入订单来源id
