@@ -9,10 +9,10 @@
 
 <template>
   <div class="app-main channel-orientation-periond">
-    <!-- 双周体验课 -->
-    <biweekly-exp-class v-if="courseType == 0"></biweekly-exp-class>
     <!-- 单周体验课 -->
-    <weekly-exp-class v-if="courseType == 6"></weekly-exp-class>
+    <biweekly-exp-class v-if="courseType == 0"></biweekly-exp-class>
+    <!-- 双周体验课 -->
+    <weekly-exp-class v-if="courseType == 1"></weekly-exp-class>
   </div>
 </template>
 
@@ -27,7 +27,7 @@ export default {
   },
   data() {
     return {
-      // 0 双周体验课 6 单周体验课
+      //1 双周体验课 0 单周体验课
       courseType: 0
     }
   },

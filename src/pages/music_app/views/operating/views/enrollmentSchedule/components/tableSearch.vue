@@ -32,6 +32,7 @@
       @result="(data) => changeEmit(data, 'periods')"
       :type="calcType"
       name="periods"
+      placeholder="体验课排期"
     />
     <slot name="addChannel"></slot>
   </div>
@@ -78,8 +79,8 @@ export default {
 
   computed: {
     calcType() {
-      // 28元体验课（单周体验课） tab标签默认为6  但是查询期 单周体验课需要的是5
-      return String(this.courseType) === '6' ? '5' : this.courseType
+      // 查询排期 0是双周  2是单周
+      return this.courseType==='1'?'2':'0'
     }
   }
 }

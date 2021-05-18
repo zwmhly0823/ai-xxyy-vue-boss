@@ -781,4 +781,29 @@ export default {
       `/api/t/v1/teacher/category/config/getByCourseType?courseType=${params.courseType}`
     )
   },
+  // 体验课新建定向招生渠道
+  saveConfigTrialOperPeroid(params) {
+    return axios.post(
+      '/api/s/v1/managementChannel/saveConfig',
+      JSON.stringify(params)
+    )
+  },
+
+  // 体验课编辑定向招生渠道
+  editConfigTrialOperPeroid(params) {
+    const curstomQuery = {
+      id: params.id,
+      period: params.period,
+      subject: params.subject
+    }
+    return axios.post(
+      '/api/s/v1/managementChannel/changeChannelPeriod',
+      JSON.stringify(curstomQuery)
+    )
+  },
+
+  // 体验课定向招生渠道切换启用、禁用状态
+  switchStatusTrialOperPeroid(params) {
+    return axios.post('/api/s/v1/managementChannel/switchStatus', params)
+  }
 }

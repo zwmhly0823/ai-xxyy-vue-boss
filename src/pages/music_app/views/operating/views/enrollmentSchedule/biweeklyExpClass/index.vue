@@ -10,7 +10,7 @@
 <template>
   <div class="biweekly-exp-class">
     <table-search @change="changeSearch" :showDatas="showDatas">
-      <div slot="addChannel">
+    <div slot="addChannel">
         <el-button type="primary" size="mini" @click="handlePeriod(false)"
           >新增渠道</el-button
         >
@@ -22,7 +22,7 @@
         >
           批量配置/修改/停用
         </el-button>
-      </div>
+    </div>
     </table-search>
     <table-list
       :tableData="tableData"

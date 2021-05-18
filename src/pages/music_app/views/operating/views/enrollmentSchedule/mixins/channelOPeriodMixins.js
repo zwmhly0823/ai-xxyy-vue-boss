@@ -4,12 +4,11 @@ import PeriodDialog from '../components/dialog/newEditPeriod'
 import { mapGetters } from 'vuex'
 import UploadExcel from '@/pages/music_app/views/operating/components/uploadExcel' // 上传excel文件
 import axios from '@/api/axiosConfig'
+import { Sup_scheduleIndex} from '@/utils/supList'
 const courseTypeEnum = {
-  0: 'TESTCOURSE',
-  1: 'SYSTEMCOURSE',
-  2: 'SPECIALCOURSE',
-  3: 'CAMPCOURSE',
-  4: 'THEMECOURSE'
+  0: 'TESTCOURSE', // 双周
+  1: 'SYSTEMCOURSE', // 系统课
+  2: 'TESTCOURSE_SINGLE', //单周
 }
 export default {
   components: { TableSearch, TableList, PeriodDialog, UploadExcel },
@@ -57,7 +56,7 @@ export default {
 
   async created() {
     const { courseType } = this.$route.params
-    this.courseType = courseType
+    this.courseType = Sup_scheduleIndex[courseType]
     await this.getChannel()
     await this.getChannelClassList()
     this.formatData(this.channelList, this.channelClassList)
@@ -156,8 +155,8 @@ export default {
       const params = {
         pageNumber: this.tabQuery.page - 1,
         pageSize: this.tabQuery.size,
-        type: courseTypeEnum[this.courseType] || 'CATEGORYTESTCOURSE',
-        category: Number(this.courseType) === 0 ? '' : '19' // 双周体验课 0 单周需要类别为19
+        type: courseTypeEnum[this.courseType],
+        category: '0'
       }
       Object.assign(params, this.queryParams)
       this.$http.Operating.getTrialOperPeroid(params)
