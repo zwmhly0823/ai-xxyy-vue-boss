@@ -119,7 +119,7 @@
             :class="['margin_l10']"
             style="width: 140px"
           />
-         <search-lesson-type
+          <search-lesson-type
             :class="['margin_l10']"
             v-if="oddWeekTrial.length !== 0 && doubleWeekTrial.length !== 0"
             :odd="oddWeekTrial"
@@ -415,10 +415,22 @@ export default {
     },
     // 接收套餐类型
     getTrialCourseType(res) {
-      if(!res.packages_id) {
-        res.packages_id = [500, 503, 505, 508, 502, 506, 507]
+      if (res.packages_id == '' && this.exType !== null) {
+        this.setSeachParmas(this.exType, ['packages_id'], 'terms')
+      } else {
+        if (!res.packages_id) {
+          this.setSeachParmas(
+            { packages_id: [500, 503, 505, 508, 502, 506, 507] },
+            ['packages_id'],
+            'terms'
+          )
+        } else {
+          this.setSeachParmas(res, ['packages_id'], 'terms')
+        }
       }
-      this.setSeachParmas(res, ['packages_id'], 'terms')
+      if (!this.exType) {
+        this.stageDisabled = false
+      }
     },
     // 体验课排期
     selectScheduleTrial(res) {
@@ -447,8 +459,15 @@ export default {
         this.stageDisabled = false
       }
       if (val.packages_id.length > 5) {
+        this.exType = null
         this.classArr = []
         this.stageDisabled = true
+        this.setSeachParmas(
+          { packages_id: [500, 503, 505, 508, 502, 506, 507] },
+          ['packages_id'],
+          'terms'
+        )
+        return false
       }
       if (val.packages_id[0] == this.doubleWeekTrial[0].id) {
         this.categoryType = [0]
@@ -457,6 +476,7 @@ export default {
         this.categoryType = [2]
         this.classArr = this.oddWeekTrial
       }
+      this.exType = val
       this.setSeachParmas(val, ['packages_id'], 'terms')
     },
     // 请求单双周的类型以及套餐
