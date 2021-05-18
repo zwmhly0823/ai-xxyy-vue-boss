@@ -43,11 +43,10 @@
         }}</span>
       </div>
       <i class="line"></i>
-      <search-stage
+      <search-stageEC
         class="input-custom"
         :type="calcType"
         :recordPeriod="form.period"
-        :status="[0, 1, 2]"
         :isMultiple="false"
         name="period"
         @result="changePeriod"
@@ -63,13 +62,11 @@
 </template>
 
 <script>
-import SearchStage from '@/components/MSearch/searchItems/searchStage'
+import SearchStageEC from '@/components/MSearch/searchItems/searchStageEC'
 
 export default {
   name: 'newEditPeriod',
-
-  components: { SearchStage },
-
+  components: { SearchStageEC },
   props: {
     toBody: {
       type: Boolean,
@@ -123,8 +120,8 @@ export default {
     },
 
     calcType() {
-      // 28元体验课（单周体验课） tab标签默认为6  但是查询期 单周体验课需要的是5
-      return String(this.courseType) === '6' ? '5' : String(this.courseType)
+      // 查询排期 0是双周  2是单周
+      return this.courseType==='1'?'0':'2'
     },
 
     visibleInnerCalc: {

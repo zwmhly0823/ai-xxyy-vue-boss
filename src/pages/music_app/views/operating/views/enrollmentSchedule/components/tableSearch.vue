@@ -27,7 +27,7 @@
       clearable
       class="input-custom"
     ></el-input>
-    <search-stage
+    <search-stageEC
       class="input-custom"
       @result="(data) => changeEmit(data, 'periods')"
       :type="calcType"
@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import SearchStage from '@/components/MSearch/searchItems/searchStage'
+import SearchStageEC from '@/components/MSearch/searchItems/searchStageEC'
 
 export default {
   name: 'tableSearch',
@@ -52,7 +52,7 @@ export default {
   },
 
   components: {
-    SearchStage
+    SearchStageEC
   },
 
   data() {
@@ -80,7 +80,7 @@ export default {
   computed: {
     calcType() {
       // 查询排期 0是双周  2是单周
-      return this.courseType==='1'?'2':'0'
+      return this.courseType==='1'?'0':'2'
     }
   }
 }

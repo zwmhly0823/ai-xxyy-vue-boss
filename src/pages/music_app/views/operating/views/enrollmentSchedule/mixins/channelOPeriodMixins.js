@@ -219,8 +219,8 @@ export default {
         channelIds: channelIds.map((item) => item[2]),
         period,
         subject: this.subjects.subject,
-        type: courseTypeEnum[this.courseType] || 'CATEGORYTESTCOURSE',
-        category: Number(this.courseType) === 0 ? '' : '19' // 双周体验课 0 单周需要类别为19
+        type: courseTypeEnum[this.courseType],
+        category:"0"
       }
       if (!isNew) {
         params.id = this.curPeriodInfo.id
