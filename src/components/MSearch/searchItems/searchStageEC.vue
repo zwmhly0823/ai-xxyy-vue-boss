@@ -174,7 +174,7 @@ export default {
       if (this.type) {
         queryParams.bool.must.push({
           term: {
-            type: `${this.type}`,
+            type: this.type,
           },
         })
       }
