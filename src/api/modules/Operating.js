@@ -763,4 +763,22 @@ export default {
       `/api/home/v1/config/getPhoneModel`
     )
   },
+  // 体验课定向排期列表
+  getTrialOperPeroid(params) {
+    return axios.get(
+      `/api/s/v1/managementChannel/getConfigPage?channelIds=${params.channelIds
+      }&pageNumber=${params.pageNumber}&pageSize=${params.pageSize}&type=${params.type
+      }&category=${params.category}&channelId=${params.channelId
+      }&periods=${params.periods || ''}`
+    )
+  },
+  /**
+  * @description 获取课程类型
+  * @params courseType { 0: 体验课； 1： 系统课}
+  */
+  getCourseListByCourseType(params) {
+    return axios.get(
+      `/api/t/v1/teacher/category/config/getByCourseType?courseType=${params.courseType}`
+    )
+  },
 }
