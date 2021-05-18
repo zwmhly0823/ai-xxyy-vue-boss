@@ -762,7 +762,8 @@ export default {
               type: 'error',
             })
           })
-          if (remainingWeek && targetItem.subOrderType == 1) {
+          if (targetItem.subOrderType === 2 || remainingWeek) {
+            console.log(1111)
             this.pureWeekS = remainingWeek
             this.pureWeekY = reduceWeek
             console.info(
