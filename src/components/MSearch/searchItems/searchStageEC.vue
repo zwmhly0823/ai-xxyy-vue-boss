@@ -66,11 +66,6 @@ export default {
       type: String,
       default: '',
     },
-    // 老师ID,通过老师获取对应的排期
-    teacherId: {
-      type: Array,
-      default: () => [],
-    },
     myStyle: {
       type: Object,
       default: () => {},
@@ -79,9 +74,9 @@ export default {
       type: Boolean,
       default: false,
     },
-    record: {
-      type: Array,
-      default: () => [],
+    recordPeriod: {
+      type: String,
+      value: ''
     },
   },
   data() {
@@ -106,7 +101,7 @@ export default {
     this.getData()
   },
   mounted() {
-    console.log(this.type,"this.type");
+    console.log(this.type, 'this.type')
   },
   watch: {
     category(val, oldValue) {
@@ -114,7 +109,7 @@ export default {
         this.getData()
       }
     },
-    record(val) {
+    recordPeriod(val) {
       this.stage = val
     },
     isDisabled(val) {
@@ -122,42 +117,6 @@ export default {
         this.$emit('result', '')
         this.stage = ''
       }
-    },
-    teacherId(val) {
-      this.stage = ''
-      this.$emit('result', '')
-      if (!this.teacherId || this.teacherId.length === 0) {
-        this.period = []
-        this.getData()
-        return
-      }
-      // 体验课
-      const query = { teacher_id: this.teacherId }
-      const teamType =
-        this.type === '0' ? { team_type: 0 } : { team_type: { gt: 0 } }
-      Object.assign(
-        query,
-        teamType,
-        {
-          subject: this.$store.getters.subjects.subjectCode,
-        },
-        { type: `${this.type}` }
-      )
-
-      const q = JSON.stringify(query)
-      axios
-        .post('/graphql/v1/toss', {
-          query: `{
-            StudentTeamList(query: ${JSON.stringify(q)}, size: 500){
-              term
-            }
-          }`,
-        })
-        .then((res) => {
-          const period = (res.data && res.data.StudentTeamList) || []
-          this.period = period.map((item) => item.term)
-          this.getData()
-        })
     },
   },
   methods: {
@@ -177,13 +136,6 @@ export default {
             type: this.type,
           },
         })
-      }
-      if (this.record.length > 0) {
-        console.log(this.period)
-        this.period.push(...this.record)
-      }
-      if (this.period.length > 0) {
-        // queryParams.bool.must.push({ terms: { period: this.period } })
       }
       const q = JSON.stringify(queryParams)
       const sort = `{"id":"desc"}`
