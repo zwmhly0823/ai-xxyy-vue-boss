@@ -155,7 +155,7 @@ export default {
       this.emitStatus()
     },
     seachTotal(newVal) {
-      if (this.activeIndex != 5 && newVal >=1) {
+      if (this.activeIndex != 5) {
         if ((newVal && this.activeIndex != 0) || newVal == 0) {
           this.toggleList[this.activeIndex].count =
             newVal > 0 && newVal < 1 ? 0 : newVal
