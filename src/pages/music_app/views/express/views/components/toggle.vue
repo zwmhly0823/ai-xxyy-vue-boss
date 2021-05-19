@@ -52,6 +52,16 @@ export default {
       let q
       if (this.teacherId || this.teacherId === 0) {
         q = `{"teacher_id": [${this.teacherId}],"regtype":[${this.regtype}],"source_type":[${this.source_type}]}`
+      } else if (this.tab === '0' || this.tab === '4') {
+        q = `{"regtype":[${this.regtype}],"source_type":[${
+          this.source_type
+        }],"packages_id":[${
+          this.tab === '0'
+            ? [500, 503, 505, 508]
+            : this.tab === '4'
+            ? [502, 506, 507]
+            : null
+        }]}`
       } else {
         q = `{"regtype":[${this.regtype}],"source_type":[${this.source_type}]}`
       }
@@ -68,16 +78,32 @@ export default {
             confirm_wait_send
             invalid
             difficult
+            pause
           }
         }`,
       }).then((res) => {
         const x = res.data.logisticsStatisticsNew
         this.toggleList.map((item) => {
           if (item.id === '0') {
-            item.count = Number(x?.no_address) || ''
+            item.count = Number(x?.no_address) || '0'
           }
           if (item.id === '1') {
-            item.count = Number(x?.wait_send) || ''
+            item.count = Number(x?.wait_send) || '0'
+          }
+          if (item.id === '2') {
+            item.count = Number(x?.has_send) || '0'
+          }
+          if (item.id === '4,5,8') {
+            item.count =
+              Number(x?.difficult) +
+                Number(x?.has_return) +
+                Number(x?.difficult) || '0'
+          }
+          if (item.id === '7') {
+            item.count = Number(x?.invalid) || '0'
+          }
+          if (item.id === '9') {
+            item.count = Number(x?.pause) || '0'
           }
         })
         this.toggleList = [...this.toggleList]
@@ -87,6 +113,16 @@ export default {
       let q
       if (this.teacherId || this.teacherId === 0) {
         q = `{"teacher_id": [${this.teacherId}],"regtype":[${this.regtype}],"source_type":[${this.source_type}],"center_express_id":{"lte":0},"subject":3}`
+      } else if (this.tab === '0' || this.tab === '4') {
+        q = `{"regtype":[${this.regtype}],"source_type":[${
+          this.source_type
+        }],"packages_id":[${
+          this.tab === '0'
+            ? [500, 503, 505, 508]
+            : this.tab === '4'
+            ? [502, 506, 507]
+            : null
+        }]}`
       } else {
         q = `{"regtype":[${this.regtype}],"source_type":[${this.source_type}],"center_express_id":{"lte":0},"subject":3}`
       }
@@ -144,19 +180,6 @@ export default {
     },
   },
   mounted() {
-    if (this.tab) {
-      eventBus.$on('getSearchData', (data) => {
-        let queryObj = {}
-        if (this.tab === '0') {
-          queryObj.packages_id = [500, 503, 505, 508]
-        } else if (this.tab === '4') {
-          queryObj.packages_id = [502, 506, 507]
-        }
-        Object.assign(queryObj, JSON.parse(data))
-        this.getLogisticsStatisticsDsh(queryObj)
-      })
-    }
-
     this.hideSomeBtn()
     this.getTeacherId()
     this.getLogisticsStatistics()
@@ -164,7 +187,6 @@ export default {
   },
   watch: {
     tab(val) {
-      console.log(val, '132412341234')
       this.getLogisticsStatistics()
       this.getLogisticsStatisticsDsh()
       this.initToggleList()
@@ -175,14 +197,16 @@ export default {
       this.emitStatus()
     },
     seachTotal(newVal) {
-      if ((newVal && this.activeIndex != 0) || newVal == 0) {
-        this.toggleList[this.activeIndex].count =
-          newVal > 0 && newVal < 1 ? 0 : newVal
-        this.$set(
-          this.toggleList,
-          this.activeIndex,
-          this.toggleList[this.activeIndex]
-        )
+      if (this.activeIndex != 5) {
+        if ((newVal && this.activeIndex != 0) || newVal == 0) {
+          this.toggleList[this.activeIndex].count =
+            newVal > 0 && newVal < 1 ? 0 : newVal
+          this.$set(
+            this.toggleList,
+            this.activeIndex,
+            this.toggleList[this.activeIndex]
+          )
+        }
       }
     },
   },
