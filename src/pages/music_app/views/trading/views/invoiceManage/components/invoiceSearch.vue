@@ -20,6 +20,17 @@
         ></simple-select>
       </div>
     </el-form-item>
+    <el-form-item label="订单类型:">
+      <div class="row_colum">
+        <simple-select
+          name="content_type"
+          :data-list="orderTypeList"
+          :multiple="false"
+          placeholder="全部"
+          @result="getSearchData('content_type', arguments)"
+        ></simple-select>
+      </div>
+    </el-form-item>
     <el-form-item label="开票状态:">
       <div class="row_colum">
         <simple-select
@@ -93,6 +104,20 @@ export default {
         {
           id: 2,
           text: '专票'
+        }
+      ],
+      orderTypeList: [
+        {
+          id: [0, 1],
+          text: '课程订单'
+        },
+        {
+          id: [2],
+          text: '器材订单'
+        },
+        {
+          id: [0, 1, 2],
+          text: '全部'
         }
       ]
     }
