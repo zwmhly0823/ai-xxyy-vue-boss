@@ -140,29 +140,13 @@ export default {
     },
   },
   mounted() {
-    if (this.tab) {
-      eventBus.$on('getSearchData', (data) => {
-        let queryObj = {}
-        if (this.tab === '0') {
-          queryObj.packages_id = [500, 503, 505, 508]
-        } else if (this.tab === '4') {
-          queryObj.packages_id = [502, 506, 507]
-        }
-        Object.assign(queryObj, JSON.parse(data))
-        this.getLogisticsStatisticsDsh(queryObj)
-      })
-    }
-
     this.hideSomeBtn()
     this.getTeacherId()
     this.getLogisticsStatistics()
-    // this.getLogisticsStatisticsDsh()
   },
   watch: {
     tab(val) {
-      console.log(val, '132412341234')
       this.getLogisticsStatistics()
-      // this.getLogisticsStatisticsDsh()
       this.initToggleList()
       this.hideSomeBtn()
       this.activeIndex = 0
@@ -171,14 +155,16 @@ export default {
       this.emitStatus()
     },
     seachTotal(newVal) {
-      if ((newVal && this.activeIndex != 0) || newVal == 0) {
-        this.toggleList[this.activeIndex].count =
-          newVal > 0 && newVal < 1 ? 0 : newVal
-        this.$set(
-          this.toggleList,
-          this.activeIndex,
-          this.toggleList[this.activeIndex]
-        )
+      if (this.activeIndex != 5 && newVal >=1) {
+        if ((newVal && this.activeIndex != 0) || newVal == 0) {
+          this.toggleList[this.activeIndex].count =
+            newVal > 0 && newVal < 1 ? 0 : newVal
+          this.$set(
+            this.toggleList,
+            this.activeIndex,
+            this.toggleList[this.activeIndex]
+          )
+        }
       }
     },
   },
