@@ -176,11 +176,11 @@ export default {
       this.getClassType(JSON.stringify({ type: val }))
     },
     classArr(val) {
+      this.type = null
       if (val.length == 0) {
         this.getClassType()
         return
       }
-      this.type = null
       this.typeList = val
     },
     // exType(val) {

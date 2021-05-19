@@ -13,7 +13,7 @@
         当前结果：社群销售<span>{{ resultStatistics.wechatSize }}</span
         >人，计划招生<span>{{ resultStatistics.planSumTeamSize }}</span>
         <span>（</span>
-        
+
         <span
           >{{ SUP_LEVEL_ALL['S1'] }}:{{
             (resultStatistics.S1 && resultStatistics.S1.planSumTeamSize) || 0
@@ -43,7 +43,7 @@
 
         实际招生<span>{{ resultStatistics.realSumTeamSize }}</span>
         <span>（</span>
-        
+
         <span
           >{{ SUP_LEVEL_ALL['S1'] }}:{{
             (resultStatistics.S1 && resultStatistics.S1.realSumTeamSize) || 0
@@ -64,7 +64,7 @@
             (resultStatistics.S4 && resultStatistics.S3.realSumTeamSize) || 0
           }}
         </span>
-        <span 
+        <span
           >{{ SUP_LEVEL_ALL['S4'] }}:{{
             (resultStatistics.S4 && resultStatistics.S4.realSumTeamSize) || 0
           }}
@@ -177,11 +177,11 @@ export default {
   props: {
     paramsInfo: {
       type: Object,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
   components: {
-    EleTable
+    EleTable,
   },
   data() {
     return {
@@ -190,29 +190,30 @@ export default {
         0: '双周体验课',
         2: '年系统课',
         3: '单周体验课',
-        4: '半年系统课'
+        4: '半年系统课',
       },
       courseType: '0',
       totalElements: 0,
       flags: {
-        loading: false
+        loading: false,
       },
       resultStatistics: {},
       tabQuery: {
         size: 20,
-        pageNum: 1
+        pageNum: 1,
       },
       // 总页数
       totalPages: 1,
       // 当前页数
       // 表格数据
-      tableData: []
+      tableData: [],
+      courseArr: [],
     }
   },
   computed: {
     calcIndex() {
       return this.tabQuery.size * (this.tabQuery.pageNum - 1)
-    }
+    },
   },
   watch: {
     paramsInfo: {
@@ -222,14 +223,14 @@ export default {
         this.tabQuery = {
           ...this.tabQuery,
           ...val,
-          pageNum: 1
+          pageNum: 1,
         }
         // console.log('this.tabQuery', this.tabQuery)
         this.init()
         // 表格内统计
         this.getScheduleDetailStatistic()
-      }
-    }
+      },
+    },
   },
   async created() {
     const { period = '', courseType = '0' } = this.$route.params
@@ -237,6 +238,9 @@ export default {
     Object.assign(this.tabQuery, { period, courseType })
     // 表格内统计
     this.getScheduleDetailStatistic()
+  },
+  mounted() {
+    this.initData()
   },
   methods: {
     async init() {
@@ -251,7 +255,7 @@ export default {
         })
         const query = {
           ids: idsArr.join(','),
-          term: this.paramsInfo.period
+          term: this.paramsInfo.period,
         }
         // 转介绍招生数
         const intruStuNumRes = await this.getIntroduceCountByIds(query)
@@ -261,8 +265,10 @@ export default {
           content.forEach((value) => {
             if (item.id === value.teacherId) {
               value.intruNum = item.count || 0
-              value.realSumTeamSize = value.realSumTeamSize?value.realSumTeamSize:0;
-              value.realTeam = value.realTeam?value.realTeam:0;
+              value.realSumTeamSize = value.realSumTeamSize
+                ? value.realSumTeamSize
+                : 0
+              value.realTeam = value.realTeam ? value.realTeam : 0
               // 市场招生数
               value.marketStuNum = value.realSumTeamSize - value.intruNum
               // 招生完成率
@@ -277,19 +283,28 @@ export default {
         content.forEach((value) => {
           let { courseCategory, courseCategoryCHN = '' } = value
           courseCategory.split(',').forEach((course) => {
-            courseCategoryCHN += ' ' + COURSECATEGORY(course)
+            this.courseArr.forEach((item, index) => {
+              if (item.value === course) {
+                value.courseCategoryCHN = item.name
+              }
+            })
           })
-
-          value.courseCategoryCHN = courseCategoryCHN
-          // value.courseDifficulty =
-          //   SUP_LEVEL_ALL[value.courseDifficulty] || ''
         })
-
         this.tableData = content
-
         this.totalElements = +_list.totalElements
         this.flags.loading = false
       } catch (err) {}
+    },
+    // 获取全部课程类型
+    async initData() {
+      let result = await this.$http.Operating.getAllCategory()
+      if (result.code == 0) {
+        this.courseArr = [
+          ...result.payload.singleWeek,
+          ...result.payload.doubleWeek,
+          ...result.payload.systemWeek,
+        ]
+      }
     },
     // 表格 内 统计数据
     async getScheduleDetailStatistic() {
@@ -313,7 +328,7 @@ export default {
           S2: {},
           S3: {},
           S4: {},
-          S5: {}
+          S5: {},
         }
 
         payload.forEach((item, index) => {
@@ -323,8 +338,8 @@ export default {
           const sup = {
             [item.courseDifficulty]: {
               planSumTeamSize: item.planSumTeamSize || 0,
-              realSumTeamSize: item.realSumTeamSize || 0
-            }
+              realSumTeamSize: item.realSumTeamSize || 0,
+            },
           }
           Object.assign(obj, sup)
 
@@ -374,8 +389,8 @@ export default {
     pageChange_handler(page) {
       this.tabQuery.pageNum = page
       this.init()
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>

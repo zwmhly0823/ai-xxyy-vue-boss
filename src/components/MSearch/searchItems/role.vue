@@ -25,7 +25,7 @@
         </el-option>
       </el-select>
     </el-col>
-    <el-col :span="15" :offset="1">
+    <!-- <el-col :span="15" :offset="1" v-if="false">
       <el-input
         v-model="phoneNumber"
         type="number"
@@ -35,7 +35,7 @@
         @clear="clearPhone"
         placeholder="请输入手机号码"
       ></el-input>
-    </el-col>
+    </el-col> -->
   </div>
 </template>
 

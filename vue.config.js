@@ -33,8 +33,8 @@ let targetGrapqhlEnv = 'http://ai-xxyy-default-graphql-boss.yinyuebao.cloud'
 let targetApiEnv = 'https://ai-xxyy-default-boss-h5.xiaoxiongyinyue.com';
 let publicPath = baseUrl();
 if (env === 'dev') {
-  targetGrapqhlEnv = 'http://ai-xxyy-dev-graphql-boss.xiaoxiongyinyue.cloud'
-  targetApiEnv = 'http://ai-xxyy-dev-boss.xiaoxiongyinyue.cloud'
+  targetGrapqhlEnv = 'http://ai-xxyy-dev-graphql-boss.yinyuebao.cloud'
+  targetApiEnv = 'http://ai-xxyy-dev-boss.yinyuebao.cloud'
 } else if (env === 'test') {
   // test环境
   targetGrapqhlEnv = 'http://ai-xxyy-test-graphql-boss.xiaoxiongyinyue.cloud'

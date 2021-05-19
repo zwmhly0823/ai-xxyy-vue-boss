@@ -87,6 +87,10 @@ export default {
   batchApproval(params) {
     return axios.post(`/api/b/v1/backend/completed/batch/flow`, params)
   },
+  // 调班 调期 赠品审批
+  checkpriviles(params) {
+    return axios.get(`/api/b/v1/backend/checkpriviles`, params)
+  },
   // 临时解决方案-显示申请人部门
   changeDepart(params) {
     console.warn('临时解决方案-显示申请人部门')

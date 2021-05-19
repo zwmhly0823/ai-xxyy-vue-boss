@@ -28,13 +28,13 @@
           <template
             v-if="
               dItem.value.indexOf('mp4') > -1 ||
-                dItem.value.indexOf('mov') > -1 ||
-                dItem.value.indexOf('flv') > -1 ||
-                dItem.value.indexOf('rmvb') > -1
+              dItem.value.indexOf('mov') > -1 ||
+              dItem.value.indexOf('flv') > -1 ||
+              dItem.value.indexOf('rmvb') > -1
             "
           >
             <video
-              style="width: 220px; height: 120px;"
+              style="width: 220px; height: 120px"
               :src="dItem.value"
               controls
             ></video>
@@ -108,12 +108,13 @@
     <div
       v-if="
         adjustDrawerData.type === 'notDone' &&
-          isStaffId &&
-          !adjustDrawerData.packagePower
+        isStaffId &&
+        !adjustDrawerData.packagePower &&
+        checkStatus
       "
       class="adjust-drawer-button-box"
     >
-      <el-button @click="adjustDrawerPass('reject')">拒 绝</el-button>
+      <el-button @click="adjustDrawerPass('reject')">拒绝</el-button>
       <el-button type="primary" @click="adjustDrawerPass('pass')"
         >同 意</el-button
       >
@@ -145,15 +146,19 @@ export default {
     is3d: { default: 0 },
     packagePower: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
+    checkStatus: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
       adjustDrawerShow: false,
       reload: true,
       now: new Date().getTime(),
-      originGoodsInfo: []
+      originGoodsInfo: [],
     }
   },
   methods: {
@@ -200,7 +205,7 @@ export default {
           // 保存一份商品的原始数据，之后修改版本号的时候要用
           this.originGoodsInfo.push({
             oldCenterProductCode: child.centerProductCode,
-            oldProVersion: child.proVersion
+            oldProVersion: child.proVersion,
           })
         })
       }
@@ -228,8 +233,8 @@ export default {
       this.originGoodsInfo[index].newCenterProductCode =
         selectItem.centerProductCode
       this.now = new Date().getTime()
-    }
-  }
+    },
+  },
 }
 </script>
 

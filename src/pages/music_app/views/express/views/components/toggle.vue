@@ -15,6 +15,7 @@
 /* eslint-disable camelcase */
 import { isToss, injectSubject } from '@/utils/index'
 import { expressToggleList } from '@/utils/expressItemConfig'
+import eventBus from './bug'
 export default {
   props: {
     seachTotal: {
@@ -82,13 +83,14 @@ export default {
         this.toggleList = [...this.toggleList]
       })
     },
-    getLogisticsStatisticsDsh() {
+    getLogisticsStatisticsDsh(params) {
       let q
       if (this.teacherId || this.teacherId === 0) {
         q = `{"teacher_id": [${this.teacherId}],"regtype":[${this.regtype}],"source_type":[${this.source_type}],"center_express_id":{"lte":0},"subject":3}`
       } else {
         q = `{"regtype":[${this.regtype}],"source_type":[${this.source_type}],"center_express_id":{"lte":0},"subject":3}`
       }
+      Object.assign(q, params)
       const query = JSON.stringify(q)
       this.$http.Express.getLogisticsStatistics({
         query: `{
@@ -142,13 +144,27 @@ export default {
     },
   },
   mounted() {
+    if (this.tab) {
+      eventBus.$on('getSearchData', (data) => {
+        let queryObj = {}
+        if (this.tab === '0') {
+          queryObj.packages_id = [500, 503, 505, 508]
+        } else if (this.tab === '4') {
+          queryObj.packages_id = [502, 506, 507]
+        }
+        Object.assign(queryObj, JSON.parse(data))
+        this.getLogisticsStatisticsDsh(queryObj)
+      })
+    }
+
     this.hideSomeBtn()
     this.getTeacherId()
     this.getLogisticsStatistics()
     this.getLogisticsStatisticsDsh()
   },
   watch: {
-    tab() {
+    tab(val) {
+      console.log(val, '132412341234')
       this.getLogisticsStatistics()
       this.getLogisticsStatisticsDsh()
       this.initToggleList()
@@ -159,11 +175,16 @@ export default {
       this.emitStatus()
     },
     seachTotal(newVal) {
-      if(newVal && this.activeIndex !=0 || newVal ==0) {
-        this.toggleList[this.activeIndex].count = newVal>0 && newVal<1?0:newVal
-        this.$set(this.toggleList,this.activeIndex,this.toggleList[this.activeIndex])
+      if ((newVal && this.activeIndex != 0) || newVal == 0) {
+        this.toggleList[this.activeIndex].count =
+          newVal > 0 && newVal < 1 ? 0 : newVal
+        this.$set(
+          this.toggleList,
+          this.activeIndex,
+          this.toggleList[this.activeIndex]
+        )
       }
-    }
+    },
   },
 }
 </script>
