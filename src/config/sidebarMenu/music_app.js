@@ -158,8 +158,8 @@ let bearArt = [
                     show: true
                 }
             }, {
-                path: '/contract',
-                name: 'contract',
+                path: '/contractManage',
+                name: 'contractManage',
                 meta: {
                     title: '合同管理',
                     // module: 'operating'

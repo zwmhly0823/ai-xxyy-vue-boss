@@ -260,11 +260,15 @@
             </div>
           </template>
           <template slot-scope="scope">
-            <span>{{
+            <el-radio-group :disabled="scope.row.isDisabled" v-model="scope.row.price">
+              <el-radio :label="0">0元</el-radio>
+              <el-radio :label="scope.row.radioSel">{{'套餐价格' + scope.row.radioSel + '元'}}</el-radio>
+            </el-radio-group>
+            <!-- <span>{{
               scope.row.orderPrice === '0'
                 ? '0元'
                 : '套餐价格' + scope.row.price + '元'
-            }}</span>
+            }}</span> -->
           </template>
         </el-table-column>
       </el-table>
@@ -326,6 +330,7 @@ export default {
           orderPrice: '',
           isDisabled: true,
           price: '29',
+          radioSel:'29'
         },
         {
           packageName: '29元双周体验课',
@@ -336,6 +341,7 @@ export default {
           orderPrice: '',
           isDisabled: true,
           price: '29',
+          radioSel: '29',
         },
         {
           packageName: '9.9元双周体验课',
@@ -346,6 +352,8 @@ export default {
           orderPrice: '',
           isDisabled: true,
           price: '9.9',
+          radioSel: '9.9',
+
         },
         {
           packageName: '19元单周体验课',
@@ -356,6 +364,8 @@ export default {
           orderPrice: '',
           isDisabled: true,
           price: '19',
+          radioSel: '19',
+
         },
         {
           packageName: '9.9元单周体验课',
@@ -366,6 +376,8 @@ export default {
           orderPrice: '',
           isDisabled: true,
           price: '9.9',
+          radioSel: '9.9',
+
         },
       ],
       // pickerOptions: {
@@ -421,18 +433,18 @@ export default {
         //     price: '68',
         //   })
         // } else {
-          // 删除列表中的数据
-          // this.set_mealList.forEach((item, i) => {
-          //   if (item.packageId === '54') {
-          //     this.set_mealList.splice(i, 1)
-          //   }
-          // })
-          // 删除列表中选中的数据
-          // this.contractPriceDetailList.forEach((item, i) => {
-          //   if (item.packageId === '54') {
-          //     this.set_mealList.splice(i, 1)
-          //   }
-          // })
+        // 删除列表中的数据
+        // this.set_mealList.forEach((item, i) => {
+        //   if (item.packageId === '54') {
+        //     this.set_mealList.splice(i, 1)
+        //   }
+        // })
+        // 删除列表中选中的数据
+        // this.contractPriceDetailList.forEach((item, i) => {
+        //   if (item.packageId === '54') {
+        //     this.set_mealList.splice(i, 1)
+        //   }
+        // })
         // }
       },
     },
