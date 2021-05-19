@@ -84,32 +84,29 @@ export default {
       }).then((res) => {
         const x = res.data.logisticsStatisticsNew
         this.toggleList.map((item) => {
-          if (
-            item.id === '6' &&
-            Object.prototype.hasOwnProperty.call(item.center_express_id, 'lte')
-          ) {
-            item.count = Number(x?.confirm_wait_send) || ''
+          if (item.id === '6') {
+            item.count = Number(x?.confirm_wait_send) || '0'
           }
           if (item.id === '0') {
-            item.count = Number(x?.no_address) || ''
+            item.count = Number(x?.no_address) || '0'
           }
           if (item.id === '1') {
-            item.count = Number(x?.wait_send) || ''
+            item.count = Number(x?.wait_send) || '0'
           }
           if (item.id === '2') {
-            item.count = Number(x?.has_send) || ''
+            item.count = Number(x?.has_send) || '0'
           }
           if (item.id === '4,5,8') {
             item.count =
               Number(x?.difficult) +
                 Number(x?.has_return) +
-                Number(x?.difficult) || ''
+                Number(x?.difficult) || '0'
           }
           if (item.id === '7') {
-            item.count = Number(x?.invalid) || ''
+            item.count = Number(x?.invalid) || '0'
           }
           if (item.id === '9') {
-            item.count = Number(x?.pause) || ''
+            item.count = Number(x?.pause) || '0'
           }
         })
         this.toggleList = [...this.toggleList]
