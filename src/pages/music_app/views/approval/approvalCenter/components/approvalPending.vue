@@ -112,8 +112,11 @@
         <el-option label="课程退款" value="课程退款"></el-option>
         <el-option label="降半年课包" value="降半年课包"></el-option>
         <el-option label="补偿" value="补偿"></el-option>
-        <el-option label="降一年课包" value="降一年课包"></el-option>
-        <el-option label="降一年半年课包" value="降一年半年课包"></el-option>
+        <el-option label="降一年包" value="降一年课包"></el-option>
+        <el-option label="降一年半年包" value="降一年半年课包"></el-option>
+        <el-option label="系统预售-优惠券退款" value="系统预售-优惠券退款"></el-option>
+        <el-option label="器材退款" value="器材退款"></el-option>
+        <el-option label="体验课退差价" value="体验课退差价"></el-option>
       </el-select>
       <el-button
         type="primary"
@@ -549,6 +552,8 @@
                   4: '降1年包',
                   5: '降1年半包',
                   6: '系统课预付款优惠券退款',
+                  7: '硬件乐器退款',
+                  8: '体验课退差价'
                 }[drawerApprovalDeatail.refundType]
               }}
             </el-col>
@@ -902,7 +907,7 @@
       <p class="adjust-dialog-p">
         请确认是否{{
           adjustDialogType === 'reject'
-            ? '拒123123123绝'
+            ? '拒绝'
             : adjustDialogType === 'pass'
             ? '同意'
             : ''

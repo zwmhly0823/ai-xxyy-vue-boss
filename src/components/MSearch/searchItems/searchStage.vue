@@ -193,9 +193,6 @@ export default {
         console.log(this.period)
         this.period.push(...this.record)
       }
-      if (this.period.length > 0) {
-        // queryParams.bool.must.push({ terms: { period: this.period } })
-      }
       const q = JSON.stringify(queryParams)
       const sort = `{"id":"desc"}`
       axios
