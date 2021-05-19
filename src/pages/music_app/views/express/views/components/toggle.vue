@@ -68,6 +68,7 @@ export default {
             confirm_wait_send
             invalid
             difficult
+            pause
           }
         }`,
       }).then((res) => {
@@ -78,6 +79,24 @@ export default {
           }
           if (item.id === '1') {
             item.count = Number(x?.wait_send) || ''
+          }
+          if (item.id === '2') {
+            item.count = Number(x?.has_send) || ''
+          }
+          if (item.id === '4,5,8') {
+            item.count =
+              Number(x?.difficult) +
+                Number(x?.has_return) +
+                Number(x?.difficult) || ''
+          }
+          if (item.id === '7') {
+            item.count = Number(x?.invalid) || ''
+          }
+          if (item.id === '9') {
+            item.count = Number(x?.pause) || ''
+          }
+          if (item.id === '6') {
+            item.count = Number(x?.confirm_wait_send) || ''
           }
         })
         this.toggleList = [...this.toggleList]
@@ -160,13 +179,13 @@ export default {
     this.hideSomeBtn()
     this.getTeacherId()
     this.getLogisticsStatistics()
-    this.getLogisticsStatisticsDsh()
+    // this.getLogisticsStatisticsDsh()
   },
   watch: {
     tab(val) {
       console.log(val, '132412341234')
       this.getLogisticsStatistics()
-      this.getLogisticsStatisticsDsh()
+      // this.getLogisticsStatisticsDsh()
       this.initToggleList()
       this.hideSomeBtn()
       this.activeIndex = 0
