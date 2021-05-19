@@ -101,16 +101,15 @@ export default {
     this.getData()
   },
   mounted() {
-    console.log(this.recordPeriod, 'this.recordPeriod')
+    if (this.recordPeriod) {
+      this.stage = this.recordPeriod.periodName
+    }
   },
   watch: {
     category(val, oldValue) {
       if (val) {
         this.getData()
       }
-    },
-    recordPeriod(val) {
-      this.stage = val.periodName
     },
     isDisabled(val) {
       if (val) {
