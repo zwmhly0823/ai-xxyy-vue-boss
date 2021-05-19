@@ -75,8 +75,8 @@ export default {
       default: false,
     },
     recordPeriod: {
-      type: String,
-      value: ''
+      type: Object,
+      default: () => {},
     },
   },
   data() {
@@ -101,7 +101,7 @@ export default {
     this.getData()
   },
   mounted() {
-    console.log(this.type, 'this.type')
+    console.log(this.recordPeriod, 'this.recordPeriod')
   },
   watch: {
     category(val, oldValue) {
@@ -110,7 +110,7 @@ export default {
       }
     },
     recordPeriod(val) {
-      this.stage = val
+      this.stage = val.periodName
     },
     isDisabled(val) {
       if (val) {

@@ -68,7 +68,6 @@ export default {
     }
   },
   created() {
-    this.getCourseType()
   },
   methods: {
     /** 判断上传excel需要用到的接口 */
@@ -137,22 +136,6 @@ export default {
       document.body.removeChild(elink)
 
       cb && cb()
-    },
-    /**
-     * @description "28单周体验课" 动态获取 category
-     * @params 后端说 courseType传4
-     */
-    async getCourseType() {
-      const { getCourseListByCourseType } = this.$http.Operating
-
-      const { code, payload } = await getCourseListByCourseType({
-        courseType: 4
-      })
-
-      if (code === 0) {
-        const first = payload.length ? payload[0] : {}
-        this.trial_28_category = first.category || ''
-      }
     },
     submitUpload(file, filelist) {
       this.$refs.upload.submit()

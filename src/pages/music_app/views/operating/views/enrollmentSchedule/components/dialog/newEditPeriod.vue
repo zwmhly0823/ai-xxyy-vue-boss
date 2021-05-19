@@ -46,7 +46,7 @@
       <search-stageEC
         class="input-custom"
         :type="calcType"
-        :recordPeriod="form.period"
+        :recordPeriod="periodInfo"
         :isMultiple="false"
         name="period"
         @result="changePeriod"
