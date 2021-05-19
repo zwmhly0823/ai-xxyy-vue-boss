@@ -43,6 +43,19 @@
               :label="item.relationOrder"
             ></el-option>
           </el-select>
+          <el-select
+            v-if = "sonItem"
+            v-model="refundForm.childOrder"
+            :class="$style.order100"
+            clearable
+          >
+            <el-option
+              v-for="item in childOrderOptions"
+              :key="item.subOutTradeNo"
+              :value="item.subOutTradeNo"
+              :label="item.relationOrder"
+            ></el-option>
+          </el-select>
           <div :class="$style.tip" v-if="isThird">该订单为第三方导入订单</div>
         </el-form-item>
         <el-form-item label="退款规则：" prop="isRules">
@@ -111,20 +124,33 @@
             :class="$style.order100"
           ></el-input>
         </el-form-item>
+        <el-form-item label="乐器签收时间：" v-if="refundForm.signTime">
+          <span>{{refundForm.signTime}}</span>
+        </el-form-item>
         <el-form-item label="退款类型：" prop="refundType">
           <el-radio-group v-model="refundForm.refundType">
-            <el-radio :label="0" v-show="refundForm.businessType === '系统课'"
+            <el-radio :label="0" v-show="!musical && refundForm.businessType === '系统课'"
               >优惠券退款</el-radio
             >
             <el-radio
               :label="1"
-              v-show="this.refundForm.businessType !== '预付款优惠券'"
+              v-show="!musical && refundForm.businessType !== '预付款优惠券'"
               >课程退款</el-radio
             >
             <el-radio
+              :label="8"
+              v-show="this.refundForm.businessType === '体验课' && this.exprienceType === 2"
+              >退差价</el-radio
+            >
+            <el-radio
               :label="6"
-              v-show="this.refundForm.businessType === '预付款优惠券'"
+              v-show="refundForm.businessType === '预付款优惠券'"
               >系统课预付款优惠券退款</el-radio
+            >
+            <el-radio
+              :label="7"
+              v-show="refundForm.businessType === '系统课' && musical"
+              >乐器硬件全额退款</el-radio
             >
             <!-- <el-radio
               :label="2"
@@ -177,12 +203,12 @@
               <el-radio :label="1">保留</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="是否扣除乐器费用：" prop="instrument">
+          <!-- <el-form-item label="是否扣除乐器费用：" prop="instrument">
             <el-radio-group v-model="jsonDate3.instrument" @change="casket">
               <el-radio :label="1">不扣除乐器费用</el-radio>
               <el-radio :label="0">扣除1800元</el-radio>
             </el-radio-group>
-          </el-form-item>
+          </el-form-item> -->
 
           <el-form-item label="随材盒子：" prop="deductMaterial">
             <el-radio-group
@@ -225,7 +251,6 @@
           </el-form-item>
           <el-form-item label="是否扣除赠品金额">
             <el-radio-group
-              :disabled="jsonDate3.boxAble"
               v-model="giftsFlag"
               @change="handlerGiftsFlag"
             >
@@ -272,7 +297,17 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="退款金额：" prop="refundAmount">
+        <el-form-item v-if="refundForm.refundType === 8" label="退款金额：" prop="refundAmount">
+          <el-select v-if="refundForm.residueFee === 49" v-model="priceDiff" placeholder="">
+            <el-option :key="20" :value="20">49元双周退29双周差价</el-option>
+            <el-option :key="39.1" :value="39.1">49元双周退9.9双周差价</el-option>
+          </el-select>
+          <el-select v-else-if="refundForm.residueFee === 29" v-model="priceDiff" placeholder="">
+            <el-option :key="19.1" :value="19.1">29元双周退9.9双周差价</el-option>
+          </el-select>
+          <span v-else style="color: red; font-size: 16px">此订单不符合退差价规则，如有疑问请联系客服或运营</span>
+        </el-form-item>
+        <el-form-item v-else label="退款金额：" prop="refundAmount">
           <el-input
             v-model="refundAmountComputed"
             disabled
@@ -280,7 +315,16 @@
           ></el-input>
         </el-form-item>
         <el-form-item
-          v-if="refundForm.refundType"
+          v-if="refundForm.refundType === 8"
+          label="退款原因："
+          prop="reason"
+        >
+          <el-radio-group v-model="refundForm.reason">
+            <el-radio label="退课程差价">退课程差价</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item
+          v-else-if="refundForm.refundType"
           label="退款原因："
           prop="reason"
         >
@@ -289,6 +333,7 @@
             <el-radio label="内容">内容</el-radio>
             <el-radio label="销售">销售</el-radio>
             <el-radio label="盒子">盒子</el-radio>
+            <el-radio label="乐器">乐器</el-radio>
             <!-- <el-radio label="其他">其他</el-radio> -->
           </el-radio-group>
         </el-form-item>
@@ -339,6 +384,7 @@
 
 <script>
 // prop 与绑定的form model字段要一致
+import { formatData } from '@/utils/index.js'
 import SearchPhone from '@/components/MSearch/searchItems/searchPhone'
 import uploadFile from '@/utils/upload' // 上传公共方法
 export default {
@@ -417,6 +463,8 @@ export default {
       immediate: true,
       deep: true,
       handler(newValue) {
+        this.refundForm.signTime = '',
+        this.priceDiff = null,
         this.refundForm.isRules = ''
         this.refundForm.businessType = ''
         this.refundForm.payChannel = ''
@@ -433,6 +481,7 @@ export default {
         this.refundForm.imageUrl = ''
         this.refundForm.orderId = ''
         this.refundForm.order = ''
+        this.refundForm.childOrder = ''
         this.refundForm.orderSource = '' // 订单来源
         this.refundForm.orderSourceId = '' // 订单来源id
         this.orderOptions = []
@@ -456,31 +505,81 @@ export default {
     },
     // 关联订单改变~巴拉巴拉
 
-    'refundForm.order': {
+    changeData: {
       immediate: false,
       deep: true,
       async handler(newValue, oldValue) {
+        if (newValue.order === '') {
+          this.sonItem = false
+          return
+        }
+        // 如果母订单改变，执行此逻辑
+        if (newValue.order !== oldValue.order) {
+          this.childOrderOptions = ''
+          this.refundForm.signTime = ''
+          this.refundForm.childOrder = ''
+          newValue.childOrder = ''
+          this.sonItem = false
+        }
         this.isAlipay = false
         this.refundForm.payChannel = '' // 支付渠道
         this.refundForm.refundType = '' // 退款类型
         this.refundForm.orderAmount = '' // 交易金额
         this.refundForm.residueFee = '' // 剩余金额
         this.refundForm.refundAmount = '' // 退款金额(给女测试)
-        const targetItem = this.orderOptions.filter((item) => {
-          return item.outTradeNo === newValue
-        })[0]
-        this.targetList = targetItem
-        console.log(targetItem, '关联订单拿到的数据')
-        this.relationList = this.orderOptions.filter((item) => {
-          if (item.outTradeNo === newValue) {
-            return item
+        let targetItem;
+        // 如果有子订单，执行第一个逻辑
+        if (newValue.childOrder) {
+          targetItem = this.childOrderOptions.filter((item) => {
+            return item.subOutTradeNo === newValue.childOrder
+          })[0]
+          this.targetList = targetItem
+          this.relationList = this.childOrderOptions.filter((item) => {
+            if (item.subOutTradeNo === newValue.childOrder) {
+              return item
+            }
+          })
+          if (targetItem.subOrderType === 1) {
+            this.musical = false
+          } else {
+            this.musical = true
           }
-        })
-        // primary->存起来方便公用
-        this.selectOrder = targetItem
+          // primary->存起来方便公用
+          this.selectOrder = targetItem
+        } else {
+          targetItem = this.orderOptions.filter((item) => {
+            return item.outTradeNo === newValue.order
+          })[0]
+          this.targetList = targetItem
+          console.log(targetItem, '关联订单拿到的数据', newValue)
+          this.relationList = this.orderOptions.filter((item) => {
+            if (item.outTradeNo === newValue.order) {
+              return item
+            }
+          })
+          // primary->存起来方便公用
+          this.selectOrder = targetItem
+        }
         console.info('选择关联订单是我,大家快来公用--', targetItem)
         console.info('所选订单购买时间戳:', Number(this.selectOrder.buytime))
-
+        // 判断是否有子订单
+        if ( targetItem.packagesTags  === 'NEEDORDER' ) {
+          this.$http.RefundApproval.getChildOrder({itemId: targetItem.id})
+          .then(({ payload }) => {
+            this.childOrderOptions = [];
+            this.childOrderOptions = payload.map((item) => {
+              if (item.subOrderType === 1) {
+                item.relationOrder = '课程订单退款 ' + item.subOutTradeNo
+              } else {
+                item.relationOrder = '乐器订单退款 ' + item.subOutTradeNo
+              }
+              return item
+            })
+            console.log(this.childOrderOptions)
+          })
+          this.sonItem = true
+          return
+        }
         // 显示业务类型
         if (targetItem && targetItem.regtype) {
           if (
@@ -501,6 +600,7 @@ export default {
         }
         // 导入订单红色显示(只限体验课)
         if (targetItem && targetItem.regtype === 'EXPERIENCE') {
+          this.exprienceType = targetItem.packagesType == 'EXPERIENCE_ONEWEEK_COURSE' ? 1 : 2
           this.isThird =
             Number(targetItem.importTime) > 0 && targetItem.importTime ? 1 : 0
           console.info(this.isThird)
@@ -511,31 +611,63 @@ export default {
           this.refundForm.residueFee = 0
         } else {
           if (targetItem && targetItem.id) {
-            const {
-              code,
-              payload,
-            } = await this.$http.RefundApproval.getResidueFee({
-              orderId: targetItem.id,
-            }).catch((err) => {
-              console.warn(err)
-              this.$message({
-                message: '该订单剩余金额获取失败',
-                type: 'error',
+            // 子订单的请求
+            if (targetItem.parentOrderId) {
+              const {
+                code,
+                payload,
+              } = await this.$http.RefundApproval.getSubResidueFee({
+                parentOrderId: targetItem.parentOrderId,
+                subOrderId: targetItem.id,
+                type: '1'
+              }).catch((err) => {
+                console.warn(err)
+                this.$message({
+                  message: '该订单剩余金额获取失败',
+                  type: 'error',
+                })
               })
-            })
-            if (!code && payload > 0) {
-              this.refundForm.residueFee = payload
+              if (!code && payload > 0) {
+                this.refundForm.residueFee = payload
+              } else {
+                this.$message({
+                  message: '该订单剩余金额获取失败或为0',
+                  type: 'warning',
+                })
+                // this.onCancel('refundForm')
+                setTimeout(() => {
+                  location.reload()
+                }, 4000)
+                return
+              }
             } else {
-              this.$message({
-                message: '该订单剩余金额获取失败或为0',
-                type: 'warning',
+              const {
+                code,
+                payload,
+              } = await this.$http.RefundApproval.getResidueFee({
+                orderId: targetItem.id,
+              }).catch((err) => {
+                console.warn(err)
+                this.$message({
+                  message: '该订单剩余金额获取失败',
+                  type: 'error',
+                })
               })
-              // this.onCancel('refundForm')
-              setTimeout(() => {
-                location.reload()
-              }, 4000)
-              return
-            }
+              if (!code && payload > 0) {
+                this.refundForm.residueFee = payload
+              } else {
+                this.$message({
+                  message: '该订单剩余金额获取失败或为0',
+                  type: 'warning',
+                })
+                // this.onCancel('refundForm')
+                setTimeout(() => {
+                  location.reload()
+                }, 4000)
+                return
+              }
+            }  
+            
 
             if (targetItem.regtype === 'TICKET500') {
               const {
@@ -554,7 +686,7 @@ export default {
         }
         if (targetItem && targetItem.id) {
           // 获取关单赠品列表
-          this.$http.Approval.findOrderGiftInfo(targetItem.id).then((res) => {
+          this.$http.Approval.findOrderGiftInfo(targetItem.parentOrderId || targetItem.id).then((res) => {
             this.productData = res.payload.itemInfoModelList
             this.giftsPrice = +res.payload.productPrice
           })
@@ -570,7 +702,9 @@ export default {
             code,
             payload: { isRefundStatus },
           } = await this.$http.RefundApproval.getBackStatus({
-            orderId: targetItem.id,
+            // 通过targetItem.parentOrderId来判断是否是子订单
+            orderId: targetItem.parentOrderId || targetItem.id,
+            subOrderId: targetItem.parentOrderId ? targetItem.id : 0,
           }).catch((err) => {
             console.warn(err)
             this.$message({
@@ -619,7 +753,8 @@ export default {
           const {
             payload: { remainingWeek, reduceWeek },
           } = await this.$http.RefundApproval.getPeriod({
-            orderNo: targetItem.id,
+            // 通过targetItem.parentOrderId来判断是否是子订单
+            orderNo: targetItem.parentOrderId ? targetItem.parentOrderId : targetItem.id,
           }).catch((err) => {
             console.warn(err)
             this.$message({
@@ -627,7 +762,8 @@ export default {
               type: 'error',
             })
           })
-          if (remainingWeek) {
+          if (targetItem.subOrderType === 2 || remainingWeek) {
+            console.log(1111)
             this.pureWeekS = remainingWeek
             this.pureWeekY = reduceWeek
             console.info(
@@ -638,6 +774,10 @@ export default {
               message: '系统课剩余信息未获取或为0,无法计算退款',
               type: 'warning',
             })
+            setTimeout(() => {
+                  location.reload()
+            }, 4000)
+            return
           }
         }
         // 显示订单金额
@@ -651,9 +791,9 @@ export default {
         }
         // 拿到选中订单的id,取支付渠道
         if (targetItem && targetItem.id) {
-          this.refundForm.orderId = targetItem.id // 存oid給iphone
+          this.refundForm.orderId = targetItem.parentOrderId || targetItem.id // 存oid給iphone
           this.$http.RefundApproval.getPaymentPay(
-            JSON.stringify({ oid: targetItem.id, status: '2' })
+            JSON.stringify({ oid: targetItem.parentOrderId || targetItem.id, status: '2' })
             // 查询条件:status-2完成状态;type-1收入
           )
             .then(({ data: { PaymentPay } }) => {
@@ -687,6 +827,20 @@ export default {
               })
             })
         }
+        if(targetItem && targetItem.parentOrderId && targetItem.subOrderType === 2) {
+          this.$http.Express.getOrderSignTime(
+            { orderId: targetItem.parentOrderId, producType: targetItem.packageProductType}
+            ).then(({ payload }) => {
+              if (payload == 0) {
+                this.refundForm.signTime = '--'
+              }
+              else {
+                this.refundForm.signTime = formatData(payload, 's')
+              }
+            })
+        } else {
+          this.refundForm.signTime = ''
+        }
       },
     },
     // 退款类型改变
@@ -694,6 +848,7 @@ export default {
       immediate: true,
       deep: true,
       async handler(newValue) {
+        this.jsonDate3.boxAble = false
         // 初始就触发,执行前确认关联订单已选择
         if (this.selectOrder && Object.keys(this.selectOrder).length) {
           // newValue:0 选中优惠券时-获取优惠券列表
@@ -912,7 +1067,29 @@ export default {
             }
           } else if (newValue === 6) {
             this.refundForm.refundAmount = this.refundForm.residueFee
-          }
+          } else if (newValue === 7) {
+            this.refundForm.refundAmount = ''
+            if (this.refundForm.residueFee && this.refundForm.residueFee > 0) {
+              this.refundForm.refundAmount = this.refundForm.residueFee
+              this.refundForm.refundType = 7
+            } else {
+              this.$message({
+                message:
+                  '退款金额不满足条件',
+                type: 'warning'
+              })
+              // this.onCancel('refundForm')
+              setTimeout(() => {
+                location.reload()
+              }, 4000)
+            }
+          } else if (newValue === 8) {
+            // 改9.9
+            if(this.refundForm.residueFee == 9.9) {
+              this.priceDiff = 0
+              // console.log(this.refundAmountComputed, 111111)
+            }
+          } 
           // 补偿
           // else if (newValue === 3) {
           //   this.refundForm.refundAmount = '' // 退款额
@@ -969,7 +1146,9 @@ export default {
     giftsFlag: {
       immediate: true,
       handler(newValue) {
+        // 关单赠品改价格
         this.fontPrice = newValue ? this.giftsPrice : 0
+        // this.fontPrice = newValue ? 0.01 : 0
       },
     },
   },
@@ -1011,7 +1190,11 @@ export default {
       }
     }
     return {
+      exprienceType: 0, //区分单双周
+      priceDiff: null,
       // 是否扣除赠品
+      musical: false, //判断是否是乐器硬件退款
+      sonItem: false, //是否显示关联订单的子订单
       giftsFlag: 0,
       giftsPrice: 0,
       targetList: null,
@@ -1081,9 +1264,11 @@ export default {
       },
       relationList: [], // 关联订单
       refundForm: {
+        signTime: '', //订单签收时间
         isRules: '', // 该订单是否符合规则
         name: '', // 用户uid
         order: '', // 订单号
+        childOrder: '', // 只有系统课才有的子订单号
         businessType: '', // 业务类型
         payChannel: '',
         accountName: '',
@@ -1117,6 +1302,7 @@ export default {
       onePrice: '', // 关单赠品,次月课程,随材盒子 用到的月单价
 
       orderOptions: [], // 关联订单项
+      childOrderOptions: [], //子关联订单项
       couponTypeOptions: [], // 优惠券项
       selectOrder: '', // 公用选中的订单项
       isAlipay: false,
@@ -1209,7 +1395,9 @@ export default {
           // 不保留次月
           return (
             this.refundForm.refundAmount -
+            // 改价格
             ((this.jsonDate3.deductMaterial === 1 ? 100 : 0) +
+            // ((this.jsonDate3.deductMaterial === 1 ? 0.01 : 0) +
               this.fontPrice +
               instrument)
           )
@@ -1217,11 +1405,19 @@ export default {
           console.warn('注意！这是体验课,无需选择是否保留次月')
           return this.refundForm.refundAmount
         }
-      } else {
+      } else if(this.refundForm.refundType === 8) {
+        return this.priceDiff;
+      }
+      else {
         // 退款类型-其他
         return this.refundForm.refundAmount
       }
     },
+    // 监听两个数据的变化
+    changeData() {
+      const { order, childOrder } = this.refundForm
+      return {order, childOrder}
+    }
   },
   methods: {
     // 切换是否扣除赠品
@@ -1245,12 +1441,10 @@ export default {
       if (r === 1) {
         this.jsonDate3.boxAble = true
         this.jsonDate3.deductMaterial = 0
-        this.giftsFlag = 1
       } else if (r === 0) {
         // 不保留 随材盒子自由选择
         this.jsonDate3.boxAble = false
         this.jsonDate3.deductMaterial = ''
-        this.giftsFlag = ''
       }
     },
 
@@ -1322,6 +1516,13 @@ export default {
     onSubmit(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          // 改9.9
+          if(this.refundForm.refundType === 8) { //退差价
+            if(this.refundForm.residueFee !== 29 && this.refundForm.residueFee !== 49) {
+              this.$message.error('此订单不符合退差价规则，如有疑问请联系客服或运营')
+              return;
+            }
+          }
           const params1 = {
             refundRule:
               this.refundForm.isRules === '符合'
@@ -1329,14 +1530,17 @@ export default {
                 : this.refundForm.isRules === '不符合'
                 ? 1
                 : null, // 符合规则
+            subOrderId: this.selectOrder.parentOrderId ? this.selectOrder.id : 0,    
+            subOrderType: this.selectOrder.subOrderType || 0,   
             channelOuterName: this.refundForm.orderSource, // 第三方导入订单来源
+            fromSource: 'boss',
             channelId: this.refundForm.orderSourceId, // 第三方导入订单来源id
             isImport: this.isThird, // 1是0否
             userId: this.refundForm.name, // userId(选择用户取)
             customerPhone: this.refundForm.cellPhone, // 客户手机(选择用户取)
             orderId: this.refundForm.orderId, // 订单id(关联订单取)
             outTradeNo: this.refundForm.order, // 订单号(关联订单取)
-            productMsg: this.selectOrder.relationOrder.split('(^_^)')[1], // 商品信息(关联订单取)
+            productMsg: this.selectOrder.packageProductName || this.selectOrder.relationOrder.split('(^_^)')[1], // 商品信息(关联订单取)
             regType: this.refundForm.businessType, // 业务类型
             channel: this.refundForm.payChannel, // 支付渠道
             // payeeName: this.refundForm.accountName, // 支付宝收款人姓名

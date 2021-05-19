@@ -240,5 +240,14 @@ export default {
    */
   getRefundtypeById(params) {
     return axios.get(`/api/b/v1/backend/refund/flow/get`, params)
-  }
+  },
+   /**
+   * 通过orderId、producType获取订单签收时间
+   */
+   getOrderSignTime(query) {
+    return axios.get(
+      '/api/ex/v1/express/getSigningTimeByOrderIdAndType',
+      query
+    )
+  },
 }
