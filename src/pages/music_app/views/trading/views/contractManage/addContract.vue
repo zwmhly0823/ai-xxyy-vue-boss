@@ -321,6 +321,18 @@ export default {
       // 前端写死套餐，变更需要同时更改 ../components/contractDrawer.vue 中set_mealList
       set_mealList: [
         {
+          packageName: '49元单周体验课',
+          // 双周体验课
+          packageId: '500',
+          classHour: '2',
+          contractPrice: undefined,
+          settlePrice: undefined,
+          orderPrice: '',
+          isDisabled: true,
+          price: '49',
+          radioSel:'49'
+        },
+        {
           packageName: '29元单周体验课',
           // 双周体验课
           packageId: '502',
