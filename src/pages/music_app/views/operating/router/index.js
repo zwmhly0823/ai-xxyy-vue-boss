@@ -245,6 +245,16 @@ const operatingRoutes = [{
             import ('../views/reviewManagement/components/userResult.vue')
     },
     {
+        path: '/manageChangeClass',
+        name: 'manageChangeClass',
+        meta: {
+            title: '体验课调班',
+            keepAlive: false
+        },
+        component: () =>
+            import ('../views/manageChangeClass/index.vue')
+    },
+    {
         path: '/labelManage',
         name: 'labelManage',
         meta: {
@@ -265,6 +275,36 @@ const operatingRoutes = [{
             import ('../views/pushConfig/index.vue')
     },
 
+    {
+        path: '/problem',
+        name: 'problem',
+        meta: {
+            title: '问卷管理',
+            keepAlive: false
+        },
+        component: () =>
+            import ('../views/problem/index.vue')
+    },
+    {
+        path: '/issueBearCoins',
+        name: 'issueBearCoins',
+        meta: {
+            title: '发放小熊币',
+            keepAlive: false
+        },
+        component: () =>
+            import ('../views/issueBearCoins/index.vue')
+    },
+    {
+        path: '/recommend',
+        name: 'recommend',
+        meta: {
+            title: '转介绍截图审批',
+            keepAlive: false
+        },
+        component: () =>
+            import ('../views/recommend/changeRecommend.vue')
+    },
     {
         path: '/problem',
         name: 'problem',
