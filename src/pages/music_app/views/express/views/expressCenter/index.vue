@@ -40,6 +40,7 @@
           <toggle
             @result="getStatus"
             :tab="activeName"
+            :seachTotal="seachTotal"
             :regtype="regtype"
             :source_type="source_type"
           />
@@ -55,6 +56,7 @@
                 :source_type="source_type"
                 :hideCol="hideCol"
                 :exType="2"
+                @getTotal="getTotal"
               />
             </div>
           </el-scrollbar>
@@ -78,6 +80,7 @@
           <toggle
             @result="getStatus"
             :tab="activeName"
+            :seachTotal="seachTotal"
             :regtype="regtype"
             :source_type="source_type"
           />
@@ -92,6 +95,7 @@
                 :regtype="regtype"
                 :source_type="source_type"
                 :hideCol="hideCol"
+                @getTotal="getTotal"
                 :exType="1"
               />
             </div>
@@ -115,6 +119,7 @@
           <toggle
             @result="getStatus"
             :tab="activeName"
+            :seachTotal="seachTotal"
             :regtype="regtypeSys"
             :source_type="source_type"
           />
@@ -129,6 +134,7 @@
                 :regtype="regtypeSys"
                 :isType="true"
                 :source_type="source_type"
+                @getTotal="getTotal"
                 :hideCol="allExpressHideCol"
               />
             </div>
@@ -149,6 +155,7 @@
           <toggle
             @result="getStatus"
             :tab="activeName"
+            :seachTotal="seachTotal"
             :regtype="`0,${regtypeActivity}`"
             :source_type="source_type"
             :hideToggleBtn="allHideToggleBtn"
@@ -161,6 +168,7 @@
               <rightDown
                 :search="searchActivity"
                 :sortItem="sortItem"
+                @getTotal="getTotal"
                 :regtype="`0,${regtypeActivity}`"
                 :source_type="
                   (searchActivity &&
@@ -190,6 +198,7 @@
           />
           <toggle
             @result="getStatus"
+            :seachTotal="seachTotal"
             :hideToggleBtn="hideToggleBtn"
             :tab="activeName"
             :regtype="`0,${regtype},${regtypeSys},${regtypeActivity}`"
@@ -203,6 +212,7 @@
               <rightDown
                 :search="searchReplenish"
                 :sortItem="sortItem"
+                @getTotal="getTotal"
                 :regtype="`0,${regtype},${regtypeSys},${regtypeActivity}`"
                 :source_type="'5'"
                 :hideCol="replenishHideCol"
@@ -447,6 +457,7 @@ export default {
       allExpressHideSearchItemActivity,
       allExpressHideSearchItemSystem,
       replenishHideSearchItem,
+      seachTotal: 0,
     }
   },
   mounted() {
@@ -761,7 +772,10 @@ export default {
       this.sortItem = val
       this.handleHideCol(val)
     },
-     // 展示失败原因
+    getTotal(data) {
+      this.seachTotal = data
+    },
+    // 展示失败原因
     handleHideCol(val) {
       if (
         (val.id === '6' && val.center_express_id?.gt === 0) ||

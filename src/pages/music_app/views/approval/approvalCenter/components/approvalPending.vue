@@ -907,7 +907,7 @@
       <p class="adjust-dialog-p">
         请确认是否{{
           adjustDialogType === 'reject'
-            ? '拒123123123绝'
+            ? '拒绝'
             : adjustDialogType === 'pass'
             ? '同意'
             : ''
