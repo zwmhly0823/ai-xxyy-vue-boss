@@ -153,7 +153,7 @@
             name="pay_teacher_id"
             class="margin_l10"
           />
-          <search-stage
+          <search-stageEC
             :teacher-id="teacherscope_trial || teacherscope"
             class="margin_l10"
             name="trial_stage"
@@ -207,6 +207,7 @@
             class="margin_l10"
             @result="selectSchedule"
             name="stage"
+            type="1"
             placeholder="全部系统课排期"
           />
           <hardLevel
@@ -285,6 +286,7 @@ import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 // import SearchTrialTeamName from '@/components/MSearch/searchItems/searchTrialTeamName'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
+import SearchStageEC from '@/components/MSearch/searchItems/searchStageEC'
 import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
 import { isToss } from '@/utils/index'
@@ -317,6 +319,7 @@ export default {
     orderAttr,
     SearchPhoneAndUsername,
     SimpleSelect,
+    SearchStageEC
   },
 
   data() {

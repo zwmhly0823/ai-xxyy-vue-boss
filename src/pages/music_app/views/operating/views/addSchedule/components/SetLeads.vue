@@ -113,9 +113,9 @@
       <el-button size="small" type="primary" @click="stepOperate(1)">
         下一步
       </el-button>
-      <el-button size="small" type="info" @click="skip">
+      <!-- <el-button size="small" type="info" @click="skip">
         跳过此步
-      </el-button>
+      </el-button> -->
     </div>
     <!-- 导入数据模态框 -->
     <el-dialog

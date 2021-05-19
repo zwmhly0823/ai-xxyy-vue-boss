@@ -50,7 +50,7 @@ export default {
     // 1-系统课，0-体验课
     type: {
       type: String,
-      default: '1',
+      default: '0',
     },
     // 体验课类型 2是双周 1是单周
     exType: {
@@ -114,16 +114,6 @@ export default {
         this.getData()
       }
     },
-    exType(val) {
-      if(this.category.length>0) {
-        this.params = this.type
-      }else {
-        this.params = this.type
-      }
-      console.log(this.params,"this.params");
-      this.params = this.exType == 2 ? 0 : 2
-      this.getData()
-    },
     record(val) {
       this.stage = val
     },
@@ -132,7 +122,6 @@ export default {
         this.$emit('result', '')
         this.stage = ''
       }
-      console.log(val, '123123')
     },
     teacherId(val) {
       this.stage = ''
@@ -152,7 +141,7 @@ export default {
         {
           subject: this.$store.getters.subjects.subjectCode,
         },
-        { type: `${this.category.length == 0 ? this.params : this.category}` }
+        { type: `${this.type}` }
       )
 
       const q = JSON.stringify(query)
@@ -185,13 +174,16 @@ export default {
       if (this.type) {
         queryParams.bool.must.push({
           term: {
-            type: `${this.category.length == 0 ? this.params : this.category}`,
+            type: this.type,
           },
         })
       }
       if (this.record.length > 0) {
         console.log(this.period)
         this.period.push(...this.record)
+      }
+      if (this.period.length > 0) {
+        // queryParams.bool.must.push({ terms: { period: this.period } })
       }
       const q = JSON.stringify(queryParams)
       const sort = `{"id":"desc"}`
