@@ -251,7 +251,6 @@
           </el-form-item>
           <el-form-item label="是否扣除赠品金额">
             <el-radio-group
-              :disabled="jsonDate3.boxAble"
               v-model="giftsFlag"
               @change="handlerGiftsFlag"
             >
@@ -299,12 +298,12 @@
           </el-select>
         </el-form-item>
         <el-form-item v-if="refundForm.refundType === 8" label="退款金额：" prop="refundAmount">
-          <el-select v-if="refundForm.refundAmount === 0.04" v-model="priceDiff" placeholder="">
-            <el-option :key="20" :value="0.02">49元双周退29双周差价</el-option>
-            <el-option :key="39.1" :value="0.03">49元双周退9.9双周差价</el-option>
+          <el-select v-if="refundForm.residueFee === 49" v-model="priceDiff" placeholder="">
+            <el-option :key="20" :value="20">49元双周退29双周差价</el-option>
+            <el-option :key="39.1" :value="39.1">49元双周退9.9双周差价</el-option>
           </el-select>
-          <el-select v-else-if="refundForm.refundAmount === 0.02" v-model="priceDiff" placeholder="">
-            <el-option :key="19.1" :value="0.01">29元双周退9.9双周差价</el-option>
+          <el-select v-else-if="refundForm.residueFee === 29" v-model="priceDiff" placeholder="">
+            <el-option :key="19.1" :value="19.1">29元双周退9.9双周差价</el-option>
           </el-select>
           <span v-else style="color: red; font-size: 16px">此订单不符合退差价规则，如有疑问请联系客服或运营</span>
         </el-form-item>
@@ -763,7 +762,8 @@ export default {
               type: 'error',
             })
           })
-          if (remainingWeek) {
+          if (targetItem.subOrderType === 2 || remainingWeek) {
+            console.log(1111)
             this.pureWeekS = remainingWeek
             this.pureWeekY = reduceWeek
             console.info(
@@ -848,6 +848,7 @@ export default {
       immediate: true,
       deep: true,
       async handler(newValue) {
+        this.jsonDate3.boxAble = false
         // 初始就触发,执行前确认关联订单已选择
         if (this.selectOrder && Object.keys(this.selectOrder).length) {
           // newValue:0 选中优惠券时-获取优惠券列表
@@ -1084,9 +1085,9 @@ export default {
             }
           } else if (newValue === 8) {
             // 改9.9
-            if(this.refundForm.residueFee == 0.01) {
+            if(this.refundForm.residueFee == 9.9) {
               this.priceDiff = 0
-              console.log(this.refundAmountComputed, 111111)
+              // console.log(this.refundAmountComputed, 111111)
             }
           } 
           // 补偿
@@ -1404,8 +1405,7 @@ export default {
           console.warn('注意！这是体验课,无需选择是否保留次月')
           return this.refundForm.refundAmount
         }
-      }
-      else if(this.refundForm.refundType === 8) {
+      } else if(this.refundForm.refundType === 8) {
         return this.priceDiff;
       }
       else {
@@ -1441,12 +1441,10 @@ export default {
       if (r === 1) {
         this.jsonDate3.boxAble = true
         this.jsonDate3.deductMaterial = 0
-        this.giftsFlag = 1
       } else if (r === 0) {
         // 不保留 随材盒子自由选择
         this.jsonDate3.boxAble = false
         this.jsonDate3.deductMaterial = ''
-        this.giftsFlag = ''
       }
     },
 
@@ -1520,7 +1518,7 @@ export default {
         if (valid) {
           // 改9.9
           if(this.refundForm.refundType === 8) { //退差价
-            if(this.refundForm.refundAmount !== 0.04 && this.refundForm.refundAmount !== 0.02) {
+            if(this.refundForm.residueFee !== 29 && this.refundForm.residueFee !== 49) {
               this.$message.error('此订单不符合退差价规则，如有疑问请联系客服或运营')
               return;
             }
@@ -1533,8 +1531,7 @@ export default {
                 ? 1
                 : null, // 符合规则
             subOrderId: this.selectOrder.parentOrderId ? this.selectOrder.id : 0,    
-            subOrderType: this.selectOrder.subOrderType || 0,
-            fromSource: 'boss',    
+            subOrderType: this.selectOrder.subOrderType || 0,   
             channelOuterName: this.refundForm.orderSource, // 第三方导入订单来源
             fromSource: 'boss',
             channelId: this.refundForm.orderSourceId, // 第三方导入订单来源id
