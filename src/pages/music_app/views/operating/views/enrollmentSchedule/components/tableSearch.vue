@@ -32,6 +32,7 @@
       @result="(data) => changeEmit(data, 'periods')"
       :type="calcType"
       name="periods"
+      :isNew="false"
       placeholder="体验课排期"
     />
     <slot name="addChannel"></slot>

@@ -48,6 +48,7 @@
         :type="calcType"
         :recordPeriod="periodInfo"
         :isMultiple="false"
+        :isNew="true"
         name="period"
         @result="changePeriod"
       />

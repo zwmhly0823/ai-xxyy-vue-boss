@@ -74,6 +74,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    isNew: {
+      type: Boolean,
+      default: false,
+    },
     recordPeriod: {
       type: Object,
       default: () => {},
@@ -121,13 +125,30 @@ export default {
   methods: {
     getData(queryString = '') {
       this.loading = true
-      const queryParams = {
-        bool: {
-          must: [
-            { wildcard: { 'period_name.keyword': `*${queryString}*` } },
-            { term: { subject: this.$store.getters.subjects.subjectCode } },
-          ],
-        },
+      let queryParams = {}
+      if (!this.isNew) {
+        queryParams = {
+          bool: {
+            must: [
+              { wildcard: { 'period_name.keyword': `*${queryString}*` } },
+              { term: { subject: this.$store.getters.subjects.subjectCode } },
+            ],
+          },
+        }
+      } else {
+        queryParams = {
+          bool: {
+            must: [
+              { wildcard: { 'period_name.keyword': `*${queryString}*` } },
+              { term: { subject: this.$store.getters.subjects.subjectCode } },
+              {
+                terms: {
+                  status: ['0', '1', '2'],
+                },
+              },
+            ],
+          },
+        }
       }
       if (this.type) {
         queryParams.bool.must.push({
