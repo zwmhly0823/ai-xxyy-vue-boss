@@ -92,10 +92,13 @@
             <el-radio label="STORE">商城礼品</el-radio>
             <el-radio label="RECOMMEND">推荐有礼</el-radio>
             <el-radio label="INVITATION">邀请有奖</el-radio>
+            <el-radio label="ARTPLAYPRO">Artplay X1 Pro</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item
-          v-if="formRepair.type == 'MATERIALS'"
+          v-if="
+            formRepair.type == 'MATERIALS' || formRepair.type === 'ARTPLAYPRO'
+          "
           label="补发方式"
           prop="mode"
         >
@@ -113,7 +116,10 @@
             <!-- 课程-难度-级别 -->
             <div
               class="reapirProduct-detail"
-              v-if="formRepair.type == 'MATERIALS'"
+              v-if="
+                formRepair.type == 'MATERIALS' &&
+                formRepair.type !== 'ARTPLAYPRO'
+              "
             >
               <package
                 @result="getPackageId"
@@ -163,34 +169,59 @@
             <el-radio label="TRANSPORT_BAD">运输损坏</el-radio>
             <template v-show="formRepair.type === 'MATERIALS'">
               <el-radio
-                v-show="formRepair.mode === 'DEFAULT'"
+                v-show="
+                  formRepair.mode === 'DEFAULT' &&
+                  formRepair.type !== 'ARTPLAYPRO'
+                "
                 label="MULTI_SELF_PAY"
               >
                 自费补发
               </el-radio>
               <el-radio
-                v-show="formRepair.mode === 'DEFAULT'"
+                v-show="
+                  formRepair.mode === 'DEFAULT' &&
+                  formRepair.type !== 'ARTPLAYPRO'
+                "
                 label="MULTI_LOSS"
               >
                 丢件补发
               </el-radio>
               <el-radio
-                v-show="formRepair.mode === 'DEFAULT'"
+                v-show="
+                  formRepair.mode === 'DEFAULT' &&
+                  formRepair.type !== 'ARTPLAYPRO'
+                "
                 label="MULTI_TIMEOUT_RETURN"
               >
                 超时退回
               </el-radio>
               <el-radio
-                v-show="formRepair.mode === 'DEFAULT'"
+                v-show="
+                  formRepair.mode === 'DEFAULT' &&
+                  formRepair.type !== 'ARTPLAYPRO'
+                "
                 label="MULTI_ADJUSTMENT_SUP"
               >
                 调级补发
               </el-radio>
               <el-radio
-                v-show="formRepair.mode === 'SINGLE'"
+                v-show="
+                  formRepair.mode === 'SINGLE' &&
+                  formRepair.type !== 'ARTPLAYPRO'
+                "
                 label="SINGLE_QUALITY"
               >
                 产品质量问题
+              </el-radio>
+              <!-- 补发airplay 选项 -->
+              <el-radio
+                v-show="
+                  formRepair.mode === 'DEFAULT' &&
+                  formRepair.type === 'ARTPLAYPRO'
+                "
+                label="SINGLE_QUALITY"
+              >
+                寄回维修/换货
               </el-radio>
               <!-- <el-radio
                 v-show="formRepair.mode === 'SINGLE'"
@@ -201,6 +232,21 @@
             </template>
             <el-radio label="OTHER">其他</el-radio>
           </el-radio-group>
+        </el-form-item>
+        <el-form-item
+          v-if="formRepair.type == 'ARTPLAYPRO'"
+          label="寄回单号"
+          class="address-recept"
+        >
+          <el-input v-model="formRepair.currentLesson"> </el-input>
+        </el-form-item>
+
+        <el-form-item
+          label="SN号"
+          v-if="formRepair.type == 'ARTPLAYPRO'"
+          class="address-recept"
+        >
+          <el-input v-model="formRepair.currentLesson"> </el-input>
         </el-form-item>
         <el-form-item label="补发货说明" prop="reissueMsg">
           <el-input
@@ -983,7 +1029,10 @@ export default {
 
             break
           case 'SINGLE':
-            if (this.formRepair.packagesType === 'EXPERIENCE_COURSE' || this.formRepair.packagesType === 'TESTCOURSE_SINGLE') {
+            if (
+              this.formRepair.packagesType === 'EXPERIENCE_COURSE' ||
+              this.formRepair.packagesType === 'TESTCOURSE_SINGLE'
+            ) {
               this.formRepair.level = 'LEVEL1'
             }
             if (this.formRepair.sup && this.formRepair.packagesType) {

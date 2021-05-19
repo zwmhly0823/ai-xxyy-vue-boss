@@ -51,6 +51,10 @@ export default {
         {
           id: '4,5,6',
           text: '活动商品补发'
+        },
+        {
+          id:'7',
+          text:'硬件补发'
         }
       ]
     }
