@@ -319,5 +319,5 @@ export default {
             `/api/c/v1/contract/modifyContract`,
             JSON.stringify(params)
         )
-    },
+    }
 }
