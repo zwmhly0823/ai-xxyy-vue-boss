@@ -45,7 +45,8 @@ export default [
     render(h, data, row) {
       return h(BaseUserInfo, {
         props: {
-          user: row.userInfo
+          user: row.userInfo,
+          order: row.orderInfo,
         }
       })
     }
