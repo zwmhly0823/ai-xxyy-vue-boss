@@ -11,7 +11,7 @@
 // teacherInfo = JSON.parse(teacher) || {} // dutyId: 1-体验课老师， 2-系统课老师
 
 import {
-  getAppSubject
+    getAppSubject
 } from '@/utils/index'
 import musicApp from './music_app'
 
@@ -20,13 +20,13 @@ import musicApp from './music_app'
  */
 const staff = JSON.parse(localStorage.getItem('staff'))
 if (staff === null) {
-  window.location.replace('/login')
+    window.location.replace('/login')
 }
 
 const subject = getAppSubject(false)
 var menu = null
 if (subject === 'music_app') {
-  menu = musicApp
+    menu = musicApp
 }
 
 export default menu

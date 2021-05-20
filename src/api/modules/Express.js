@@ -236,12 +236,6 @@ export default {
         return axios.get(`/api/ex/v1/express/getAddressById?addressId=${params}`)
     },
     /**
-     * 通过uid、oid获取 退费类型
-     */
-    getRefundtypeById(params) {
-        return axios.get(`/api/b/v1/backend/refund/flow/get`, params)
-    },
-    /**
      * 通过orderId、producType获取订单签收时间
      */
     getOrderSignTime(query) {
@@ -250,11 +244,80 @@ export default {
             query
         )
     },
-    getChildrenOrderList(params) {
-        return axios.post(`api/o/v1/orderSub/query/orderSubListByParentOrderId`, params)
+    /**
+     * 通过uid、oid获取 退费类型
+     */
+    getRefundtypeById(params) {
+        return axios.get(`/api/b/v1/backend/refund/flow/get`, params)
     },
-    getHardwareProductList(query) {
-        return axios.get(`api/p/v1/product/getHardwareProductList?subject=MUSIC_APP&courseDifficulty=S3&productType=HARDWARE_MATERIALS_PARTS&courseType=SYSTEM_COURSE&courseLevel=LEVEL1&proVersion=v1.0`)
+    saveAndUpdatecontract(params) {
+        return axios.post(
+            `/api/c/v1/contract/createContract`,
+            JSON.stringify(params)
+        )
+    },
+    /**
+     * 合同管理 列表查询
+     */
+    getContracts(params, pages) {
+        return axios.post(
+            `/api/c/v1/contract/getContracts?name=${params.name}&body=${params.body}&contractType=${params.contractType}&beginTime=${params.beginTime}&endTime=${params.endTime}&page=${pages.page}&size=${pages.size}`
+        )
+    },
+    /**
+     * 通过id查询合同详情
+     */
+    getContractById(params) {
+        return axios.get(`/api/c/v1/contract/getContractDetail?id=${params}`)
+    },
+    /**
+     * 通过id查询合同套餐详情
+     */
+    getOperationRecordById(params) {
+        return axios.get(
+            `/api/c/v1/contract/getContractPriceDetails?contractId=${params}`
+        )
+    },
+    /**
+     * 删除合同
+     */
+    deleteContractById(params) {
+        return axios.get(`/api/c/v1/contract/deleteContract?id=${params}`)
+    },
+    /**
+     * 删除合同套餐
+     */
+    deleteContractDetailById(params) {
+        return axios.get(
+            // `/api/c/v1/contract/deleteContractDetail?contractDetailId=${params}`
+            `/api/c/v1/contract/stopContractPriceDetail?id=${params}`
+        )
+    },
+    /**
+     * 合同配置套餐价格
+     */
+    createContractPrice(params) {
+        return axios.post(`/api/c/v1/contract/createContractPriceDetails`, params)
+    },
+    /**
+     * 合同配置套餐的创建时间 ，获取数据校验时间段
+     */
+    getCheckPriceDataById(params) {
+        return axios.post(`/api/c/v1/contract/checkPriceData?contractId=${params}`)
+    },
+    /**
+     * 获取合同类型
+     */
+    getContractInfo() {
+        return axios.get(`/api/c/v1/contract/contractInfo`)
+    },
+    /**
+     * 通过id修改合同
+     */
+    getmodifyContractById(params) {
+        return axios.put(
+            `/api/c/v1/contract/modifyContract`,
+            JSON.stringify(params)
+        )
     }
-
 }

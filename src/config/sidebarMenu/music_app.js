@@ -157,7 +157,15 @@ let bearArt = [
                     module,
                     show: true
                 }
-            }
+            }, {
+                path: '/contractManage',
+                name: 'contractManage',
+                meta: {
+                    title: '合同管理',
+                    // module: 'operating'
+                    module
+                }
+            },
         ]
     },
     {

@@ -50,109 +50,73 @@ import SystemMenu from './modules/SystemMenu.js' // 菜单资源
 import SystemRole from './modules/SystemRole.js' // 角色管理
 import liveBroadcast from './modules/liveBroadcast'
 import ReviewManage from './modules/ReviewManage'
-export default Object.assign(
-  {},
-  // { writeApp },
-  { Complaint },
-  { SystemMenu },
-  { SystemRole },
-  {
-    Base
-  },
-  {
-    Login
-  },
-  {
-    Order
-  },
-  {
-    User
-  },
-  {
-    Team
-  },
-  {
-    StudentTerm
-  },
-  {
-    Express
-  },
-  {
-    Permission
-  },
-  {
-    Department
-  },
-  {
-    Product
-  },
-  {
-    Teacher
-  },
-  {
-    Weixin
-  },
-  {
-    Operating
-  },
-  {
-    Statistics
-  },
-  {
-    RiviewCourse
-  },
-  {
-    DownloadExcel
-  },
-  {
-    Backend
-  },
-  {
-    RefundApproval
-  },
-  {
-    Approval
-  },
-  {
-    Finance
-  },
-  {
-    WorkerHandover
-  },
-  {
-    Staff
-  },
-  {
-    NoticeCenter
-  },
-  {
-    Community
-  },
-  {
-    Outbound
-  },
-  {
-    Marketing
-  },
-  {
-    LearnRecord
-  },
-  {
-    Setting
-  },
-  {
-    TeamV2
-  },
-  {
-    Active
-  },
-  {
-    TeamV3
-  },
-  {
-    ReviewManage
-  },
-  {
-    liveBroadcast
-  }
+export default Object.assign({},
+    // { writeApp },
+    { Complaint }, { SystemMenu }, { SystemRole }, {
+        Base
+    }, {
+        Login
+    }, {
+        Order
+    }, {
+        User
+    }, {
+        Team
+    }, {
+        StudentTerm
+    }, {
+        Express
+    }, {
+        Permission
+    }, {
+        Department
+    }, {
+        Product
+    }, {
+        Teacher
+    }, {
+        Weixin
+    }, {
+        Operating
+    }, {
+        Statistics
+    }, {
+        RiviewCourse
+    }, {
+        DownloadExcel
+    }, {
+        Backend
+    }, {
+        RefundApproval
+    }, {
+        Approval
+    }, {
+        Finance
+    }, {
+        WorkerHandover
+    }, {
+        Staff
+    }, {
+        NoticeCenter
+    }, {
+        Community
+    }, {
+        Outbound
+    }, {
+        Marketing
+    }, {
+        LearnRecord
+    }, {
+        Setting
+    }, {
+        TeamV2
+    }, {
+        Active
+    }, {
+        TeamV3
+    }, {
+        ReviewManage
+    }, {
+        liveBroadcast
+    }
 )
