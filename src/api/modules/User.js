@@ -1046,6 +1046,7 @@ export default {
              code
              value
            }
+           bear_amount
         }
       }`
     })

@@ -522,6 +522,17 @@ export default {
     dosomething() {},
     handleSearch(search) {
       console.log(search, 'search==')
+      // if (this.exType == 2) {
+      //   // 双周
+      //   search.packages_id = [500, 503, 505, 508]
+      // }
+      // if (this.exType == 1) {
+      //   // 单周
+      //   search.packages_id = [502, 506, 507]
+      // }
+      // if (!this.exType) {
+      //   delete search.packages_id
+      // }
       this.searchIn = deepClone(search)
       this.searchIn.forEach((item) => {
         if (item.terms && (item.terms.sup || item.terms.product_type)) {
