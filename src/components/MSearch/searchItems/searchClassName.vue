@@ -59,7 +59,7 @@ export default {
   watch: {
     teamName(newValue, oldValue) {
       if (newValue || newValue == '') {
-        this.getTeam()
+        this.getTeam(newValue)
       }
     },
   },
@@ -68,7 +68,12 @@ export default {
       // if (query !== '') {
       this.loading = true
       let q = {}
-      this.$http.Team.getSearchClassName(JSON.stringify(q))
+      if (query) {
+        Object.assign(q, {
+          teamName: query,
+        })
+      }
+      this.$http.Team.getSearchClassName(q)
         .then((res) => {
           this.teamList = res.data.StudentTrialTeamStatisticsPage.content || []
           this.loading = false
@@ -80,12 +85,12 @@ export default {
     },
     // 获取选中的
     onChange(data) {
-      let list = this.teamList.filter((item,index) => {
-         if(item.id == data) {
-           return this.teamList
-         }
+      let list = this.teamList.filter((item, index) => {
+        if (item.id == data) {
+          return this.teamList
+        }
       })
-     this.$emit('result', data ? list : '')
+      this.$emit('result', data ? list : '')
     },
     // 清空
     onClear(val) {
