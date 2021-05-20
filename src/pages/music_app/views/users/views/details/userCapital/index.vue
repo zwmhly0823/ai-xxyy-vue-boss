@@ -10,23 +10,23 @@
   <div class="user-capital">
     <div :class="{ normalFlexCommon: true }">
       <section :class="['backCol']">
-        <samp style="margin-right:30px"
-          >剩余小熊币：<span style="color:#4a93dd;"
-            >{{ topDatafour.bear }}个</span
+        <samp style="margin-right: 30px"
+          >剩余小熊币：<span style="color: #4a93dd"
+            >{{ bear_amount }}个</span
           ></samp
         >
-        <samp style="margin-right:30px"
-          >剩余钻石：<span style="color:#4a93dd;"
+        <samp style="margin-right: 30px"
+          >剩余钻石：<span style="color: #4a93dd"
             >{{ topDatafour.diamond }}个</span
           ></samp
         >
-        <samp style="margin-right:30px"
-          >可使用优惠券：<span style="color:#4a93dd;"
+        <samp style="margin-right: 30px"
+          >可使用优惠券：<span style="color: #4a93dd"
             >{{ topDatafour.coupon }}张</span
           ></samp
         >
-        <samp style="margin-right:30px"
-          >可提现金额：<span style="color:#4a93dd;"
+        <samp style="margin-right: 30px"
+          >可提现金额：<span style="color: #4a93dd"
             >{{ topDatafour.cash }}元</span
           ></samp
         >
@@ -80,7 +80,11 @@
         />
       </el-tab-pane>
       <el-tab-pane label="提现记录" name="cashRecord">
-        <cashRecord :pUserId="pUserId" ref="colorCash" :changeSubject="changeSubject" />
+        <cashRecord
+          :pUserId="pUserId"
+          ref="colorCash"
+          :changeSubject="changeSubject"
+        />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -99,8 +103,8 @@ export default {
   props: {
     pUserId: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
   components: {
     couponComponent,
@@ -109,14 +113,15 @@ export default {
     coinWrite,
     coinArt,
     cashRecord,
-    diamond
+    diamond,
   },
   data() {
     return {
       studentId: '',
       topDatafour: { bear: 0, diamond: 0, coupon: 0, cash: 0 },
       assetCurPane: 'assetBearCoin',
-      changeSubject: this.$store.state.subjects.subjectCode
+      changeSubject: this.$store.state.subjects.subjectCode,
+      bear_amount: '0',
     }
   },
   computed: {
@@ -124,7 +129,7 @@ export default {
     isFrom1v1() {
       const { from } = this.$route.query
       return from === '1v1'
-    }
+    },
   },
   watch: {
     changeSubject: {
@@ -135,37 +140,37 @@ export default {
         if (newValue === 1 && this.assetCurPane === 'gradingTicket') {
           this.assetCurPane = 'assetBearCoin'
         }
-      }
+      },
     },
     pUserId(value) {
-      if(value && this.$route.params.isShort) {
+      if (value && this.$route.params.isShort) {
         this.studentId = value
         this.getTopData()
         this.getcolorData() // 获取背景色4个数据来源4个子组件
       }
-    }
+    },
   },
   mounted() {
-    if(!this.$route.params.isShort){
-      this.studentId = this.$route.params.id;
+    if (!this.$route.params.isShort) {
+      this.studentId = this.$route.params.id
       this.getTopData()
       this.getcolorData() // 获取背景色4个数据来源4个子组件
     }
-
   },
 
   methods: {
     async getTopData() {
       const {
-        data: { UserExtends }
+        data: { UserExtends },
       } = await this.$http.User._reqGetUserTop({
         u_id: this.studentId,
-        subject: this.changeSubject
+        subject: this.changeSubject,
       }).catch((err) => {
         console.error(err)
         this.$message.error('获取用户资产_头部数据_失败')
       })
       if (UserExtends) {
+        this.bear_amount = UserExtends.bear_amount
         this.$root.$emit('bearCoin', UserExtends.accountUserCollect) // 用户资产_小熊币
         this.$root.$emit('coupon', UserExtends.couponUserList) // 用户资产_优惠券
       } else {
@@ -186,8 +191,8 @@ export default {
       this.$refs.colorCash.$on('colorCash', (r) => {
         this.topDatafour.cash = r
       })
-    }
-  }
+    },
+  },
 }
 </script>
 
