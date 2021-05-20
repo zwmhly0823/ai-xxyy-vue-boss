@@ -47,7 +47,7 @@ export default {
     permission,
     ApprovalPending,
     ApprovalRevocation,
-    ApprovalCompleted
+    ApprovalCompleted,
     // accountRejected
   },
   created() {
@@ -67,10 +67,10 @@ export default {
         delivery: false,
         type: [],
         resource: '',
-        desc: ''
+        desc: '',
       },
       timer: null,
-      activeNameBySearch: ''
+      activeNameBySearch: '',
     }
   },
   methods: {
@@ -117,8 +117,8 @@ export default {
         }
         localStorage.removeItem('noticeParams')
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -133,7 +133,7 @@ export default {
 </style>
 
 <style lang="scss">
-  .el-image-viewer__wrapper {
+ /deep/ .el-image-viewer__wrapper {
   z-index: 2888 !important;
 }
 </style>

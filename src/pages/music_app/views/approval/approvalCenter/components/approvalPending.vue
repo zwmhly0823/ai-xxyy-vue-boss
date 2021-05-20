@@ -112,8 +112,11 @@
         <el-option label="课程退款" value="课程退款"></el-option>
         <el-option label="降半年课包" value="降半年课包"></el-option>
         <el-option label="补偿" value="补偿"></el-option>
-        <el-option label="降一年课包" value="降一年课包"></el-option>
-        <el-option label="降一年半年课包" value="降一年半年课包"></el-option>
+        <el-option label="降一年包" value="降一年课包"></el-option>
+        <el-option label="降一年半年包" value="降一年半年课包"></el-option>
+        <el-option label="系统预售-优惠券退款" value="系统预售-优惠券退款"></el-option>
+        <el-option label="器材退款" value="器材退款"></el-option>
+        <el-option label="体验课退差价" value="体验课退差价"></el-option>
       </el-select>
       <el-button
         type="primary"
@@ -549,6 +552,8 @@
                   4: '降1年包',
                   5: '降1年半包',
                   6: '系统课预付款优惠券退款',
+                  7: '硬件乐器退款',
+                  8: '体验课退差价'
                 }[drawerApprovalDeatail.refundType]
               }}
             </el-col>
@@ -879,6 +884,7 @@
       ref="adjustDrawerCom"
       :adjustDrawerData="adjustDrawerData"
       :isStaffId="isStaffId"
+      :checkStatus="checkStatus"
       @result="adjustDrawerPass"
     ></adjust-drawer>
     <!-- 调班调级备注弹窗 -->
@@ -1222,6 +1228,8 @@ export default {
       type_lk: '',
       changeVersionList: [],
       roleId: '',
+      checkType: null,
+      checkStatus: false,
     }
   },
   created() {
@@ -1273,6 +1281,13 @@ export default {
       this.$http.Backend.getStaffIds().then((res) => {
         this.roleIdList = res.payload.approvalIdSet
       })
+    },
+    // 获取审批权限
+    async initData() {
+      let result = await this.$http.Backend.checkpriviles({ type: this.checkType })
+      if(result.status =='OK') {
+        this.checkStatus = result.payload
+      }
     },
     getSearchData1(val) {
       console.info('选择部门获取值:', val)
@@ -1567,7 +1582,7 @@ export default {
     refuseDialog() {
       this.form_checkbox.reason = ''
       this.dialogFormVisible_checkbox = true
-      this.drawerApprovalDeatail.flowApprovalId=''
+      this.drawerApprovalDeatail.flowApprovalId = ''
     },
     // 同意申请
     ensureReplenish() {
@@ -1668,6 +1683,8 @@ export default {
     },
     // 打开抽屉 传进来4个参数 申请单type 申请单id  申请单申请人id 申请单tag
     getApprovalDeatail(type, id, applyId, tag) {
+      this.checkType = type
+      this.initData()
       console.log(arguments)
       this.currentType = type // 全局配置:申请单类型
       console.log(type)

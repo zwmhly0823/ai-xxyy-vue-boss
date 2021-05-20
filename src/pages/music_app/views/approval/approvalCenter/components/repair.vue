@@ -900,9 +900,9 @@ export default {
     },
     getChildrenOrderList(id) {
       let query = {
-        id,
+        itemId:id,
       }
-      this.$http.Express.getChildrenOrderList(query).then((res) => {
+      this.$http.RefundApproval.getChildOrder(query).then((res) => {
         console.log(res)
       })
     },
