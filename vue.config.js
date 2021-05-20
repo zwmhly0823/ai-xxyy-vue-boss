@@ -13,7 +13,7 @@ const projectName = process.argv[3] || 'dashboard'
 const name = defaultSettings.title || '小熊音乐BOSS'
 const version = defaultSettings.version;
 const { BASE_URL } = process.env
-const env = BASE_URL || 'default' // default, dev, test, prod, live
+const env = BASE_URL || 'test' // default, dev, test, prod, live
 
 const ossConfig = {
   bucket: process.env.WEBPACK_ALIOSS_PLUGIN_BUCKET,
@@ -37,8 +37,8 @@ if (env === 'dev') {
   targetApiEnv = 'http://ai-xxyy-dev-boss.yinyuebao.cloud'
 } else if (env === 'test') {
   // test环境
-  targetGrapqhlEnv = 'http://ai-xxyy-test-graphql-boss.xiaoxiongyinyue.cloud'
-  targetApiEnv = 'http://ai-xxyy-test-boss.xiaoxiongyinyue.cloud'
+  targetGrapqhlEnv = 'http://ai-xxyy-test-graphql-boss.yinyuebao.cloud'
+  targetApiEnv = 'http://ai-xxyy-test-boss.yinyuebao.cloud'
 } else if (env === 'prod') {
   // 预发布环境
   publicPath = publicPath + version;
