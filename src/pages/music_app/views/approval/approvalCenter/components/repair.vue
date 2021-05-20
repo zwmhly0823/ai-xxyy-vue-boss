@@ -796,6 +796,9 @@ export default {
     async getSeletInput(val) {
       console.log(val)
       if (val.id) {
+        this.getChildrenOrderList(val.id)
+      }
+      if (val.id) {
         this.$http.Express.getExpressByOrderId(val.id).then((res) => {
           let medium
           if (res && res.payload) {
@@ -894,6 +897,14 @@ export default {
           this.now = new Date().getTime()
         }
       }
+    },
+    getChildrenOrderList(id) {
+      let query = {
+        id,
+      }
+      this.$http.Express.getChildrenOrderList(query).then((res) => {
+        console.log(res)
+      })
     },
     getTrialClassProgress(orderNo) {
       return this.$http.Approval.findTrailByOrderNo(orderNo)
