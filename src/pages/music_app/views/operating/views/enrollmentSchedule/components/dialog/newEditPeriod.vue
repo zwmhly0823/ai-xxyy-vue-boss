@@ -31,7 +31,7 @@
             value: 'id',
             label: 'channel_outer_name',
             emitPath: true,
-            checkStrictly: false
+            checkStrictly: false,
           }"
           :show-all-levels="true"
           clearable
@@ -71,46 +71,45 @@ export default {
   props: {
     toBody: {
       type: Boolean,
-      default: false
+      default: false,
     },
     visible: {
       type: Boolean,
-      default: false
+      default: false,
     },
     // 内层dialog
     visibleInner: {
       type: Boolean,
-      default: false
+      default: false,
     },
     courseType: {
       type: [Number, String],
-      value: 0
+      value: 0,
     },
     showDatas: {
       type: Array,
-      value: []
+      value: [],
     },
     // 失败渠道数据
     failChannelData: {
       type: Array,
-      value: []
+      value: [],
     },
     periodInfo: {
       // 编辑当前的info
       type: Object,
-      value: {}
-    }
+      value: {},
+    },
   },
 
   data() {
     return {
       form: {
         channelIds: [], // 渠道name
-        period: '' // 期
-      }
+        period: '', // 期
+      },
     }
   },
-
   computed: {
     // 新建、编辑 渠道定向期
     isNew() {
@@ -122,7 +121,7 @@ export default {
 
     calcType() {
       // 查询排期 0是双周  2是单周
-      return this.courseType==='1'?'0':'2'
+      return this.courseType === 2 ? '2' : '0'
     },
 
     visibleInnerCalc: {
@@ -131,8 +130,8 @@ export default {
       },
       set() {
         this.$emit('handleInnerDialog')
-      }
-    }
+      },
+    },
   },
 
   watch: {
@@ -144,7 +143,7 @@ export default {
       if (newVal && this.periodInfo && Object.keys(this.periodInfo).length) {
         this.receiveVal(this.periodInfo)
       }
-    }
+    },
   },
 
   methods: {
@@ -187,8 +186,8 @@ export default {
         return
       }
       this.$emit('handleDialog', val ? { channelIds: filterThree, period } : {})
-    }
-  }
+    },
+  },
 }
 </script>
 
