@@ -189,7 +189,7 @@ export default {
         this.currentPage,
         Array.isArray(this.value1) && this.value1.length
           ? this.value1
-          : [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14], // 清空之后全类型
+          : [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14,15], // 清空之后全类型
         this.ctime
       )
         .then((res = {}) => {
