@@ -97,7 +97,7 @@ export default {
             item.count =
               Number(x?.difficult) +
                 Number(x?.has_return) +
-                Number(x?.difficult) || '0'
+                Number(x?.signed_failed) || '0'
           }
           if (item.id === '7') {
             item.count = Number(x?.invalid) || '0'
@@ -122,7 +122,7 @@ export default {
             : this.tab === '4'
             ? [502, 506, 507]
             : null
-        }]}`
+        }],"center_express_id":{"lte":0}}`
       } else {
         q = `{"regtype":[${this.regtype}],"source_type":[${this.source_type}],"center_express_id":{"lte":0},"subject":3}`
       }
@@ -145,11 +145,51 @@ export default {
       }).then((res) => {
         const x = res.data.logisticsStatisticsNew
         this.toggleList.map((item) => {
-          if (
-            item.id === '6' &&
-            Object.prototype.hasOwnProperty.call(item.center_express_id, 'lte')
-          ) {
-            item.count = Number(x?.confirm_wait_send) || ''
+          if (item.label === '待审核') {
+            item.count = Number(x?.confirm_wait_send) || '0'
+          }
+        })
+        this.toggleList = [...this.toggleList]
+      })
+    },
+    getLogisticsStatisticsDsh1(params) {
+      let q
+      if (this.teacherId || this.teacherId === 0) {
+        q = `{"teacher_id": [${this.teacherId}],"regtype":[${this.regtype}],"source_type":[${this.source_type}],"center_express_id":{"gt":0},"subject":3}`
+      } else if (this.tab === '0' || this.tab === '4') {
+        q = `{"regtype":[${this.regtype}],"source_type":[${
+          this.source_type
+        }],"packages_id":[${
+          this.tab === '0'
+            ? [500, 503, 505, 508]
+            : this.tab === '4'
+            ? [502, 506, 507]
+            : null
+        }],"center_express_id":{"gt":0}}`
+      } else {
+        q = `{"regtype":[${this.regtype}],"source_type":[${this.source_type}],"center_express_id":{"gt":0},"subject":3}`
+      }
+      Object.assign(q, params)
+      const query = JSON.stringify(q)
+      this.$http.Express.getLogisticsStatistics({
+        query: `{
+          logisticsStatisticsNew(query:${query}) {
+            no_address
+            wait_send
+            has_send
+            has_signed
+            signed_failed
+            has_return
+            confirm_wait_send
+            invalid
+            difficult
+          }
+        }`,
+      }).then((res) => {
+        const x = res.data.logisticsStatisticsNew
+        this.toggleList.map((item) => {
+          if (item.label === '下单失败') {
+            item.count = Number(x?.confirm_wait_send) || '0'
           }
         })
         this.toggleList = [...this.toggleList]
@@ -184,11 +224,13 @@ export default {
     this.getTeacherId()
     this.getLogisticsStatistics()
     this.getLogisticsStatisticsDsh()
+    this.getLogisticsStatisticsDsh1()
   },
   watch: {
     tab(val) {
       this.getLogisticsStatistics()
       this.getLogisticsStatisticsDsh()
+      this.getLogisticsStatisticsDsh1()
       this.initToggleList()
       this.hideSomeBtn()
       this.activeIndex = 0
