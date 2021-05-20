@@ -52,6 +52,29 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item
+          v-if="childrenListOrder.length > 0"
+          label="关联子订单"
+          prop="childOrderId"
+        >
+          <el-select
+            v-model="formRepair.childOrderId"
+            placeholder="请选择订单号"
+            :class="$style.chooseinput"
+            value-key="id"
+            @change="setChildrenId"
+            :disabled="orderDisable"
+          >
+            <el-option
+              v-for="item in childrenListOrder"
+              :key="item.id"
+              :label="item.outTradeNo + ' ' + item.packageProductName"
+              :value="item"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+
         <el-form-item label="课程进度" class="address-recept">
           <el-input
             v-model="formRepair.currentLesson"
@@ -92,10 +115,13 @@
             <el-radio label="STORE">商城礼品</el-radio>
             <el-radio label="RECOMMEND">推荐有礼</el-radio>
             <el-radio label="INVITATION">邀请有奖</el-radio>
+            <el-radio label="ARTPLAYPRO">硬件</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item
-          v-if="formRepair.type == 'MATERIALS'"
+          v-if="
+            formRepair.type == 'MATERIALS' || formRepair.type === 'ARTPLAYPRO'
+          "
           label="补发方式"
           prop="mode"
         >
@@ -113,7 +139,10 @@
             <!-- 课程-难度-级别 -->
             <div
               class="reapirProduct-detail"
-              v-if="formRepair.type == 'MATERIALS'"
+              v-if="
+                formRepair.type == 'MATERIALS' &&
+                formRepair.type !== 'ARTPLAYPRO'
+              "
             >
               <package
                 @result="getPackageId"
@@ -163,34 +192,59 @@
             <el-radio label="TRANSPORT_BAD">运输损坏</el-radio>
             <template v-show="formRepair.type === 'MATERIALS'">
               <el-radio
-                v-show="formRepair.mode === 'DEFAULT'"
+                v-show="
+                  formRepair.mode === 'DEFAULT' &&
+                  formRepair.type !== 'ARTPLAYPRO'
+                "
                 label="MULTI_SELF_PAY"
               >
                 自费补发
               </el-radio>
               <el-radio
-                v-show="formRepair.mode === 'DEFAULT'"
+                v-show="
+                  formRepair.mode === 'DEFAULT' &&
+                  formRepair.type !== 'ARTPLAYPRO'
+                "
                 label="MULTI_LOSS"
               >
                 丢件补发
               </el-radio>
               <el-radio
-                v-show="formRepair.mode === 'DEFAULT'"
+                v-show="
+                  formRepair.mode === 'DEFAULT' &&
+                  formRepair.type !== 'ARTPLAYPRO'
+                "
                 label="MULTI_TIMEOUT_RETURN"
               >
                 超时退回
               </el-radio>
               <el-radio
-                v-show="formRepair.mode === 'DEFAULT'"
+                v-show="
+                  formRepair.mode === 'DEFAULT' &&
+                  formRepair.type !== 'ARTPLAYPRO'
+                "
                 label="MULTI_ADJUSTMENT_SUP"
               >
                 调级补发
               </el-radio>
               <el-radio
-                v-show="formRepair.mode === 'SINGLE'"
+                v-show="
+                  formRepair.mode === 'SINGLE' &&
+                  formRepair.type !== 'ARTPLAYPRO'
+                "
                 label="SINGLE_QUALITY"
               >
                 产品质量问题
+              </el-radio>
+              <!-- 补发airplay 选项 -->
+              <el-radio
+                v-show="
+                  formRepair.mode === 'DEFAULT' &&
+                  formRepair.type === 'ARTPLAYPRO'
+                "
+                label="SEND_BACK_REPAIR_OR_CHANGE"
+              >
+                寄回维修/换货
               </el-radio>
               <!-- <el-radio
                 v-show="formRepair.mode === 'SINGLE'"
@@ -201,6 +255,23 @@
             </template>
             <el-radio label="OTHER">其他</el-radio>
           </el-radio-group>
+        </el-form-item>
+        <el-form-item
+          v-if="formRepair.type == 'ARTPLAYPRO'"
+          label="寄回单号"
+          class="address-recept"
+          prop='sendBackTrackingNum'
+        >
+          <el-input v-model="formRepair.sendBackTrackingNum"> </el-input>
+        </el-form-item>
+
+        <el-form-item
+          label="SN号"
+          prop='snNum'
+          v-if="formRepair.type == 'ARTPLAYPRO'"
+          class="address-recept"
+        >
+          <el-input v-model="formRepair.snNum"> </el-input>
         </el-form-item>
         <el-form-item label="补发货说明" prop="reissueMsg">
           <el-input
@@ -377,6 +448,8 @@ export default {
       }, 200)
     }
     return {
+      // 自订单list
+      childrenListOrder: [],
       // 根据订单物流获取随材版本
       proVersion: '',
       fileListC: [],
@@ -436,7 +509,16 @@ export default {
       changeProductText: '选择商品',
       chooseCompleted: true, // 选择商品完成之后
       rules: {
+        sendBackTrackingNum: [
+          { required: true, message: '请填写寄回订单号', trigger: 'change' },
+        ],
+        snNum: [
+          { required: true, message: '请填写寄回sn码', trigger: 'change' },
+        ],
         name: [{ required: true, validator: validateName, trigger: 'change' }],
+        childOrderId: [
+          { required: true, message: '请选择子订单', trigger: 'change' },
+        ],
         showMessage: [
           { required: true, message: '请选择关联订单', trigger: 'change' },
         ],
@@ -497,6 +579,11 @@ export default {
   },
 
   methods: {
+    // 设置子订单号
+    setChildrenId(val) {
+      this.formRepair.childOrderId = val.id
+      this.formRepair.childOutTradeNo = val.outTradeNo
+    },
     singglefileListPromise() {
       console.info(this.fileListC)
       const promiseAll = this.fileListC.map((item) =>
@@ -600,6 +687,10 @@ export default {
     clearAllData() {
       this.fileListC = []
       this.formRepair = {
+        childOutTradeNo:'',//子订单订单号
+        childOrderId:'',//子订单号
+        snNum:'',//sn 号
+        sendBackTrackingNum:'',//寄回单号
         totalAddress: '', // 补上
         userId: '', // 用户id
         applyDepartment: '', // 申请人所在部门  --非必传
@@ -725,6 +816,8 @@ export default {
     chooseMode(val) {
       this.clearData()
       this.formRepair.mode = val
+      this.giftList = []
+      this.getHardware(val)
     },
     // 选择补发原因-为了给reason附上replenishReason补发原因
     choosereplenishReason(val) {
@@ -746,9 +839,30 @@ export default {
         })
       }
     },
+    // 查询硬件
+    getHardware(val) {
+      let productType = 'HARDWARE_MATERIALS_PARTS'
+      if (val === 'DEFAULT') {
+        productType = 'HARDWARE'
+      }
+      let query = {
+        courseDifficulty: 'S3',
+        productType,
+        courseType: 'SYSTEM_COURSE',
+        courseLevel: 'LEVEL1',
+        proVersion: 'v1.0',
+      }
+      this.$http.Order.getHardwareProductList(query).then((res) => {
+        this.giftList = res.payload
+      })
+    },
     // 通过订单id查询物流信息
     async getSeletInput(val) {
       console.log(val)
+      if (val.id) {
+        this.childrenListOrder = []
+        this.getChildrenOrderList(val.id)
+      }
       if (val.id) {
         this.$http.Express.getExpressByOrderId(val.id).then((res) => {
           let medium
@@ -823,7 +937,6 @@ export default {
       // 根据订单获取课程进度
       // 分体验课和系统课
       this.formRepair.currentLesson = ''
-      console.log(val)
       if (val.regtype === 'EXPERIENCE') {
         const resTrialData = await this.getTrialClassProgress(val.id)
         if (resTrialData) {
@@ -848,6 +961,19 @@ export default {
           this.now = new Date().getTime()
         }
       }
+    },
+    getChildrenOrderList(id) {
+      let query = {
+        itemId: id,
+      }
+      this.$http.RefundApproval.getChildOrder(query).then((res) => {
+        if (res.code === 0) {
+          if (res.payload.length > 0) {
+            this.childrenListOrder = res.payload
+          } else {
+          }
+        }
+      })
     },
     getTrialClassProgress(orderNo) {
       return this.$http.Approval.findTrailByOrderNo(orderNo)
@@ -983,7 +1109,10 @@ export default {
 
             break
           case 'SINGLE':
-            if (this.formRepair.packagesType === 'EXPERIENCE_COURSE' || this.formRepair.packagesType === 'TESTCOURSE_SINGLE') {
+            if (
+              this.formRepair.packagesType === 'EXPERIENCE_COURSE' ||
+              this.formRepair.packagesType === 'TESTCOURSE_SINGLE'
+            ) {
               this.formRepair.level = 'LEVEL1'
             }
             if (this.formRepair.sup && this.formRepair.packagesType) {
