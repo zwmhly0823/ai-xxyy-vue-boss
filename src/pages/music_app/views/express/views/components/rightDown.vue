@@ -1070,7 +1070,7 @@ export default {
             item.term.regType == '500, 503, 505, 508' ||
             item.term.regType == '502,506,507'
           ) {
-            timeType.packages_id = item.term.regType
+            timeType.packages_id = item.term.regType.split()
             timeType.regType = '1'
           } else {
             timeType.regType = item.term.regType
