@@ -141,7 +141,9 @@
       >
         <template slot-scope="scope">
           <div class="product">
-            <span>{{ regtypeEnum[scope.row.regtype] || '--' }}</span>
+            <span>{{
+              scope.row.regtype_text ? scope.row.regtype_text : '--'
+            }}</span>
           </div>
           <div class="gray-text">
             <span>{{ scope.row.replenish_type_text || '--' }}</span>
@@ -1232,6 +1234,7 @@ export default {
               operator_id
               operator_name
               level
+              regtype_text
               ctime
               utime
               center_ctime

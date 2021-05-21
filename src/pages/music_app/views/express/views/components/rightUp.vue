@@ -329,6 +329,7 @@ export default {
         query = { bool: { must: [{ terms: { id: uid } }] } } // 自行通过前端选择的条件进行动态组装
         sessionStorage.removeItem('uid')
       } else {
+        console.log(this.searchIn, 'this.searchIn-=')
         if (this.exType == 2) {
           // 双周
           if (this.searchIn.length > 0) {
@@ -374,7 +375,6 @@ export default {
             }
           })
         }
-        console.log(this.searchIn, 'this.searchIn-=')
         const term = this.searchIn.map((item, index) => {
           if (item.terms && item.terms.sup) {
             item.terms['sup.keyword'] = item.terms.sup
@@ -412,10 +412,10 @@ export default {
               })
               delete item.term.product_type
             }
-            if (item.term && item.term.packages_id) {
+            if (item.terms && item.terms.packages_id) {
               arrFlag.push({
                 terms: {
-                  packages_id: item.term.packages_id,
+                  packages_id: item.terms.packages_id,
                 },
               })
               delete item.terms.packages_id
