@@ -266,7 +266,7 @@ export default {
       )
       // 头3数据取自老爹-计算剩余
       this.coinNumList[2].value =
-        this.coinNumList[0].value - this.coinNumList[1].value
+        (this.coinNumList[0].value - this.coinNumList[1].value)<0?'0':(this.coinNumList[0].value - this.coinNumList[1].value)
 
       this.$emit('colorBear', this.coinNumList[2].value) // colorBear
     }
