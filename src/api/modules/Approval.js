@@ -19,7 +19,7 @@ export default {
   // 调期获取调整开课日期列表
   getAdjustStartClassDateList(query) {
     return axios.get(
-      `/api/s/v1/management/getManagementBeforeOrNext?period=${query.stage}&type=SYSTEMCOURSE`
+      `/api/s/v2/management/getManagementListByCourseDayGreaterThan?courseDay=${new Date().getTime()}&type=SYSTEMCOURSE`
     )
   },
   // 调期获取班级列表
