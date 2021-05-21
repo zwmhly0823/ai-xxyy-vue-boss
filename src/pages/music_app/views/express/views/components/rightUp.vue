@@ -452,39 +452,24 @@ export default {
             }
             if (item.term && item.term.regType) {
               // 新增类型的时候这里要改
-              if (item.term.regType == '500, 503, 505, 508') {
-                arrFlag.push({
-                  terms: {
-                    packages_id: item.term.regType.split(','),
-                  },
-                })
+              if (item.term && item.term.regType) {
+                // 新增类型的时候这里要改
+                if (this.tab == '3') {
+                  arrFlag.push({
+                    terms: {
+                      packages_id: item.term.regType.split(','),
+                    },
+                  })
+                } else {
+                  arrFlag.push({
+                    terms: {
+                      regtype: item.term.regType.split(','),
+                    },
+                  })
+                }
                 // 单周体验课补发移除 regType
-              } else {
-                arrFlag.push({
-                  terms: {
-                    regType: item.term.regType.split(','),
-                  },
-                })
-              }
-              if (item.term.regType == '502,506,507') {
-                arrFlag.push({
-                  terms: {
-                    packages_id: item.term.regType.split(','),
-                  },
-                })
-                // 单周体验课补发移除 regType
-              } else {
-                arrFlag.push({
-                  terms: {
-                    regType: item.term.regType.split(','),
-                  },
-                })
                 delete item.term.regType
               }
-            } else {
-              arrFlag.push({
-                terms: { regtype: this.regtype.split(',') },
-              })
             }
             if (item.term && item.term.province) {
               if (item.term.province.provincesCode) {
