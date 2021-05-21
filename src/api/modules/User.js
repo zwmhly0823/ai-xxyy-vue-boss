@@ -1176,13 +1176,18 @@ export default {
   ManagementForTeacherList({
     // teacher_id = [],
     team_state = [1, 2],
-    team_type = 0
+    team_type = 0,
+    category = [],
+    trial_management_type = 0
+
   } = {}) {
     const query = {
       // teacher_id,
       team_state,
       team_type,
-      subject
+      subject,
+      category,
+      trial_management_type
     }
     // const params = JSON.stringify(query)
     const params = injectSubject(query)
@@ -1703,6 +1708,7 @@ export default {
             trialOfStudentDetails {
               course_state
               current_super
+              team_category_text
               current_progress
               send_course_count
               join_course_count
@@ -1775,6 +1781,7 @@ export default {
                   id
                   address_id
                   order_id
+                  product_type_text
                   source_type
                   product_name
                   replenish_type

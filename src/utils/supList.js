@@ -52,6 +52,12 @@ export const Sup_scheduleDownload = {
     1: "双周体验课",
     2: "系统课"
 }
+export const SUP_LEVEL_LIST_teacher = [
+    { id: 'S1', text: 'M1' },
+    { id: 'S2', text: 'M2' },
+    { id: 'S3', text: 'M3' },
+    { id: 'S4', text: 'M4' }
+]
 export const SUP_LEVEL_LIST_LOWER = [
     { id: 'S1', text: 'M1' },
     { id: 'S2', text: 'M2' },

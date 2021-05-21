@@ -29,6 +29,16 @@ export default {
   /**
    * ##根据用户ID，查询用户登录信息
    * */
+  getClassName(url,item) {
+    return axios.post('/graphql/filter', {
+      query: `{
+        ${url}(query: ${JSON.stringify(item)}){
+          id
+          name
+        }
+      }`
+    })
+  },
   UserLoginDataPage(query, page = 1, size = 20) {
     return axios.post('/graphql/v1/toss', {
       query: `{
@@ -674,6 +684,7 @@ export default {
             uniq_id
             complete_time
             isImport
+            content_type
             userInfo {
               user_num
               username

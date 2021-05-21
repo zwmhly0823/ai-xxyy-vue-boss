@@ -32,8 +32,10 @@
         :productName="showItem.productName"
         :regType="showItem.regType"
         :channel="showItem.channel"
-        :packages_id="showItem.packages_id"
+        :packages_id="packages_id"
+        :exType="exType"
         :product_type_0="showItem.product_type_0"
+        :isExpress="true"
       />
     </div>
     <!-- v-if="!teacherId" TOSS -->
@@ -128,6 +130,11 @@ export default {
       type: Boolean,
       default: false,
     },
+    // 体验课类型 2是双周 1是单周
+    exType: {
+      type: Number,
+      default: null,
+    },
     tab: {
       type: String,
       default: '0',
@@ -178,6 +185,11 @@ export default {
   },
   mounted() {
     switchTabSearchIn = {}
+    if (this.exType == 1 || this.exType == 2) {
+      this.packages_id = 'packages_id'
+    } else {
+      this.packages_id = ''
+    }
   },
   data() {
     return {
@@ -215,9 +227,9 @@ export default {
         selectAddress: 'province',
         replenishReason: 'replenish_reason',
         replenishMethod: 'replenish_type',
-        packages_id: !this.addSupS ? 'packages_id' : '',
-        product_type_0:this.addSupS?'product_type_0':''
+        product_type_0: this.addSupS ? 'product_type_0' : '',
       },
+      packages_id: '',
     }
   },
   watch: {

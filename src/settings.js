@@ -8,17 +8,17 @@
  */
 module.exports = {
   title: '小熊音乐BOSS',
-  version: '1.3.0',
+  version: '1.5.5',
 
-  /**
-   * @type {boolean} true | false
-   * @description Whether fix the header
-   */
-  fixedHeader: true,
+    /**
+     * @type {boolean} true | false
+     * @description Whether fix the header
+     */
+    fixedHeader: true,
 
-  /**
-   * @type {boolean} true | false
-   * @description Whether show the logo in sidebar
-   */
-  sidebarLogo: true
+    /**
+     * @type {boolean} true | false
+     * @description Whether show the logo in sidebar
+     */
+    sidebarLogo: true
 }

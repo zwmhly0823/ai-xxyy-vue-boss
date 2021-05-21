@@ -113,7 +113,11 @@
       </el-form-item>
       <el-form-item v-if="product_type_0">
         <!-- 盒子及硬件搜索 -->
-        <boxSearch @result="getSearchBox" :name="product_type_0" :LevelArr="LevelArr" />
+        <boxSearch
+          @result="getSearchBox"
+          :name="product_type_0"
+          :LevelArr="LevelArr"
+        />
       </el-form-item>
       <el-form-item v-if="schedule">
         <!-- 排期 -->
@@ -293,7 +297,13 @@
       </el-form-item>
       <el-form-item v-if="packages_id">
         <!-- 体验课类型 -->
-        <trial-classtype @result="gettrialClassType" :name="packages_id" />
+        <trial-classtype
+          @result="gettrialClassType"
+          :name="packages_id"
+          :addSupS="addSupS"
+          :exType="exType"
+          :isExpress="isExpress"
+        />
       </el-form-item>
       <el-form-item>
         <slot name="searchItems"></slot>
@@ -769,6 +779,16 @@ export default {
     product_type_0: {
       type: String,
       default: '',
+    },
+    // 体验课类型 2是双周 1是单周
+    exType: {
+      type: Number,
+      default: 2,
+    },
+    // 是否是物流管理页面
+    isExpress: {
+      type: Boolean,
+      default: false,
     },
   },
   components: {

@@ -45,6 +45,16 @@ const operatingRoutes = [{
         redirect: '/channelManagement'
     },
     {
+        path: '/phoneType',
+        name: 'phoneType',
+        meta: {
+            title: '机型管理',
+            keepAlive: false
+        },
+        component: () =>
+            import ('../views/phoneType/index.vue')
+    },
+    {
         path: '/activityManagement',
         name: 'activityManagement',
         meta: {
@@ -264,7 +274,6 @@ const operatingRoutes = [{
         component: () =>
             import ('../views/pushConfig/index.vue')
     },
-
     {
         path: '/problem',
         name: 'problem',
@@ -297,6 +306,47 @@ const operatingRoutes = [{
     },
 
 
+
+    {
+        path: '/problem',
+        name: 'problem',
+        meta: {
+            title: '问卷管理',
+            keepAlive: false
+        },
+        component: () =>
+            import ('../views/problem/index.vue')
+    },
+    {
+        path: '/issueBearCoins',
+        name: 'issueBearCoins',
+        meta: {
+            title: '发放小熊币',
+            keepAlive: false
+        },
+        component: () =>
+            import ('../views/issueBearCoins/index.vue')
+    },
+    {
+        path: '/recommend',
+        name: 'recommend',
+        meta: {
+            title: '转介绍截图审批',
+            keepAlive: false
+        },
+        component: () =>
+            import ('../views/recommend/changeRecommend.vue')
+    },
+    {
+        path: '/manageChangeClass',
+        name: 'manageChangeClass',
+        meta: {
+            title: '体验课调班',
+            keepAlive: false
+        },
+        component: () =>
+            import ('../views/manageChangeClass/index.vue')
+    },
 ]
 const operatingUploadList = [{
     path: '/uploadFile',

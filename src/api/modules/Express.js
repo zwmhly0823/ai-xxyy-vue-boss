@@ -311,4 +311,13 @@ export default {
             JSON.stringify(params)
         )
     },
+    /**
+     * 通过orderId、producType获取订单签收时间
+     */
+    getOrderSignTime(query) {
+        return axios.get(
+            '/api/ex/v1/express/getSigningTimeByOrderIdAndType',
+            query
+        )
+    },
 }

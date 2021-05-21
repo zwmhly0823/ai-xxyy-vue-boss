@@ -725,7 +725,14 @@ export default {
     },
     /**
      * @description 编辑微信保存按钮
+     * /**
+     * @description 查询排期
      */
+    getAllCategory() {
+        return axios.get(
+            `/api/s/v1/management/getAllCategory`,
+        )
+    },
     saveEditTeacherWeChat(params) {
         return axios.post(
             `/api/t/v1/wechat/teacher/saveTeacherChangeWeixinRecord?teacherId=${params.teacherId}&oldWeixinNo=${params.oldWeixinNo}&oldWeixinId=${params.oldWeixinId}&weixinId=${params.weixinId}&weixinNo=${params.weixinNo}&courseType=${params.courseType}&period=${params.period}`
@@ -743,5 +750,17 @@ export default {
             '/api/u/v2/user/cancelMobile',
             params
         )
-    }
+    },
+    // 机型管理添加
+    addPhoneType(query) {
+        return axios.get(
+            `/api/home/v1/config/addPhoneModel?phoneModel=${query.phoneModel}`
+        )
+    },
+    // 机型管理list
+    getPhoneTypeList() {
+        return axios.get(
+            `/api/home/v1/config/getPhoneModel`
+        )
+    },
 }

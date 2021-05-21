@@ -23,7 +23,6 @@
           :key="item.value"
           :label="item.label"
           :value="item.value"
-          :disabled="!item.show"
         >
         </el-option>
       </el-select>

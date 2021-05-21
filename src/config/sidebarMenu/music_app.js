@@ -265,6 +265,14 @@ let bearArt = [
                 }
             },
             {
+                path: '/phoneType',
+                name: 'phoneType',
+                meta: {
+                    title: '机型管理',
+                    module
+                }
+            },
+            {
                 path: '/review',
                 name: 'review',
                 hidden: true,
@@ -400,8 +408,7 @@ let bearArt = [
                     // module: 'operating'
                     module
                 }
-            },
-            {
+            }, {
                 path: '/manageChangeClass',
                 name: 'manageChangeClass',
                 meta: {

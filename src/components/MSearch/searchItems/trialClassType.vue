@@ -38,9 +38,36 @@ export default {
       type: Number,
       default: 0,
     },
+    addSupS: {
+      type: Boolean,
+      default: false,
+    },
     placeholder: {
       type: String,
       default: '体验课类型',
+    },
+    // 排期班级类型
+    classType: {
+      type: String,
+      default: '0',
+    },
+    // 体验课类型 2是双周 1是单周
+    exType: {
+      type: Number,
+      default: null,
+    },
+    // 套餐类型类型
+    classArr: {
+      type: Array,
+      default: () => [],
+    },
+    isOrder: {
+      type: Boolean,
+      default: false,
+    },
+    isExpress: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -128,7 +155,7 @@ export default {
         },
       ],
       // 火山直播的体验课类型
-       typeList6: [
+      typeList6: [
         {
           id: ['0', '3'],
           text: '全部',
@@ -144,34 +171,95 @@ export default {
       ],
     }
   },
+  watch: {
+    classType(val) {
+      this.getClassType(JSON.stringify({ type: val }))
+    },
+    classArr(val) {
+      this.type = null
+      if (val.length == 0) {
+        this.getClassType()
+        return
+      }
+      this.typeList = val
+    },
+    // exType(val) {
+    //   this.getClassType(JSON.stringify({ type: val }))
+    // }
+  },
   mounted() {
     console.log('搜索数据', this.name)
-    if (this.name == 'category' && this.typeB !=1) {
+    if (this.name == 'category' && this.typeB != 1) {
       this.typeList = this.typeList2
     } else if (this.name == 'packages_type') {
       this.typeList = this.typeList1
     } else if (this.name == 'packages_id') {
-      this.typeList = this.typeList3
+      if (this.exType && !this.isOrder) {
+        let type = this.exType == 2 ? 0 : 2
+        this.initData(JSON.stringify({ type }))
+      } else {
+        this.initData()
+      }
     } else if (this.name == 'team_category') {
-      this.typeList = this.typeList4
+      this.getClassType(JSON.stringify({ type: this.classType }))
     } else if (this.name == 'type') {
       this.typeList = this.typeList5
-    }else if(this.name == 'category' && this.typeB ==1) {
+    } else if (this.name == 'category' && this.typeB == 1) {
       this.typeList = this.typeList6
+    } else if (this.name == 'class_list') {
+      this.getClassType()
+    } else if (this.isExpress) {
+      let type = this.exType == 2 ? 0 : 2
+      this.initData(JSON.stringify({ type }))
     }
+  },
+  created() {
+    // if (!this.exType && !this.isExpress) {
+    //   setTimeout(() => {
+    //     this.getClassType()
+    //   })
+    // }
   },
   methods: {
     onChange(item) {
-      console.log(item, '选择的值')
+      if (!item && item !== 0 && !this.classArr) {
+        this.getClassType()
+      }
       if (this.name == 'team_category') {
         this.$emit(
           'result',
           'team_category',
-          item ? [{ [this.name]: item }] : ''
+          item !== undefined ? [{ [this.name]: item }] : ''
         )
       } else {
-        this.$emit('result', item ? { [this.name]: item } : '')
+        console.log({ [this.name]: item }, '选择的值')
+        this.$emit('result', item !== undefined ? { [this.name]: item } : '')
       }
+    },
+    getClassType(type = '') {
+      this.type = null
+      this.$http.Order.getClassName('trialCourseCategoryList', type).then(
+        ({ data }) =>
+          (this.typeList = data.trialCourseCategoryList.map((item) => {
+            item.text = item.name
+            delete item.name
+            return item
+          }))
+      )
+    },
+    initData(type = '') {
+      let result = this.$http.Order.getClassName(
+        'trialExpressPackageList',
+        type
+      ).then((res) => {
+        if (res.data.trialExpressPackageList) {
+          this.typeList = res.data.trialExpressPackageList.map((item) => {
+            item.text = item.name
+            delete item.name
+            return item
+          })
+        }
+      })
     },
   },
 }

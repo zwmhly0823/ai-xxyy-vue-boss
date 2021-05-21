@@ -64,10 +64,12 @@ export default [
   {
     prop: 'live_watch_time',
     label: '观看直播总时长/分钟',
+    width:"200"
   },
   {
     prop: 'playback_watch_time',
-    label: '观看回放总时长',
+    label: '观看回放总时长/分钟',
+    width:"200"
   },
   {
     prop: 'chat_count',
