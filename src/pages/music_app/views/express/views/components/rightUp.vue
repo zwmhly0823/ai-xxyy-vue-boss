@@ -369,11 +369,17 @@ export default {
           }
         }
         if (!this.exType) {
-          this.searchIn.forEach((item, index) => {
-            if (item.terms.packages_id) {
-              this.searchIn.splice(index, 1)
-            }
-          })
+          this.searchIn.length > 0 &&
+            this.searchIn.forEach((item, index) => {
+              let keys = Object.keys(item)
+              keys.forEach((k, i) => {
+                if (k == 'terms') {
+                  if (item.terms.packages_id) {
+                    this.searchIn.splice(index, 1)
+                  }
+                }
+              })
+            })
         }
         const term = this.searchIn.map((item, index) => {
           if (item.terms && item.terms.sup) {
@@ -445,12 +451,36 @@ export default {
               delete item.term.replenish_type
             }
             if (item.term && item.term.regType) {
-              arrFlag.push({
-                terms: {
-                  regtype: item.term.regType.split(','),
-                },
-              })
-              delete item.term.regType
+              // 新增类型的时候这里要改
+              if (item.term.regType == '500, 503, 505, 508') {
+                arrFlag.push({
+                  terms: {
+                    packages_id: item.term.regType.split(','),
+                  },
+                })
+                // 单周体验课补发移除 regType
+              } else {
+                arrFlag.push({
+                  terms: {
+                    regType: item.term.regType.split(','),
+                  },
+                })
+              }
+              if (item.term.regType == '502,506,507') {
+                arrFlag.push({
+                  terms: {
+                    packages_id: item.term.regType.split(','),
+                  },
+                })
+                // 单周体验课补发移除 regType
+              } else {
+                arrFlag.push({
+                  terms: {
+                    regType: item.term.regType.split(','),
+                  },
+                })
+                delete item.term.regType
+              }
             } else {
               arrFlag.push({
                 terms: { regtype: this.regtype.split(',') },

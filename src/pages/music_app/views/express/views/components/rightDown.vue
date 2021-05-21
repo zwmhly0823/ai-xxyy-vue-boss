@@ -142,7 +142,7 @@
         <template slot-scope="scope">
           <div class="product">
             <span>{{
-              scope.row.regtype_text ? scope.row.regtype_text : '--'
+              scope.row.express_regtype_text ? scope.row.express_regtype_text : '--'
             }}</span>
           </div>
           <div class="gray-text">
@@ -1234,7 +1234,7 @@ export default {
               operator_id
               operator_name
               level
-              regtype_text
+              express_regtype_text
               ctime
               utime
               center_ctime
