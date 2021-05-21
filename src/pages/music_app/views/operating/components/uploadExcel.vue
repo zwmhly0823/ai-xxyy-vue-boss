@@ -82,8 +82,8 @@ export default {
         batchSetTeacher: `/api/t/v1/enroll/importEnrollTeacher?courseType=${courseType}&category=${category}`, // 批量配置接生销售
         batchSetVolume: `/api/t/v1/enroll/updateEnrollDifficulty?courseType=${courseType}&category=${category}`, // 批量修改容量
         importChannel: `/api/t/v1/teacher/direct/importDirectChannel?courseType=${courseType}&category=${category}`, // 批量导入定向渠道
-        artBiweekly: `/api/s/v1/managementChannel/bacthEdit?type=TESTCOURSE&subject=ART_APP`, // 双周体验课、渠道定向排期页面，“批量配置/修改”按钮
-        artWeekly: `/api/s/v1/managementChannel/bacthEdit?type=CATEGORYTESTCOURSE&subject=ART_APP&category=${this.trial_28_category}` // 单周体验课、渠道定向排期页面，“批量配置/修改”按钮
+        artBiweekly: `/api/s/v1/managementChannel/bacthEdit?type=TESTCOURSE&subject=MUSIC_APP`, // 双周体验课、渠道定向排期页面，“批量配置/修改”按钮
+        artWeekly: `/api/s/v1/managementChannel/bacthEdit?type=CATEGORYTESTCOURSE&subject=MUSIC_APP&category=${this.trial_28_category}` // 单周体验课、渠道定向排期页面，“批量配置/修改”按钮
       }
       return reqUrl[this.uploadCategory]
     },
