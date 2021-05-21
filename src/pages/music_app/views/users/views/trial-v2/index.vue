@@ -150,7 +150,7 @@
           </el-table-column>
           <el-table-column label="APP信息" min-width="110" class-name="pdl-10">
             <template slot-scope="scope">
-              <base-user-info :user="scope.row.userInfo" />
+              <base-user-info :user="scope.row.userInfo" :order="scope.row.orderInfo"/>
             </template>
           </el-table-column>
           <el-table-column label="微信信息" min-width="110" class-name="pdl-10">

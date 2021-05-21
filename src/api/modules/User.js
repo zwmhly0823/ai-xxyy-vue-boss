@@ -248,6 +248,8 @@ export default {
             }
             orderInfo {
               id
+              packages_id
+              user_source_text
               trial_course {
                 order_no
               }
@@ -1046,6 +1048,7 @@ export default {
              code
              value
            }
+           bear_amount
         }
       }`
     })

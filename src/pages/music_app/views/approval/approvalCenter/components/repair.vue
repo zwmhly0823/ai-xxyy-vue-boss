@@ -58,7 +58,7 @@
           prop="childOrderId"
         >
           <el-select
-            v-model="formRepair.childOrderId"
+            v-model="formRepair.showChildOrder"
             placeholder="请选择订单号"
             :class="$style.chooseinput"
             value-key="id"
@@ -115,12 +115,12 @@
             <el-radio label="STORE">商城礼品</el-radio>
             <el-radio label="RECOMMEND">推荐有礼</el-radio>
             <el-radio label="INVITATION">邀请有奖</el-radio>
-            <el-radio label="ARTPLAYPRO">硬件</el-radio>
+            <el-radio label="HARDWARE">硬件</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item
           v-if="
-            formRepair.type == 'MATERIALS' || formRepair.type === 'ARTPLAYPRO'
+            formRepair.type == 'MATERIALS' || formRepair.type === 'HARDWARE'
           "
           label="补发方式"
           prop="mode"
@@ -141,7 +141,7 @@
               class="reapirProduct-detail"
               v-if="
                 formRepair.type == 'MATERIALS' &&
-                formRepair.type !== 'ARTPLAYPRO'
+                formRepair.type !== 'HARDWARE'
               "
             >
               <package
@@ -194,7 +194,7 @@
               <el-radio
                 v-show="
                   formRepair.mode === 'DEFAULT' &&
-                  formRepair.type !== 'ARTPLAYPRO'
+                  formRepair.type !== 'HARDWARE'
                 "
                 label="MULTI_SELF_PAY"
               >
@@ -203,7 +203,7 @@
               <el-radio
                 v-show="
                   formRepair.mode === 'DEFAULT' &&
-                  formRepair.type !== 'ARTPLAYPRO'
+                  formRepair.type !== 'HARDWARE'
                 "
                 label="MULTI_LOSS"
               >
@@ -212,7 +212,7 @@
               <el-radio
                 v-show="
                   formRepair.mode === 'DEFAULT' &&
-                  formRepair.type !== 'ARTPLAYPRO'
+                  formRepair.type !== 'HARDWARE'
                 "
                 label="MULTI_TIMEOUT_RETURN"
               >
@@ -221,7 +221,7 @@
               <el-radio
                 v-show="
                   formRepair.mode === 'DEFAULT' &&
-                  formRepair.type !== 'ARTPLAYPRO'
+                  formRepair.type !== 'HARDWARE'
                 "
                 label="MULTI_ADJUSTMENT_SUP"
               >
@@ -230,7 +230,7 @@
               <el-radio
                 v-show="
                   formRepair.mode === 'SINGLE' &&
-                  formRepair.type !== 'ARTPLAYPRO'
+                  formRepair.type !== 'HARDWARE'
                 "
                 label="SINGLE_QUALITY"
               >
@@ -240,7 +240,7 @@
               <el-radio
                 v-show="
                   formRepair.mode === 'DEFAULT' &&
-                  formRepair.type === 'ARTPLAYPRO'
+                  formRepair.type === 'HARDWARE'
                 "
                 label="SEND_BACK_REPAIR_OR_CHANGE"
               >
@@ -257,7 +257,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item
-          v-if="formRepair.type == 'ARTPLAYPRO'"
+          v-if="formRepair.type == 'HARDWARE'"
           label="寄回单号"
           class="address-recept"
           prop='sendBackTrackingNum'
@@ -268,7 +268,7 @@
         <el-form-item
           label="SN号"
           prop='snNum'
-          v-if="formRepair.type == 'ARTPLAYPRO'"
+          v-if="formRepair.type == 'HARDWARE'"
           class="address-recept"
         >
           <el-input v-model="formRepair.snNum"> </el-input>
@@ -687,6 +687,7 @@ export default {
     clearAllData() {
       this.fileListC = []
       this.formRepair = {
+        showChildOrder:'',
         childOutTradeNo:'',//子订单订单号
         childOrderId:'',//子订单号
         snNum:'',//sn 号
@@ -858,7 +859,6 @@ export default {
     },
     // 通过订单id查询物流信息
     async getSeletInput(val) {
-      console.log(val)
       if (val.id) {
         this.childrenListOrder = []
         this.getChildrenOrderList(val.id)
