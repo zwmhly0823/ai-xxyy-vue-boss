@@ -236,6 +236,15 @@ export default {
         return axios.get(`/api/ex/v1/express/getAddressById?addressId=${params}`)
     },
     /**
+     * 通过orderId、producType获取订单签收时间
+     */
+    getOrderSignTime(query) {
+        return axios.get(
+            '/api/ex/v1/express/getSigningTimeByOrderIdAndType',
+            query
+        )
+    },
+    /**
      * 通过uid、oid获取 退费类型
      */
     getRefundtypeById(params) {

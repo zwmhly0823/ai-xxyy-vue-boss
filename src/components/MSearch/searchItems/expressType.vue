@@ -32,25 +32,34 @@ export default {
   props: {
     name: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
   data() {
     return {
       isMultipe: false,
       result: null,
+      // 新增类型的时候这里要改
       typeList: [
         {
-          id: '1',
-          text: '体验课补发'
+          id: '502,506,507',
+          text: '单周体验课补发',
+        },
+        {
+          id: '500, 503, 505, 508',
+          text: '双周体验课补发',
         },
         {
           id: '2,3',
-          text: '系统课补发'
+          text: '系统课补发',
         },
         {
           id: '4,5,6',
           text: '活动商品补发'
+        },
+        {
+          id:'7',
+          text:'硬件补发'
         }
       ]
     }
@@ -58,8 +67,8 @@ export default {
   methods: {
     onChange(item) {
       this.$emit('result', item ? { [this.name]: item } : '')
-    }
-  }
+    },
+  },
 }
 </script>
 

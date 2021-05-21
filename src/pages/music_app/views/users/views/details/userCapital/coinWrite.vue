@@ -106,7 +106,8 @@ export default {
         11: '大转盘消耗',
         12: '小熊币兑吧添加',
         13: '小熊币兑吧扣除',
-        14: '运营扣除'
+        14: '运营扣除',
+        15:'买课退款扣除'
       },
       coinNumList: [
         {
@@ -189,7 +190,7 @@ export default {
         this.currentPage,
         Array.isArray(this.value1) && this.value1.length
           ? this.value1
-          : [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14], // 清空之后全类型
+          : [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14,15], // 清空之后全类型
         this.ctime
       )
         .then((res = {}) => {
@@ -205,7 +206,8 @@ export default {
                 +nItem.trans_type === 4 ||
                 +nItem.trans_type === 5 ||
                 +nItem.trans_type === 11 ||
-                +nItem.trans_type === 14
+                +nItem.trans_type === 14 ||
+                +nItem.trans_type === 15
                   ? 1
                   : 0
             })
@@ -228,13 +230,15 @@ export default {
     },
     top3Show() {
       // 头3数据取自老爹-总获取
+      console.log(this.faProps,"this.fapsadfasd");
       this.coinNumList[0].value = this.faProps.reduce(
         (pre, cur, index, self) => {
           if (
             cur.code !== '5' &&
             cur.code !== '11' &&
             cur.code !== '13' &&
-            cur.code !== '14'
+            cur.code !== '14' &&
+            cur.code !=='15'
           ) {
             return pre + Number(cur.value)
           } else {
@@ -247,10 +251,11 @@ export default {
       this.coinNumList[1].value = this.faProps.reduce(
         (pre, cur, index, self) => {
           if (
-            cur.code === '5' ||
+            cur.code === '5' || 
             cur.code === '11' ||
             cur.code === '13' ||
-            cur.code === '14'
+            cur.code === '14' ||
+            cur.code ==='15'
           ) {
             return pre + Number(cur.value)
           } else {

@@ -38,7 +38,20 @@ export default [
   {
     prop: 'versionCode',
     label: '版本标识',
-
+  },
+  {
+    prop: 'app_id',
+    label: 'app_id',
+    render(h, data, row) {
+      return row.app_id ? row.app_id : '-'
+    }
+  },
+  {
+    prop: 'channel',
+    label: '渠道',
+    render(h, data, row) {
+      return row.channel ? row.channel : '-'
+    }
   },
   {
     prop: 'title',
@@ -66,7 +79,7 @@ export default [
     label: '下载链接',
     width: '300',
     render(h, data, row) {
-      return row.downloadUrl ? row.downloadUrl: '-'
+      return row.downloadUrl ? row.downloadUrl : '-'
     }
   },
   {
