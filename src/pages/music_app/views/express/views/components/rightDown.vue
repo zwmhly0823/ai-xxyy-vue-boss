@@ -1066,12 +1066,13 @@ export default {
             timeType.product_type_0 = item.term.product_type_0
           }
           // 新增类型的时候这里要改
-          if (
-            item.term.regType == '500, 503, 505, 508' ||
-            item.term.regType == '502,506,507'
-          ) {
-            timeType.packages_id = item.term.regType.split()
-            timeType.regType = '1'
+          if (item.term.regType == '500, 503, 505, 508') {
+            timeType.packages_id = [500, 503, 505, 508]
+          } else {
+            timeType.regType = item.term.regType
+          }
+          if (item.term.regType == '502,506,507') {
+            timeType.packages_id = [502, 506, 507]
           } else {
             timeType.regType = item.term.regType
           }
