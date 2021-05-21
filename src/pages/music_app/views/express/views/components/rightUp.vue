@@ -329,6 +329,51 @@ export default {
         query = { bool: { must: [{ terms: { id: uid } }] } } // 自行通过前端选择的条件进行动态组装
         sessionStorage.removeItem('uid')
       } else {
+        if (this.exType == 2) {
+          // 双周
+          if (this.searchIn.length > 0) {
+            this.searchIn.forEach((item, index) => {
+              if (
+                !item.terms.packages_id ||
+                item.terms.packages_id.includes('502')
+              ) {
+                this.searchIn.push({
+                  terms: { packages_id: ['500', '503', '505', '508'] },
+                })
+              }
+            })
+          } else {
+            this.searchIn.push({
+              terms: { packages_id: ['500', '503', '505', '508'] },
+            })
+          }
+        }
+        if (this.exType == 1) {
+          // 单周
+          if (this.searchIn.length > 0) {
+            this.searchIn.forEach((item, index) => {
+              if (
+                !item.terms.packages_id ||
+                item.terms.packages_id.includes('500')
+              ) {
+                this.searchIn.push({
+                  terms: { packages_id: ['502', '506', '507'] },
+                })
+              }
+            })
+          } else {
+            this.searchIn.push({
+              terms: { packages_id: ['502', '506', '507'] },
+            })
+          }
+        }
+        if (!this.exType) {
+          this.searchIn.forEach((item, index) => {
+            if (item.terms.packages_id) {
+              this.searchIn.splice(index, 1)
+            }
+          })
+        }
         console.log(this.searchIn, 'this.searchIn-=')
         const term = this.searchIn.map((item, index) => {
           if (item.terms && item.terms.sup) {
@@ -367,7 +412,14 @@ export default {
               })
               delete item.term.product_type
             }
-
+            if (item.term && item.term.packages_id) {
+              arrFlag.push({
+                terms: {
+                  packages_id: item.term.packages_id,
+                },
+              })
+              delete item.terms.packages_id
+            }
             if (item.term && item.term.productType) {
               arrFlag.push({
                 term: {
