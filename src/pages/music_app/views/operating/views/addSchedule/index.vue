@@ -108,7 +108,6 @@ export default {
       )
     },
     isShowLastStep() {
-      console.log(this.courseType,this.stepStatus,"测试导入");
       return (
         (this.courseType === '0' && this.stepStatus === 5) ||
         (this.courseType === '1' && this.stepStatus === 5) ||
