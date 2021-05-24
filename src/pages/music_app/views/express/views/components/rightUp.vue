@@ -334,13 +334,15 @@ export default {
           // 双周
           if (this.searchIn.length > 0) {
             this.searchIn.forEach((item, index) => {
-              if (
-                !item.term.packages_id ||
-                item.term.packages_id.includes('502')
-              ) {
-                this.searchIn.push({
-                  term: { packages_id: ['500', '503', '505', '508'] },
-                })
+              if (item.term) {
+                if (
+                  !item.term.packages_id ||
+                  item.term.packages_id.includes('502')
+                ) {
+                  this.searchIn.push({
+                    term: { packages_id: ['500', '503', '505', '508'] },
+                  })
+                }
               }
             })
           } else {
@@ -351,15 +353,17 @@ export default {
         }
         if (this.exType == 1) {
           // 单周
-          if (this.searchIn.length > 0) {
+          if (his.searchIn.length > 0) {
             this.searchIn.forEach((item, index) => {
-              if (
-                !item.term.packages_id ||
-                (item.term && item.term.packages_id.includes('500'))
-              ) {
-                this.searchIn.push({
-                  term: { packages_id: ['502', '506', '507'] },
-                })
+              if (item.term) {
+                if (
+                  !item.term.packages_id ||
+                  (item.term && item.term.packages_id.includes('500'))
+                ) {
+                  this.searchIn.push({
+                    term: { packages_id: ['502', '506', '507'] },
+                  })
+                }
               }
             })
           } else {
@@ -374,7 +378,7 @@ export default {
               let keys = Object.keys(item)
               keys.forEach((k, i) => {
                 if (k == 'terms') {
-                  if (item.terms.packages_id) {
+                  if (item.term.packages_id) {
                     this.searchIn.splice(index, 1)
                   }
                 }
@@ -382,14 +386,25 @@ export default {
             })
         }
         const term = this.searchIn.map((item, index) => {
-          if (item.terms && item.terms.sup) {
-            item.terms['sup.keyword'] = item.terms.sup
-            delete item.terms.sup
+          if (item && item.terms) {
+            if (item.terms && item.terms.sup) {
+              item.terms['sup.keyword'] = item.terms.sup
+              delete item.terms.sup
+            }
+            if (item.terms && item.terms.packages_id) {
+              arrFlag.push({
+                terms: {
+                  packages_id: item.terms.packages_id,
+                },
+              })
+              delete item.terms.packages_id
+            }
+            if (item.terms && item.terms.level) {
+              item.terms['level.keyword'] = item.terms.level
+              delete item.terms.level
+            }
           }
-          if (item.terms && item.terms.level) {
-            item.terms['level.keyword'] = item.terms.level
-            delete item.terms.level
-          }
+
           if (item && item.wildcard && item.wildcard.express_nu) {
             item.wildcard['express_nu.keyword'] = item.wildcard.express_nu
             delete item.wildcard.express_nu
@@ -417,14 +432,6 @@ export default {
                 },
               })
               delete item.term.product_type
-            }
-            if (item.terms && item.terms.packages_id) {
-              arrFlag.push({
-                terms: {
-                  packages_id: item.terms.packages_id,
-                },
-              })
-              delete item.terms.packages_id
             }
             if (item.term && item.term.productType) {
               arrFlag.push({
@@ -515,7 +522,7 @@ export default {
         let finalmust = []
         finalmust = finaTerm.filter((item) => {
           if (!item.range) {
-            return Object.values(Object.values(item)[0])[0].length
+            return Object.values(Object.values(item)[0])[0] && Object.values(Object.values(item)[0])[0].length
           }
           return item
         })
@@ -589,17 +596,6 @@ export default {
     dosomething() {},
     handleSearch(search) {
       console.log(search, 'search==')
-      // if (this.exType == 2) {
-      //   // 双周
-      //   search.packages_id = [500, 503, 505, 508]
-      // }
-      // if (this.exType == 1) {
-      //   // 单周
-      //   search.packages_id = [502, 506, 507]
-      // }
-      // if (!this.exType) {
-      //   delete search.packages_id
-      // }
       this.searchIn = deepClone(search)
       this.searchIn.forEach((item) => {
         if (item.terms && (item.terms.sup || item.terms.product_type)) {
