@@ -353,7 +353,7 @@ export default {
         }
         if (this.exType == 1) {
           // 单周
-          if (his.searchIn.length > 0) {
+          if (this.searchIn.length > 0) {
             this.searchIn.forEach((item, index) => {
               if (item.term) {
                 if (
