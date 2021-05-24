@@ -103,7 +103,7 @@ export default {
     isShowThirdStep() {
       return (
         (this.courseType === '0' && this.stepStatus === 4) ||
-        (this.courseType === '1' && this.stepStatus === 5) ||
+        (this.courseType === '1' && this.stepStatus === 4) ||
         (this.courseType === '2' && this.stepStatus === 3)
       )
     },
@@ -111,7 +111,7 @@ export default {
       console.log(this.courseType,this.stepStatus,"测试导入");
       return (
         (this.courseType === '0' && this.stepStatus === 5) ||
-        (this.courseType === '1' && this.stepStatus === 4) ||
+        (this.courseType === '1' && this.stepStatus === 5) ||
         (this.courseType === '2' && this.stepStatus === 6)
       )
     }
