@@ -335,17 +335,17 @@ export default {
           if (this.searchIn.length > 0) {
             this.searchIn.forEach((item, index) => {
               if (
-                !item.terms.packages_id ||
-                item.terms.packages_id.includes('502')
+                !item.term.packages_id ||
+                item.term.packages_id.includes('502')
               ) {
                 this.searchIn.push({
-                  terms: { packages_id: ['500', '503', '505', '508'] },
+                  term: { packages_id: ['500', '503', '505', '508'] },
                 })
               }
             })
           } else {
             this.searchIn.push({
-              terms: { packages_id: ['500', '503', '505', '508'] },
+              term: { packages_id: ['500', '503', '505', '508'] },
             })
           }
         }
@@ -354,17 +354,17 @@ export default {
           if (this.searchIn.length > 0) {
             this.searchIn.forEach((item, index) => {
               if (
-                !item.terms.packages_id ||
-                item.terms.packages_id.includes('500')
+                !item.term.packages_id ||
+                (item.term && item.term.packages_id.includes('500'))
               ) {
                 this.searchIn.push({
-                  terms: { packages_id: ['502', '506', '507'] },
+                  term: { packages_id: ['502', '506', '507'] },
                 })
               }
             })
           } else {
             this.searchIn.push({
-              terms: { packages_id: ['502', '506', '507'] },
+              term: { packages_id: ['502', '506', '507'] },
             })
           }
         }
