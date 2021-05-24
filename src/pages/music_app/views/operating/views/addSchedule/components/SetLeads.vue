@@ -119,7 +119,7 @@
     </div>
     <!-- 导入数据模态框 -->
     <el-dialog
-      title="导入物流信息"
+      title="导入配置信息"
       :visible.sync="dialogVisible"
       :before-close="handleCloseUpdata"
       width="30%"
