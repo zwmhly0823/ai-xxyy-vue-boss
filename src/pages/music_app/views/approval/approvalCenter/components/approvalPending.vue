@@ -250,7 +250,7 @@
     <el-drawer
       :visible.sync="drawerApproval"
       :destroy-on-close="true"
-      size="50%"
+      size="60%"
       class="drawer-approval-detail"
       :modal="false"
       @close="handleCloseDraw"
@@ -264,20 +264,20 @@
       <!-- 1-1补发货全套 -->
       <div v-if="drawerApprovalDeatail.addressId" class="approval-replenish">
         <el-row>
-          <el-col :span="3">申请人:</el-col>
-          <el-col :span="20" :offset="1">
+          <el-col :span="4">申请人:</el-col>
+          <el-col :span="19" :offset="1">
             {{ drawerApprovalDeatail.applyUserName }}
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="3">申请部门:</el-col>
-          <el-col :span="20" :offset="1">
+          <el-col :span="4">申请部门:</el-col>
+          <el-col :span="19" :offset="1">
             {{ drawerApprovalDeatail.applyUserDeapartmentName }}
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="3">用户电话:</el-col>
-          <el-col :span="20" :offset="1">
+          <el-col :span="4">用户电话:</el-col>
+          <el-col :span="19" :offset="1">
             <el-link
               type="primary"
               :href="'/music_app/#/details/' + drawerApprovalDeatail.userId"
@@ -287,14 +287,14 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="3">补发商品:</el-col>
-          <el-col :span="20" :offset="1">
+          <el-col :span="4">补发商品:</el-col>
+          <el-col :span="19" :offset="1">
             {{ drawerApprovalDeatail.productInfo }}
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="3">收货信息:</el-col>
-          <el-col :span="20" :offset="1">
+          <el-col :span="4">收货信息:</el-col>
+          <el-col :span="19" :offset="1">
             {{
               `${
                 drawerApprovalDeatail.receiptName +
@@ -313,20 +313,20 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="3">订单号:</el-col>
-          <el-col :span="20" :offset="1">
+          <el-col :span="4">订单号:</el-col>
+          <el-col :span="19" :offset="1">
             {{ drawerApprovalDeatail.outTradeNo }}
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="3">课程进度:</el-col>
-          <el-col :span="20" :offset="1">{{
+          <el-col :span="4">课程进度:</el-col>
+          <el-col :span="19" :offset="1">{{
             courseLevelReplace(drawerApprovalDeatail.currentLesson)
           }}</el-col>
         </el-row>
         <el-row>
-          <el-col :span="3">商品信息:</el-col>
-          <el-col :span="20" :offset="1">
+          <el-col :span="4">商品信息:</el-col>
+          <el-col :span="19" :offset="1">
             <span
               v-for="item of drawerApprovalDeatail.productdetails"
               :key="item.id"
@@ -360,8 +360,8 @@
           </el-col>
         </el-row>
         <el-row v-show="+drawerApprovalDeatail.stage !== 0">
-          <el-col :span="3">开课期数:</el-col>
-          <el-col :span="20" :offset="1">
+          <el-col :span="4">开课期数:</el-col>
+          <el-col :span="19" :offset="1">
             {{ drawerApprovalDeatail.periodName }}
           </el-col>
         </el-row>
@@ -373,37 +373,37 @@
               drawerApprovalDeatail.type === 'SYSTEM_MATERIALS')
           "
         >
-          <el-col :span="3">版本信息:</el-col>
-          <el-col :span="20" :offset="1">
+          <el-col :span="4">版本信息:</el-col>
+          <el-col :span="19" :offset="1">
             <VersionBox @result="getVersion" name="version" />
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="3">补发原因:</el-col>
-          <el-col :span="20" :offset="1">{{
+          <el-col :span="4">补发原因:</el-col>
+          <el-col :span="19" :offset="1">{{
             reasonList[drawerApprovalDeatail.reason]
           }}</el-col>
         </el-row>
         <el-row>
-          <el-col :span="3">发起时间:</el-col>
-          <el-col :span="20" :offset="1">{{
+          <el-col :span="4">发起时间:</el-col>
+          <el-col :span="19" :offset="1">{{
             drawerApprovalDeatail.ctimeFormdate
           }}</el-col>
         </el-row>
         <el-row>
-          <el-col :span="3">状态:</el-col>
-          <el-col :span="20" :offset="1">{{
+          <el-col :span="4">状态:</el-col>
+          <el-col :span="19" :offset="1">{{
             drawerApprovalDeatail.status == 'PENDING' ? '待审批' : '-'
           }}</el-col>
         </el-row>
         <el-row>
-          <el-col :span="3">补货说明:</el-col>
+          <el-col :span="4">补货说明:</el-col>
           <el-col :span="18" :offset="1">
             {{ drawerApprovalDeatail.reissueMsg }}
           </el-col>
         </el-row>
         <el-row v-if="drawerApprovalDeatail.attsUrl.indexOf('mp4') == -1">
-          <el-col :span="3">附件:</el-col>
+          <el-col :span="4">附件:</el-col>
           <el-col :span="18" :offset="1">
             <div class="demo-image__preview">
               <span
@@ -428,7 +428,7 @@
           </el-col>
         </el-row>
         <el-row v-else>
-          <el-col :span="3">附件:</el-col>
+          <el-col :span="4">附件:</el-col>
           <el-col :span="18" :offset="1">
             <video
               style="width: 220px; height: 120px"
@@ -438,7 +438,7 @@
           </el-col>
         </el-row>
         <el-row class="BOTTOM" v-if="isStaffId">
-          <el-col :span="20" :offset="1">
+          <el-col :span="19" :offset="1">
             <el-button type="button" @click="dialogFormVisible_checkbox = true"
               >拒 绝</el-button
             >
@@ -813,7 +813,7 @@
         <!-- 1-2-4退款操作按钮 -->
         <div v-if="currentType !== 'UNCREDITED'">
           <el-row class="BOTTOM" v-if="isStaffId">
-            <el-col :span="20" :offset="1">
+            <el-col :span="19" :offset="1">
               <a
                 :href="'/music_app/#/details/' + drawerApprovalDeatail.userId"
                 target="_blank"
@@ -845,7 +845,7 @@
           "
         >
           <el-row class="BOTTOM">
-            <el-col :span="20" :offset="1">
+            <el-col :span="19" :offset="1">
               <el-button
                 type="button"
                 @click="dialogFormVisible_checkbox = true"

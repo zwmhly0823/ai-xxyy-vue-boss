@@ -157,7 +157,15 @@ let bearArt = [
                     module,
                     show: true
                 }
-            }
+            }, {
+                path: '/contractManage',
+                name: 'contractManage',
+                meta: {
+                    title: '合同管理',
+                    // module: 'operating'
+                    module
+                }
+            },
         ]
     },
     {
@@ -588,7 +596,7 @@ let bearArt = [
     {
         path: '/statistics',
         name: 'statistics',
-        // hidden: true ,
+        // hidden: true,
         meta: {
             title: '数据中心',
             icon: 'icontongjifenxi',
