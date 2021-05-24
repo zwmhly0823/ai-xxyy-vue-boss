@@ -5,7 +5,7 @@
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: zhangjianwen
  * @LastEditTime: 2020-10-27 21:53:33
- 
+
  -->
 <template>
   <div class="left-container">
@@ -64,7 +64,9 @@
 </template>
 
 <script>
+import dayjs from 'dayjs'
 import { sortByKey } from '@/utils/boss'
+import { downloadHandle } from '@/utils/download'
 export default {
   props: {
     experienceData: {
@@ -101,7 +103,11 @@ export default {
         {
           lable: '删除',
           type: 'delete'
-        }
+        },
+        {
+          lable: '导出',
+          type: 'export'
+        },
       ],
       editMenuListNodel: [
         {
@@ -111,7 +117,11 @@ export default {
         {
           lable: '修改',
           type: 'edit'
-        }
+        },
+        {
+          lable: '导出',
+          type: 'export'
+        },
       ],
       dialogVisible: false,
       editCurrentItem: {},
@@ -192,12 +202,53 @@ export default {
           case 'edit':
             this.addMenu()
             break
+          case 'export':
+            this.exportMenu();
+            break;
           default:
             return ''
         }
       } else {
         this.initProps()
       }
+    },
+
+    async exportMenu() {
+      const fileTitle = dayjs(new Date()).format('YYYY-MM-DD')
+      const fileTitleTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
+      const query = {
+        department: {
+          id: this.editCurrentData.id,
+          pid: this.editCurrentData.pid,
+          children: this.editCurrentData.children
+        },
+        status: 0,
+      };
+      const params = {
+        apiName: "TeacherManagePage",
+        header: {
+          "id": "员工ID",
+          "realname": "姓名",
+          "ding_userid": "钉钉工号",
+          "phone": "绑定手机号",
+          "wechat_ids": "绑定微信号",
+          "work_place": "所属职场",
+          "department.name": "所属部门",
+          "department.id": "部门ID",
+          "status_text": "入离职状态",
+          "teacherLevelInfo.level_name": "等级",
+          "last_team_term_name": "最近接班期数"
+        },
+        fileName: `${this.editCurrentData.name}导出-${fileTitleTime}`,
+        query: JSON.stringify(query),
+      }
+      this.$http.DownloadExcel.exportOrder(params)
+      .then(res => {
+        downloadHandle(res, `${this.editCurrentData.name}导出-${fileTitle}`, () => {
+          this.initProps();
+          this.$message.success('导出成功')
+        })
+      })
     },
     // 增加菜单
     async addMenu() {
