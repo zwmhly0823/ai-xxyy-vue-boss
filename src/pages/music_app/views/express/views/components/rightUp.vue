@@ -356,7 +356,7 @@ export default {
           if (this.searchIn.length > 0) {
             this.searchIn.forEach((item, index) => {
               if (item.term) {
-                if (
+               if (
                   !item.term.packages_id ||
                   (item.term && item.term.packages_id.includes('500'))
                 ) {
@@ -522,7 +522,10 @@ export default {
         let finalmust = []
         finalmust = finaTerm.filter((item) => {
           if (!item.range) {
-            return Object.values(Object.values(item)[0])[0] && Object.values(Object.values(item)[0])[0].length
+            return (
+              Object.values(Object.values(item)[0])[0] &&
+              Object.values(Object.values(item)[0])[0].length
+            )
           }
           return item
         })
@@ -574,7 +577,13 @@ export default {
       if (this.tab === '1') {
         headers.replenish_reason = '补发原因'
       }
-
+      query.bool.must.forEach((item,index) => {
+         if(item.term && item.term.packages_id) {
+            if(item.term.packages_id.length == item.term.packages_id.length) {
+              query.bool.must.splice(index,1)
+            }
+         }
+      })
       const params = {
         tableName,
         name,
