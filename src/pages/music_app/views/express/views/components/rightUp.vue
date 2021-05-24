@@ -324,67 +324,85 @@ export default {
       var query
       const tableName = 'o_express'
       const arrFlag = []
+      if (
+        this.exType &&
+        !this.searchIn.some((item) => {
+          if (item && item.terms && item.terms.packages_id) {
+            return item.terms.packages_id
+          }
+        })
+      ) {
+        if (this.exType === 1) {
+          arrFlag.push({
+            terms: { packages_id: [502, 506, 507] },
+          })
+        } else if (this.exType === 2) {
+          arrFlag.push({
+            terms: { packages_id: [500, 503, 505, 508] },
+          })
+        }
+      }
       if (sessionStorage.getItem('uid')) {
         var uid = sessionStorage.getItem('uid').split(',')
         query = { bool: { must: [{ terms: { id: uid } }] } } // 自行通过前端选择的条件进行动态组装
         sessionStorage.removeItem('uid')
       } else {
         console.log(this.searchIn, 'this.searchIn-=')
-        if (this.exType == 2) {
-          // 双周
-          if (this.searchIn.length > 0) {
-            this.searchIn.forEach((item, index) => {
-              if (item.term) {
-                if (
-                  !item.term.packages_id ||
-                  item.term.packages_id.includes('502')
-                ) {
-                  this.searchIn.push({
-                    term: { packages_id: ['500', '503', '505', '508'] },
-                  })
-                }
-              }
-            })
-          } else {
-            this.searchIn.push({
-              term: { packages_id: ['500', '503', '505', '508'] },
-            })
-          }
-        }
-        if (this.exType == 1) {
-          // 单周
-          if (this.searchIn.length > 0) {
-            this.searchIn.forEach((item, index) => {
-              if (item.term) {
-               if (
-                  !item.term.packages_id ||
-                  (item.term && item.term.packages_id.includes('500'))
-                ) {
-                  this.searchIn.push({
-                    term: { packages_id: ['502', '506', '507'] },
-                  })
-                }
-              }
-            })
-          } else {
-            this.searchIn.push({
-              term: { packages_id: ['502', '506', '507'] },
-            })
-          }
-        }
-        if (!this.exType) {
-          this.searchIn.length > 0 &&
-            this.searchIn.forEach((item, index) => {
-              let keys = Object.keys(item)
-              keys.forEach((k, i) => {
-                if (k == 'terms') {
-                  if (item.term.packages_id) {
-                    this.searchIn.splice(index, 1)
-                  }
-                }
-              })
-            })
-        }
+        // if (this.exType == 2) {
+        //   // 双周
+        //   if (this.searchIn.length > 0) {
+        //     this.searchIn.forEach((item, index) => {
+        //       if (item.terms) {
+        //         if (
+        //           !item.terms.packages_id ||
+        //           item.terms.packages_id.includes('502')
+        //         ) {
+        //           this.searchIn.push({
+        //             terms: { packages_id: ['500', '503', '505', '508'] },
+        //           })
+        //         }
+        //       }
+        //     })
+        //   } else {
+        //     this.searchIn.push({
+        //       terms: { packages_id: ['500', '503', '505', '508'] },
+        //     })
+        //   }
+        // }
+        // if (this.exType == 1) {
+        //   // 单周
+        //   if (this.searchIn.length > 0) {
+        //     this.searchIn.forEach((item, index) => {
+        //       if (item.terms) {
+        //        if (
+        //           !item.terms.packages_id ||
+        //           (item.terms && item.terms.packages_id.includes('500'))
+        //         ) {
+        //           this.searchIn.push({
+        //             terms: { packages_id: ['502', '506', '507'] },
+        //           })
+        //         }
+        //       }
+        //     })
+        //   } else {
+        //     this.searchIn.push({
+        //       terms: { packages_id: ['502', '506', '507'] },
+        //     })
+        //   }
+        // }
+        // if (!this.exType) {
+        //   this.searchIn.length > 0 &&
+        //     this.searchIn.forEach((item, index) => {
+        //       let keys = Object.keys(item)
+        //       keys.forEach((k, i) => {
+        //         if (k == 'terms') {
+        //           if (item.term.packages_id) {
+        //             this.searchIn.splice(index, 1)
+        //           }
+        //         }
+        //       })
+        //     })
+        // }
         const term = this.searchIn.map((item, index) => {
           if (item && item.terms) {
             if (item.terms && item.terms.sup) {
@@ -577,12 +595,12 @@ export default {
       if (this.tab === '1') {
         headers.replenish_reason = '补发原因'
       }
-      query.bool.must.forEach((item,index) => {
-         if(item.term && item.term.packages_id) {
-            if(item.term.packages_id.length == item.term.packages_id.length) {
-              query.bool.must.splice(index,1)
-            }
-         }
+      query.bool.must.forEach((item, index) => {
+        if (item.term && item.term.packages_id) {
+          if (item.term.packages_id.length == item.term.packages_id.length) {
+            query.bool.must.splice(index, 1)
+          }
+        }
       })
       const params = {
         tableName,
