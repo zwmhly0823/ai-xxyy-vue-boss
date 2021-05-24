@@ -285,9 +285,10 @@ export default {
           courseCategory.split(',').forEach((course) => {
             this.courseArr.forEach((item, index) => {
               if (item.value === course) {
-                value.courseCategoryCHN = item.name
+                courseCategoryCHN += item.name
               }
             })
+            value.courseCategoryCHN = courseCategoryCHN
           })
         })
         this.tableData = content

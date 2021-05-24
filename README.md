@@ -1,31 +1,15 @@
-# ai-app-vue-toss
-
-### [Graphql 测试](http://docker.meixiu.mobi:43401/)
-
-### [TOSS 测试环境](https://test.meixiu.mobi/ai-app-vue-toss-test/login/#/)
-
-帐号（验证码登录）：
-15591611037 / 961211(验证码)
-
-### [TOSS 正式环境](https://toss.xiaoxiongmeishu.com/login/#/)
-
-18967101347 体验课
-18910930251 系统课
-
-### [BOSS 测试环境](https://test.meixiu.mobi/ai-app-vue-boss-test/login/#/)
-
-帐号：
-bearboss / bearnb123
-bearboss /MsbNB123
-
+# ai-xxyy-vue-boss
 ### [BOSS default环境](https://ai-xxyy-default-boss-h5.xiaoxiongyinyue.com/login/#/  )
-
-账号：13501224231 密码 xxnb123
-
-### [Search API](http://docker.meixiu.mobi:48767/jsondoc-ui.html?url=/data/search/m1/jsondoc#)
-
----
-
+帐号（密码登录）：
+boss / MsbNB-123
+### [BOSS test环境](https://ai-xxyy-test-boss-h5.xiaoxiongyinyue.com/login/#/)
+帐号（密码登录）：
+boss / MsbNB-123
+### [BOSS dev环境](https://ai-xxyy-dev-boss-h5.xiaoxiongyinyue.com/login/#/)
+帐号（密码登录）：
+boss / MsbNB-123
+### [BOSS prod环境](https://ai-xxyy-prod-boss-h5.xiaoxiongyinyue.com/login/#/)
+### [BOSS live环境](https://boss.xiaoxiongyinyue.com/login/#/)
 ## Project setup
 
 ```

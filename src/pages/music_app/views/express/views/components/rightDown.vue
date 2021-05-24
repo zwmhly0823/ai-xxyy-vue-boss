@@ -141,7 +141,11 @@
       >
         <template slot-scope="scope">
           <div class="product">
-            <span>{{ regtypeEnum[scope.row.regtype] || '--' }}</span>
+            <span>{{
+              scope.row.express_regtype_text
+                ? scope.row.express_regtype_text
+                : '--'
+            }}</span>
           </div>
           <div class="gray-text">
             <span>{{ scope.row.replenish_type_text || '--' }}</span>
@@ -1062,21 +1066,16 @@ export default {
       this.searchIn.forEach((item) => {
         console.log(item, 'item===物流参数')
         if (item && item.term) {
-          if (item.term.product_type_0) {
-            timeType.product_type_0 = item.term.product_type_0
-          }
           // 新增类型的时候这里要改
-          if (
-            item.term.regType == '500, 503, 505, 508' ||
-            item.term.regType == '502,506,507'
-          ) {
-            timeType.packages_id = item.term.regType
-            timeType.regType = '1'
+          if (item.term.regType == '500, 503, 505, 508') {
+            timeType.packages_id = [500, 503, 505, 508]
+          } else if (item.term.regType == '502,506,507') {
+            timeType.packages_id = [502, 506, 507]
           } else {
             timeType.regType = item.term.regType
           }
-          if (item.term.packages_id) {
-            timeType.packages_id = item.term.packages_id
+          if (item.term.product_type_0) {
+            timeType.product_type_0 = item.term.product_type_0
           }
           if (item.term.operator_id) {
             timeType.operator_id = item.term.operator_id
@@ -1133,6 +1132,9 @@ export default {
           }
         }
         if (item && item.terms) {
+          if (item.terms.packages_id && item.terms.packages_id[0]) {
+            timeType.packages_id = item.terms.packages_id
+          }
           if (item.terms.sup) {
             timeType.sup = `${item.terms.sup}`
           }
@@ -1231,6 +1233,7 @@ export default {
               operator_id
               operator_name
               level
+              express_regtype_text
               ctime
               utime
               center_ctime

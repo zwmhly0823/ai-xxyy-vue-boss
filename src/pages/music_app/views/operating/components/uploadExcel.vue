@@ -45,6 +45,12 @@
 </template>
 
 <script>
+import { Sup_scheduleIndex} from '@/utils/supList'
+const courseTypeEnum = {
+  0: 'TESTCOURSE', // 双周
+  1: 'SYSTEMCOURSE', // 系统课
+  2: 'TESTCOURSE_SINGLE', //单周
+}
 export default {
   props: {
     showUploadExcel: {
@@ -64,7 +70,6 @@ export default {
     return {
       uploading: false,
       headers: { 'Content-Type': 'multipart/form-data' },
-      trial_28_category: ''
     }
   },
   created() {
@@ -72,18 +77,14 @@ export default {
   methods: {
     /** 判断上传excel需要用到的接口 */
     judgeUploadUrl() {
-      let { courseType = 0, category = '' } = this.$route.params
-
-      if (courseType === '6') {
-        courseType = '2'
-        category = this.category || this.trial_28_category
-      }
+      let { courseType = 0} = this.$route.params
+      courseType = Sup_scheduleIndex[courseType]
       const reqUrl = {
-        batchSetTeacher: `/api/t/v1/enroll/importEnrollTeacher?courseType=${courseType}&category=${category}`, // 批量配置接生销售
-        batchSetVolume: `/api/t/v1/enroll/updateEnrollDifficulty?courseType=${courseType}&category=${category}`, // 批量修改容量
-        importChannel: `/api/t/v1/teacher/direct/importDirectChannel?courseType=${courseType}&category=${category}`, // 批量导入定向渠道
-        artBiweekly: `/api/s/v1/managementChannel/bacthEdit?type=TESTCOURSE&subject=ART_APP`, // 双周体验课、渠道定向排期页面，“批量配置/修改”按钮
-        artWeekly: `/api/s/v1/managementChannel/bacthEdit?type=CATEGORYTESTCOURSE&subject=ART_APP&category=${this.trial_28_category}` // 单周体验课、渠道定向排期页面，“批量配置/修改”按钮
+        batchSetTeacher: `/api/t/v1/enroll/importEnrollTeacher?courseType=${courseType}`, // 批量配置接生销售
+        batchSetVolume: `/api/t/v1/enroll/updateEnrollDifficulty?courseType=${courseType}`, // 批量修改容量
+        importChannel: `/api/t/v1/teacher/direct/importDirectChannel?courseType=${courseType}`, // 批量导入定向渠道
+        artBiweekly: `/api/s/v1/managementChannel/bacthEdit?type=${courseTypeEnum[courseType]}&subject=MUSIC_APP`, // 双周体验课、渠道定向排期页面，“批量配置/修改”按钮
+        artWeekly: `/api/s/v1/managementChannel/bacthEdit?type=${courseTypeEnum[courseType]}&subject=MUSIC_APP` // 单周体验课、渠道定向排期页面，“批量配置/修改”按钮
       }
       return reqUrl[this.uploadCategory]
     },

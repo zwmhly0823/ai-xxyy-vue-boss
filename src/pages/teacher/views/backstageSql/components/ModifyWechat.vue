@@ -112,9 +112,10 @@
       <el-form-item label="升级文案" :label-width="formLabelWidth">
         <el-input
           type="textarea"
-          v-model.trim="form.content"
-          placeholder="请输入升级文案，非必填"
+          :rows="2"
+          v-model="form.content"
           autocomplete="off"
+          placeholder="请输入升级文案，非必填"
         ></el-input>
       </el-form-item>
       <el-form-item label="下载链接" :label-width="formLabelWidth">
@@ -163,8 +164,8 @@ export default {
     current() {
       if (this.current) {
         this.form = this.current
-        ;(this.title = '编辑数据'),
-          (this.form.type = this.form.type == 0 ? '非强制升级' : '强制升级')
+        this.form.type = String(this.form.type)
+        ;(this.title = '编辑数据');
       }
     },
   },
@@ -210,8 +211,8 @@ export default {
         version: '',
         versionCode: '',
         title: '',
-        channel:'',
-        app_id:'',
+        channel: '',
+        app_id: '',
         buttonContent: '',
         content: '',
         downloadUrl: '',
@@ -241,11 +242,11 @@ export default {
         this.$message.error('请输入版本标识')
         return
       }
-        if (!this.form.app_id) {
+      if (!this.form.app_id) {
         this.$message.error('请输入app_id')
         return
       }
-        if (!this.form.channel) {
+      if (!this.form.channel) {
         this.$message.error('请输入渠道')
         return
       }

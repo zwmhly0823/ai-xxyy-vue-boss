@@ -103,10 +103,12 @@ export default {
     },
   },
   created() {
-    this.getData()
+    if (!this.isDisabled) {
+      this.getData()
+    }
   },
   mounted() {
-    console.log(this.type,"this.type");
+    console.log(this.type, 'this.type')
   },
   watch: {
     category(val, oldValue) {
@@ -115,12 +117,12 @@ export default {
       }
     },
     exType(val) {
-      if(this.category.length>0) {
+      if (this.category.length > 0) {
         this.params = this.type
-      }else {
+      } else {
         this.params = this.type
       }
-      console.log(this.params,"this.params");
+      console.log(this.params, 'this.params')
       this.params = this.exType == 2 ? 0 : 2
       this.getData()
     },

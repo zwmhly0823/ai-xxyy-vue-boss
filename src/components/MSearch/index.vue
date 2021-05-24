@@ -883,7 +883,8 @@ export default {
     // 选择体验课类型
     gettrialClassType(res) {
       console.log(res, 'packages_id')
-      this.setSeachParmas(res, [this.packages_id || 'packages_id'], 'term')
+      res.packages_id = [res.packages_id]
+      this.setSeachParmas(res, [this.packages_id || 'packages_id'], 'terms')
     },
     // 级别
     levelCallBack(res) {

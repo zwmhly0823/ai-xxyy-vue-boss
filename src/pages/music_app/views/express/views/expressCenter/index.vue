@@ -65,7 +65,7 @@
       <el-tab-pane label="单周体验课" name="4">
         <div v-if="activeName == '4'">
           <rightUp
-            ref="right0"
+            ref="right4"
             :tab="activeName"
             @result="getSearch"
             :regtype="regtype"
