@@ -52,6 +52,7 @@
       </el-form-item>
       <el-form-item prop="linkPhone" label="联系人电话" style="width: 320px">
         <el-input
+          :maxlength="16"
           v-model="contractFrom.linkPhone"
           placeholder="请输入联系人电话"
         ></el-input>
