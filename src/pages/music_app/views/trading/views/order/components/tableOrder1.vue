@@ -61,12 +61,15 @@
                 : '-'
             }}
             {{
-              (scope.row.amount-scope.row.instrument_order_total_amount)>0 && scope.row.course_product_name
-                ? (scope.row.amount*100-scope.row.instrument_order_total_amount*100)/100
+              scope.row.amount - scope.row.instrument_order_total_amount > 0 &&
+              scope.row.course_product_name
+                ? (scope.row.amount * 100 -
+                    scope.row.instrument_order_total_amount * 100) /
+                  100
                 : '-'
             }}
           </p>
-            <p>
+          <p>
             {{
               scope.row.instrument_product_name
                 ? scope.row.instrument_product_name
@@ -281,9 +284,15 @@
       <el-table-column label="关联物流" min-width="170">
         <template slot-scope="scope">
           <p
-            :class="{ 'primary-color': scope.row.express.express_total > 0 }"
+            :class="{
+              'primary-color':
+                scope.row.express && scope.row.express.express_total > 0,
+            }"
             @click="
-              showExpressDetail(scope.row.id, scope.row.express.express_total)
+              showExpressDetail(
+                scope.row.id,
+                scope.row.express && scope.row.express.express_total
+              )
             "
           >
             {{ scope.row.express ? scope.row.express.express_total || 0 : '-' }}
@@ -626,7 +635,7 @@ export default {
       })
       this.trialTeam = result || {}
       this.trialTeamUid = resultUid || {}
-      console.log(this.trialTeamUid,"this.trialTeamUid");
+      console.log(this.trialTeamUid, 'this.trialTeamUid')
       // return result
     },
 
