@@ -3,7 +3,7 @@
  * @LastEditors: liuzhiyuan
 -->
 <template>
-  <div style="padding: 10px">
+  <div style="padding: 20px">
     <el-form
       :model="contractFrom"
       ref="contractFrom"
@@ -260,15 +260,15 @@
             </div>
           </template>
           <template slot-scope="scope">
-            <el-radio-group :disabled="scope.row.isDisabled" v-model="scope.row.price">
-              <el-radio :label="0">0元</el-radio>
-              <el-radio :label="scope.row.radioSel">{{'套餐价格' + scope.row.radioSel + '元'}}</el-radio>
-            </el-radio-group>
-            <!-- <span>{{
+            <!-- <el-radio-group :disabled="scope.row.isDisabled" v-model="scope.row.price">
+              <el-radio :label="0" :value='0'>0元</el-radio>
+              <el-radio :label="scope.row.radioSel" :value='scope.row.radioSel'>{{'套餐价格' + scope.row.radioSel + '元'}}</el-radio>
+            </el-radio-group> -->
+            <span>{{
               scope.row.orderPrice === '0'
                 ? '0元'
                 : '套餐价格' + scope.row.price + '元'
-            }}</span> -->
+            }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -467,9 +467,10 @@ export default {
           if (item.settlePrice === 0) {
             item.orderPrice = '0'
           } else if (item.settlePrice > 0) {
-            // item.settlePrice =
-            //   +item.settlePrice.toString().match(/^\d*(\.?\d{0,2})/g)[0] || null
+            item.settlePrice =
+              +item.settlePrice.toString().match(/^\d*(\.?\d{0,2})/g)[0] || null
             item.orderPrice = item.price
+            item.price = item.price
           }
         })
       },
@@ -726,7 +727,7 @@ export default {
 .bottom_choose {
   background-color: #fff;
   margin: -20px 0;
-  padding-bottom: 20px;
+  padding-bottom: 50px;
   display: flex;
   justify-content: center;
 }
