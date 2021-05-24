@@ -11,6 +11,44 @@
  * 美术 - 课程难度更改
  * ‘S1-基础’ 新增S4 ； ‘S1-进阶’ 原S1 ；‘S2-基础’ 原S2； 'S2-进阶' 新增S5； 'S3' 原S3 ；
  */
+/** 
+ * 渠道信息管理添加渠道模版字典
+ * 
+*/
+export const channelList = [
+  {
+    value: "/channel/single/505/index/1?channelId='",
+    label: '1v1美术宝9.9元双周体验课模版',
+  },
+  {
+    value: '/channel/single/505/index/0?channelId=',
+    label: '9.9元双周体验课模版',
+  },
+  {
+    value: '/channel/single/506/index/0?channelId=',
+    label: '9.9元单周体验课模版',
+  },
+  {
+    value: '/channel/single/507/index/0?channelId=',
+    label: '19元单周体验课模版',
+  },
+  {
+    value: '/channel/single/503/index/0?channelId=',
+    label: '29元双周体验课模版',
+  },
+  {
+    value: '/channel/single/500/index/0?channelId=',
+    label: '49元双周体验课模版',
+  },
+  {
+    value: '/activityCoupon/twoHundred?channelId=',
+    label: '200抵500代金券',
+  },
+  {
+    value: '/fortyNine/newSystemYear?channelId=',
+    label: '年系统课',
+  },
+]
 export const SUP_LEVEL = {
   4: 'M1',
   1: 'M2',

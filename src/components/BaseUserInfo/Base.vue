@@ -19,6 +19,9 @@
       <span class="username">{{ (user && user.username) || '-' }}</span>
     </p>
     <p>{{ birthday }} · {{ basePainting || '' }}</p>
+    <p>
+      <span class="order">{{ (order && order.user_source_text) || '-' }}</span>
+    </p>
   </div>
 </template>
 
@@ -30,18 +33,26 @@ export default {
     // 用户信息
     user: {
       type: Object,
-      default: () => ({})
+      default: () => ({}),
     },
     // 自定义style
     myStyle: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
+    // 订单信息
+    order: {
+      type: Object,
+      default: () => ({}),
+    },
   },
   data() {
     return {
-      defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png'
+      defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png',
     }
+  },
+  mounted() {
+    console.log(this.order,"this.order");
   },
   computed: {
     // 头像
@@ -62,14 +73,14 @@ export default {
         ? this.user.base_painting || this.user.basepainting
         : ''
       return base ? BASE_PAINTING[base] : '-'
-    }
+    },
   },
   methods: {
     // 预留：点击用户信息事件回调, 参数是用户信息
     onClick() {
       this.$emit('handle-click', this.user)
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -103,6 +114,10 @@ export default {
       display: inline-block;
       @include ellipsis();
     }
+  }
+  .order {
+    color: #f90000;
+    font-size: 8px;
   }
 }
 </style>

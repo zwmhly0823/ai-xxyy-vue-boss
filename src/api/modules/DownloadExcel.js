@@ -212,5 +212,24 @@ export default {
           })
       })
     }
-  }
+  },
+  importScheduleExcel(params) {
+    const { url } = params
+    console.log('params', params)
+    return new Promise((resolve, reject) => {
+      axios({
+        method: 'POST',
+        url,
+        responseType: 'blob',
+        headers: getHeaders(),
+        data: params
+      })
+        .then((res) => {
+          resolve(res)
+        })
+        .catch((err) => {
+          reject(err)
+        })
+    })
+  },
 }

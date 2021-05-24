@@ -763,4 +763,47 @@ export default {
       `/api/home/v1/config/getPhoneModel`
     )
   },
+  // 体验课定向排期列表
+  getTrialOperPeroid(params) {
+    return axios.get(
+      `/api/s/v1/managementChannel/getConfigPage?channelIds=${params.channelIds
+      }&pageNumber=${params.pageNumber}&pageSize=${params.pageSize}&type=${params.type
+      }&category=${params.category}&channelId=${params.channelId
+      }&periods=${params.periods || ''}`
+    )
+  },
+  /**
+  * @description 获取课程类型
+  * @params courseType { 0: 体验课； 1： 系统课}
+  */
+  getCourseListByCourseType(params) {
+    return axios.get(
+      `/api/t/v1/teacher/category/config/getByCourseType?courseType=${params.courseType}`
+    )
+  },
+  // 体验课新建定向招生渠道
+  saveConfigTrialOperPeroid(params) {
+    return axios.post(
+      '/api/s/v1/managementChannel/saveConfig',
+      JSON.stringify(params)
+    )
+  },
+
+  // 体验课编辑定向招生渠道
+  editConfigTrialOperPeroid(params) {
+    const curstomQuery = {
+      id: params.id,
+      period: params.period,
+      subject: params.subject
+    }
+    return axios.post(
+      '/api/s/v1/managementChannel/changeChannelPeriod',
+      JSON.stringify(curstomQuery)
+    )
+  },
+
+  // 体验课定向招生渠道切换启用、禁用状态
+  switchStatusTrialOperPeroid(params) {
+    return axios.post('/api/s/v1/managementChannel/switchStatus', params)
+  }
 }
