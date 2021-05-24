@@ -1071,7 +1071,9 @@ export default {
             timeType.packages_id = [500, 503, 505, 508]
           } else if (item.term.regType == '502,506,507') {
             timeType.packages_id = [502, 506, 507]
-          } else {
+          } else if(item.term.regType =='2,3') {
+            timeType.packages_id = [501,504]
+          }else {
             timeType.regType = item.term.regType
           }
           if (item.term.product_type_0) {
