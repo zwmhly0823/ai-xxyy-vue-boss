@@ -7,8 +7,8 @@
  * @FilePath: /ai-xxyy-vue-boss/src/settings.js
  */
 module.exports = {
-  title: '小熊音乐BOSS',
-  version: '1.6.0',
+    title: '小熊音乐BOSS',
+    version: '1.7.0',
 
     /**
      * @type {boolean} true | false

@@ -567,9 +567,8 @@ export default {
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)',
       })
-      uploadFile(file, false, 5, 'xiaoxiongmeishuContract/', false)
+      uploadFile(file, false, 5, 'xiaoxiongyinyueContract/', false)
         .then((res) => {
-          console.log('res----', res)
           const url = res.fileUrl // 文件remote地址
           this.contractFrom.fileAddress = url
           this.contractFrom.fileName = res.file.file.name // 文件名称
