@@ -51,6 +51,7 @@
         <coinWrite
           ref="colorBear"
           :changeSubject="changeSubject"
+          :bearAmount="bear_amount"
           :childTab="assetCurPane"
           v-else
         />
@@ -121,7 +122,7 @@ export default {
       topDatafour: { bear: 0, diamond: 0, coupon: 0, cash: 0 },
       assetCurPane: 'assetBearCoin',
       changeSubject: this.$store.state.subjects.subjectCode,
-      bear_amount: '0',
+      bear_amount:0,
     }
   },
   computed: {
