@@ -191,7 +191,6 @@ export default {
                 this.ruleForm.experience = item1.label
               }
             });
-            console.log(this.ruleForm.experience,"asdfasdfasdfasdfasdfasdf");
             this.ruleForm.status = item.status.toString()
             this.ruleForm.channelLevel = item.channel_level
           })
