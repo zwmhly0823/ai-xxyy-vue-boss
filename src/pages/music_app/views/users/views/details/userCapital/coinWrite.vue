@@ -11,7 +11,9 @@
     <div class="coin-num-box">
       <div class="coin-item" v-for="(cItem, cKey) of coinNumList" :key="cKey">
         <span class="coin-nums-label">{{ cItem.label }} :</span>
-        <span class="coin-nums-val">{{cKey==2?bear_amount:cItem.value }}</span>
+        <span class="coin-nums-val">{{
+          cKey == 2 ? bear_amount : cItem.value
+        }}</span>
       </div>
     </div>
     <div class="searchItem" v-if="changeSubject === 0">
@@ -86,13 +88,13 @@ export default {
     },
     bearAmount: {
       type: Number,
-      default:0
+      default: 0,
     },
   },
   data() {
     return {
       studentId: '',
-      bear_amount:null,
+      bear_amount: null,
       value1: [], // 任务类型-[]
       value2: null, // 获取时间-null
       options: {
@@ -134,10 +136,14 @@ export default {
       allDigit: 0,
     }
   },
+  watch: {
+    bearAmount(newValue) {
+      if (newValue) {
+        this.bear_amount = this.bearAmount
+      }
+    },
+  },
   mounted() {
-    setTimeout(() => {
-      this.bear_amount = this.bearAmount
-    },1000)
     if (!this.$route.params.isShort) {
       this.studentId = this.$route.params.id
       setTimeout(this.reqGetUserCoin.bind(this, 'mounted'), 2000)
@@ -238,7 +244,6 @@ export default {
     },
     top3Show() {
       // 头3数据取自老爹-总获取
-      console.log(this.faProps, 'this.fapsadfasd')
       this.coinNumList[0].value = this.faProps.reduce(
         (pre, cur, index, self) => {
           if (
