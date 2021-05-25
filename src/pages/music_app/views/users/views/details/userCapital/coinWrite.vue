@@ -136,14 +136,10 @@ export default {
       allDigit: 0,
     }
   },
-  watch: {
-    bearAmount(newValue) {
-      if (newValue) {
-        this.bear_amount = this.bearAmount
-      }
-    },
-  },
   mounted() {
+    setTimeout(() => {
+      this.bear_amount = this.bearAmount
+    }, 1000)
     if (!this.$route.params.isShort) {
       this.studentId = this.$route.params.id
       setTimeout(this.reqGetUserCoin.bind(this, 'mounted'), 2000)
