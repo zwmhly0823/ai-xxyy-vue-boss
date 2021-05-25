@@ -19,7 +19,6 @@
       :remote-method="getTeam"
       :loading="loading"
       @change="onChange"
-      @focus="onFocus"
     >
       <el-option
         v-for="item in teamList"
@@ -51,7 +50,6 @@ export default {
       loading: false,
       teamName: '',
       teamList: [],
-      list:[],
       courseLevelReplace,
     }
   },
@@ -98,11 +96,6 @@ export default {
     onClear(val) {
       this.getTeam('')
     },
-    onFocus() {
-      if(!this.teamName) {
-        this.getTeam()
-      }
-    }
   },
 }
 </script>
