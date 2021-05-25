@@ -16,10 +16,10 @@
  * 
 */
 export const channelList = [
-  {
-    value: "/channel/single/508/index/0?channelId='",
-    label: '22元双周体验课联投模版',
-  },
+  // {
+  //   value: "/channel/single/508/index/0?channelId='",
+  //   label: '22元双周体验课联投模版',
+  // },
   {
     value: "/channel/single/505/index/1?channelId='",
     label: '1v1美术宝9.9元双周体验课模版',
