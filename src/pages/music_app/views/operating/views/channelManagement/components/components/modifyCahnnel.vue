@@ -86,6 +86,87 @@
           v-model="ruleForm.desc"
         ></el-input>
       </el-form-item>
+      <el-form-item label="是否支持导入订单" prop="export" required>
+        <el-radio-group v-model="ruleForm.export">
+          <el-radio
+            :disabled="+ruleForm.contract_id > 0 ? true : false"
+            :label="0"
+            >支持</el-radio
+          >
+          <el-radio
+            :disabled="+ruleForm.contract_id > 0 ? true : false"
+            :label="1"
+            >不支持</el-radio
+          >
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="关联合同" required v-if="ruleForm.export == '0'">
+        <div v-if="tableData.length === 0">
+          <el-button
+            type="primary"
+            size="mini"
+            icon="el-icon-plus"
+            @click="dialogVisible = true"
+            >选择合同</el-button
+          >
+        </div>
+        <div v-else>
+          <el-table :data="tableData" border style="width: 95%">
+            <el-table-column prop="contract.id" label="合同id" width="60">
+            </el-table-column>
+            <el-table-column prop="contract.contractName" label="合同名称">
+            </el-table-column>
+            <el-table-column
+              prop="contractPriceDetailList"
+              label="实际结算课单价（元）"
+              min-width="125"
+            >
+              <template slot-scope="scope">
+                <p v-if="scope.row.contractPriceDetailList.length === 0">-</p>
+                <p
+                  v-else
+                  v-for="(item, index) in scope.row.contractPriceDetailList"
+                  :key="index"
+                  :style="{
+                    color: item.priceType == 'DISCOUNT' ? '#2E8B57' : '#606266',
+                    padding: 0
+                  }"
+                >
+                  <!-- DISCOUNT 为绿色 -->
+                  {{ item.packageName + ' ' + item.settlePrice }}
+                </p>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="contractPriceDetailList"
+              label="订单入库价格（元）"
+              min-width="125"
+            >
+              <template slot-scope="scope">
+                <p v-if="scope.row.contractPriceDetailList.length === 0">-</p>
+                <p
+                  v-else
+                  v-for="(item, index) in scope.row.contractPriceDetailList"
+                  :key="index"
+                  :style="{
+                    color: item.priceType == 'DISCOUNT' ? '#2E8B57' : '#606266',
+                    padding: 0
+                  }"
+                >
+                  {{ item.packageName + ' ' + item.orderPrice }}
+                </p>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-button
+            size="mini"
+            icon="el-icon-plus"
+            v-if="+ruleForm.contract_id > 0 ? false : true"
+            @click="dialogVisible = true"
+            >更换合同</el-button
+          >
+        </div>
+      </el-form-item>
       <el-form-item label="渠道状态" prop="status">
         <el-switch
           v-model="ruleForm.status"
@@ -105,13 +186,29 @@
         </div>
       </el-form-item>
     </el-form>
+     <el-dialog
+      title="选择关联合同"
+      append-to-body
+      width="80%"
+      :visible.sync="dialogVisible"
+    >
+      <contract-dialog
+        @close="visibleHide"
+        @getData="getData"
+      ></contract-dialog>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { channelList } from '@/utils/supList'
+import contractDialog from './contractChannel'
+
 export default {
   props: ['modifyRow'],
+  components:{
+    contractDialog
+  },
   data() {
     var channelSort = (rule, value, callback) => {
       if (value === '') {
@@ -125,6 +222,8 @@ export default {
       }
     }
     return {
+      dialogVisible:false,
+      tableData:[],
       channelId: '',
       channelTwoDisabled: true,
       channelThreeDisabled: true,
@@ -168,6 +267,15 @@ export default {
     this.getChannelDetailStatisticsPage()
   },
   methods: {
+    visibleHide() {
+      this.dialogVisible = false
+    },
+    getData(val) {
+      if (val && val.length === 1) {
+        this.tableData = val
+        this.dialogVisible = false
+      }
+    },
     getChannelDetailStatisticsPage() {
       const id = `id:${this.modifyRow.id}`
       this.$http.Operating.ChannelDetailStatisticsPage(JSON.stringify(id)).then(
