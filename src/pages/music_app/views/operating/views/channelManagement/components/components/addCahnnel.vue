@@ -228,6 +228,7 @@ export default {
         status: '1',
         experience: '',
         channelLevel: '',
+        createUser: JSON.parse(localStorage.getItem('staff')).realName,
       },
       rules: {
         channelOne: [
@@ -311,6 +312,19 @@ export default {
             channelLink: this.ruleForm.experience,
             channelLevel: this.getLevel(this.ruleForm.channelLevel), // 渠道等级
             subject: 'MUSIC_APP',
+            createUser: this.ruleForm.createUser,
+            contractId:
+              this.ruleForm.export !== '0'
+                ? 0
+                : this.tableData.map((item) => item.contract.id)[0],
+            contractName:
+              this.ruleForm.export !== '0'
+                ? null
+                : this.tableData.map((item) => item.contract.contractName)[0],
+            contractBody:
+              this.ruleForm.export !== '0'
+                ? null
+                : this.tableData.map((item) => item.contract.contractBody)[0]
           }
           this.$http.Operating.createChannel(props).then((res) => {
             if (res.code === 0) {

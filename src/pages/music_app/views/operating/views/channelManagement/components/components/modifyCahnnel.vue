@@ -241,6 +241,9 @@ export default {
         status: '1',
         channelLevel: '',
         experience: '',
+        export: '',
+        contract_id: '', // 合同id
+        contract_name: '' // 合同名称
       },
       rules: {
         channelOne: [
@@ -299,12 +302,27 @@ export default {
                 this.ruleForm.experience = item1.label
               }
             });
-            console.log(this.ruleForm.experience,"asdfasdfasdfasdfasdfasdf");
             this.ruleForm.status = item.status.toString()
             this.ruleForm.channelLevel = item.channel_level
+            this.ruleForm.contract_name = item.contract_name
+            this.ruleForm.contract_id = item.contract_id
+            this.ruleForm.export = +item.contract_id > 0 ? 0 : 1
           })
         }
       )
+      // 查询渠道关联合同
+      this.$http.Operating.getChannelAndContractDetailByIdAndTimeStamp(
+        this.modifyRow.id
+      ).then((res) => {
+        const { code, payload } = res
+        if (
+          code === 0 &&
+          payload?.contractPriceDetailList &&
+          payload?.contract
+        ) {
+          this.tableData = [payload]
+        }
+      })
     },
     channelTwo() {
       if (typeof this.ruleForm.channelOne === 'string') {

@@ -382,6 +382,14 @@ export default {
         return axios.post('/api/c/v1/channel/updateChannel', params)
     },
     /**
+     *渠道管理查询 合同关联
+     */
+    getChannelAndContractDetailByIdAndTimeStamp(id) {
+        return axios.get(
+            `/api/c/v1/channel/getChannelAndContractDetailByIdAndTimeStamp?id=${id}`
+        )
+    },
+    /**
      *
      *渠道查询
      */
