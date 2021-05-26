@@ -411,6 +411,8 @@ export default {
             channel_class_name
             p_channel_class_name
             p_channel_class_id
+            contract_id
+            contract_name
           }
         }
       }`
