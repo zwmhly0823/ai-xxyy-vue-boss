@@ -10,8 +10,7 @@
 // import axios from '../axios'
 import axios from '../axiosConfig'
 import { getAppSubjectCode, injectSubject } from '@/utils/index'
-const subject = getAppSubjectCode()
-console.log(subject)
+const subject = 3
 export default {
   /**
    * 修改学员是否已加微信、已进群状态
@@ -821,7 +820,7 @@ export default {
       courseId && courseId.length
         ? {
             del: 0,
-            subject,
+            subject:3,
             cid: cid,
             // student_id: studentId,
             team_id: 0,
