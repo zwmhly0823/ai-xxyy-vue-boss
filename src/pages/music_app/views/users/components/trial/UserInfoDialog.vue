@@ -77,7 +77,7 @@
           <el-table
             :data="courseLogData"
             v-loading="courseLoading"
-            style="margin-top: 20px;width: 100%"
+            style="margin-top: 20px; width: 100%"
           >
             <el-table-column prop="title" label="课程名" min-width="150">
               <template slot-scope="scope">
@@ -89,7 +89,7 @@
                 <span
                   :class="{
                     'danger-text':
-                      scope.row.studentCompleteCourseLog.learn_course_count > 0
+                      scope.row.studentCompleteCourseLog.learn_course_count > 0,
                   }"
                   >{{
                     scope.row.studentCompleteCourseLog.learn_course_count > 0
@@ -104,7 +104,7 @@
                 <span
                   :class="{
                     'danger-text':
-                      scope.row.studentCompleteCourseLog.state === '1'
+                      scope.row.studentCompleteCourseLog.state === '1',
                   }"
                   >{{
                     scope.row.studentCompleteCourseLog.state === '1'
@@ -137,7 +137,7 @@
                   :class="{
                     'danger-text':
                       scope.row.studentCompleteCourseLog
-                        .is_today_complete_course
+                        .is_today_complete_course,
                   }"
                   v-if="scope.row.studentCompleteCourseLog"
                   >{{
@@ -168,18 +168,23 @@
             <el-table-column prop="task_image_small" label="作品">
               <template slot-scope="scope">
                 <!-- 图片 -->
-                <div class="task-image-container" v-if="scope.row.task_image">
-                  <div class="task-image" @click="handleViewLarge(scope.row)">
-                    <img :src="scope.row.task_image_small" />
+                <div class="task-image-container" v-if="scope.row.cover_path">
+                  <div
+                    class="task-image"
+                    @click="handleViewLarge(imgUrl + scope.row.video_path)"
+                  >
+                    <img
+                      :src="`${imgUrl}${scope.row.cover_path}?x-oss-process=image/resize,l_100`"
+                    />
                     <!-- 视频-播放按钮 -->
                     <i
                       class="el-icon-video-play"
-                      v-if="scope.row.task_video"
+                      v-if="scope.row.cover_path"
                     ></i>
                   </div>
                   <!--班级2.0：视频不支持下载-->
                   <p
-                    v-if="!(teamIdProp && scope.row.task_video)"
+                    v-if="!(teamIdProp && scope.row.cover_path)"
                     class="primary-text"
                     @click="downImg(scope.row)"
                   >
@@ -263,16 +268,18 @@
 
 <script>
 import { formatData } from '@/utils/index'
+import contants from '@/utils/contants'
+const { OSS_IMG_BASE_URL } = contants
 export default {
   props: {
     // 学员信息
     user: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     tab: {
       type: String,
-      default: ''
+      default: '',
     },
     // 老师权限ID
     teacherIds: Array,
@@ -280,12 +287,12 @@ export default {
     // 班级ID
     teamIdProp: {
       type: String,
-      default: ''
+      default: '',
     },
     limit: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   computed: {
     userInfo() {
@@ -293,10 +300,11 @@ export default {
     },
     teamId() {
       return (this.user && this.user.team_id) || ''
-    }
+    },
   },
   data() {
     return {
+      imgUrl: OSS_IMG_BASE_URL,
       courseLoading: false,
       visible: false,
       activeTab: this.tab || '',
@@ -309,7 +317,7 @@ export default {
       pageSize: 5,
       taskDialogVisible: false,
       currentImg: '',
-      currentVideo: ''
+      currentVideo: '',
     }
   },
 
@@ -322,7 +330,7 @@ export default {
       this.currentPage = 1
       this.totalElements = 0
       this.getDataByTab(newVal)
-    }
+    },
   },
 
   methods: {
@@ -338,7 +346,7 @@ export default {
         teamId,
         page,
         size: 5,
-        limit
+        limit,
       }
       this.$http.User.getSendCourseLogPage(params)
         .then((res) => {
@@ -346,7 +354,7 @@ export default {
             const {
               totalPages,
               totalElements,
-              content
+              content,
             } = res.data.SendCourseLogPage
             const list = content.map((item) => {
               item.studentCompleteCourseLog =
@@ -377,13 +385,13 @@ export default {
         teamId,
         page,
         size: 5,
-        subject: '0'
+        subject: '0',
       }).then((res) => {
         if (res?.data?.StudentCourseTaskPage) {
           const {
             totalPages,
             totalElements,
-            content
+            content,
           } = res.data.StudentCourseTaskPage
           const list = content.map((item) => {
             item.task_image_small =
@@ -408,14 +416,14 @@ export default {
       const params = {
         uid: this.userInfo.id,
         // teacher_id: this.teacherIds, // 冬成说去掉
-        action_type: [1, 2, 3, 4, 5, 6]
+        action_type: [1, 2, 3, 4, 5, 6],
       }
       this.$http.User.getUserBehaviorLogPage(params, page, 9).then((res) => {
         if (res.data?.UserBehaviorLogPage) {
           const {
             content,
             totalPages,
-            totalElements
+            totalElements,
           } = res.data.UserBehaviorLogPage
           const list = content.map((item) => {
             item.action_type_text = item.action_type_text || '-'
@@ -430,33 +438,23 @@ export default {
         }
       })
     },
-
-    // 查看大图
+   // 查看大图
     handleViewLarge(task) {
-      const { task_image: taskImage, task_video: taskVideo } = task
-      if (taskImage && !taskVideo) {
-        this.currentImg = taskImage
-        this.currentVideo = ''
-      }
-      if (taskImage && taskVideo) {
-        this.currentImg = ''
-        this.currentVideo = taskVideo
-      }
+      this.currentVideo = task
       this.taskDialogVisible = true
     },
-
     // 下载作品图片
     downImg(val) {
       const that = this
       console.log('下载', val)
       const canvas = document.createElement('canvas')
-      const typeName = val.task_image.lastIndexOf('.')
-      const type = val.task_image.substr(typeName + 1)
+      const typeName = this.imgUrl+val.video_path.lastIndexOf('.')
+      const type = this.imgUrl+val.video_path.substr(typeName + 1)
       const image = new Image()
       image.setAttribute('crossOrigin', 'anonymous')
 
-      image.src = val.task_image
-      image.onload = function() {
+      image.src = this.imgUrl+val.video_path
+      image.onload = function () {
         const link = document.createElement('a')
         canvas.width = image.width
         canvas.height = image.height
@@ -519,8 +517,8 @@ export default {
       this.taskDialogVisible = false
       this.currentVideo = ''
       this.currentImg = ''
-    }
-  }
+    },
+  },
 }
 </script>
 
