@@ -622,7 +622,7 @@
               >
                 <span>点评</span>
                 <div class="sort-icon-arrow">
-                  <i
+                  <!-- <i
                     class="el-icon-caret-top top-color"
                     :class="{
                       active:
@@ -637,7 +637,7 @@
                         sortKeys['listen_comment_count'] == 'asc' &&
                         sortActive == 'listen_comment_count',
                     }"
-                  ></i>
+                  ></i> -->
                 </div>
               </div>
             </template>
@@ -768,7 +768,7 @@
               >
                 <span>调查问卷</span>
                 <div class="sort-icon-arrow">
-                  <i
+                  <!-- <i
                     class="el-icon-caret-top top-color"
                     :class="{
                       active:
@@ -783,7 +783,7 @@
                         sortKeys['questionnaire_count'] == 'asc' &&
                         sortActive == 'questionnaire_count',
                     }"
-                  ></i>
+                  ></i> -->
                 </div>
               </div>
             </template>
@@ -873,7 +873,7 @@
               >
                 <span>转化</span>
                 <div class="sort-icon-arrow">
-                  <i
+                  <!-- <i
                     class="el-icon-caret-top top-color"
                     :class="{
                       active:
@@ -888,7 +888,7 @@
                         sortKeys['bi_label.keyword'] == 'asc' &&
                         sortActive == 'bi_label.keyword',
                     }"
-                  ></i>
+                  ></i> -->
                 </div>
               </div>
             </template>

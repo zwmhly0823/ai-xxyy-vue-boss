@@ -830,7 +830,7 @@ export default {
           }
         : {
             del: 0,
-            subject,
+            subject:3,
             cid: cid,
             // student_id: studentId,
             // normal 体验系统课
