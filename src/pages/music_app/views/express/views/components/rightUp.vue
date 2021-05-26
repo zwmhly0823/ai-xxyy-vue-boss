@@ -348,61 +348,6 @@ export default {
         sessionStorage.removeItem('uid')
       } else {
         console.log(this.searchIn, 'this.searchIn-=')
-        // if (this.exType == 2) {
-        //   // 双周
-        //   if (this.searchIn.length > 0) {
-        //     this.searchIn.forEach((item, index) => {
-        //       if (item.terms) {
-        //         if (
-        //           !item.terms.packages_id ||
-        //           item.terms.packages_id.includes('502')
-        //         ) {
-        //           this.searchIn.push({
-        //             terms: { packages_id: ['500', '503', '505', '508'] },
-        //           })
-        //         }
-        //       }
-        //     })
-        //   } else {
-        //     this.searchIn.push({
-        //       terms: { packages_id: ['500', '503', '505', '508'] },
-        //     })
-        //   }
-        // }
-        // if (this.exType == 1) {
-        //   // 单周
-        //   if (this.searchIn.length > 0) {
-        //     this.searchIn.forEach((item, index) => {
-        //       if (item.terms) {
-        //        if (
-        //           !item.terms.packages_id ||
-        //           (item.terms && item.terms.packages_id.includes('500'))
-        //         ) {
-        //           this.searchIn.push({
-        //             terms: { packages_id: ['502', '506', '507'] },
-        //           })
-        //         }
-        //       }
-        //     })
-        //   } else {
-        //     this.searchIn.push({
-        //       terms: { packages_id: ['502', '506', '507'] },
-        //     })
-        //   }
-        // }
-        // if (!this.exType) {
-        //   this.searchIn.length > 0 &&
-        //     this.searchIn.forEach((item, index) => {
-        //       let keys = Object.keys(item)
-        //       keys.forEach((k, i) => {
-        //         if (k == 'terms') {
-        //           if (item.term.packages_id) {
-        //             this.searchIn.splice(index, 1)
-        //           }
-        //         }
-        //       })
-        //     })
-        // }
         const term = this.searchIn.map((item, index) => {
           if (item && item.terms) {
             if (item.terms && item.terms.sup) {
