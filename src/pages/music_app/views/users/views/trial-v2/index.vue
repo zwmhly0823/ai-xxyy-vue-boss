@@ -618,7 +618,6 @@
             <template slot="header">
               <div
                 class="sort-operate-box"
-                @click="sortRules('listen_comment_count')"
               >
                 <span>点评</span>
                 <div class="sort-icon-arrow">
@@ -764,7 +763,6 @@
             <template slot="header">
               <div
                 class="sort-operate-box"
-                @click="sortRules('questionnaire_count')"
               >
                 <span>调查问卷</span>
                 <div class="sort-icon-arrow">
@@ -869,7 +867,6 @@
             <template slot="header">
               <div
                 class="sort-operate-box"
-                @click="sortRules('bi_label.keyword')"
               >
                 <span>转化</span>
                 <div class="sort-icon-arrow">
