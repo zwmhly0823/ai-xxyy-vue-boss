@@ -183,13 +183,13 @@
                     ></i>
                   </div>
                   <!--班级2.0：视频不支持下载-->
-                  <p
+                  <!-- <p
                     v-if="!(teamIdProp && scope.row.cover_path)"
                     class="primary-text"
                     @click="downImg(scope.row)"
                   >
                     下载
-                  </p>
+                  </p> -->
                 </div>
               </template>
             </el-table-column>
