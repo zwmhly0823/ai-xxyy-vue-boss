@@ -322,7 +322,7 @@ export default {
       // 前端写死套餐，变更需要同时更改 ../components/contractDrawer.vue 中set_mealList
       set_mealList: [
         {
-          packageName: '49元单周体验课',
+          packageName: '49元双周体验课',
           // 双周体验课
           packageId: '500',
           classHour: '2',
