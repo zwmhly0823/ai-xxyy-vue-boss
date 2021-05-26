@@ -179,7 +179,7 @@
       </el-form-item>
       <el-form-item>
         <div style="margin-left: 50px">
-          <el-button type="primary" @click="submitForm('ruleForm')"
+          <el-button type="primary" :disabled="this.ruleForm.export == 0 && this.tableData.length != 1" @click="submitForm('ruleForm')"
             >提交</el-button
           >
           <el-button @click="resetForm('ruleForm')">取消</el-button>
@@ -387,7 +387,21 @@ export default {
               channelLevel: this.getLevel(this.ruleForm.channelLevel), // 渠道等级
             }
           }
-
+          const obj = {
+            contractId:
+              this.ruleForm.export !== 0
+                ? 0
+                : this.tableData.map((item) => item.contract.id)[0],
+            contractName:
+              this.ruleForm.export !== 0
+                ? null
+                : this.tableData.map((item) => item.contract.contractName)[0],
+            contractBody:
+              this.ruleForm.export !== 0
+                ? null
+                : this.tableData.map((item) => item.contract.contractBody)[0]
+          }
+          Object.assign(this.props, obj)
           this.$http.Operating.updateChannel(this.props).then((res) => {
             console.log(res)
             if (res.code === 0) {
