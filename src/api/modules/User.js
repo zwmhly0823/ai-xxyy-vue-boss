@@ -204,6 +204,7 @@ export default {
             user_intention_type
             user_intention_describe
             send_course_count
+            task_course_count
             join_course_count
             all_join_course_count
             complete_course_count
