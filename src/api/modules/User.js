@@ -814,7 +814,7 @@ export default {
     page,
     subject,
     cid,
-    // studentId,
+    studentId,
     teamId, // 只普通用
     courseId // 只写字0元体验课用
   }) {
@@ -833,7 +833,7 @@ export default {
             del: 0,
             subject:3,
             cid: cid,
-            // student_id: studentId,
+            student_id: studentId,
             // normal 体验系统课
             team_id: teamId
           }
