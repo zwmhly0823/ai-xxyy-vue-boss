@@ -8,7 +8,7 @@
 -->
 <template>
   <div class="user-list">
-     <el-tabs class="trial-type-content" v-model="trialTypeVal" type="card">
+    <el-tabs class="trial-type-content" v-model="trialTypeVal" type="card">
       <el-tab-pane label="双周体验课学员" name="0"></el-tab-pane>
       <el-tab-pane label="单周体验课学员" name="2"></el-tab-pane>
     </el-tabs>
@@ -150,7 +150,10 @@
           </el-table-column>
           <el-table-column label="APP信息" min-width="110" class-name="pdl-10">
             <template slot-scope="scope">
-              <base-user-info :user="scope.row.userInfo" :order="scope.row.orderInfo"/>
+              <base-user-info
+                :user="scope.row.userInfo"
+                :order="scope.row.orderInfo"
+              />
             </template>
           </el-table-column>
           <el-table-column label="微信信息" min-width="110" class-name="pdl-10">
@@ -616,9 +619,7 @@
             "
           >
             <template slot="header">
-              <div
-                class="sort-operate-box"
-              >
+              <div class="sort-operate-box">
                 <span>点评</span>
                 <div class="sort-icon-arrow">
                   <!-- <i
@@ -678,7 +679,7 @@
               </div>
             </template>
           </el-table-column> -->
-         <el-table-column label="盒子物流" min-width="80">
+          <el-table-column label="盒子物流" min-width="80">
             <template slot-scope="scope">
               <div class="d-flex align-center space-between">
                 <p
@@ -761,9 +762,7 @@
             v-if="showMode === 'trialUserListMode'"
           >
             <template slot="header">
-              <div
-                class="sort-operate-box"
-              >
+              <div>
                 <span>调查问卷</span>
                 <div class="sort-icon-arrow">
                   <!-- <i
@@ -865,9 +864,7 @@
           </el-table-column>
           <el-table-column label="系统课转化" min-width="65" fixed="right">
             <template slot="header">
-              <div
-                class="sort-operate-box"
-              >
+              <div>
                 <span>转化</span>
                 <div class="sort-icon-arrow">
                   <!-- <i

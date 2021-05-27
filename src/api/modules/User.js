@@ -273,6 +273,12 @@ export default {
             expressInfo{
               express_status
             }
+            userExtends {
+              wechat_no
+              wechat_id
+              wechat_avatar
+              wechat_nick_name
+            }
             questionnaire_count
             bi_label
             sys_label
