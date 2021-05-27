@@ -12,7 +12,7 @@
       :model="ruleForm"
       :rules="rules"
       ref="ruleForm"
-      label-width="100px"
+      label-width="120px"
       class="demo-ruleForm"
     >
       <el-form-item label="一级渠道" prop="channelOne">
@@ -91,11 +91,11 @@
       </el-form-item>
       <el-form-item label="是否支持导入订单" prop="export" required>
         <el-radio-group v-model="ruleForm.export">
-          <el-radio label="0">支持</el-radio>
-          <el-radio label="1">不支持</el-radio>
+          <el-radio :label="0">支持</el-radio>
+          <el-radio :label="1">不支持</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="关联合同" required v-if="ruleForm.export === '0'">
+      <el-form-item label="关联合同" required v-if="ruleForm.export == 0">
         <div v-if="tableData.length === 0">
           <el-button
             type="primary"
@@ -226,6 +226,7 @@ export default {
         sort: '',
         desc: '',
         status: '1',
+        export:1,
         experience: '',
         channelLevel: '',
         createUser: JSON.parse(localStorage.getItem('staff')).realName,

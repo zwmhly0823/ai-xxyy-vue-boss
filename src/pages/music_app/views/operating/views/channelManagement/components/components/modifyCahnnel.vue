@@ -12,7 +12,7 @@
       :model="ruleForm"
       :rules="rules"
       ref="ruleForm"
-      label-width="100px"
+      label-width="120px"
       class="demo-ruleForm"
     >
       <el-form-item label="渠道ID">
@@ -100,7 +100,7 @@
           >
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="关联合同" required v-if="ruleForm.export == '0'">
+      <el-form-item label="关联合同" required v-if="ruleForm.export == 0">
         <div v-if="tableData.length === 0">
           <el-button
             type="primary"
@@ -241,7 +241,7 @@ export default {
         status: '1',
         channelLevel: '',
         experience: '',
-        export: '',
+        export: 1,
         contract_id: '', // 合同id
         contract_name: '' // 合同名称
       },

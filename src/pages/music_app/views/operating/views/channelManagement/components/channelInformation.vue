@@ -215,7 +215,7 @@
       :show-close="showClose"
       :visible.sync="modifyDrawer"
       :modal="false"
-      size="30%"
+      size="40%"
     >
       <modify-cahnnel
         v-if="modifyDrawer"
