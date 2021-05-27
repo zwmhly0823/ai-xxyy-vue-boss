@@ -198,7 +198,7 @@
     <el-drawer
       :visible.sync="drawerApproval"
       :destroy-on-close="true"
-      size="50%"
+      size="30%"
       class="drawer-approval-detail"
       :modal="false"
     >
@@ -1315,11 +1315,11 @@ export default {
   }
 }
 </style>
-<style lang="scss" scoped>
+<style lang="scss">
 .el-tabs--border-card > .el-tabs__content {
   padding: 0px;
 }
-/deep/ .el-image-viewer__mask .el-image-viewer__img {
-  z-index: 2888 !important;
+.el-image-viewer__mask .el-image-viewer__img {
+  z-index: 8888 !important;
 }
 </style>

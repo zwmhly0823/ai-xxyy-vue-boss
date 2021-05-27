@@ -250,7 +250,7 @@
     <el-drawer
       :visible.sync="drawerApproval"
       :destroy-on-close="true"
-      size="60%"
+      size="30%"
       class="drawer-approval-detail"
       :modal="false"
       @close="handleCloseDraw"
@@ -671,7 +671,7 @@
               <div class="demo-image__preview">
                 <el-image
                   v-if="drawerApprovalDeatail.attsUrl"
-                  style="width: 220px; height: 120px"
+                  style="width: 220px; height: 120px;"
                   :src="drawerApprovalDeatail.attsUrl"
                   fit="contain"
                   :preview-src-list="[drawerApprovalDeatail.attsUrl]"
@@ -2309,8 +2309,8 @@ export default {
   }
 }
 </style>
-<style lang="scss" scoped>
-/deep/ .el-image-viewer__mask .el-image-viewer__img {
-  z-index: 2888 !important;
+<style lang="scss">
+.el-image-viewer__mask .el-image-viewer__img {
+  z-index: 8888 !important;
 }
 </style>
