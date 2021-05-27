@@ -823,8 +823,8 @@ export default {
         ? {
             del: 0,
             subject:3,
-            cid: cid,
-            student_id: studentId,
+            // cid: cid,
+            cid: studentId,
             team_id: 0,
             // 写字0元体验课
             course_id: courseId
@@ -832,8 +832,8 @@ export default {
         : {
             del: 0,
             subject:3,
-            cid: cid,
-            student_id: studentId,
+            // cid: cid,
+            cid: studentId,
             // normal 体验系统课
             team_id: teamId
           }
