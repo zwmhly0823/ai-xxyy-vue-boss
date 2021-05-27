@@ -824,7 +824,7 @@ export default {
             del: 0,
             subject:3,
             cid: cid,
-            // student_id: studentId,
+            student_id: studentId,
             team_id: 0,
             // 写字0元体验课
             course_id: courseId
