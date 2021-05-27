@@ -619,7 +619,7 @@
             "
           >
             <template slot="header">
-              <div class="sort-operate-box">
+              <div>
                 <span>点评</span>
                 <div class="sort-icon-arrow">
                   <!-- <i
