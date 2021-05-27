@@ -382,7 +382,7 @@ export default {
       let result = await this.$http.Operating.getAllCategory()
       if (result.code == 0) {
         if (this.courseType == '2') {
-          this.trialClass = result.payload.singleWeek;
+          this.trialClass = result.payload.singleWeek
         } else if (this.courseType == '0') {
           this.trialClass = result.payload.doubleWeek
         } else if (this.courseType == '1') {

@@ -355,6 +355,7 @@
                 drawerApprovalDeatail.productdetails.length
               "
               @click="dialogFormVisibleCount = true"
+              style="background-color: rgba(31, 116, 249, 0.7); color: white"
               >修改数量</mark
             >
           </el-col>
@@ -649,7 +650,7 @@
               {{ drawerApprovalDeatail.refundFee }}
             </el-col>
             <el-col v-if="isStaffId" :span="13" :offset="1">
-              <mark @click="dialogFormVisible = true">修改金额</mark>
+              <mark @click="dialogFormVisible = true" style="background-color: rgba(31, 116, 249, 0.7); color: white">修改金额</mark>
             </el-col>
           </el-row>
           <el-row>

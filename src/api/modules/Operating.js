@@ -182,10 +182,10 @@ export default {
         return axios.post(
             `/api/s/v1/management/enroll/exportDetail?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&level=${params.level}&courseType=${params.courseType}&period=${params.period}&courseDifficulties=${params.courseDifficulties}`,
             params, {
-                responseType: 'blob' // 跟headers同级的
-                    // 给文件流加个字段,excel就不会有内部错误了
-                    // 二进制大对象(表示一个不可变、原始数据的类文件对象)
-            }
+            responseType: 'blob' // 跟headers同级的
+            // 给文件流加个字段,excel就不会有内部错误了
+            // 二进制大对象(表示一个不可变、原始数据的类文件对象)
+        }
         )
     },
     /**
@@ -276,8 +276,8 @@ export default {
         return axios.post('/graphql/v1/toss', {
             query: `{
         ChannelManagementStatisticsTotal(query: ${JSON.stringify(
-        injectSubject(params)
-      )}){
+                injectSubject(params)
+            )}){
            trial_user_num
            order_user_no_pay_nums
            wet_nums
@@ -470,10 +470,10 @@ export default {
             responseType: 'blob'
         }
         return axios.post(`/api/b/v1/import/importCompletedOrder`, file, {
-                headers,
-                params: {}
-            })
-            // return axios.post(`/api/b/v1/import/importCompletedOrder`, file)
+            headers,
+            params: {}
+        })
+        // return axios.post(`/api/b/v1/import/importCompletedOrder`, file)
     },
     /**
      * 系统标签 列表查询
@@ -736,8 +736,8 @@ export default {
     /**
      * @description 编辑微信保存按钮
      * /**
-     * @description 查询排期
-     */
+    * @description 查询排期
+    */
     getAllCategory() {
         return axios.get(
             `/api/s/v1/management/getAllCategory`,
@@ -773,4 +773,47 @@ export default {
             `/api/home/v1/config/getPhoneModel`
         )
     },
+    // 体验课定向排期列表
+    getTrialOperPeroid(params) {
+        return axios.get(
+            `/api/s/v1/managementChannel/getConfigPage?channelIds=${params.channelIds
+            }&pageNumber=${params.pageNumber}&pageSize=${params.pageSize}&type=${params.type
+            }&category=${params.category}&channelId=${params.channelId
+            }&periods=${params.periods || ''}`
+        )
+    },
+    /**
+    * @description 获取课程类型
+    * @params courseType { 0: 体验课； 1： 系统课}
+    */
+    getCourseListByCourseType(params) {
+        return axios.get(
+            `/api/t/v1/teacher/category/config/getByCourseType?courseType=${params.courseType}`
+        )
+    },
+    // 体验课新建定向招生渠道
+    saveConfigTrialOperPeroid(params) {
+        return axios.post(
+            '/api/s/v1/managementChannel/saveConfig',
+            JSON.stringify(params)
+        )
+    },
+
+    // 体验课编辑定向招生渠道
+    editConfigTrialOperPeroid(params) {
+        const curstomQuery = {
+            id: params.id,
+            period: params.period,
+            subject: params.subject
+        }
+        return axios.post(
+            '/api/s/v1/managementChannel/changeChannelPeriod',
+            JSON.stringify(curstomQuery)
+        )
+    },
+
+    // 体验课定向招生渠道切换启用、禁用状态
+    switchStatusTrialOperPeroid(params) {
+        return axios.post('/api/s/v1/managementChannel/switchStatus', params)
+    }
 }
