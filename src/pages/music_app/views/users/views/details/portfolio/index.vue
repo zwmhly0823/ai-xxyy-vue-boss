@@ -445,7 +445,7 @@ export default {
       this.$http.User.getStudentCourseTaskPage({
         page: this.currentPage,
         subject: this.changeSubject,
-        // studentId: this.studentId,
+        studentId: this.studentId,
         cid: this.studentId,
 
         teamId: this.teamId, // 班级Id
