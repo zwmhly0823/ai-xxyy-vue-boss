@@ -10,8 +10,7 @@
 // import axios from '../axios'
 import axios from '../axiosConfig'
 import { getAppSubjectCode, injectSubject } from '@/utils/index'
-const subject = getAppSubjectCode()
-console.log(subject)
+const subject = 3
 export default {
   /**
    * 修改学员是否已加微信、已进群状态
@@ -205,6 +204,8 @@ export default {
             user_intention_type
             user_intention_describe
             send_course_count
+            task_course_count
+            last_task_time
             join_course_count
             all_join_course_count
             complete_course_count
@@ -271,6 +272,12 @@ export default {
             }
             expressInfo{
               express_status
+            }
+            userExtends {
+              wechat_no
+              wechat_id
+              wechat_avatar
+              wechat_nick_name
             }
             questionnaire_count
             bi_label
@@ -813,7 +820,7 @@ export default {
     page,
     subject,
     cid,
-    // studentId,
+    studentId,
     teamId, // 只普通用
     courseId // 只写字0元体验课用
   }) {
@@ -821,18 +828,18 @@ export default {
       courseId && courseId.length
         ? {
             del: 0,
-            subject,
-            cid: cid,
-            // student_id: studentId,
+            subject:3,
+            // cid: cid,
+            cid: studentId,
             team_id: 0,
             // 写字0元体验课
             course_id: courseId
           }
         : {
             del: 0,
-            subject,
-            cid: cid,
-            // student_id: studentId,
+            subject:3,
+            // cid: cid,
+            cid: studentId,
             // normal 体验系统课
             team_id: teamId
           }
@@ -840,7 +847,7 @@ export default {
     return axios.post(`/graphql/v1/toss`, {
       query: `{
         StudentCourseTaskPage(query:${JSON.stringify(formattingQuery)},
-        sort: ${JSON.stringify(`{ "ctime": "asc" }`)},
+        sort: ${JSON.stringify(`{ "ctime": "desc" }`)},
           page: ${page},
           size:20){
             totalPages
