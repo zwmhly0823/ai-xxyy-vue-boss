@@ -112,8 +112,11 @@
         <el-option label="课程退款" value="课程退款"></el-option>
         <el-option label="降半年课包" value="降半年课包"></el-option>
         <el-option label="补偿" value="补偿"></el-option>
-        <el-option label="降一年课包" value="降一年课包"></el-option>
-        <el-option label="降一年半年课包" value="降一年半年课包"></el-option>
+        <el-option label="降一年包" value="降一年课包"></el-option>
+        <el-option label="降一年半年包" value="降一年半年课包"></el-option>
+        <el-option label="系统预售-优惠券退款" value="系统预售-优惠券退款"></el-option>
+        <el-option label="器材退款" value="器材退款"></el-option>
+        <el-option label="体验课退差价" value="体验课退差价"></el-option>
       </el-select>
       <el-button
         type="primary"
@@ -247,7 +250,7 @@
     <el-drawer
       :visible.sync="drawerApproval"
       :destroy-on-close="true"
-      size="50%"
+      size="30%"
       class="drawer-approval-detail"
       :modal="false"
       @close="handleCloseDraw"
@@ -261,20 +264,20 @@
       <!-- 1-1补发货全套 -->
       <div v-if="drawerApprovalDeatail.addressId" class="approval-replenish">
         <el-row>
-          <el-col :span="3">申请人:</el-col>
-          <el-col :span="20" :offset="1">
+          <el-col :span="4">申请人:</el-col>
+          <el-col :span="19" :offset="1">
             {{ drawerApprovalDeatail.applyUserName }}
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="3">申请部门:</el-col>
-          <el-col :span="20" :offset="1">
+          <el-col :span="4">申请部门:</el-col>
+          <el-col :span="19" :offset="1">
             {{ drawerApprovalDeatail.applyUserDeapartmentName }}
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="3">用户电话:</el-col>
-          <el-col :span="20" :offset="1">
+          <el-col :span="4">用户电话:</el-col>
+          <el-col :span="19" :offset="1">
             <el-link
               type="primary"
               :href="'/music_app/#/details/' + drawerApprovalDeatail.userId"
@@ -284,14 +287,14 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="3">补发商品:</el-col>
-          <el-col :span="20" :offset="1">
+          <el-col :span="4">补发商品:</el-col>
+          <el-col :span="19" :offset="1">
             {{ drawerApprovalDeatail.productInfo }}
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="3">收货信息:</el-col>
-          <el-col :span="20" :offset="1">
+          <el-col :span="4">收货信息:</el-col>
+          <el-col :span="19" :offset="1">
             {{
               `${
                 drawerApprovalDeatail.receiptName +
@@ -310,20 +313,20 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="3">订单号:</el-col>
-          <el-col :span="20" :offset="1">
+          <el-col :span="4">订单号:</el-col>
+          <el-col :span="19" :offset="1">
             {{ drawerApprovalDeatail.outTradeNo }}
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="3">课程进度:</el-col>
-          <el-col :span="20" :offset="1">{{
+          <el-col :span="4">课程进度:</el-col>
+          <el-col :span="19" :offset="1">{{
             courseLevelReplace(drawerApprovalDeatail.currentLesson)
           }}</el-col>
         </el-row>
         <el-row>
-          <el-col :span="3">商品信息:</el-col>
-          <el-col :span="20" :offset="1">
+          <el-col :span="4">商品信息:</el-col>
+          <el-col :span="19" :offset="1">
             <span
               v-for="item of drawerApprovalDeatail.productdetails"
               :key="item.id"
@@ -352,13 +355,14 @@
                 drawerApprovalDeatail.productdetails.length
               "
               @click="dialogFormVisibleCount = true"
+              style="background-color: rgba(31, 116, 249, 0.7); color: white"
               >修改数量</mark
             >
           </el-col>
         </el-row>
         <el-row v-show="+drawerApprovalDeatail.stage !== 0">
-          <el-col :span="3">开课期数:</el-col>
-          <el-col :span="20" :offset="1">
+          <el-col :span="4">开课期数:</el-col>
+          <el-col :span="19" :offset="1">
             {{ drawerApprovalDeatail.periodName }}
           </el-col>
         </el-row>
@@ -370,37 +374,37 @@
               drawerApprovalDeatail.type === 'SYSTEM_MATERIALS')
           "
         >
-          <el-col :span="3">版本信息:</el-col>
-          <el-col :span="20" :offset="1">
+          <el-col :span="4">版本信息:</el-col>
+          <el-col :span="19" :offset="1">
             <VersionBox @result="getVersion" name="version" />
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="3">补发原因:</el-col>
-          <el-col :span="20" :offset="1">{{
+          <el-col :span="4">补发原因:</el-col>
+          <el-col :span="19" :offset="1">{{
             reasonList[drawerApprovalDeatail.reason]
           }}</el-col>
         </el-row>
         <el-row>
-          <el-col :span="3">发起时间:</el-col>
-          <el-col :span="20" :offset="1">{{
+          <el-col :span="4">发起时间:</el-col>
+          <el-col :span="19" :offset="1">{{
             drawerApprovalDeatail.ctimeFormdate
           }}</el-col>
         </el-row>
         <el-row>
-          <el-col :span="3">状态:</el-col>
-          <el-col :span="20" :offset="1">{{
+          <el-col :span="4">状态:</el-col>
+          <el-col :span="19" :offset="1">{{
             drawerApprovalDeatail.status == 'PENDING' ? '待审批' : '-'
           }}</el-col>
         </el-row>
         <el-row>
-          <el-col :span="3">补货说明:</el-col>
+          <el-col :span="4">补货说明:</el-col>
           <el-col :span="18" :offset="1">
             {{ drawerApprovalDeatail.reissueMsg }}
           </el-col>
         </el-row>
         <el-row v-if="drawerApprovalDeatail.attsUrl.indexOf('mp4') == -1">
-          <el-col :span="3">附件:</el-col>
+          <el-col :span="4">附件:</el-col>
           <el-col :span="18" :offset="1">
             <div class="demo-image__preview">
               <span
@@ -425,7 +429,7 @@
           </el-col>
         </el-row>
         <el-row v-else>
-          <el-col :span="3">附件:</el-col>
+          <el-col :span="4">附件:</el-col>
           <el-col :span="18" :offset="1">
             <video
               style="width: 220px; height: 120px"
@@ -435,7 +439,7 @@
           </el-col>
         </el-row>
         <el-row class="BOTTOM" v-if="isStaffId">
-          <el-col :span="20" :offset="1">
+          <el-col :span="19" :offset="1">
             <el-button type="button" @click="dialogFormVisible_checkbox = true"
               >拒 绝</el-button
             >
@@ -549,6 +553,8 @@
                   4: '降1年包',
                   5: '降1年半包',
                   6: '系统课预付款优惠券退款',
+                  7: '硬件乐器退款',
+                  8: '体验课退差价'
                 }[drawerApprovalDeatail.refundType]
               }}
             </el-col>
@@ -568,7 +574,12 @@
 
           <el-row>
             <el-col :span="5">关联订单:</el-col>
-            <el-col :span="18" :offset="1">{{drawerApprovalDeatail.associatedOrderOutTradeNo && drawerApprovalDeatail.associatedOrderOutTradeNo!=0?`${drawerApprovalDeatail.associatedPackagesName},金额${drawerApprovalDeatail.associatedOrderAmout},订单号${drawerApprovalDeatail.associatedOrderOutTradeNo}`:'无关联'}}</el-col>
+            <el-col :span="18" :offset="1">{{
+              drawerApprovalDeatail.associatedOrderOutTradeNo &&
+              drawerApprovalDeatail.associatedOrderOutTradeNo != 0
+                ? `${drawerApprovalDeatail.associatedPackagesName},金额${drawerApprovalDeatail.associatedOrderAmout},订单号${drawerApprovalDeatail.associatedOrderOutTradeNo}`
+                : '无关联'
+            }}</el-col>
           </el-row>
           <el-row>
             <el-col :span="5">关单赠品:</el-col>
@@ -639,7 +650,7 @@
               {{ drawerApprovalDeatail.refundFee }}
             </el-col>
             <el-col v-if="isStaffId" :span="13" :offset="1">
-              <mark @click="dialogFormVisible = true">修改金额</mark>
+              <mark @click="dialogFormVisible = true" style="background-color: rgba(31, 116, 249, 0.7); color: white">修改金额</mark>
             </el-col>
           </el-row>
           <el-row>
@@ -660,7 +671,7 @@
               <div class="demo-image__preview">
                 <el-image
                   v-if="drawerApprovalDeatail.attsUrl"
-                  style="width: 220px; height: 120px"
+                  style="width: 220px; height: 120px;"
                   :src="drawerApprovalDeatail.attsUrl"
                   fit="contain"
                   :preview-src-list="[drawerApprovalDeatail.attsUrl]"
@@ -803,7 +814,7 @@
         <!-- 1-2-4退款操作按钮 -->
         <div v-if="currentType !== 'UNCREDITED'">
           <el-row class="BOTTOM" v-if="isStaffId">
-            <el-col :span="20" :offset="1">
+            <el-col :span="19" :offset="1">
               <a
                 :href="'/music_app/#/details/' + drawerApprovalDeatail.userId"
                 target="_blank"
@@ -835,7 +846,7 @@
           "
         >
           <el-row class="BOTTOM">
-            <el-col :span="20" :offset="1">
+            <el-col :span="19" :offset="1">
               <el-button
                 type="button"
                 @click="dialogFormVisible_checkbox = true"
@@ -874,6 +885,7 @@
       ref="adjustDrawerCom"
       :adjustDrawerData="adjustDrawerData"
       :isStaffId="isStaffId"
+      :checkStatus="checkStatus"
       @result="adjustDrawerPass"
     ></adjust-drawer>
     <!-- 调班调级备注弹窗 -->
@@ -1208,25 +1220,31 @@ export default {
         SINGLE_QUALITY: '产品质量问题',
         // SINGLE_PIGMENT_LEAKAGE: '颜料撒漏'
       },
-      courseOptions: { TESTCOURSE: '体验课', SYSTEMCOURSE: '系统课', TESTCOURSE_SINGLE:'体验课'},
+      courseOptions: {
+        TESTCOURSE: '体验课',
+        SYSTEMCOURSE: '系统课',
+        TESTCOURSE_SINGLE: '体验课',
+      },
       currentType: '',
       type_lk: '',
       changeVersionList: [],
       roleId: '',
+      checkType: null,
+      checkStatus: false,
     }
   },
   created() {
     // 身份类型，4是财务，具体见wiki
     const roleList = JSON.parse(localStorage.getItem('staff')).roleList
 
-    console.log(roleList,"roleList");
+    console.log(roleList, 'roleList')
     let roleId = roleList ? roleList[0] : ''
     this.roleId = roleId
     this.getRoleIdList()
   },
   mounted() {
     const staff = getStaffInfo()
-    console.log(staff,"staff");
+    console.log(staff, 'staff')
     this.resetParams = staff
     this.staffId = staff.staffId // storage体验或系统课老师id
     this.isStaffId = staff.isStaffId // 只有boss且position==='1' 为true
@@ -1264,6 +1282,13 @@ export default {
       this.$http.Backend.getStaffIds().then((res) => {
         this.roleIdList = res.payload.approvalIdSet
       })
+    },
+    // 获取审批权限
+    async initData() {
+      let result = await this.$http.Backend.checkpriviles({ type: this.checkType })
+      if(result.status =='OK') {
+        this.checkStatus = result.payload
+      }
     },
     getSearchData1(val) {
       console.info('选择部门获取值:', val)
@@ -1556,7 +1581,9 @@ export default {
     },
     // 拒绝弹窗（赠品）
     refuseDialog() {
+      this.form_checkbox.reason = ''
       this.dialogFormVisible_checkbox = true
+      this.drawerApprovalDeatail.flowApprovalId = ''
     },
     // 同意申请
     ensureReplenish() {
@@ -1657,6 +1684,8 @@ export default {
     },
     // 打开抽屉 传进来4个参数 申请单type 申请单id  申请单申请人id 申请单tag
     getApprovalDeatail(type, id, applyId, tag) {
+      this.checkType = type
+      this.initData()
       console.log(arguments)
       this.currentType = type // 全局配置:申请单类型
       console.log(type)
@@ -2280,8 +2309,8 @@ export default {
   }
 }
 </style>
-<style lang="scss" scoped>
-/deep/ .el-image-viewer__mask .el-image-viewer__img {
-  z-index: 2888 !important;
+<style lang="scss">
+.el-image-viewer__mask .el-image-viewer__img {
+  z-index: 8888 !important;
 }
 </style>

@@ -30,11 +30,15 @@ deploy_default:
     - npm set progress=false
     - npm config set registry https://registry.npm.taobao.org/
     - npm config set sass_binary_site http://cdn.npm.taobao.org/dist/node-sass
-    - npm ci
+    - yarn install
     - npm run build:default
     - export KUBERNETES_NAMESPACE=ai-xxyy-default
     - ./mvnw deploy
     - ${KUBECTL_CLI_OPTS} apply -f target/classes/META-INF/jkube/kubernetes.yml -n ${KUBERNETES_NAMESPACE}
+  cache:
+    key: "ai-xxyy-boss"
+    paths:
+      - node_modules/
   only:
     - default
   tags:
@@ -49,11 +53,15 @@ deploy_dev:
     - npm set progress=false
     - npm config set registry https://registry.npm.taobao.org/
     - npm config set sass_binary_site http://cdn.npm.taobao.org/dist/node-sass
-    - npm ci
+    - yarn install
     - npm run build:dev
     - export KUBERNETES_NAMESPACE=ai-xxyy-dev
     - ./mvnw deploy
     - ${KUBECTL_CLI_OPTS} apply -f target/classes/META-INF/jkube/kubernetes.yml -n ${KUBERNETES_NAMESPACE}
+  cache:
+    key: "ai-xxyy-boss"
+    paths:
+      - node_modules/
   only:
     - dev
   tags:
@@ -69,11 +77,15 @@ deploy_test:
     - npm set progress=false
     - npm config set registry https://registry.npm.taobao.org/
     - npm config set sass_binary_site http://cdn.npm.taobao.org/dist/node-sass
-    - npm ci
+    - yarn install
     - npm run build:test
     - export KUBERNETES_NAMESPACE=ai-xxyy-test
     - ./mvnw deploy
     - ${KUBECTL_CLI_OPTS} apply -f target/classes/META-INF/jkube/kubernetes.yml -n ${KUBERNETES_NAMESPACE}
+  cache:
+    key: "ai-xxyy-boss"
+    paths:
+      - node_modules/
   only:
     - test
   tags:
@@ -93,11 +105,15 @@ deploy_prod:
     - npm set progress=false
     - npm config set registry https://registry.npm.taobao.org/
     - npm config set sass_binary_site http://cdn.npm.taobao.org/dist/node-sass
-    - npm ci
+    - yarn install
     - npm run build:prod
     - export KUBERNETES_NAMESPACE=ai-xxyy-prod
     - ./mvnw deploy
     - ${KUBECTL_CLI_OPTS} apply -f target/classes/META-INF/jkube/kubernetes.yml -n ${KUBERNETES_NAMESPACE}
+  cache:
+    key: "ai-xxyy-boss"
+    paths:
+      - node_modules/
   only:
     - prod
   tags:
@@ -116,11 +132,15 @@ deploy_live:
     - npm set progress=false
     - npm config set registry https://registry.npm.taobao.org/
     - npm config set sass_binary_site http://cdn.npm.taobao.org/dist/node-sass
-    - npm ci
+    - yarn install
     - npm run build:live
     - export KUBERNETES_NAMESPACE=ai-xxyy-live
     - ./mvnw deploy
     - "envsubst < target/classes/META-INF/jkube/kubernetes.yml | sed 's/replicas: 1/replicas: 2/g' | sed 's/cpu: 100m/cpu: 200m/g' | ${KUBECTL_CLI_OPTS_LIVE} apply -f - -n ${KUBERNETES_NAMESPACE}"
+  cache:
+    key: "ai-xxyy-boss"
+    paths:
+      - node_modules/
   only:
     - /^master-.*$/
   tags:

@@ -15,7 +15,11 @@
           <div class="step-container-status">
             <el-steps :active="stepStatus">
               <el-step title="设置基本信息" icon="el-icon-edit"></el-step>
-              <el-step v-if="courseType == '0' || courseType == '1'" title="设置分配线索规则" icon="el-icon-s-tools"></el-step>
+              <el-step
+                v-if="courseType == '0' || courseType == '1'"
+                title="设置分配线索规则"
+                icon="el-icon-s-tools"
+              ></el-step>
               <el-step title="选择带班销售" icon="el-icon-s-flag"></el-step>
               <el-step title="设置招生容量" icon="el-icon-s-check"></el-step>
               <!-- <el-step title="完成" icon="el-icon-success"></el-step> -->
@@ -48,13 +52,20 @@
             @listenStepStatus="fSstepStatus"
           ></third-step>
           <!-- 第四步 -->
-          <div class="step-container step-four-container" v-show="isShowLastStep">
+          <div
+            class="step-container step-four-container"
+            v-show="isShowLastStep"
+          >
             <div class="complete-container">
               <i class="el-icon-success"></i>
               <p>保存成功</p>
               <div class="succ-operate">
-                <el-button size="small" type="info" @click="containerEdit">继续修改</el-button>
-                <el-button size="small" type="success" @click="backList">返回列表</el-button>
+                <el-button size="small" type="info" @click="containerEdit"
+                  >继续修改</el-button
+                >
+                <el-button size="small" type="success" @click="backList"
+                  >返回列表</el-button
+                >
               </div>
             </div>
           </div>
@@ -69,7 +80,7 @@ import FirstStep from './components/FirstStep'
 import SecondStep from './components/SecondStep'
 import ThirdStep from './components/ThirdStep'
 import SetLeads from './components/SetLeads'
-import { Sup_scheduleIndex,Sup_scheduleSubmit} from '@/utils/supList'
+import { Sup_scheduleIndex, Sup_scheduleSubmit } from '@/utils/supList'
 export default {
   props: [],
   data() {
@@ -78,23 +89,23 @@ export default {
       stepStatus: 1,
       teacherSelectInfo: {},
       courseType: '0',
-      courseName: '体验课'
+      courseName: '体验课',
     }
   },
   components: {
     FirstStep,
     SecondStep,
     ThirdStep,
-    SetLeads
+    SetLeads,
   },
   watch: {
     stepStatus(val) {
       this.setStatus(val)
-    }
+    },
   },
   computed: {
     isShowSecondStep() {
-     return (
+      return (
         (this.courseType === '0' && this.stepStatus === 3) ||
         (this.courseType === '1' && this.stepStatus === 3) ||
         (this.courseType === '2' && this.stepStatus === 2)
@@ -108,27 +119,30 @@ export default {
       )
     },
     isShowLastStep() {
+      console.log(this.courseType, this.stepStatus)
       return (
         (this.courseType === '0' && this.stepStatus === 5) ||
         (this.courseType === '1' && this.stepStatus === 5) ||
         (this.courseType === '2' && this.stepStatus === 6)
       )
-    }
+    },
   },
   created() {
     const { courseType = '0' } = this.$route.params
-    this.courseType =  courseType
-    this.courseName = courseType === '0' ? '单周体验课' :courseType === '1'?'双周体验课':'系统课'
+    this.courseType = courseType
+    this.courseName =
+      courseType === '0'
+        ? '单周体验课'
+        : courseType === '1'
+        ? '双周体验课'
+        : '系统课'
     let staff = JSON.parse(localStorage.getItem('staff'))
     if (staff.stepStatus) {
       this.stepStatus = staff.stepStatus
     }
     let _this = this
-    
   },
-  destroyed() {
-    
-  },
+  destroyed() {},
   methods: {
     setStatus(val = 1) {
       var staff = JSON.parse(localStorage.getItem('staff'))
@@ -164,9 +178,11 @@ export default {
      * @type 返回为'complete'代表导入数据成功，此时直接跳转到完成步骤
      */
     excelStatus(res) {
-      res === 'complete' && (this.stepStatus = this.courseType === '0' ? 5 : 4)
-    }
-  }
+      res === 'complete' &&
+        (this.stepStatus =
+          this.courseType === '0' || this.courseType === '1' ? 5 : 4)
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>

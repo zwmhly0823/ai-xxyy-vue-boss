@@ -75,23 +75,11 @@
       <el-form-item label="模版" prop="experience">
         <el-select v-model="ruleForm.experience" placeholder="请选择" clearable>
           <el-option
-            label="29元体验课模版"
-            :value="'/channel29/index?channelId='"
-            >29元体验课模版</el-option
-          >
-          <el-option label="49元体验课模版" :value="'/channel/index?channelId='"
-            >49元体验课模版</el-option
-          >
-          <el-option
-            label="200抵500代金券"
-            :value="'/activityCoupon/twoHundred?channelId='"
-            >200抵500代金券</el-option
-          >
-          <el-option
-            label="年系统课"
-            :value="'/fortyNine/newSystemYear?channelId='"
-            >年系统课</el-option
-          >
+            v-for="item in channelList"
+            :label="item.label"
+            :value="item.value"
+            :key="item.value"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="渠道备注" prop="desc">
@@ -124,6 +112,7 @@
 </template>
 
 <script>
+import { channelList } from '@/utils/supList'
 export default {
   data() {
     var channelSort = (rule, value, callback) => {
@@ -164,6 +153,7 @@ export default {
         ],
         sort: [{ required: true, validator: channelSort, trigger: 'blur' }],
       },
+      channelList: channelList,
     }
   },
   created() {

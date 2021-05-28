@@ -198,7 +198,7 @@
     <el-drawer
       :visible.sync="drawerApproval"
       :destroy-on-close="true"
-      size="50%"
+      size="30%"
       class="drawer-approval-detail"
       :modal="false"
     >
@@ -469,6 +469,8 @@
                 4: '降1年包',
                 5: '降1年半包',
                 6: '系统课预付款优惠券退款',
+                7: '硬件乐器退款',
+                8: '体验课退差价'
               }[drawerApprovalDeatail.refundType]
             }}</el-col>
           </el-row>
@@ -1313,11 +1315,11 @@ export default {
   }
 }
 </style>
-<style lang="scss" scoped>
+<style lang="scss">
 .el-tabs--border-card > .el-tabs__content {
   padding: 0px;
 }
-/deep/ .el-image-viewer__mask .el-image-viewer__img {
-  z-index: 2888 !important;
+.el-image-viewer__mask .el-image-viewer__img {
+  z-index: 8888 !important;
 }
 </style>

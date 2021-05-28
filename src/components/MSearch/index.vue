@@ -111,7 +111,14 @@
           @result="supCallBack"
         />-->
       </el-form-item>
-
+      <el-form-item v-if="product_type_0">
+        <!-- 盒子及硬件搜索 -->
+        <boxSearch
+          @result="getSearchBox"
+          :name="product_type_0"
+          :LevelArr="LevelArr"
+        />
+      </el-form-item>
       <el-form-item v-if="schedule">
         <!-- 排期 -->
         <Schedule
@@ -121,7 +128,6 @@
           :teamClass="teamClass"
         />
       </el-form-item>
-
       <el-form-item v-if="teacherphone">
         <!-- 老师模块手机号搜索 -->
         <teacher-phone
@@ -235,12 +241,6 @@
           :name="searchTrialTeamName"
         />
       </el-form-item>
-
-      <el-form-item v-if="searchStage">
-        <!-- 系统课排期搜索 -->
-        <search-stage @result="getSearchStage" :name="searchStage" />
-      </el-form-item>
-
       <el-form-item v-if="searchTrialStage">
         <!-- 体验课排期搜索 -->
         <search-stage
@@ -297,7 +297,13 @@
       </el-form-item>
       <el-form-item v-if="packages_id">
         <!-- 体验课类型 -->
-        <trial-classtype @result="gettrialClassType" :name="packages_id" />
+        <trial-classtype
+          @result="gettrialClassType"
+          :name="packages_id"
+          :addSupS="addSupS"
+          :exType="exType"
+          :isExpress="isExpress"
+        />
       </el-form-item>
       <el-form-item>
         <slot name="searchItems"></slot>
@@ -396,6 +402,8 @@ import employeesRole from './searchItems/role.vue'
 import staffName from './searchItems/staffName.vue'
 import SearchCourseware from './searchItems/searchCourseware'
 import trialClasstype from './searchItems/trialClassType'
+// 硬件及盒子
+import boxSearch from './searchItems/boxSearch'
 export default {
   props: {
     // 物流体验课0 系统课1
@@ -767,6 +775,21 @@ export default {
       type: String,
       default: '',
     },
+    //硬件及盒子
+    product_type_0: {
+      type: String,
+      default: '',
+    },
+    // 体验课类型 2是双周 1是单周
+    exType: {
+      type: Number,
+      default: 2,
+    },
+    // 是否是物流管理页面
+    isExpress: {
+      type: Boolean,
+      default: false,
+    },
   },
   components: {
     trialClasstype,
@@ -807,10 +830,12 @@ export default {
     staffName,
     expressType,
     SearchCourseware,
+    boxSearch,
   },
   data() {
     return {
       showErr: false,
+      LevelArr: [],
       errTips: '搜索条件不能为空',
       must: [],
       should: [],
@@ -846,6 +871,10 @@ export default {
       console.log(res, 'res')
       this.setSeachParmas(res, [this.schedule || 'id'])
     },
+    // 硬件及盒子
+    getSearchBox(res) {
+      this.setSeachParmas(res, [this.product_type_0 || 'product_type_0'])
+    },
     // 难度
     supCallBack(res) {
       console.log(res, 'res')
@@ -854,11 +883,13 @@ export default {
     // 选择体验课类型
     gettrialClassType(res) {
       console.log(res, 'packages_id')
-      this.setSeachParmas(res, [this.packages_id || 'packages_id'], 'term')
+      res.packages_id = [res.packages_id]
+      this.setSeachParmas(res, [this.packages_id || 'packages_id'], 'terms')
     },
     // 级别
     levelCallBack(res) {
-      console.log(res, 'res')
+      console.log(res, 'res111')
+      this.LevelArr = res.level
       this.setSeachParmas(res, [this.level || 'current_level'], 'terms')
     },
     // 选择订单下单时间
@@ -1012,7 +1043,7 @@ export default {
       this.sendSeachParams(res, this.employees)
     },
     gerEmployeesPhone(res) {
-      this.sendSeachParams(res, this.phoneNumber,"terms")
+      this.sendSeachParams(res, this.phoneNumber, 'terms')
     },
     getReplenishProduct(res) {
       this.setSeachParmas(res, [this.replenishProduct || 'product_type'])

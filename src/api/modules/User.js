@@ -10,8 +10,7 @@
 // import axios from '../axios'
 import axios from '../axiosConfig'
 import { getAppSubjectCode, injectSubject } from '@/utils/index'
-const subject = getAppSubjectCode()
-console.log(subject)
+const subject = 3
 export default {
   /**
    * 修改学员是否已加微信、已进群状态
@@ -205,6 +204,8 @@ export default {
             user_intention_type
             user_intention_describe
             send_course_count
+            task_course_count
+            last_task_time
             join_course_count
             all_join_course_count
             complete_course_count
@@ -248,6 +249,8 @@ export default {
             }
             orderInfo {
               id
+              packages_id
+              user_source_text
               trial_course {
                 order_no
               }
@@ -269,6 +272,12 @@ export default {
             }
             expressInfo{
               express_status
+            }
+            userExtends {
+              wechat_no
+              wechat_id
+              wechat_avatar
+              wechat_nick_name
             }
             questionnaire_count
             bi_label
@@ -811,7 +820,7 @@ export default {
     page,
     subject,
     cid,
-    // studentId,
+    studentId,
     teamId, // 只普通用
     courseId // 只写字0元体验课用
   }) {
@@ -819,18 +828,18 @@ export default {
       courseId && courseId.length
         ? {
             del: 0,
-            subject,
-            cid: cid,
-            // student_id: studentId,
+            subject:3,
+            // cid: cid,
+            cid: studentId,
             team_id: 0,
             // 写字0元体验课
             course_id: courseId
           }
         : {
             del: 0,
-            subject,
-            cid: cid,
-            // student_id: studentId,
+            subject:3,
+            // cid: cid,
+            cid: studentId,
             // normal 体验系统课
             team_id: teamId
           }
@@ -838,7 +847,7 @@ export default {
     return axios.post(`/graphql/v1/toss`, {
       query: `{
         StudentCourseTaskPage(query:${JSON.stringify(formattingQuery)},
-        sort: ${JSON.stringify(`{ "ctime": "asc" }`)},
+        sort: ${JSON.stringify(`{ "ctime": "desc" }`)},
           page: ${page},
           size:20){
             totalPages
@@ -1046,6 +1055,7 @@ export default {
              code
              value
            }
+           bear_amount
         }
       }`
     })
@@ -1176,13 +1186,18 @@ export default {
   ManagementForTeacherList({
     // teacher_id = [],
     team_state = [1, 2],
-    team_type = 0
+    team_type = 0,
+    category = [],
+    trial_management_type = 0
+
   } = {}) {
     const query = {
       // teacher_id,
       team_state,
       team_type,
-      subject
+      subject,
+      category,
+      trial_management_type
     }
     // const params = JSON.stringify(query)
     const params = injectSubject(query)
@@ -1703,6 +1718,7 @@ export default {
             trialOfStudentDetails {
               course_state
               current_super
+              team_category_text
               current_progress
               send_course_count
               join_course_count
@@ -1775,6 +1791,7 @@ export default {
                   id
                   address_id
                   order_id
+                  product_type_text
                   source_type
                   product_name
                   replenish_type

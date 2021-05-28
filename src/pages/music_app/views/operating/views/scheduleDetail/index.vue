@@ -14,8 +14,8 @@
           <div class="head-info">
             <div class="title">
               <p>
-                <span v-if="params.courseType == '0'">体验课</span>
-                <span v-else>系统课</span>
+                <span v-if="params.courseType == '0'">{{courseName[courseType]}}</span>
+                <span v-else>{{courseName[courseType]}}</span>
                 <span>-</span>
                 <span>{{ scheduleStatistic.periodName || '-' }}</span>
               </p>
@@ -84,6 +84,11 @@ export default {
         teacherId: '',
         level: '',
         courseDifficulties: ''
+      },
+      courseName:{
+        "2":"单周体验课",
+        "0":"双周体验课",
+        "1":"系统课"
       }
     }
   },

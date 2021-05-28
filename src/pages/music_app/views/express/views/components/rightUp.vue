@@ -32,7 +32,10 @@
         :productName="showItem.productName"
         :regType="showItem.regType"
         :channel="showItem.channel"
-        :packages_id="showItem.packages_id"
+        :packages_id="packages_id"
+        :exType="exType"
+        :product_type_0="showItem.product_type_0"
+        :isExpress="true"
       />
     </div>
     <!-- v-if="!teacherId" TOSS -->
@@ -127,6 +130,11 @@ export default {
       type: Boolean,
       default: false,
     },
+    // 体验课类型 2是双周 1是单周
+    exType: {
+      type: Number,
+      default: null,
+    },
     tab: {
       type: String,
       default: '0',
@@ -177,6 +185,11 @@ export default {
   },
   mounted() {
     switchTabSearchIn = {}
+    if (this.exType == 1 || this.exType == 2) {
+      this.packages_id = 'packages_id'
+    } else {
+      this.packages_id = ''
+    }
   },
   data() {
     return {
@@ -214,8 +227,9 @@ export default {
         selectAddress: 'province',
         replenishReason: 'replenish_reason',
         replenishMethod: 'replenish_type',
-        packages_id: !this.addSupS ? 'packages_id' : '',
+        product_type_0: this.addSupS ? 'product_type_0' : '',
       },
+      packages_id: '',
     }
   },
   watch: {
@@ -310,6 +324,24 @@ export default {
       var query
       const tableName = 'o_express'
       const arrFlag = []
+      if (
+        this.exType &&
+        !this.searchIn.some((item) => {
+          if (item && item.terms && item.terms.packages_id) {
+            return item.terms.packages_id
+          }
+        })
+      ) {
+        if (this.exType === 1) {
+          arrFlag.push({
+            terms: { packages_id: [502, 506, 507] },
+          })
+        } else if (this.exType === 2) {
+          arrFlag.push({
+            terms: { packages_id: [500, 503, 505, 508] },
+          })
+        }
+      }
       if (sessionStorage.getItem('uid')) {
         var uid = sessionStorage.getItem('uid').split(',')
         query = { bool: { must: [{ terms: { id: uid } }] } } // 自行通过前端选择的条件进行动态组装
@@ -317,14 +349,25 @@ export default {
       } else {
         console.log(this.searchIn, 'this.searchIn-=')
         const term = this.searchIn.map((item, index) => {
-          if (item.terms && item.terms.sup) {
-            item.terms['sup.keyword'] = item.terms.sup
-            delete item.terms.sup
+          if (item && item.terms) {
+            if (item.terms && item.terms.sup) {
+              item.terms['sup.keyword'] = item.terms.sup
+              delete item.terms.sup
+            }
+            if (item.terms && item.terms.packages_id) {
+              arrFlag.push({
+                terms: {
+                  packages_id: item.terms.packages_id,
+                },
+              })
+              delete item.terms.packages_id
+            }
+            if (item.terms && item.terms.level) {
+              item.terms['level.keyword'] = item.terms.level
+              delete item.terms.level
+            }
           }
-          if (item.terms && item.terms.level) {
-            item.terms['level.keyword'] = item.terms.level
-            delete item.terms.level
-          }
+
           if (item && item.wildcard && item.wildcard.express_nu) {
             item.wildcard['express_nu.keyword'] = item.wildcard.express_nu
             delete item.wildcard.express_nu
@@ -353,7 +396,6 @@ export default {
               })
               delete item.term.product_type
             }
-
             if (item.term && item.term.productType) {
               arrFlag.push({
                 term: {
@@ -379,16 +421,25 @@ export default {
               delete item.term.replenish_type
             }
             if (item.term && item.term.regType) {
-              arrFlag.push({
-                terms: {
-                  regtype: item.term.regType.split(','),
-                },
-              })
-              delete item.term.regType
-            } else {
-              arrFlag.push({
-                terms: { regtype: this.regtype.split(',') },
-              })
+              // 新增类型的时候这里要改
+              if (item.term && item.term.regType) {
+                // 新增类型的时候这里要改
+                if (this.tab == '3') {
+                  arrFlag.push({
+                    terms: {
+                      packages_id: item.term.regType.split(','),
+                    },
+                  })
+                } else {
+                  arrFlag.push({
+                    terms: {
+                      regtype: item.term.regType.split(','),
+                    },
+                  })
+                }
+                // 单周体验课补发移除 regType
+                delete item.term.regType
+              }
             }
             if (item.term && item.term.province) {
               if (item.term.province.provincesCode) {
@@ -434,7 +485,10 @@ export default {
         let finalmust = []
         finalmust = finaTerm.filter((item) => {
           if (!item.range) {
-            return Object.values(Object.values(item)[0])[0].length
+            return (
+              Object.values(Object.values(item)[0])[0] &&
+              Object.values(Object.values(item)[0])[0].length
+            )
           }
           return item
         })
@@ -472,7 +526,7 @@ export default {
           '补发原因',
         user_num: '用户短ID',
         last_teacher_name: '带班老师',
-        department_name: '所属部组',
+        'area_name|department_name|group_name': '所属部组',
         receipt_name: '收货人姓名',
         receipt_tel: '收货人手机号',
         province: '省',
@@ -486,7 +540,13 @@ export default {
       if (this.tab === '1') {
         headers.replenish_reason = '补发原因'
       }
-
+      query.bool.must.forEach((item, index) => {
+        if (item.term && item.term.packages_id) {
+          if (item.term.packages_id.length == item.term.packages_id.length) {
+            query.bool.must.splice(index, 1)
+          }
+        }
+      })
       const params = {
         tableName,
         name,

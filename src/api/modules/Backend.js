@@ -9,9 +9,9 @@
 import axios from '../axiosConfig'
 export default {
   /**
-  * /v1/backend/approval/staffIds/get
-  * 获取退款审批权限id
-  */
+   * /v1/backend/approval/staffIds/get
+   * 获取退款审批权限id
+   */
   getStaffIds() {
     return axios.post('/api/b/v1/backend/approval/staffIds/get?redisKey=approval:uncreditedApprovalIds', {})
   },
@@ -29,9 +29,9 @@ export default {
    * 获取补发货流程详情 /v1/backend/reissue/flow/info
    *
    */
-  getReplenishDetail(params) {
+  getReplenishDetail(query) {
     return axios.get(
-      `/api/b/v1/backend/reissue/flow/info?flowApprovalId=${params}`
+      `/api/b/v1/backend/reissue/flow/info?flowApprovalId=${query}`
     )
   },
   /**
@@ -61,6 +61,12 @@ export default {
       }`
     )
   },
+  // 校验关单赠品权限的
+  isPromotions() {
+    return axios.get(
+      `/api/b/v1/backend/promotions/checkpriviles`
+    )
+  },
   // 财务驳回的重新提交
   rejectedUpdate(params) {
     return axios.post(`/api/b/v1/backend/refund/detail/update`, params)
@@ -80,6 +86,10 @@ export default {
   // 赠品批量审批
   batchApproval(params) {
     return axios.post(`/api/b/v1/backend/completed/batch/flow`, params)
+  },
+  // 调班 调期 赠品审批
+  checkpriviles(params) {
+    return axios.get(`/api/b/v1/backend/checkpriviles`, params)
   },
   // 临时解决方案-显示申请人部门
   changeDepart(params) {

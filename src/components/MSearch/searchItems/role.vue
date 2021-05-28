@@ -25,7 +25,7 @@
         </el-option>
       </el-select>
     </el-col>
-    <el-col :span="15" :offset="1">
+    <el-col :span="15" :offset="1" v-if="isShow">
       <el-input
         v-model="phoneNumber"
         type="number"

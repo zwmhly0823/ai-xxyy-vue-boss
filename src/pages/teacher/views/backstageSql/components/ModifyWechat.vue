@@ -46,7 +46,23 @@
           autocomplete="off"
         ></el-input>
       </el-form-item>
-       <el-form-item label="升级类型" required :label-width="formLabelWidth">
+      <el-form-item label="app_id" required :label-width="formLabelWidth">
+        <el-input
+          min="0"
+          v-model.trim="form.app_id"
+          placeholder="请输入app_id，必填"
+          autocomplete="off"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="渠道" required :label-width="formLabelWidth">
+        <el-input
+          min="0"
+          v-model.trim="form.channel"
+          placeholder="请输入渠道，必填"
+          autocomplete="off"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="升级类型" required :label-width="formLabelWidth">
         <el-select v-model="form.type" placeholder="请输入升级类型">
           <el-option
             v-for="item in options1"
@@ -69,10 +85,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="状态" required :label-width="formLabelWidth">
-        <el-select
-          v-model="form.upgradeStatus"
-          placeholder="请输入状态"
-        >
+        <el-select v-model="form.upgradeStatus" placeholder="请输入状态">
           <el-option
             v-for="item in options3"
             :key="item.value"
@@ -99,9 +112,10 @@
       <el-form-item label="升级文案" :label-width="formLabelWidth">
         <el-input
           type="textarea"
-          v-model.trim="form.content"
-          placeholder="请输入升级文案，非必填"
+          :rows="2"
+          v-model="form.content"
           autocomplete="off"
+          placeholder="请输入升级文案，非必填"
         ></el-input>
       </el-form-item>
       <el-form-item label="下载链接" :label-width="formLabelWidth">
@@ -130,10 +144,7 @@
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="visible = false" size="mini">取 消</el-button>
-      <el-button
-        type="primary"
-        @click="handleSave"
-        size="mini"
+      <el-button type="primary" @click="handleSave" size="mini"
         >确 定</el-button
       >
     </div>
@@ -153,8 +164,8 @@ export default {
     current() {
       if (this.current) {
         this.form = this.current
-        this.title = "编辑数据",
-        this.form.type = this.form.type==0?'非强制升级':'强制升级'
+        this.form.type = String(this.form.type)
+        ;(this.title = '编辑数据');
       }
     },
   },
@@ -200,6 +211,8 @@ export default {
         version: '',
         versionCode: '',
         title: '',
+        channel: '',
+        app_id: '',
         buttonContent: '',
         content: '',
         downloadUrl: '',
@@ -229,15 +242,23 @@ export default {
         this.$message.error('请输入版本标识')
         return
       }
-       if (!this.form.type && this.form.type!=0) {
+      if (!this.form.app_id) {
+        this.$message.error('请输入app_id')
+        return
+      }
+      if (!this.form.channel) {
+        this.$message.error('请输入渠道')
+        return
+      }
+      if (!this.form.type && this.form.type != 0) {
         this.$message.error('请选择升级类型')
         return
       }
-       if (!this.form.ostype) {
+      if (!this.form.ostype) {
         this.$message.error('请选择系统类型')
         return
       }
-       if (!this.form.upgradeStatus) {
+      if (!this.form.upgradeStatus) {
         this.$message.error('请选择输入状态')
         return
       }
@@ -250,9 +271,9 @@ export default {
             if (res.code !== 0) {
               return
             }
-            this.loading = false,
-            this.visible = false,
-            this.$message.success('添加成功')
+            ;(this.loading = false),
+              (this.visible = false),
+              this.$message.success('添加成功')
             setTimeout(() => {
               this.onClose()
               this.$emit('success')
@@ -261,15 +282,15 @@ export default {
           .finally(() => {
             this.loading = false
           })
-      }else {
-         this.$http.Teacher.updataUpgradeConfigList(this.form)
+      } else {
+        this.$http.Teacher.updataUpgradeConfigList(this.form)
           .then((res) => {
             if (res.code !== 0) {
               return
             }
-            this.loading = false,
-            this.visible = false,
-            this.$message.success('编辑成功')
+            ;(this.loading = false),
+              (this.visible = false),
+              this.$message.success('编辑成功')
             setTimeout(() => {
               this.onClose()
               this.$emit('success')
@@ -279,7 +300,6 @@ export default {
             this.loading = false
           })
       }
-      
     },
 
     onClose() {

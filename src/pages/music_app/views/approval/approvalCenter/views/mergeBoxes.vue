@@ -94,9 +94,7 @@
         <el-button type="primary" @click="submitForm('mergeForm')">
           提交
         </el-button>
-        <el-button @click="resetForm('mergeForm')">
-          重置
-        </el-button>
+        <el-button @click="resetForm('mergeForm')"> 重置 </el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -107,7 +105,7 @@ import SearchPhone from '@/components/MSearch/searchItems/searchPhone'
 export default {
   name: 'mergeboxes',
   components: {
-    SearchPhone
+    SearchPhone,
   },
   data() {
     return {
@@ -117,7 +115,7 @@ export default {
         orderId: '',
         expressInfo: '',
         packageCount: '',
-        reason: ''
+        reason: '',
       },
       // 校验
       formRules: {
@@ -127,19 +125,19 @@ export default {
             validator: (rule, value, callback) => {
               this.validatePhone(rule, value, callback)
             },
-            trigger: ['change', 'blur']
-          }
+            trigger: ['change', 'blur'],
+          },
         ],
         orderId: [
-          { required: true, message: '请选择关联订单', trigger: 'change' }
+          { required: true, message: '请选择关联订单', trigger: 'change' },
         ],
         expressInfo: [{ required: true, message: ' ', trigger: 'change' }],
         packageCount: [
-          { required: true, message: '请选择打包数量', trigger: 'change' }
+          { required: true, message: '请选择打包数量', trigger: 'change' },
         ],
         reason: [
-          { required: true, message: '请选择申请理由', trigger: 'change' }
-        ]
+          { required: true, message: '请选择申请理由', trigger: 'change' },
+        ],
       },
       // 选择订单
       orderSelect: {
@@ -148,16 +146,16 @@ export default {
           {
             value: '0',
             label: '请先选择用户',
-            disabled: true
-          }
-        ]
+            disabled: true,
+          },
+        ],
       },
       // 选择打包数量
       packageCountList: [],
       // 商品信息
       showGoods: false,
       goodsData: [],
-      goodsShowData: []
+      goodsShowData: [],
     }
   },
   methods: {
@@ -205,9 +203,9 @@ export default {
           {
             value: '0',
             label: '请先选择用户',
-            disabled: true
-          }
-        ]
+            disabled: true,
+          },
+        ],
       }
       this.packageCountList = []
       // 隐藏商品信息
@@ -236,8 +234,8 @@ export default {
             value: {
               orderId: orderItem.id,
               outTradeNo: orderItem.outTradeNo,
-              packagesType: orderItem.packagesType
-            }
+              packagesType: orderItem.packagesType,
+            },
           })
           // 有系统课订单则置为true
           check = true
@@ -247,11 +245,11 @@ export default {
         this.orderSelect.option.push({
           label: '该用户下没有系统订单',
           value: 0,
-          disabled: true
+          disabled: true,
         })
         this.$message({
           message: '该用户下没有系统订单',
-          type: 'warning'
+          type: 'warning',
         })
       }
     },
@@ -264,7 +262,7 @@ export default {
           } else {
             this.$message({
               message: '该手机号未查询到订单',
-              type: 'warning'
+              type: 'warning',
             })
             return 'error'
           }
@@ -272,7 +270,7 @@ export default {
         .catch(() => {
           this.$message({
             message: '获取订单列表请求出错请稍后再试～',
-            type: 'warning'
+            type: 'warning',
           })
           return 'error'
         })
@@ -287,6 +285,7 @@ export default {
       // 然后判断打包数量
       this.handlePackageCount(expressData, val)
     },
+    
     getExpressByOrderId(val) {
       return this.$http.Approval.getExpressByOrderId(val)
         .then((res) => {
@@ -297,14 +296,14 @@ export default {
             this.formData.expressInfo = ''
             this.$message({
               message: '该订单没有物流信息..',
-              type: 'warning'
+              type: 'warning',
             })
           }
         })
         .catch(() => {
           this.$message({
             message: '获取物流信息失败',
-            type: 'warning'
+            type: 'warning',
           })
         })
     },
@@ -313,7 +312,7 @@ export default {
       const level = expressData.level.replace(/[^0-9]/gi, '')
       const query = {
         sup: expressData.sup,
-        level: `LEVEL${level}`
+        level: `LEVEL${level}`,
       }
       return this.$http.Approval.getCourseMaterialsMoreThanLevel(query)
         .then((res) => {
@@ -324,7 +323,7 @@ export default {
         .catch(() => {
           this.$message({
             message: '获取商品信息失败',
-            type: 'warning'
+            type: 'warning',
           })
         })
     },
@@ -346,14 +345,14 @@ export default {
         for (let i = 1, len = this.goodsData.length; i <= len; i++) {
           this.packageCountList.push({
             label: `${i}个月`,
-            value: i
+            value: i,
           })
         }
       } else {
         for (let i = 1, len = baseCount - curLevel; i <= len; i++) {
           this.packageCountList.push({
             label: `${i}个月`,
-            value: i
+            value: i,
           })
         }
       }
@@ -389,7 +388,7 @@ export default {
           centerProductCode: item.centerProductCode,
           proVersion: item.proVersion,
           sup: item.courseDifficulty,
-          level: item.courseLevel
+          level: item.courseLevel,
         })
       })
       return {
@@ -402,7 +401,7 @@ export default {
         userId: this.formData.userId,
         packageCount: this.formData.packageCount,
         packageBoxProductSimpleList: packageBoxs,
-        applyReason: this.formData.reason
+        applyReason: this.formData.reason,
       }
     },
     packageboxFlow(query) {
@@ -413,12 +412,12 @@ export default {
           if (res.code === 0 && res.status === 'OK') {
             this.$router.push({
               name: 'approvalCenter',
-              params: { activeApprove: 'second' }
+              params: { activeApprove: 'second' },
             })
           } else {
             this.$message({
               message: '提交失败',
-              type: 'warning'
+              type: 'warning',
             })
           }
         })
@@ -426,7 +425,7 @@ export default {
           this.loading = false
           this.$message({
             message: '提交失败',
-            type: 'warning'
+            type: 'warning',
           })
         })
     },
@@ -434,8 +433,8 @@ export default {
       this.$refs[formName].resetFields()
       // 手动清空手机号
       this.$refs.searchPhone.input = ''
-    }
-  }
+    },
+  },
 }
 </script>
 

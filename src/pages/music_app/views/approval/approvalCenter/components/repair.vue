@@ -52,6 +52,29 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item
+          v-if="childrenListOrder.length > 0"
+          label="关联子订单"
+          prop="childOrderId"
+        >
+          <el-select
+            v-model="formRepair.showChildOrder"
+            placeholder="请选择订单号"
+            :class="$style.chooseinput"
+            value-key="id"
+            @change="setChildrenId"
+            :disabled="orderDisable"
+          >
+            <el-option
+              v-for="item in childrenListOrder"
+              :key="item.id"
+              :label="item.outTradeNo + ' ' + item.packageProductName"
+              :value="item"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+
         <el-form-item label="课程进度" class="address-recept">
           <el-input
             v-model="formRepair.currentLesson"
@@ -64,9 +87,7 @@
           <el-form-item label="收货人" disabled prop="receiptName">
             <el-input disabled v-model="formRepair.receiptName"></el-input>
             <div class="repair-address" @click="repairAddress" v-if="userId">
-              <span>
-                修改收货地址
-              </span>
+              <span> 修改收货地址 </span>
             </div>
           </el-form-item>
         </div>
@@ -94,10 +115,13 @@
             <el-radio label="STORE">商城礼品</el-radio>
             <el-radio label="RECOMMEND">推荐有礼</el-radio>
             <el-radio label="INVITATION">邀请有奖</el-radio>
+            <el-radio label="HARDWARE">硬件</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item
-          v-if="formRepair.type == 'MATERIALS'"
+          v-if="
+            formRepair.type == 'MATERIALS' || formRepair.type === 'HARDWARE'
+          "
           label="补发方式"
           prop="mode"
         >
@@ -115,7 +139,10 @@
             <!-- 课程-难度-级别 -->
             <div
               class="reapirProduct-detail"
-              v-if="formRepair.type == 'MATERIALS'"
+              v-if="
+                formRepair.type == 'MATERIALS' &&
+                formRepair.type !== 'HARDWARE'
+              "
             >
               <package
                 @result="getPackageId"
@@ -165,34 +192,59 @@
             <el-radio label="TRANSPORT_BAD">运输损坏</el-radio>
             <template v-show="formRepair.type === 'MATERIALS'">
               <el-radio
-                v-show="formRepair.mode === 'DEFAULT'"
+                v-show="
+                  formRepair.mode === 'DEFAULT' &&
+                  formRepair.type !== 'HARDWARE'
+                "
                 label="MULTI_SELF_PAY"
               >
                 自费补发
               </el-radio>
               <el-radio
-                v-show="formRepair.mode === 'DEFAULT'"
+                v-show="
+                  formRepair.mode === 'DEFAULT' &&
+                  formRepair.type !== 'HARDWARE'
+                "
                 label="MULTI_LOSS"
               >
                 丢件补发
               </el-radio>
               <el-radio
-                v-show="formRepair.mode === 'DEFAULT'"
+                v-show="
+                  formRepair.mode === 'DEFAULT' &&
+                  formRepair.type !== 'HARDWARE'
+                "
                 label="MULTI_TIMEOUT_RETURN"
               >
                 超时退回
               </el-radio>
               <el-radio
-                v-show="formRepair.mode === 'DEFAULT'"
+                v-show="
+                  formRepair.mode === 'DEFAULT' &&
+                  formRepair.type !== 'HARDWARE'
+                "
                 label="MULTI_ADJUSTMENT_SUP"
               >
                 调级补发
               </el-radio>
               <el-radio
-                v-show="formRepair.mode === 'SINGLE'"
+                v-show="
+                  formRepair.mode === 'SINGLE' &&
+                  formRepair.type !== 'HARDWARE'
+                "
                 label="SINGLE_QUALITY"
               >
                 产品质量问题
+              </el-radio>
+              <!-- 补发airplay 选项 -->
+              <el-radio
+                v-show="
+                  formRepair.mode === 'DEFAULT' &&
+                  formRepair.type === 'HARDWARE'
+                "
+                label="SEND_BACK_REPAIR_OR_CHANGE"
+              >
+                寄回维修/换货
               </el-radio>
               <!-- <el-radio
                 v-show="formRepair.mode === 'SINGLE'"
@@ -203,6 +255,23 @@
             </template>
             <el-radio label="OTHER">其他</el-radio>
           </el-radio-group>
+        </el-form-item>
+        <el-form-item
+          v-if="formRepair.type == 'HARDWARE'"
+          label="寄回单号"
+          class="address-recept"
+          prop='sendBackTrackingNum'
+        >
+          <el-input v-model="formRepair.sendBackTrackingNum"> </el-input>
+        </el-form-item>
+
+        <el-form-item
+          label="SN号"
+          prop='snNum'
+          v-if="formRepair.type == 'HARDWARE'"
+          class="address-recept"
+        >
+          <el-input v-model="formRepair.snNum"> </el-input>
         </el-form-item>
         <el-form-item label="补发货说明" prop="reissueMsg">
           <el-input
@@ -233,9 +302,7 @@
             :before-upload="beforeUpload"
             :before-remove="beforeRemove"
           >
-            <div slot="tip" class="el-upload__tip">
-              提示信息内容告知
-            </div>
+            <div slot="tip" class="el-upload__tip">提示信息内容告知</div>
             <i class="el-icon-plus"></i>
           </el-upload>
         </el-form-item>
@@ -280,13 +347,8 @@
         @selection-change="handleSelectionChange"
         align="center"
       >
-
-          <!-- v-if="formRepair.mode === 'SINGLE'" -->
-        <el-table-column
-          type="selection"
-          align="center"
-        >
-        </el-table-column>
+        <!-- v-if="formRepair.mode === 'SINGLE'" -->
+        <el-table-column type="selection" align="center"> </el-table-column>
         <el-table-column prop="name" label="商品名称" align="center">
         </el-table-column>
         <el-table-column
@@ -325,8 +387,7 @@ import Package from './package'
 import { getStaffInfo } from '../common'
 import SearchPhone from '@/components/MSearch/searchItems/searchPhone'
 import UploadFile from '@/utils/uploadFiles' // 上传公共方法(单文件上传)
-import { courseLevelReplace,SUP_LEVEL_ALL } from '@/utils/supList'
-
+import { courseLevelReplace, SUP_LEVEL_ALL } from '@/utils/supList'
 
 export default {
   components: {
@@ -334,7 +395,7 @@ export default {
     SearchPhone,
     RepairSup,
     RepairLevel,
-    Package
+    Package,
   },
   // 学员详情跳转来审批query lk
   async mounted() {
@@ -344,9 +405,9 @@ export default {
       this.$refs.toGetPhone.input = this.$route.query.cellphone
       // 手机号查uid
       const {
-        data: { blurrySearch }
+        data: { blurrySearch },
       } = await this.$http.RefundApproval.getUid_lk({
-        mobile: this.$route.query.cellphone
+        mobile: this.$route.query.cellphone,
       }).catch((err) => {
         console.error(err)
         this.$message.error('跳转来的手机号获取uid失败')
@@ -387,8 +448,10 @@ export default {
       }, 200)
     }
     return {
+      // 自订单list
+      childrenListOrder: [],
       // 根据订单物流获取随材版本
-      proVersion:'',
+      proVersion: '',
       fileListC: [],
       dialogImageUrl: '', // 上传文件的预览url
       dialogVisible: false, // 上传文件的预览弹窗显隐开关
@@ -434,7 +497,7 @@ export default {
         reason: '', // 后端补发货原因认这个=↓
         replenishReason: '', // 补发原因-radio
         reissueMsg: '', // 补发说明-textarea
-        packagesType: '' // 体验课或者系统课首先默认选择
+        packagesType: '', // 体验课或者系统课首先默认选择
       },
       addresDialog: false,
       textarea: '',
@@ -446,59 +509,81 @@ export default {
       changeProductText: '选择商品',
       chooseCompleted: true, // 选择商品完成之后
       rules: {
+        sendBackTrackingNum: [
+          { required: true, message: '请填写寄回订单号', trigger: 'change' },
+        ],
+        snNum: [
+          { required: true, message: '请填写寄回sn码', trigger: 'change' },
+        ],
         name: [{ required: true, validator: validateName, trigger: 'change' }],
+        childOrderId: [
+          { required: true, message: '请选择子订单', trigger: 'change' },
+        ],
         showMessage: [
-          { required: true, message: '请选择关联订单', trigger: 'change' }
+          { required: true, message: '请选择关联订单', trigger: 'change' },
         ],
         receiptName: [
-          { required: true, message: '请选择关联收货人姓名', trigger: 'change' }
+          {
+            required: true,
+            message: '请选择关联收货人姓名',
+            trigger: 'change',
+          },
         ],
         receiptTel: [
-          { required: true, message: '请选择关联收货人电话', trigger: 'change' }
+          {
+            required: true,
+            message: '请选择关联收货人电话',
+            trigger: 'change',
+          },
         ],
         type: [
           {
             required: true,
             message: '请选择关联补发类别盒子',
-            trigger: 'change'
-          }
+            trigger: 'change',
+          },
         ],
         mode: [
-          { required: true, message: '请选择关联补发方式', trigger: 'change' }
+          { required: true, message: '请选择关联补发方式', trigger: 'change' },
         ],
         totalAddress: [
           {
             required: true,
             message: '请选择关联收货人地址',
-            trigger: 'change'
-          }
+            trigger: 'change',
+          },
         ],
         chooseProductVaidator: [
           {
             required: true,
-            validator: validateProduct
-          }
+            validator: validateProduct,
+          },
         ],
         replenishReason: [
           {
             required: true,
             message: '请选择关联补发商品原因',
-            trigger: 'blur'
-          }
+            trigger: 'blur',
+          },
         ],
         reissueMsg: [
           { required: true, message: '请填写原因', trigger: 'blur' },
-          { min: 0, max: 150, message: '最大长度150个字符', trigger: 'blur' }
+          { min: 0, max: 150, message: '最大长度150个字符', trigger: 'blur' },
         ],
         attsUrl: [
-          { required: true, message: '请选择上传的附件', trigger: 'change' }
-        ]
+          { required: true, message: '请选择上传的附件', trigger: 'change' },
+        ],
       },
-      now: new Date().getTime()
+      now: new Date().getTime(),
     }
   },
 
   methods: {
+    // 设置子订单号
+    setChildrenId(val) {
+      this.formRepair.childOrderId = val.id
+      this.formRepair.childOutTradeNo = val.outTradeNo
+    },
     singglefileListPromise() {
       console.info(this.fileListC)
       const promiseAll = this.fileListC.map((item) =>
@@ -523,9 +608,9 @@ export default {
     // 超过个数限制
     onExceed(files, fileList) {
       this.$message.warning(
-        `当前限制选择9个文件，本次选择了 ${
-          files.length
-        } 个文件，共选择了 ${files.length + fileList.length} 个文件`
+        `当前限制选择9个文件，本次选择了 ${files.length} 个文件，共选择了 ${
+          files.length + fileList.length
+        } 个文件`
       )
     },
     // 点击预览文件
@@ -602,6 +687,11 @@ export default {
     clearAllData() {
       this.fileListC = []
       this.formRepair = {
+        showChildOrder:'',
+        childOutTradeNo:'',//子订单订单号
+        childOrderId:'',//子订单号
+        snNum:'',//sn 号
+        sendBackTrackingNum:'',//寄回单号
         totalAddress: '', // 补上
         userId: '', // 用户id
         applyDepartment: '', // 申请人所在部门  --非必传
@@ -633,7 +723,7 @@ export default {
         reason: '',
         replenishReason: '',
         reissueMsg: '',
-        attsUrl: ''
+        attsUrl: '',
       }
       this.changeProductText = '选择商品'
       this.giftList = []
@@ -643,7 +733,7 @@ export default {
     saveGift() {
       if (this.selectName.length) {
         Object.assign(this.formRepair, {
-          productdetails: this.selectName // 新启用
+          productdetails: this.selectName, // 新启用
           // productId,productNames罢用
         })
         this.chooseCompleted = false
@@ -699,7 +789,7 @@ export default {
               id: item.id,
               name: item.name,
               count: 1,
-              canOperating: false
+              canOperating: false,
             })
           })
         }
@@ -727,6 +817,8 @@ export default {
     chooseMode(val) {
       this.clearData()
       this.formRepair.mode = val
+      this.giftList = []
+      this.getHardware(val)
     },
     // 选择补发原因-为了给reason附上replenishReason补发原因
     choosereplenishReason(val) {
@@ -744,16 +836,36 @@ export default {
           addressId: 0,
           receiptAddressProvince: val.province,
           receiptName: val.receiptName,
-          receiptTel: val.receiptTel
+          receiptTel: val.receiptTel,
         })
       }
     },
+    // 查询硬件
+    getHardware(val) {
+      let productType = 'HARDWARE_MATERIALS_PARTS'
+      if (val === 'DEFAULT') {
+        productType = 'HARDWARE'
+      }
+      let query = {
+        courseDifficulty: 'S3',
+        productType,
+        courseType: 'SYSTEM_COURSE',
+        courseLevel: 'LEVEL1',
+        proVersion: 'v1.0',
+      }
+      this.$http.Order.getHardwareProductList(query).then((res) => {
+        this.giftList = res.payload
+      })
+    },
     // 通过订单id查询物流信息
     async getSeletInput(val) {
-      console.log(val)
+      if (val.id) {
+        this.childrenListOrder = []
+        this.getChildrenOrderList(val.id)
+      }
       if (val.id) {
         this.$http.Express.getExpressByOrderId(val.id).then((res) => {
-          let medium;
+          let medium
           if (res && res.payload) {
             medium = res.payload
             // 回显bug无法提交_丹阳&伟霞
@@ -769,7 +881,7 @@ export default {
             // 回显bug无法提交_丹阳&伟霞
             this.levelData = medium.level
             Object.assign(this.formRepair, {
-              proVersion:medium.productVersion,
+              proVersion: medium.productVersion,
               totalAddress:
                 medium.province +
                 medium.city +
@@ -797,11 +909,11 @@ export default {
               outTradeNo: val.outTradeNo,
               courseType: '', // 目前没法判断 先写死
               packagesId: val.packagesId,
-              showMessage: val.showMessage
+              showMessage: val.showMessage,
             })
           } else {
             Object.assign(this.formRepair, {
-              proVersion:medium.productVersion,
+              proVersion: medium.productVersion,
               userId: val.uid,
               stage: val.stage,
               productInfo: val.packagesName,
@@ -817,7 +929,7 @@ export default {
               courseType: '', // 目前没法判断 先写死
               packagesId: val.packagesId,
               showMessage: val.showMessage,
-              mode: ''
+              mode: '',
             })
           }
         })
@@ -825,7 +937,6 @@ export default {
       // 根据订单获取课程进度
       // 分体验课和系统课
       this.formRepair.currentLesson = ''
-      console.log(val)
       if (val.regtype === 'EXPERIENCE') {
         const resTrialData = await this.getTrialClassProgress(val.id)
         if (resTrialData) {
@@ -840,12 +951,29 @@ export default {
         const resSysData = await this.getSystemClassProgress(val.id)
         if (resSysData) {
           // console.log(resSysData)
-          this.formRepair.currentLesson = `${SUP_LEVEL_ALL[resSysData.currentSuper]}${resSysData.currentLevel}${resSysData.currentUnit}${resSysData.currentLesson}`
+          this.formRepair.currentLesson = `${
+            SUP_LEVEL_ALL[resSysData.currentSuper]
+          }${resSysData.currentLevel}${resSysData.currentUnit}${
+            resSysData.currentLesson
+          }`
 
           // console.log(this.formRepair.currentLesson)
           this.now = new Date().getTime()
         }
       }
+    },
+    getChildrenOrderList(id) {
+      let query = {
+        itemId: id,
+      }
+      this.$http.RefundApproval.getChildOrder(query).then((res) => {
+        if (res.code === 0) {
+          if (res.payload.length > 0) {
+            this.childrenListOrder = res.payload
+          } else {
+          }
+        }
+      })
     },
     getTrialClassProgress(orderNo) {
       return this.$http.Approval.findTrailByOrderNo(orderNo)
@@ -901,7 +1029,7 @@ export default {
           } else {
             this.$message({
               message: '该手机号未查询到订单',
-              type: 'warning'
+              type: 'warning',
             })
           }
         })
@@ -930,7 +1058,26 @@ export default {
                         id: res.payload.id,
                         name: res.payload.name,
                         count: 1,
-                        canOperating: false
+                        canOperating: false,
+                      })
+                    }
+                  )
+                } else {
+                  this.$message('请填写完信息')
+                }
+                break
+              case 'TESTCOURSE_SINGLE':
+                this.formRepair.level = 'LEVEL1'
+                if (this.formRepair.sup) {
+                  this.$http.Product.getCourseMaterials(this.formRepair).then(
+                    (res) => {
+                      this.productDialog = true
+                      this.giftList = []
+                      this.giftList.push({
+                        id: res.payload.id,
+                        name: res.payload.name,
+                        count: 1,
+                        canOperating: false,
                       })
                     }
                   )
@@ -948,7 +1095,7 @@ export default {
                         id: res.payload.id,
                         name: res.payload.name,
                         count: 1,
-                        canOperating: false
+                        canOperating: false,
                       })
                     }
                   )
@@ -962,7 +1109,10 @@ export default {
 
             break
           case 'SINGLE':
-            if (this.formRepair.packagesType === 'EXPERIENCE_COURSE') {
+            if (
+              this.formRepair.packagesType === 'EXPERIENCE_COURSE' ||
+              this.formRepair.packagesType === 'TESTCOURSE_SINGLE'
+            ) {
               this.formRepair.level = 'LEVEL1'
             }
             if (this.formRepair.sup && this.formRepair.packagesType) {
@@ -975,7 +1125,7 @@ export default {
                       id: item.id,
                       name: item.name,
                       count: 1,
-                      canOperating: false
+                      canOperating: false,
                     })
                   })
                 }
@@ -997,7 +1147,7 @@ export default {
       this.clearAllData()
     },
     confirmButton(formName) {
-      console.log(this.formRepair.attsUrl='sssssssssssssss')
+      // console.log((this.formRepair.attsUrl = 'sssssssssssssss'))
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (!this.formRepair.reissueMsg.trim()) {
@@ -1014,11 +1164,15 @@ export default {
             switch (this.formRepair.packagesType) {
               case 'EXPERIENCE_COURSE':
                 this.formRepair.courseType = 1
-                this.formRepair.type = 'EXPERIENCE_MATERIALS'
+                // this.formRepair.type = 'EXPERIENCE_MATERIALS'
+                break
+              case 'TESTCOURSE_SINGLE':
+                this.formRepair.courseType = 6
+                // this.formRepair.type = 'EXPERIENCE_MATERIALS'
                 break
               case 'SYSTEM_COURSE':
                 this.formRepair.courseType = 2
-                this.formRepair.type = 'SYSTEM_MATERIALS'
+                // this.formRepair.type = 'SYSTEM_MATERIALS'
                 break
               default:
                 break
@@ -1030,7 +1184,7 @@ export default {
             delete this.formRepair.mode
           }
           const loading = this.$loading({
-            lock: true
+            lock: true,
           })
           this.$http.Backend.applyReplenish(this.formRepair).then((res) => {
             if (res) {
@@ -1038,8 +1192,8 @@ export default {
               this.$router.push({
                 path: '/approval',
                 params: {
-                  activeApprove: 'second'
-                }
+                  activeApprove: 'second',
+                },
               })
             }
             setTimeout(() => {
@@ -1053,8 +1207,8 @@ export default {
       })
 
       this.addresDialog = false
-    }
-  }
+    },
+  },
 }
 </script>
 

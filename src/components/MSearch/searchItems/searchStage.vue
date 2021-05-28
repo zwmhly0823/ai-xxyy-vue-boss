@@ -52,6 +52,11 @@ export default {
       type: String,
       default: '1',
     },
+    // 体验课类型 2是双周 1是单周
+    exType: {
+      type: Number,
+      default: 1,
+    },
     // 是否多选
     isMultiple: {
       type: Boolean,
@@ -85,6 +90,7 @@ export default {
       stage: this.isMultiple ? this.record : '',
       dataList: [],
       period: [], // 期数
+      params: 1, // 排期联动数据
     }
   },
   computed: {
@@ -97,10 +103,27 @@ export default {
     },
   },
   created() {
-    this.getData()
+    if (!this.isDisabled) {
+      this.getData()
+    }
+  },
+  mounted() {
+    console.log(this.type, 'this.type')
   },
   watch: {
     category(val, oldValue) {
+      if (val) {
+        this.getData()
+      }
+    },
+    exType(val) {
+      if (this.category.length > 0) {
+        this.params = this.type
+      } else {
+        this.params = this.type
+      }
+      console.log(this.params, 'this.params')
+      this.params = this.exType == 2 ? 0 : 2
       this.getData()
     },
     record(val) {
@@ -108,7 +131,8 @@ export default {
     },
     isDisabled(val) {
       if (val) {
-        this.stage = []
+        this.$emit('result', '')
+        this.stage = ''
       }
       console.log(val, '123123')
     },
@@ -124,9 +148,14 @@ export default {
       const query = { teacher_id: this.teacherId }
       const teamType =
         this.type === '0' ? { team_type: 0 } : { team_type: { gt: 0 } }
-      Object.assign(query, teamType, {
-        subject: this.$store.getters.subjects.subjectCode,
-      },{type: `${this.category.length==0?this.type:this.category}`})
+      Object.assign(
+        query,
+        teamType,
+        {
+          subject: this.$store.getters.subjects.subjectCode,
+        },
+        { type: `${this.category.length == 0 ? this.params : this.category}` }
+      )
 
       const q = JSON.stringify(query)
       axios
@@ -156,14 +185,15 @@ export default {
         },
       }
       if (this.type) {
-        queryParams.bool.must.push({ term: { type: `${this.category.length==0?this.type:this.category}` } })
+        queryParams.bool.must.push({
+          term: {
+            type: `${this.category.length == 0 ? this.params : this.category}`,
+          },
+        })
       }
       if (this.record.length > 0) {
         console.log(this.period)
         this.period.push(...this.record)
-      }
-      if (this.period.length > 0) {
-        // queryParams.bool.must.push({ terms: { period: this.period } })
       }
       const q = JSON.stringify(queryParams)
       const sort = `{"id":"desc"}`
