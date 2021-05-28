@@ -255,6 +255,8 @@ export default {
         yesterday_un_open_app_uids
         today_join_course_uids
         today_complete_course_uids
+        today_join_course_count
+        today_complete_course_count
         today_course_task_uids
         today_task_comment_uids
         today_listen_comment_uids
@@ -277,6 +279,8 @@ export default {
         yesterday_system_order_count
         today_system_order_amount
         today_system_order_count
+        today_join_course_count
+        today_complete_course_count
       `
     }
     return axios.post('/graphql/v1/toss', {
