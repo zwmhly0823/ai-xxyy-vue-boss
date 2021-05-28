@@ -14,10 +14,10 @@ module.exports = {
   parserOptions: {
     parser: 'babel-eslint'
   },
-  // rules: {
-  //   'no-console': 'error',
-  //   'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
-  // },
+  rules: {
+    'no-console': 'error',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
+  },
   overrides: [
     {
       files: [
