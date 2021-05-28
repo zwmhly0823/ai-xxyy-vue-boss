@@ -85,7 +85,6 @@ export default {
     pathCompile(path) {
       // To solve this problem https://github.com/PanJiaChen/vue-element-admin/issues/561
       const { params } = this.$route
-      // console.log(pathToRegexp)
       var toPath = compile(path)
       return toPath(params)
     },

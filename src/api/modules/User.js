@@ -627,13 +627,11 @@ export default {
   },
   // 学习记录基本信息
   getStudentDetail(term, course_id, sup) {
-    // console.log(query)
     const formattingQuery = JSON.stringify({
       term,
       course_id,
       sup: sup.toLowerCase()
     })
-    console.log(formattingQuery)
     return axios.post(`/graphql/v1/toss`, {
       query: `{
         StudentTrialRecordDetailBossStatistics(
@@ -679,7 +677,6 @@ export default {
   },
   // 学习记录详情页
   getStudentTRecordList(query, teamName = '', sup, page = 1, sort = 'desc') {
-    console.log(teamName)
     teamName &&
       Object.assign(query, {
         'team_name.like': { 'team_name.keyword': `*${teamName}*` }
@@ -688,7 +685,6 @@ export default {
       ...query,
       sup: sup.toLowerCase()
     })
-    console.log(formattingQuery)
     const formattingSort = JSON.stringify({ ctime: sort })
     return axios.post(`/graphql/v1/toss`, {
       query: `{
@@ -1108,7 +1104,6 @@ export default {
     ctime,
     size = 20
   ) {
-    console.info('小熊币接口触发trans_type值', trans_type)
     const formattingQuery = JSON.stringify({
       subject,
       uid: query,
@@ -1527,7 +1522,6 @@ export default {
 
   // 转介绍记录tab给index取转介绍相关数据
   getDataStatiscsForDetailInDex(query) {
-    console.warn('查询转介绍人数据对象')
     return axios.post('/graphql/v1/toss', {
       query: `{
         Order(

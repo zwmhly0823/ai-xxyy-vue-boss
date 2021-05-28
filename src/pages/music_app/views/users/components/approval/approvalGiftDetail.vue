@@ -150,7 +150,6 @@ export default {
     }
   },
   created() {
-    console.log(this.drawerGiftDeatail, 'params_pending')
   },
   data() {
     return {}
@@ -176,8 +175,6 @@ export default {
             staffId: this.staffId,
             staffName: this.staffName
           }
-          console.log(params)
-          console.log(this.params_pending, 'params_pending')
           this.$http.Backend.isAggrePass(params)
             .then((res) => {
               if (res && res.payload) {
@@ -194,7 +191,6 @@ export default {
             })
         })
         .catch((err) => {
-          console.log(err)
         })
     },
     // 拒绝

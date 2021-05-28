@@ -119,7 +119,6 @@ export default {
           data: params
         })
           .then((res) => {
-            console.log('updateScheduleExcel-res', res)
             resolve(res)
           })
           .catch((err) => {
@@ -143,7 +142,6 @@ export default {
           data: params
         })
           .then((res) => {
-            console.log('updateScheduleExcel-res', res)
             resolve(res)
           })
           .catch((err) => {
@@ -193,7 +191,6 @@ export default {
    * 营销中心-兑换码记录列表导出
    */
   exportRedeemCodeLog(params) {
-    console.log(params, 'params')
     if (judgeToken()) {
       return new Promise((resolve, reject) => {
         axios({
@@ -204,7 +201,6 @@ export default {
           data: params
         })
           .then((res) => {
-            console.log(res, '兑换码 download')
             resolve(res)
           })
           .catch((err) => {
@@ -215,7 +211,6 @@ export default {
   },
   importScheduleExcel(params) {
     const { url } = params
-    console.log('params', params)
     return new Promise((resolve, reject) => {
       axios({
         method: 'POST',

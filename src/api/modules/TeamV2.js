@@ -167,7 +167,6 @@ export default {
       regtype: [2, 3]
     }
     const query = Object.assign({}, regtype, params || {})
-    console.log(query)
     return axios.post('/graphql/v1/toss', {
       query: `{
         OrderPage(query: ${JSON.stringify(

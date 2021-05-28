@@ -93,13 +93,11 @@ export default {
   },
   // 学习记录  体验课 基本信息
   getStudentTrialDetail(term, courseId, sup) {
-    // console.log(query)
     const formattingQuery = JSON.stringify({
       term,
       courseId,
       sup: sup.toLowerCase()
     })
-    console.log(formattingQuery)
     return axios.post(`/graphql/v1/toss`, {
       query: `{
         StudentTrialRecordDetailBossStatistics(
@@ -145,13 +143,11 @@ export default {
   },
   // 学习记录 系统课 基本信息
   getStudentSystemDetail(term, courseId, sup) {
-    // console.log(query)
     const formattingQuery = JSON.stringify({
       term,
       course_id: courseId,
       sup: sup.toLowerCase()
     })
-    console.log(formattingQuery)
     return axios.post(`/graphql/v1/toss`, {
       query: `{
         StudentSystemRecordDetailBossStatistics(
@@ -197,7 +193,6 @@ export default {
   },
   // 学习记录 体验课 详情页
   getStudentTRecordList(query, teamName = '', sup, page = 1, sort = 'desc') {
-    console.log(teamName)
     teamName &&
       Object.assign(query, {
         'team_name.like': { 'team_name.keyword': `*${teamName}*` }
@@ -206,7 +201,6 @@ export default {
       ...query,
       sup: sup.toLowerCase()
     })
-    console.log(formattingQuery)
     const formattingSort = JSON.stringify({ ctime: sort })
     return axios.post(`/graphql/v1/toss`, {
       query: `{
@@ -274,7 +268,6 @@ export default {
   },
   // 学习记录 系统课 详情页
   // getStudentSRecordList(query, teamName = '', sup, page = 1, sort = 'desc') {
-  //   console.log(teamName)
   //   teamName &&
   //     Object.assign(query, {
   //       'team_name.like': { 'team_name.keyword': `*${teamName}*` }
@@ -283,7 +276,6 @@ export default {
   //     ...query,
   //     sup: sup.toLowerCase()
   //   })
-  //   console.log(formattingQuery)
   //   const formattingSort = JSON.stringify({ ctime: sort })
   //   return axios.post(`/graphql/v1/toss`, {
   //     query: `{
@@ -355,7 +347,6 @@ export default {
   //   })
   // },
   getStudentSRecordList(query, teamName = '', sup, page = 1, sort = 'desc') {
-    console.log(teamName)
     teamName &&
       Object.assign(query, {
         'team_name.like': { 'team_name.keyword': `*${teamName}*` }
@@ -364,7 +355,6 @@ export default {
       ...query,
       sup: sup.toLowerCase()
     })
-    console.log(formattingQuery)
     const formattingSort = JSON.stringify({ ctime: sort })
     return axios.post(`/graphql/v1/toss`, {
       query: `{

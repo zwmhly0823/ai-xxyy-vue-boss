@@ -177,7 +177,6 @@ export default {
       const list = this.subjects.subjectsList.filter(
         (item) => item.key !== this.subjects.currentSubjectKey
       )
-      console.log(list)
       return list
     }
   },
@@ -191,7 +190,6 @@ export default {
   data() {
     // 修改密码验证
     const validatePass = (rule, value, callback) => {
-      console.log(validatePwd(value))
       if (value === '') {
         callback(new Error('请输入新密码'))
       } else if (!validatePwd(value)) {
@@ -243,7 +241,6 @@ export default {
     },
     logout() {
       removeToken()
-      // console.log('baseUrl:', baseUrl())
       location.href = `${baseUrl()}login/#/`
       // await this.$store.dispatch('user/logout')
       // this.$router.push(`/login?redirect=${this.$route.fullPath}`)
@@ -279,11 +276,9 @@ export default {
               }
             },
             (err) => {
-              console.log(err)
             }
           )
         } else {
-          console.log('error submit!!')
           return false
         }
       })
@@ -299,7 +294,6 @@ export default {
           }
         })
         .catch(() => {
-          console.log('获取消息数量角标失败')
         })
     },
     reduceBadge() {
@@ -314,7 +308,6 @@ export default {
      */
     // 当前页面切换
     handleChangeSubject(command, isNew = false) {
-      console.log(command, isNew)
       // 如果角色是教研（roleId=18）,跳转到 设置-员工帐号
       const { roleList = [] } = this.userInfo
       let roleId = roleList.length > 0 ? roleList[0] : '';
@@ -335,7 +328,6 @@ export default {
 
     // 新标签页打开
     openNewTab(key) {
-      console.log(key, 'new tab')
       // 如果角色是教研（roleId=18）,跳转到 设置-员工帐号
       const { roleList = [] } = this.userInfo
       let roleId = roleList.length > 0 ? roleList[0] : '';
