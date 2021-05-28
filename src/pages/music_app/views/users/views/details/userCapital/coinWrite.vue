@@ -11,12 +11,14 @@
     <div class="coin-num-box">
       <div class="coin-item" v-for="(cItem, cKey) of coinNumList" :key="cKey">
         <span class="coin-nums-label">{{ cItem.label }} :</span>
-        <span class="coin-nums-val">{{ cItem.value }}</span>
+        <span class="coin-nums-val">{{
+          cKey == 2 ? bear_amount : cItem.value
+        }}</span>
       </div>
     </div>
     <div class="searchItem" v-if="changeSubject === 0">
       <el-form :inline="true" size="mini">
-        <el-form-item label="任务类型:" style="margin-right:30px">
+        <el-form-item label="任务类型:" style="margin-right: 30px">
           <el-select
             v-model="value1"
             clearable
@@ -82,12 +84,17 @@ export default {
   props: {
     changeSubject: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
+    bearAmount: {
+      type: Number,
+      default: 0,
+    },
   },
   data() {
     return {
       studentId: '',
+      bear_amount: null,
       value1: [], // 任务类型-[]
       value2: null, // 获取时间-null
       options: {
@@ -106,31 +113,35 @@ export default {
         11: '大转盘消耗',
         12: '小熊币兑吧添加',
         13: '小熊币兑吧扣除',
-        14: '运营扣除'
+        14: '运营扣除',
+        15: '买课退款扣除',
       },
       coinNumList: [
         {
           label: '共获取',
-          value: 0
+          value: 0,
         },
         {
           label: '已消耗',
-          value: 0
+          value: 0,
         },
         {
           label: '剩余',
-          value: 0
-        }
+          value: 0,
+        },
       ],
       renderTableData: [],
       faProps: [], // 爹给的
       currentPage: 1,
-      allDigit: 0
+      allDigit: 0,
     }
   },
   mounted() {
-    if(!this.$route.params.isShort){
-      this.studentId = this.$route.params.id;
+    setTimeout(() => {
+      this.bear_amount = this.bearAmount
+    }, 1000)
+    if (!this.$route.params.isShort) {
+      this.studentId = this.$route.params.id
       setTimeout(this.reqGetUserCoin.bind(this, 'mounted'), 2000)
     }
     this.$root.$on('bearCoin', (r) => {
@@ -145,7 +156,7 @@ export default {
       deep: true,
       handler(newValue, oldValue) {
         this.reqGetUserCoin()
-      }
+      },
     },
     value1: {
       immediate: false,
@@ -153,7 +164,7 @@ export default {
       handler(newValue, oldValue) {
         console.info('捕获任务类型改变', newValue, oldValue)
         this.reqGetUserCoin()
-      }
+      },
     },
     value2: {
       immediate: false,
@@ -161,14 +172,14 @@ export default {
       handler(newValue, oldValue) {
         console.info('捕获时间改变', newValue, oldValue)
         this.reqGetUserCoin()
-      }
+      },
     },
     pUserId(value) {
-      if(value && this.$route.params.isShort) {
+      if (value && this.$route.params.isShort) {
         this.studentId = value
         this.top3Show()
       }
-    }
+    },
   },
   computed: {
     // 获取时间筛选对象
@@ -177,7 +188,7 @@ export default {
       ctime.gte = this.value2 ? this.value2[0] : 0 // 清空之后2030年↓
       ctime.lte = this.value2 ? this.value2[1] : 1902591374054
       return ctime
-    }
+    },
   },
   methods: {
     // 数据接口_用户资产_小熊币
@@ -189,7 +200,7 @@ export default {
         this.currentPage,
         Array.isArray(this.value1) && this.value1.length
           ? this.value1
-          : [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14], // 清空之后全类型
+          : [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15], // 清空之后全类型
         this.ctime
       )
         .then((res = {}) => {
@@ -205,7 +216,8 @@ export default {
                 +nItem.trans_type === 4 ||
                 +nItem.trans_type === 5 ||
                 +nItem.trans_type === 11 ||
-                +nItem.trans_type === 14
+                +nItem.trans_type === 14 ||
+                +nItem.trans_type === 15
                   ? 1
                   : 0
             })
@@ -234,7 +246,8 @@ export default {
             cur.code !== '5' &&
             cur.code !== '11' &&
             cur.code !== '13' &&
-            cur.code !== '14'
+            cur.code !== '14' &&
+            cur.code !== '15'
           ) {
             return pre + Number(cur.value)
           } else {
@@ -250,7 +263,8 @@ export default {
             cur.code === '5' ||
             cur.code === '11' ||
             cur.code === '13' ||
-            cur.code === '14'
+            cur.code === '14' ||
+            cur.code === '15'
           ) {
             return pre + Number(cur.value)
           } else {
@@ -260,12 +274,10 @@ export default {
         0
       )
       // 头3数据取自老爹-计算剩余
-      this.coinNumList[2].value =
-        this.coinNumList[0].value - this.coinNumList[1].value
-
+      this.coinNumList[2].value = this.bear_amount
       this.$emit('colorBear', this.coinNumList[2].value) // colorBear
-    }
-  }
+    },
+  },
 }
 </script>
 

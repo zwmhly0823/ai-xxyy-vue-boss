@@ -70,40 +70,15 @@
           <el-option label="B" :value="0">B</el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="模版" prop="experience">
+      <!-- <el-form-item label="模版" prop="experience">
         <el-select
           disabled
           v-model="ruleForm.experience"
           placeholder="请选择"
           clearable
         >
-          <el-option
-            label="1v1美术宝9.9元双周体验课模版"
-            :value="'/channel91v1/index'"
-            >1v1美术宝9.9元双周体验课模版</el-option
-          >
-          <el-option
-            label="9.9元双周体验课模版"
-            :value="'/channel9/index?channelId='"
-            >9.9元体验课模版</el-option
-          >
-          <el-option
-            label="29元双周体验课模版"
-            :value="'/channel29/index?channelId= '"
-            >29元体验课模版</el-option
-          >
-          <el-option
-            label="49元双周体验课模版"
-            :value="'/channel/index?channelId='"
-            >49元体验课模版</el-option
-          >
-          <el-option
-            label="200抵500代金券"
-            :value="'/activityCoupon/twoHundred?channelId='"
-            >200抵500代金券</el-option
-          >
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="渠道备注" prop="desc">
         <el-input
           placeholder="请输入备注"
@@ -134,6 +109,7 @@
 </template>
 
 <script>
+import { channelList } from '@/utils/supList'
 export default {
   props: ['modifyRow'],
   data() {
@@ -184,6 +160,7 @@ export default {
         // desc: [{ required: true, message: '请填写渠道备注', trigger: 'blur' }]
         // status: [{ required: true, message: '请选择渠道状态', trigger: 'blur' }]
       },
+      channelList: channelList,
     }
   },
   created() {
@@ -209,22 +186,12 @@ export default {
             this.ruleForm.channelThree = item.channel_inner_name
             this.ruleForm.sort = item.channel_sort
             this.ruleForm.desc = item.remarks
-            ;(this.ruleForm.experience = item.channel_link.includes('29')
-              ? '29元双周体验课模版'
-              : item.channel_link.includes('twoHundred')
-              ? '200抵500代金券'
-              : item.channel_link.includes('newSystemYear')
-              ? '年系统课'
-              : item.channel_link.includes('/channel9/index')
-              ? '9.9元双周体验课模版'
-              : item.channel_link.includes('/channel91v1/index')
-              ? '1v1美术宝9.9元双周体验课模版'
-              : item.channel_link.includes('/channel/single/507/index')
-              ? '9.9元单周体验课模版'
-              : item.channel_link.includes('/channel/single/506/index')
-              ? '19元单周体验课模版'
-              : '49元双周体验课模版'),
-              (this.ruleForm.status = item.status.toString())
+            this.channelList.forEach((item1, index) => {
+              if (item.channel_link.indexOf(item1.label)) {
+                this.ruleForm.experience = item1.label
+              }
+            });
+            this.ruleForm.status = item.status.toString()
             this.ruleForm.channelLevel = item.channel_level
           })
         }

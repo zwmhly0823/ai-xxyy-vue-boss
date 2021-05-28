@@ -116,7 +116,7 @@
             class="margin_l10"
             style="width: 140px"
           />
-          <search-stage
+          <search-stageEC
             :teacher-id="teacherscope_trial || teacherscope"
             class="margin_l10"
             name="stage"
@@ -187,7 +187,7 @@ import ChannelSelect from '@/components/MSearch/searchItems/channel.vue'
 import GroupSell from '@/components/MSearch/searchItems/groupSell'
 import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
-import SearchStage from '@/components/MSearch/searchItems/searchStage'
+import SearchStageEC from '@/components/MSearch/searchItems/searchStageEC'
 // import TrialCourseType from '@/components/MSearch/searchItems/trialCourseType'
 import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
@@ -210,7 +210,7 @@ export default {
     GroupSell,
     Department,
     SearchTeamName,
-    SearchStage,
+    SearchStageEC,
     // TrialCourseType,
     SearchPhoneAndUsername,
     SimpleSelect,

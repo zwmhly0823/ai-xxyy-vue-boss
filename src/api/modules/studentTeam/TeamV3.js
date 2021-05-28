@@ -12,8 +12,8 @@ export default {
     return axios.post('/graphql/v1/toss', {
       query: `{
         StudentTrialTeamStatistics(query: ${JSON.stringify(
-          injectSubject(params)
-        ) || null}) {
+        injectSubject(params)
+      ) || null}) {
           id
           ctime
           utime
@@ -150,6 +150,8 @@ export default {
             }
             orderInfo {
               id
+              packages_id
+              user_source_text
               trial_course {
                 order_no
               }
@@ -184,6 +186,7 @@ export default {
             bi_label
             sys_label
             userExtends {
+              wechat_no
               wechat_id
               wechat_avatar
               wechat_nick_name
@@ -200,8 +203,8 @@ export default {
     return axios.post('/graphql/v1/toss', {
       query: `{
         StudentTrialTeamStatisticsExtra(query: ${JSON.stringify(
-          injectSubject(query)
-        )}) {
+        injectSubject(query)
+      )}) {
           all_system_order_count
           payment_system_order_count
           payment_system_order_amount
@@ -226,8 +229,8 @@ export default {
     return axios.post('/graphql/v1/toss', {
       query: `{
         OrderPage(query: ${JSON.stringify(
-          injectSubject(query)
-        )}, page: ${page}, size: ${size}){
+        injectSubject(query)
+      )}, page: ${page}, size: ${size}){
           totalElements
           totalPages
           number

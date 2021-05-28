@@ -9,9 +9,9 @@
 import axios from '../axiosConfig'
 export default {
   /**
-  * /v1/backend/approval/staffIds/get
-  * 获取退款审批权限id
-  */
+   * /v1/backend/approval/staffIds/get
+   * 获取退款审批权限id
+   */
   getStaffIds() {
     return axios.post('/api/b/v1/backend/approval/staffIds/get?redisKey=approval:uncreditedApprovalIds', {})
   },
@@ -29,9 +29,9 @@ export default {
    * 获取补发货流程详情 /v1/backend/reissue/flow/info
    *
    */
-  getReplenishDetail(params) {
+  getReplenishDetail(query) {
     return axios.get(
-      `/api/b/v1/backend/reissue/flow/info?flowApprovalId=${params}`
+      `/api/b/v1/backend/reissue/flow/info?flowApprovalId=${query}`
     )
   },
   /**

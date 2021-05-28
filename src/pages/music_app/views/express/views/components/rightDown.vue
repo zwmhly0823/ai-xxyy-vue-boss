@@ -141,7 +141,11 @@
       >
         <template slot-scope="scope">
           <div class="product">
-            <span>{{ regtypeEnum[scope.row.regtype] || '--' }}</span>
+            <span>{{
+              scope.row.express_regtype_text
+                ? scope.row.express_regtype_text
+                : '--'
+            }}</span>
           </div>
           <div class="gray-text">
             <span>{{ scope.row.replenish_type_text || '--' }}</span>
@@ -619,7 +623,7 @@ export default {
     // 体验课类型 2是双周 1是单周
     exType: {
       type: Number,
-      default:null,
+      default: null,
     },
     hideCol: {
       type: Object,
@@ -1062,14 +1066,42 @@ export default {
       this.searchIn.forEach((item) => {
         console.log(item, 'item===物流参数')
         if (item && item.term) {
+          // 新增类型的时候这里要改
+          if (item.term.regType == '500, 503, 505, 508') {
+            timeType.packages_id = [500, 503, 505, 508]
+          } else if (item.term.regType == '502,506,507') {
+            timeType.packages_id = [502, 506, 507]
+          } else if (item.term.regType == '2,3') {
+            timeType.product_type = '1'
+          } else if (item.term.regType == '4,5,6') {
+            timeType.product_type = '2,3,4,5,7,8,9,10,11'
+          } 
+          // else if (item.term.regType === '7' && !item.term.replenish_type) {
+          //   timeType.product_type = '12, 13' // 单独的硬件补发
+          // } else if (
+          //   !item.term.regType && // 硬件补发+整盒补发
+          //   item.term.replenish_type &&
+          //   item.term.replenish_type[0] === '0' &&
+          //   item.term.replenish_type.length == 1
+          // ) {
+          //   timeType.product_type = '12'
+          // } else if (
+          //   // 硬件补发+单价补发
+          //   !item.term.regType &&
+          //   item.term.replenish_type &&
+          //   item.term.replenish_type[0] === '1' &&
+          //   item.term.replenish_type.length == 1
+          // ) {
+          //   timeType.product_type = '13'
+          // } else if (
+          //   !item.term.regType && // 硬件补发+单价补发+整盒补发
+          //   item.term.replenish_type &&
+          //   item.term.replenish_type.length == 2
+          // ) {
+          //   timeType.product_type = '12, 13'
+          // }
           if (item.term.product_type_0) {
             timeType.product_type_0 = item.term.product_type_0
-          }
-          if (item.term.regType) {
-            timeType.regtype = item.term.regType
-          }
-          if (item.term.packages_id) {
-            timeType.packages_id = item.term.packages_id
           }
           if (item.term.operator_id) {
             timeType.operator_id = item.term.operator_id
@@ -1112,9 +1144,9 @@ export default {
           if (item.term && item.term.regtype) {
             timeType.regtype = `${item.term.regtype}`
           }
-          if (item.term && item.term.last_team_id) {
-            timeType.last_team_id = item.term.last_team_id
-          }
+          // if (item.term && item.term.last_team_id) {
+          //   timeType.last_team_id = item.term.last_team_id
+          // }
           if (item.term && item.term['product_version.keyword']) {
             timeType.product_version = `${item.term['product_version.keyword']}`
           }
@@ -1126,6 +1158,9 @@ export default {
           }
         }
         if (item && item.terms) {
+          if (item.terms.packages_id && item.terms.packages_id[0]) {
+            timeType.packages_id = item.terms.packages_id
+          }
           if (item.terms.sup) {
             timeType.sup = `${item.terms.sup}`
           }
@@ -1224,6 +1259,7 @@ export default {
               operator_id
               operator_name
               level
+              express_regtype_text
               ctime
               utime
               center_ctime

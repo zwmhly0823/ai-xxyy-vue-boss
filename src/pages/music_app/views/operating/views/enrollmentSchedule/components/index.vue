@@ -20,8 +20,26 @@
     </div>
     <div class="sear-container">
       <!-- <m-search @search="handleSearch" stage="stage" sup="sup" />TODO: -->
-      <el-button type="primary" slot="searchItems" size="mini" @click="addEditSchedule(0)">新增招生排期</el-button>
-      <el-alert title="随意新增或编辑招生排期，有可能影响当前线索分配！请谨慎操作！" type="error" :closable="false"></el-alert>
+      <el-button
+        type="primary"
+        slot="searchItems"
+        size="mini"
+        @click="addEditSchedule(0)"
+        >新增招生排期</el-button
+      >
+      <el-button
+        v-if="tabIndex == 0 || tabIndex == 1"
+        type="primary"
+        slot="searchItems"
+        size="mini"
+        @click="linkToChannelOPeriod"
+        >渠道定向排期</el-button
+      >
+      <el-alert
+        title="随意新增或编辑招生排期，有可能影响当前线索分配！请谨慎操作！"
+        type="error"
+        :closable="false"
+      ></el-alert>
     </div>
 
     <div class="orderStyle">
@@ -34,74 +52,118 @@
         @pageChange="pageChange_handler"
         class="mytable"
       >
-        <el-table-column prop="period" label="序号" width="50" align="center"></el-table-column>
-        <el-table-column prop="periodName" label="期名" align="center" width="90"></el-table-column>
-        <el-table-column prop="startDate" width="100" align="center" label="开始招生"></el-table-column>
-        <el-table-column prop="endDate" width="100" align="center" label="结束招生"></el-table-column>
-        <el-table-column prop="courseDay" width="100" align="center" label="开课时间"></el-table-column>
-        <el-table-column prop="endCourseDay" width="100" align="center" label="结课时间"></el-table-column>
+        <el-table-column
+          prop="period"
+          label="序号"
+          width="50"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="periodName"
+          label="期名"
+          align="center"
+          width="90"
+        ></el-table-column>
+        <el-table-column
+          prop="startDate"
+          width="100"
+          align="center"
+          label="开始招生"
+        ></el-table-column>
+        <el-table-column
+          prop="endDate"
+          width="100"
+          align="center"
+          label="结束招生"
+        ></el-table-column>
+        <el-table-column
+          prop="courseDay"
+          width="100"
+          align="center"
+          label="开课时间"
+        ></el-table-column>
+        <el-table-column
+          prop="endCourseDay"
+          width="100"
+          align="center"
+          label="结课时间"
+        ></el-table-column>
         <el-table-column label="招生级别" align="center" width="80">
           <template slot-scope="scope">
             <div
               v-for="(leve, l_index) in scope.row.wechatCourse"
               :key="l_index"
-            >{{ supLevelUpper[leve.courseDifficulty] || '' }}</div>
+            >
+              {{ supLevelUpper[leve.courseDifficulty] || '' }}
+            </div>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="带班销售人数" width="100" align="center">
+        <el-table-column
+          prop="address"
+          label="带班销售人数"
+          width="100"
+          align="center"
+        >
           <template slot-scope="scope">
-            <div
-              v-for="(w, l_index) in scope.row.wechatCourse"
-              :key="l_index"
-            >{{ w.wechatSize || '0' }}</div>
+            <div v-for="(w, l_index) in scope.row.wechatCourse" :key="l_index">
+              {{ w.wechatSize || '0' }}
+            </div>
           </template>
         </el-table-column>
         <el-table-column prop="address" label="计划招生" align="center">
           <template slot-scope="scope">
-            <div
-              v-for="(p, l_index) in scope.row.wechatCourse"
-              :key="l_index"
-            >{{ p.planSumTeamSize || '0' }}</div>
+            <div v-for="(p, l_index) in scope.row.wechatCourse" :key="l_index">
+              {{ p.planSumTeamSize || '0' }}
+            </div>
           </template>
         </el-table-column>
         <el-table-column prop="address" label="实际招生" align="center">
           <template slot-scope="scope">
-            <div
-              v-for="(r, l_index) in scope.row.wechatCourse"
-              :key="l_index"
-            >{{ r.realSumTeamSize || '0' }}</div>
+            <div v-for="(r, l_index) in scope.row.wechatCourse" :key="l_index">
+              {{ r.realSumTeamSize || '0' }}
+            </div>
           </template>
         </el-table-column>
         <el-table-column prop="address" label="计划开班" align="center">
           <template slot-scope="scope">
-            <div
-              v-for="(p, l_index) in scope.row.wechatCourse"
-              :key="l_index"
-            >{{ p.planTeamSize || '0' }}</div>
+            <div v-for="(p, l_index) in scope.row.wechatCourse" :key="l_index">
+              {{ p.planTeamSize || '0' }}
+            </div>
           </template>
         </el-table-column>
         <el-table-column prop="address" label="实际开班" align="center">
           <template slot-scope="scope">
-            <div
-              v-for="(r, l_index) in scope.row.wechatCourse"
-              :key="l_index"
-            >{{ r.realTeamSize || '0' }}</div>
+            <div v-for="(r, l_index) in scope.row.wechatCourse" :key="l_index">
+              {{ r.realTeamSize || '0' }}
+            </div>
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="状态" align="center"></el-table-column>
+        <el-table-column
+          prop="status"
+          label="状态"
+          align="center"
+        ></el-table-column>
         <el-table-column label="操作" align="center" width="220">
           <template slot-scope="scope">
             <div class="editStyle">
-              <span style="margin-right:15px" @click="downlaodExcel(scope.row)">下载</span>
-              <span style="margin-right:15px" @click="addEditSchedule(scope.row)">编辑</span>
-              <span style="margin-right:15px" @click="go_detail(scope.row)">详细</span>
+              <span style="margin-right: 15px" @click="downlaodExcel(scope.row)"
+                >下载</span
+              >
+              <span
+                style="margin-right: 15px"
+                @click="addEditSchedule(scope.row)"
+                >编辑</span
+              >
+              <span style="margin-right: 15px" @click="go_detail(scope.row)"
+                >详细</span
+              >
               <span
                 v-if="tabIndex === 0 || tabIndex === 1"
                 :class="[
                   {
                     'cant-click-button':
-                      scope.row.intruSwitchName === '招生完毕'
-                  }
+                      scope.row.intruSwitchName === '招生完毕',
+                  },
                 ]"
                 @click="
                   click_intru_switch(
@@ -110,7 +172,8 @@
                     scope.row.intruSwitchName
                   )
                 "
-              >{{ scope.row.intruSwitchName }}</span>
+                >{{ scope.row.intruSwitchName }}</span
+              >
             </div>
           </template>
         </el-table-column>
@@ -123,36 +186,43 @@
 // import MSearch from '@/components/MSearch/index.vue' TODO:
 import EleTable from '@/components/Table/EleTable'
 import { formatData } from '@/utils'
-import { SUP_LEVEL_TRIAL,SUP_LEVEL_ALL, SUP_LEVEL_SYSTEM,Sup_scheduleIndex,Sup_scheduleSubmit,Sup_scheduleDownload} from '@/utils/supList'
+import {
+  SUP_LEVEL_TRIAL,
+  SUP_LEVEL_ALL,
+  SUP_LEVEL_SYSTEM,
+  Sup_scheduleIndex,
+  Sup_scheduleSubmit,
+  Sup_scheduleDownload,
+} from '@/utils/supList'
 export default {
   props: {
     department: {
       type: Object,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
   components: {
     // MSearch,
-    EleTable
+    EleTable,
   },
   data() {
     return {
       canClick: true,
       query: '',
       tabIndex: 0,
-      tabs: ['单周体验课','双周体验课', '系统课'],
+      tabs: ['单周体验课', '双周体验课', '系统课'],
       totalElements: 0,
       flags: {
-        loading: false
+        loading: false,
       },
       tabQuery: {
         size: 20,
-        page: 1
+        page: 1,
       },
       sex: {
         // 0: '-',
         0: '男',
-        1: '女'
+        1: '女',
         // 3: '保密'
       },
       // 总页数
@@ -165,7 +235,7 @@ export default {
       tableData: [],
       // 老师id
       teacherID: '',
-      supLevelUpper: {}
+      supLevelUpper: {},
     }
   },
   computed: {},
@@ -192,8 +262,8 @@ export default {
         teacherId: '',
         level: '',
         courseDifficulties: '',
-        courseType:Sup_scheduleIndex[this.tabIndex],
-        period: row.period
+        courseType: Sup_scheduleIndex[this.tabIndex],
+        period: row.period,
       }
       const res = await this.$http.DownloadExcel.downloadExcelByPeriod(params)
 
@@ -232,7 +302,7 @@ export default {
     // 新增、编辑
     addEditSchedule(row) {
       const { period = 0 } = row // TODO:
-      
+
       var staff = JSON.parse(localStorage.getItem('staff'))
       staff.stepStatus = 1
       localStorage.setItem('staff', JSON.stringify(staff))
@@ -243,7 +313,7 @@ export default {
     go_detail(row) {
       const { period = '' } = row
       this.$router.push({
-        path: `/scheduleDetail/${period}/${Sup_scheduleIndex[this.tabIndex]}`
+        path: `/scheduleDetail/${period}/${Sup_scheduleIndex[this.tabIndex]}`,
       })
     },
     /**
@@ -259,22 +329,22 @@ export default {
     async getCourseListByType() {
       this.flags.loading = true
       const status = {
-        '0': '待开始',
-        '1': '招生中',
-        '2': '待开课',
-        '3': '上课中',
-        '4': '已结课'
+        0: '待开始',
+        1: '招生中',
+        2: '待开课',
+        3: '上课中',
+        4: '已结课',
       }
       this.tabQuery = {
         ...this.tabQuery,
         // page: --this.tabQuery.page,
-        courseType: Sup_scheduleIndex[this.tabIndex]
+        courseType: Sup_scheduleIndex[this.tabIndex],
       }
       // TODO:
       try {
         const {
           content = [],
-          totalElements = 0
+          totalElements = 0,
         } = await this.$http.Operating.getCourseListByType(this.tabQuery)
         this.totalPages = Number(totalElements)
 
@@ -291,7 +361,10 @@ export default {
           periodsArr.push(item.period)
         })
         // 然后再获取招生的状态
-        const enrollStudentStatus = await this.getStatusByperiods(periodsArr,Sup_scheduleSubmit[this.tabIndex])
+        const enrollStudentStatus = await this.getStatusByperiods(
+          periodsArr,
+          Sup_scheduleSubmit[this.tabIndex]
+        )
 
         if (!enrollStudentStatus) {
           this.$message.error('获取招生状态失败')
@@ -305,7 +378,7 @@ export default {
           }
         })
 
-        console.log("enrollArr=>",enrollArr);
+        console.log('enrollArr=>', enrollArr)
         content.forEach((item) => {
           if (['待开课', '上课中', '已结课'].includes(item.status)) {
             item.intruSwitchName = '招生完毕'
@@ -317,14 +390,14 @@ export default {
             // item.intruSwitchName = '恢复招生'
             item.intruSwitchName = '恢复转介绍'
           }
-          
-          if(item.wechatCourse&&item.wechatCourse.length>0){
+
+          if (item.wechatCourse && item.wechatCourse.length > 0) {
             let reg = /\d/
-            item.wechatCourse.forEach(weItem=>{
+            item.wechatCourse.forEach((weItem) => {
               weItem.myCourseLevelId = +weItem.courseDifficulty.match(reg)[0]
             })
-            
-            item.wechatCourse.sort((a,b)=>{
+
+            item.wechatCourse.sort((a, b) => {
               return a.myCourseLevelId - b.myCourseLevelId
             })
           }
@@ -337,8 +410,11 @@ export default {
         return new Error(err)
       }
     },
-    getStatusByperiods(periodsArr,courseType) {
-      return this.$http.Operating.getStatusByperiods(periodsArr.join(','),courseType)
+    getStatusByperiods(periodsArr, courseType) {
+      return this.$http.Operating.getStatusByperiods(
+        periodsArr.join(','),
+        courseType
+      )
         .then((res) => {
           if (res.status === 'OK') {
             return res.payload
@@ -361,8 +437,8 @@ export default {
       console.log(name)
       const params = {
         period: period,
-        courseType:Sup_scheduleSubmit[this.tabIndex],
-        status: name === '停止转介绍' ? 'NOOPEN' : 'OPEN'
+        courseType: Sup_scheduleSubmit[this.tabIndex],
+        status: name === '停止转介绍' ? 'NOOPEN' : 'OPEN',
       }
       console.log(params)
       this.flags.loading = true
@@ -371,7 +447,7 @@ export default {
           if (res.status === 'OK') {
             this.$message({
               type: 'success',
-              message: '修改成功'
+              message: '修改成功',
             })
             this.$set(
               this.tableData[index],
@@ -388,8 +464,18 @@ export default {
         .finally(() => {
           this.flags.loading = false
         })
-    }
-  }
+    },
+    // 跳转渠道定向期
+    linkToChannelOPeriod() {
+      this.$router.push({
+        name: 'channelOrientationPeriod',
+        params: {
+          period: 0,
+          courseType: this.tabIndex,
+        },
+      })
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>

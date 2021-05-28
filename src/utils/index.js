@@ -10,6 +10,7 @@
 import { Message } from 'element-ui'
 import dayjs from 'dayjs'
 import store from '@/store'
+import moment from 'moment'
 import { subjects, subjectsList } from '@/config/subjects'
 // import { of } from 'core-js/fn/array'https://s1.meixiu.mobi/Pc/fileUpload/1603790950384.jpeg
 
@@ -201,44 +202,15 @@ export function GetAgeByBrithday(birth) {
   if (!birth || +birth === 0) {
     return '-'
   }
-  var age = 0
-  var month = 0
-  var today = new Date()
-  var todayYear = today.getFullYear()
-  var todayMonth = today.getMonth() + 1
-
-  const birthday = new Date(Number(birth) * 1000)
-  const birthdayYear = birthday.getFullYear()
-  const birthdayMonth = birthday.getMonth() + 1
-
-  if (today.getTime() < birthday.getTime()) {
-    console.log('无法计算')
-    return '-'
+  let now = moment();
+  let months = now.diff(birth * 1000, 'months', true);
+  let birthSpan = { year: Math.floor(months / 12), month: Math.floor(months) % 12, day: Math.round((months % 1) * now.daysInMonth(), 0) };
+  if (birthSpan.year < 1 && birthSpan.month < 1) {
+    return "1个月";
+  } else if (birthSpan.year < 1) {
+    return birthSpan.month + "个月";
   } else {
-    age = todayYear - birthdayYear
-
-    if (todayMonth <= birthdayMonth) {
-      month = todayMonth - birthdayMonth + 12
-      age--;
-      if (age < 0) {
-        age = 0;
-        month = 0;
-      }
-
-    } else {
-      month = todayMonth - birthdayMonth
-    }
-
-    if (age < 1 && month < 1) {
-      return "1个月";
-    } else if (age < 1 && month != 12) {
-      return month + "个月";
-    } else if (month == 12) {
-      return (age + 1) + "岁" + "1个月";
-    }
-    else {
-      return age + "岁" + (month > 0 ? month : (month + 1)) + "个月";
-    }
+    return birthSpan.year + "岁" + (birthSpan.month > 0 ? birthSpan.month : (birthSpan.month + 1)) + "个月";
   }
 }
 
@@ -446,7 +418,7 @@ export function injectSubject(query) {
   } else {
     const queryObj = JSON.parse(queryStr)
     for (let key in query) {
-      if (!query[key] == 'desc' || key!='join_date') {
+      if (!query[key] == 'desc' || key != 'join_date') {
         queryObj.subject = getAppSubjectCode()
       }
     }
