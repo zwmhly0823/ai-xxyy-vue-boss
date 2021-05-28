@@ -166,8 +166,9 @@ export default {
         return
       }
       const { id } = this.currentWechat
-      this.$http.Teacher.Zhiqun.deleteWaterArmy({ id, del: 1 }).then((res) => {
+      this.$http.Teacher.deleteWaterArmy({ id, del: 1 }).then((res) => {
             this.$message.success('删除成功')
+            this.deleteDialog = false
             this.listQuery.currentPage = 1
             this.getDataList()
       })
