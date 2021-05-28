@@ -847,7 +847,7 @@ export default {
     return axios.post(`/graphql/v1/toss`, {
       query: `{
         StudentCourseTaskPage(query:${JSON.stringify(formattingQuery)},
-        sort: ${JSON.stringify(`{ "ctime": "asc" }`)},
+        sort: ${JSON.stringify(`{ "ctime": "desc" }`)},
           page: ${page},
           size:20){
             totalPages
