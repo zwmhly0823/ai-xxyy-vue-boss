@@ -15,6 +15,7 @@
         clearable
         placeholder="员工角色"
         @change="handleSelect"
+        @clear="clearSelect"
       >
         <el-option
           v-for="item in options"
@@ -34,6 +35,16 @@
         @change="selectPhone"
         @clear="clearPhone"
         placeholder="请输入手机号码"
+      ></el-input>
+    </el-col>
+    <el-col :span="15" :offset="1" v-if="isShow">
+      <el-input
+        v-model="name"
+        oninput="if(value.length>11)value=value.slice(0,11)"
+        clearable
+        @change="selectName"
+        @clear="clearName"
+        placeholder="请输入姓名"
       ></el-input>
     </el-col>
   </div>
@@ -61,6 +72,7 @@ export default {
       selectedValue: null || this.devalueValue,
       options: [],
       phoneNumber: '',
+      name:''
     }
   },
   mounted() {
@@ -80,13 +92,22 @@ export default {
       }
     },
     handleSelect(val) {
-      this.$emit('result', val)
+      this.$emit('result',{roleId:val})
+    },
+    clearSelect(val) {
+      this.$emit('result',{roleId:''})
     },
     selectPhone(val) {
-      this.$emit('resultPhone', val)
+      this.$emit('resultPhone',{ mobile: val })
+    },
+    selectName(val) {
+      this.$emit('resultName', { realName: val })
+    },
+    clearName(val) {
+      this.$emit('resultName',{ realName: '' })
     },
     clearPhone(val) {
-      this.$emit('resultPhone', val)
+      this.$emit('resultPhone',{ mobile: '' })
     },
   },
 }

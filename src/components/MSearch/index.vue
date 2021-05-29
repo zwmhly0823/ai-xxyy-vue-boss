@@ -167,6 +167,7 @@
           :devalueValue="devalueValue"
           @result="gerEmployeesName"
           @resultPhone="gerEmployeesPhone"
+          @resultName="gerSearchName"
         />
       </el-form-item>
 
@@ -753,6 +754,10 @@ export default {
       type: String,
       default: '',
     },
+    searchName: {
+      type: String,
+      default: '',
+    },
     isShow: {
       type: Boolean,
       default: false,
@@ -1040,10 +1045,13 @@ export default {
       this.setSeachParmas(res, [this.operatorId])
     },
     gerEmployeesName(res) {
-      this.sendSeachParams(res, this.employees)
+      this.setSeachParmas(res, [this.employees],'roleId')
     },
     gerEmployeesPhone(res) {
-      this.sendSeachParams(res, this.phoneNumber, 'terms')
+      this.setSeachParmas(res, [this.phoneNumber],'mobile')
+    },
+    gerSearchName(res) {
+      this.setSeachParmas(res, [this.searchName],'realName')
     },
     getReplenishProduct(res) {
       this.setSeachParmas(res, [this.replenishProduct || 'product_type'])

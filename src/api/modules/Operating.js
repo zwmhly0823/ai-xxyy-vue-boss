@@ -50,13 +50,13 @@ export default {
    * @description 获取版本号
    * @param {type} params
    */
-  getCourseVersion(params) {
+  getCourseVersion (params) {
     return axios.get(`/api/s/v1/data/dictionary/byType?type=${params.type}`)
   },
   /**
    * 获取体验课、系统课列表
    */
-  getCourseListByType(params) {
+  getCourseListByType (params) {
     const page = params.page - 1
     return axios.get(
       `/api/s/v1/management/enroll/count/page?courseType=${params.courseType}&pageSize=${params.size}&pageNumber=` +
@@ -66,7 +66,7 @@ export default {
   /**
    * 体验课按人调班
    */
-  trialChangeClass(params) {
+  trialChangeClass (params) {
     return axios.post(
       `/api/ts/v1/teamChange/changeTrialTeamByMobile`,
       params.data
@@ -76,7 +76,7 @@ export default {
   /**
    * 查询体验课调班操作记录列表
    */
-  operationClassList(params) {
+  operationClassList (params) {
     return axios.post(
       `/api/ts/v1/teamChange/queryChangeTeamLog`,
       params
@@ -86,7 +86,7 @@ export default {
   /**
    * 批量导入
    */
-  changeTeamByImport(params) {
+  changeTeamByImport (params) {
     if (judgeToken()) {
       return axiosSelf({
         method: 'POST',
@@ -103,7 +103,7 @@ export default {
   /**
    * 体验课按班级调班
    */
-  changeTrialTeam(params) {
+  changeTrialTeam (params) {
     return axios.post(
       `/api/ts/v1/teamChange/changeTrialTeam`,
       params.data
@@ -112,13 +112,13 @@ export default {
   /**
    * 新增招生排期第一步-add
    */
-  addScheduleFirstStep(params) {
+  addScheduleFirstStep (params) {
     return axios.post(`/api/s/v1/management/enroll/sell/save`, params)
   },
   /**
    * 新增招生排期第一步-edit获取数据
    */
-  getScheduleFirstStep(params) {
+  getScheduleFirstStep (params) {
     return axios.get(
       `/api/s/v1/management/enroll/sell?courseType=${params.courseType}&period=${params.period}`
     )
@@ -126,7 +126,7 @@ export default {
   /**
    * 招生排期第一步，第二步之间 分配占比设置-add
    */
-  addLeads(params, period) {
+  addLeads (params, period) {
     return axios.post(
       `/api/t/v1/teacher/course/enroll/teacher/channel/config/save?period=${period}`,
       params
@@ -135,7 +135,7 @@ export default {
   /**
    * 招生排期第一步，第二步之间 分配占比-edit获取数据
    */
-  getLeads(params) {
+  getLeads (params) {
     return axios.get(
       `/api/t/v1/teacher/course/enroll/teacher/channel/config?period=${params.period}`
       // `/api/t/v1/teacher/course/enroll/teacher/channel/config?courseType=${params.courseType}&period=${params.period}`
@@ -144,7 +144,7 @@ export default {
   /**
    * 新增招生排期第三步-获取 已选择的老师
    */
-  getHasSelectTeacher(params) {
+  getHasSelectTeacher (params) {
     return axios.get(
       `/api/t/v1/teacher/course/enroll/config/getTeacher?courseType=${params.courseType}&period=${params.period}`
     )
@@ -153,7 +153,7 @@ export default {
    * 新增招生排期第三步-获取老师列表
    *
    */
-  getTeacherConfigList(params) {
+  getTeacherConfigList (params) {
     Object.assign(params, { subject: "MUSIC_APP" })
     return axios.post(
       `/api/t/v1/teacher/course/enroll/teacher/config?courseType=${params.courseType}&period=${params.period}&courseDifficulty=${params.courseDifficulty}&departmentIds=${params.departmentIds}&teacherWechatIds=${params.teacherWechatIds}&levels=${params.levels}`,
@@ -163,7 +163,7 @@ export default {
   /**
    * 保存 招生排期 设置
    */
-  saveScheduleConfig(params) {
+  saveScheduleConfig (params) {
     Object.assign(params, { subject: "MUSIC_APP" })
     return axios.post(
       `/api/t/v1/teacher/course/enroll/teacher/config/save?courseType=${params.courseType}&period=${params.period}`,
@@ -173,12 +173,11 @@ export default {
   /*
    * 密码登录
    */
-  pwdLoginIn(params) {
+  pwdLoginIn (params) {
     return axios.post('/api/b/v1/staff/login', params)
   },
   // 导出
-  exportExcel(params) {
-    console.warn('接口-导出excel')
+  exportExcel (params) {
     return axios.post(
       `/api/s/v1/management/enroll/exportDetail?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&level=${params.level}&courseType=${params.courseType}&period=${params.period}&courseDifficulties=${params.courseDifficulties}`,
       params, {
@@ -191,7 +190,7 @@ export default {
   /**
    * 招生排期列表 下载
    */
-  downloadExcel(params) {
+  downloadExcel (params) {
     return axios.post(
       `/api/s/v1/management/enroll/exportDetail?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&level=${params.level}&courseType=${params.courseType}&period=${params.period}&courseDifficulties=${params.courseDifficulties}`
     )
@@ -200,7 +199,7 @@ export default {
    *
    *招生排期 详情 列表
    */
-  getScheduleDetailList(params) {
+  getScheduleDetailList (params) {
     return axios.get(
       `/api/s/v1/management/enroll/getDetail?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&level=${params.level}&courseType=${params.courseType}&period=${params.period}&courseDifficulties=${params.courseDifficulties}&pageSize=${params.size}&pageNumber=` +
       params.pageNum
@@ -210,7 +209,7 @@ export default {
    *
    *招生排期 详情 基本信息
    */
-  getScheduleDetailInfo(params) {
+  getScheduleDetailInfo (params) {
     return axios.get(
       `/api/s/v1/management/enroll/getManagement?courseType=${params.courseType}&period=${params.period}`
     )
@@ -219,7 +218,7 @@ export default {
    *
    *招生排期 详情 基本信息
    */
-  getScheduleDetailStatistic(params) {
+  getScheduleDetailStatistic (params) {
     return axios.get(
       `/api/s/v1/management/enroll/calculation/byPeriod?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&level=${params.level}&courseType=${params.courseType}&period=${params.period}&courseDifficulties=${params.courseDifficulties}`
     )
@@ -228,7 +227,7 @@ export default {
    *
    *渠道查询
    */
-  getChannelClassList(params = '') {
+  getChannelClassList (params = '') {
     const query =
       (params && injectSubject(params)) ||
       JSON.stringify({ subject: subjectCode })
@@ -249,7 +248,7 @@ export default {
   //   )
   // },
   // 查询渠道名称 渠道分类
-  ChannelDetailStatisticsList(Params = `""`) {
+  ChannelDetailStatisticsList (Params = `""`) {
     const query = injectSubject(Params)
     return axios.post('/graphql/v1/toss', {
       query: `{
@@ -266,13 +265,13 @@ export default {
     })
   },
   // 渠道查询 模块数据
-  countsByTrialChannelOfTotal(params) {
+  countsByTrialChannelOfTotal (params) {
     return axios.get(
       `/api/o/v1/userOrderSuccess/channel/boss/countsByTrialChannelOfTotal?trialChannels=${params.trialChannels}&trialChannelClassIds=${params.trialChannelClassIds}&stage=${params.stage}&startCtime=${params.startCtime}&endCtime=${params.endCtime}`
     )
   },
   // 渠道查询结果的数据  java 接口改成toss
-  ChannelManagementStatisticsTotal(params) {
+  ChannelManagementStatisticsTotal (params) {
     return axios.post('/graphql/v1/toss', {
       query: `{
         ChannelManagementStatisticsTotal(query: ${JSON.stringify(
@@ -290,7 +289,7 @@ export default {
     })
   },
   // 查询渠道名称 渠道分类
-  countsByTrialChannel(Params) {
+  countsByTrialChannel (Params) {
     const query = injectSubject(Params)
     return axios.post('/graphql/v1/toss', {
       query: `{
@@ -316,19 +315,19 @@ export default {
     })
   },
   // 二级渠道查询 列表查询
-  countsByTrialChannelClassId(params) {
+  countsByTrialChannelClassId (params) {
     return axios.get(
       `/api/o/v1/userOrderSuccess/channel/boss/countsByTrialChannelClassId?trialChannelClassIds=${params.trialChannelClassIds}&stage=${params.stage}&startCtime=${params.startCtime}&endCtime=${params.endCtime}&page=${params.page}&pageSzie=${params.pageSzie}`
     )
   },
   // 二级渠道查询 模块数据
-  countsByTrialChannelClassIdOfTotal(params) {
+  countsByTrialChannelClassIdOfTotal (params) {
     return axios.get(
       `/api/o/v1/userOrderSuccess/channel/boss/countsByTrialChannelClassIdOfTotal?trialChannelClassIds=${params.trialChannelClassIds}&stage=${params.stage}&startCtime=${params.startCtime}&endCtime=${params.endCtime}`
     )
   },
   // 二级渠道查询名称 渠道分类
-  ChannelClassPageName(Params, page = 1) {
+  ChannelClassPageName (Params, page = 1) {
     const query = injectSubject(Params)
 
     return axios.post('/graphql/v1/toss', {
@@ -355,7 +354,7 @@ export default {
    * 一级 二级 三级 查询渠道
    * @param {*} param0
    */
-  getChannelAndClass(params) {
+  getChannelAndClass (params) {
     return axios.get(
       `/api/c/v1/channel/getChannelAndClass?channelClassParentId=${params}`
     )
@@ -364,28 +363,28 @@ export default {
    * 推广人统计查看
    * @param {*} param0
    */
-  getEncode(params) {
+  getEncode (params) {
     return axios.get(`/api/o/v1/order/channel/getEncode?channelId=${params}`)
   },
   /**
    * 渠道信息管理 添加渠道
    * @param {*} param0
    */
-  createChannel(params) {
+  createChannel (params) {
     return axios.post('/api/c/v1/channel/createChannel', params)
   },
   /**
    * 渠道信息管理 修改渠道
    * @param {*} param0
    */
-  updateChannel(params) {
+  updateChannel (params) {
     return axios.post('/api/c/v1/channel/updateChannel', params)
   },
   /**
    *
    *渠道查询
    */
-  ChannelDetailStatisticsPage(Params = `""`, page = 1) {
+  ChannelDetailStatisticsPage (Params = `""`, page = 1) {
     return axios.post('/graphql/v1/toss', {
       query: `{
         ChannelDetailStatisticsPage(query:${Params},page:${page},size:10000){
@@ -420,7 +419,7 @@ export default {
    *
    * 二级渠道查询
    */
-  ChannelClassPage(Params, page = 1) {
+  ChannelClassPage (Params, page = 1) {
     const query = injectSubject(JSON.parse(Params))
     return axios.post('/graphql/v1/toss', {
       query: `{
@@ -446,13 +445,13 @@ export default {
    * 二级渠道信息管理 修改渠道
    * @param {*} param0
    */
-  updateChannelClassV2(params) {
+  updateChannelClassV2 (params) {
     return axios.get('/api/c/v1/channel/updateChannelClassV2', params)
   },
   /*
    * 密码登录
    */
-  channelUpload(file) {
+  channelUpload (file) {
     // const token = getToken()
     const headers = {
       token: 'Bearer ' +
@@ -469,35 +468,35 @@ export default {
    * 系统标签 列表查询
    * @param {*} param0
    */
-  findLabelByPage(params) {
+  findLabelByPage (params) {
     return axios.post('/api/toss/v1/toss-api/label/findLabelByPage', params)
   },
   // 查询验证码
-  getVerification(parmas) {
+  getVerification (parmas) {
     return axios.get(`/api/m/v1/sms/getCodeByMobile?mobile=${parmas}`)
   },
   // 推送配置 创建
-  pushNotificationsAdd(params) {
+  pushNotificationsAdd (params) {
     return axios.post(`/api/b/v1/backend/PushNotifications/add`, params)
   },
   // 推送配置 修改保存
-  pushNotificationsUpdate(params) {
+  pushNotificationsUpdate (params) {
     return axios.post(`/api/b/v1/backend/PushNotifications/update`, params)
   },
   // 推送配置列表
-  getPushNotificationsList(currentPage) {
+  getPushNotificationsList (currentPage) {
     return axios.get(
       `/api/b/v1/backend/PushNotifications/list?page=${currentPage}&size=20`
     )
   },
   // 推送配置 推送
-  pushNotificationsExecute(id, operatorId, operatorName) {
+  pushNotificationsExecute (id, operatorId, operatorName) {
     return axios.get(
       `/api/b/v1/backend/PushNotifications/execute?id=${id}&operatorId=${operatorId}&operatorName=${operatorName}`
     )
   },
   // 推送配置 推送
-  queryQuestionnairePage(page, size) {
+  queryQuestionnairePage (page, size) {
     return axios.get(
       `/api/f/v1/questionnaire/queryQuestionnairePage?page=${page}&pagesize=${size}`
     )
@@ -506,7 +505,7 @@ export default {
    *
    *通过期数 获取期数下人员总数 (体验课)
    */
-  StudentTrialCoursePage(Params) {
+  StudentTrialCoursePage (Params) {
     return axios.post('/graphql/v1/toss', {
       query: `{
         StudentTrialCoursePage(query:${Params}){
@@ -519,7 +518,7 @@ export default {
    *
    *通过期数 获取期数下人员总数 (系统课)
    */
-  StudentSystemCoursePage(Params) {
+  StudentSystemCoursePage (Params) {
     return axios.post('/graphql/v1/toss', {
       query: `{
         StudentSystemCoursePage(query:${Params}){
@@ -533,7 +532,7 @@ export default {
    * 替换用户手机号
    * v1/user/replaceMobile?staffId=1&oldMobile=13012345670&newMobile=13012345672
    *  */
-  replaceMobile({ newMobile, oldMobile, staffId } = {}) {
+  replaceMobile ({ newMobile, oldMobile, staffId } = {}) {
     return axios.post(
       `/api/u/v1/user/replaceMobile?staffId=${staffId}&oldMobile=${oldMobile}&newMobile=${newMobile}`
     )
@@ -542,7 +541,7 @@ export default {
   /**
    * 获取手机号替换记录
    */
-  getUserReplaceMobileLog(params = '', page = 1) {
+  getUserReplaceMobileLog (params = '', page = 1) {
     return axios.post('/graphql/v1/toss', {
       query: `{
         UserReplaceMobileLogPage(query: ${params}, page:${page}){
@@ -578,25 +577,25 @@ export default {
     })
   },
   // 问卷管理 查询问卷列表数据
-  queryQuestionnairePages(page) {
+  queryQuestionnairePages (page) {
     return axios.get(
       `/api/f/v1/questionnaire/queryQuestionnairePage?page=${page}&pagesize=20`
     )
   },
   // 问卷管理 根据id 查询问卷
-  queryQuestionnaire(questionnaireId) {
+  queryQuestionnaire (questionnaireId) {
     return axios.get(
       `/api/f/v1/questionnaire/queryQuestionnaire?questionnaireId=${questionnaireId}`
     )
   },
   // 问卷管理 保存 修改
-  saveQuestionnaire(params) {
+  saveQuestionnaire (params) {
     return axios.post(`/api/f/v1/questionnaire/saveQuestionnaire`, params)
   },
   /**
    * @description 招生排期上传excel
    */
-  updateScheduleExcel(parmas) {
+  updateScheduleExcel (parmas) {
     return axios.post(
       `/api/t/v1/enroll/import?courseType=${parmas.courseType}`,
       parmas
@@ -605,7 +604,7 @@ export default {
   /**
    * @description 导入模板
    */
-  exportUpload(parmas) {
+  exportUpload (parmas) {
     return axios.post('/api/a/v1/account/batchUpdateAccount', parmas)
   },
   /**
@@ -635,81 +634,81 @@ export default {
   //     }`
   //   })
   // },
-  issueBearList(params) {
+  issueBearList (params) {
     return axios.get(`/api/a/v1/account/getImportLogList`, params)
   },
   /**
    * 教师渠道绑定-保存
    */
-  saveOrUpdate(params) {
+  saveOrUpdate (params) {
     return axios.post('/api/t/v1/teacherChannel/saveOrUpdate', params)
   },
   /**
    * 教师渠道绑定-查找记录
    */
-  getRecord(params) {
+  getRecord (params) {
     return axios.post(
       `/api/t/v1/teacherChannel/getRecord?period=${params.period}`
     )
   },
   // 截图转介绍
-  getTable(parmas) {
+  getTable (parmas) {
     return axios.get('/api/b/v1/backend/userflow/sharereward/pageList', parmas)
   },
   // 提交截图审核
-  submit_img(parmas) {
+  submit_img (parmas) {
     return axios.post(
       `/api/b/v1/backend/userflow/complete?id=${parmas.id}&isAgree=${parmas.isAgree}&remark=${parmas.remark}`
     )
   },
   // 提交复审
-  submit_img_2(parmas) {
+  submit_img_2 (parmas) {
     return axios.post(`/api/b/v1/backend/userflow/reComplete?id=${parmas}`)
   },
   // 新建活动编辑活动保存
-  saveAndUpdatePromotions(params) {
+  saveAndUpdatePromotions (params) {
     return axios.post(`/api/p/v1/promotions/saveAndUpdatePromotions`, params)
   },
   // 活动管理列表
-  getPromotionsPageList(params) {
+  getPromotionsPageList (params) {
     return axios.get(`/api/p/v1/promotions/getPromotionsPageList`, params)
   },
   // 审核列表
-  getReviewPageList(params) {
+  getReviewPageList (params) {
     return axios.post(`/api/wk/v1/works/getStuWorks`, params)
   },
   // 批量审核
-  auditWorks(params) {
+  auditWorks (params) {
     return axios.post(`/api/wk/v1/works/auditWorks`, params)
   },
   // 修改权重
-  topLevel(params) {
+  topLevel (params) {
     return axios.post(`/api/wk/v1/works/topLevel`, params)
   },
   // 活动管理详情
-  getPromotionsById(params) {
+  getPromotionsById (params) {
     return axios.get(`/api/p/v1/promotions/getPromotionsById`, params)
   },
   // 修改活动结束时间
-  updatePromotionsDate(params) {
+  updatePromotionsDate (params) {
     return axios.post(`/api/p/v1/promotions/updatePromotionsDate`, params)
   },
   // 获取销售等级
-  getSellLevel(params) {
+  getSellLevel (params) {
     return axios.get(`/api/t/v1/teacher/course/teacherLevelByType?level=0`)
   },
   // 招生排期获取招生状态
-  getStatusByperiods(periods, courseType) {
+  getStatusByperiods (periods, courseType) {
     return axios.get(`/api/t/v1/enroll/getStatusByperiods?periods=${periods}&courseType=${courseType}`)
   },
   // 招生排期切换状态
-  updateStatusByPeriod(params) {
+  updateStatusByPeriod (params) {
     return axios.get(
       `/api/t/v1/enroll/updateStatusByPeriod?period=${params.period}&status=${params.status}&courseType=${params.courseType}`
     )
   },
   // 转介绍招生数
-  getIntroduceCountByIds(query) {
+  getIntroduceCountByIds (query) {
     return axios.get(
       `/api/t/v1/teacher/getIntroduceCountByIds?term=${query.term}&ids=${query.ids}`
     )
@@ -717,7 +716,7 @@ export default {
   /**
    * @description 根据老师id和部门id查询老师关联微信号
    */
-  getTeacherAllWechatByDept(params) {
+  getTeacherAllWechatByDept (params) {
     return axios.post(
       `/api/t/v1/wechat/teacher/getTeacherByDepartmentIdAndTeacherId?teacherId=${params.teacherId}&departmentId=${params.departmentId}`,
       params
@@ -728,37 +727,37 @@ export default {
    * /**
   * @description 查询排期
   */
-  getAllCategory() {
+  getAllCategory () {
     return axios.get(
       `/api/s/v1/management/getAllCategory`,
     )
   },
-  saveEditTeacherWeChat(params) {
+  saveEditTeacherWeChat (params) {
     return axios.post(
       `/api/t/v1/wechat/teacher/saveTeacherChangeWeixinRecord?teacherId=${params.teacherId}&oldWeixinNo=${params.oldWeixinNo}&oldWeixinId=${params.oldWeixinId}&weixinId=${params.weixinId}&weixinNo=${params.weixinNo}&courseType=${params.courseType}&period=${params.period}`
     )
   },
   // 删除定向分配销售
-  async removeChannelSales(params) {
+  async removeChannelSales (params) {
     return axios.post(
       '/api/t/v1/teacherChannel/delRecord?id=' + params
     )
   },
   // 删除定向分配销售
-  async channelMobile(params) {
+  async channelMobile (params) {
     return axios.post(
       '/api/u/v2/user/cancelMobile',
       params
     )
   },
   // 机型管理添加
-  addPhoneType(query) {
+  addPhoneType (query) {
     return axios.get(
       `/api/home/v1/config/addPhoneModel?phoneModel=${query.phoneModel}`
     )
   },
   // 机型管理list
-  getPhoneTypeList() {
+  getPhoneTypeList () {
     return axios.get(
       `/api/home/v1/config/getPhoneModel`
     )
