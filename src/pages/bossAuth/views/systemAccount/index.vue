@@ -24,6 +24,7 @@
             <employees-role
               employees="role_id"
               phoneNumber="mobile"
+              searchName="realName"
               :isShow="true"
               @search="handleSearchEmployees"
               class="search-container"
@@ -216,7 +217,7 @@ export default {
       const query = {
         pageSize: 20,
         pageNum: 1,
-        realName: this.tabQuery.realName,
+        realName: data[0].realName || '',
         roleId: data[0].term,
         mobile:data[0].terms,
         departmentId: this.tabQuery.id,

@@ -36,6 +36,17 @@
         placeholder="请输入手机号码"
       ></el-input>
     </el-col>
+    <el-col :span="15" :offset="1" v-if="isShow">
+      <el-input
+        v-model="name"
+        type="text"
+        oninput="if(value.length>11)value=value.slice(0,11)"
+        clearable
+        @change="selectName"
+        @clear="clearName"
+        placeholder="请输入姓名"
+      ></el-input>
+    </el-col>
   </div>
 </template>
 
@@ -61,6 +72,7 @@ export default {
       selectedValue: null || this.devalueValue,
       options: [],
       phoneNumber: '',
+      name:''
     }
   },
   mounted() {
@@ -83,10 +95,16 @@ export default {
       this.$emit('result', val)
     },
     selectPhone(val) {
-      this.$emit('resultPhone', val)
+      this.$emit('resultName', val)
+    },
+    selectName(val) {
+      this.$emit('resultName', val)
+    },
+    clearName(val) {
+      this.$emit('resultName', val)
     },
     clearPhone(val) {
-      this.$emit('resultPhone', val)
+      this.$emit('resultName', val)
     },
   },
 }
