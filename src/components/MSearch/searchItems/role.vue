@@ -95,7 +95,7 @@ export default {
       this.$emit('result', val)
     },
     selectPhone(val) {
-      this.$emit('resultName', val)
+      this.$emit('resultPhone', val)
     },
     selectName(val) {
       this.$emit('resultName', val)
@@ -104,7 +104,7 @@ export default {
       this.$emit('resultName', val)
     },
     clearPhone(val) {
-      this.$emit('resultName', val)
+      this.$emit('resultPhone', val)
     },
   },
 }
