@@ -139,7 +139,7 @@ export default {
       console.log('ss', data);
     },
     handleSearchEmployees(res) {
-      this.form.roles = [res[0].term];
+      this.form.roles = [res[0].roleId.roleId];
     },
     handleSubmit() {
       const { form } = this
