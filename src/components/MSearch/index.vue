@@ -1045,13 +1045,13 @@ export default {
       this.setSeachParmas(res, [this.operatorId])
     },
     gerEmployeesName(res) {
-      this.sendSeachParams(res, this.employees)
+      this.setSeachParmas(res, [this.employees],'roleId')
     },
     gerEmployeesPhone(res) {
-      this.sendSeachParams(res, this.phoneNumber, 'terms')
+      this.setSeachParmas(res, [this.phoneNumber],'mobile')
     },
     gerSearchName(res) {
-      this.sendSeachParams(res, this.searchName,'realName')
+      this.setSeachParmas(res, [this.searchName],'realName')
     },
     getReplenishProduct(res) {
       this.setSeachParmas(res, [this.replenishProduct || 'product_type'])

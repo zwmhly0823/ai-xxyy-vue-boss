@@ -15,6 +15,7 @@
         clearable
         placeholder="员工角色"
         @change="handleSelect"
+        @clear="clearSelect"
       >
         <el-option
           v-for="item in options"
@@ -92,19 +93,22 @@ export default {
       }
     },
     handleSelect(val) {
-      this.$emit('result', val)
+      this.$emit('result',{roleId:val})
+    },
+    clearSelect(val) {
+      this.$emit('result',{roleId:''})
     },
     selectPhone(val) {
-      this.$emit('resultPhone', val)
+      this.$emit('resultPhone',{ mobile: val })
     },
     selectName(val) {
-      this.$emit('resultName', val)
+      this.$emit('resultName', { realName: val })
     },
     clearName(val) {
-      this.$emit('resultName', val)
+      this.$emit('resultName',{ realName: '' })
     },
     clearPhone(val) {
-      this.$emit('resultPhone', val)
+      this.$emit('resultPhone',{ mobile: '' })
     },
   },
 }

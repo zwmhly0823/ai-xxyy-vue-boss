@@ -214,14 +214,23 @@ export default {
     },
     // 员工身份搜索
     handleSearchEmployees(data) {
+      console.log(data,"data");
       const query = {
         pageSize: 20,
         pageNum: 1,
-        realName: data[0].realName || '',
-        roleId: data[0].term,
-        mobile:data[0].terms,
         departmentId: this.tabQuery.id,
       };
+      if (data.length > 0) {
+        data.forEach((res) => {
+          if (res.roleId) {
+            query.roleId = res.roleId.roleId
+          }else if(res.mobile) {
+            query.mobile = res.mobile.mobile
+          }else if(res.realName) {
+            query.realName = res.realName.realName
+          }
+        })
+      }
       this.tabQuery = query;
       this.getStaffList();
     },
