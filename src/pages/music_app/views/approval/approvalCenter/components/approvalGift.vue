@@ -444,10 +444,10 @@ export default {
         this.formGift.receiptTel = val.receiptTel
         this.formGift.receiptAddressProvince = val.province
         this.formGift.receiptAddressCity = val.city
-        this.formGift.receiptAddressStreet = ''
+        this.formGift.receiptAddressStreet = val.street
         this.formGift.receiptAddressArea = val.area
         this.formGift.receiptAddressDetail = val.addressDetail
-        this.formGift.totalAddress = `${val.province}${val.city}${val.area}${val.addressDetail}`
+        this.formGift.totalAddress = `${val.province}${val.city}${val.area}${val.street}${val.addressDetail}`
       }
     },
     // 关闭地址

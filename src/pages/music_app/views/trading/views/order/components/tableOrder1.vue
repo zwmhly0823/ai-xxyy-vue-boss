@@ -23,13 +23,7 @@
         <template slot-scope="scope">
           <p>
             {{
-              scope.row.regtype
-                ? +scope.row.regtype === 2
-                  ? '首单'
-                  : +scope.row.regtype === 3
-                  ? '续费'
-                  : '-'
-                : '-'
+              scope.row.regtype?regetypeText[scope.row.regtype]:'-'
             }}
           </p>
         </template>
@@ -371,6 +365,12 @@ export default {
   },
   data() {
     return {
+      regetypeText:{
+        2:"首单",
+        3:"续费",
+        10:"新签补差",
+        11:"续费补差"
+      },
       loading: false,
       // 给物流详情组件传递的订单id
       order_id: '',

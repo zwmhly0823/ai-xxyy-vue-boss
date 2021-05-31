@@ -383,6 +383,14 @@ export default {
           id: '3',
           text: '续费',
         },
+        {
+          id: '10',
+          text: '新签补差',
+        },
+        {
+          id: '11',
+          text: '续费补差',
+        },
       ],
       expChangeList: [
         {

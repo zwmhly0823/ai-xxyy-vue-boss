@@ -168,14 +168,14 @@
           </div>
           <div class="pay_order_operation">
             <!-- 体验课、特价课、主题课类型订单不显示 -->
-            <!-- <div
+            <div
               v-if="![1, 12, 13].includes(scope.row.regtype)"
               class="logistics"
               style="color:#0099FF"
               @click="openTeams(scope.row)"
             >
               申请赠品
-            </div> -->
+            </div>
             <div
               class="logistics"
               style="color:#0099FF"

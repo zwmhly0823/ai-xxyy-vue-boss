@@ -206,4 +206,10 @@ export default {
       }`
     })
   },
+  // 删除活动
+  deleteActivityName(params) {
+    return axios.get(
+      `/api/p/v1/promotions/deletePromotionsById?promotionsId=${params.promotionsId}`
+    )
+  },
 }

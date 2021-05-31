@@ -30,6 +30,7 @@
         size="medium"
         filterable
         @change="handleChange"
+        @active-item-change="handleItemChange"
       >
       </el-cascader>
     </el-form-item>
@@ -62,7 +63,6 @@
   </el-form>
 </template>
 <script>
-import areaLists from '@/utils/area.json'
 export default {
   name: 'logisticsForm',
   props: ['userId'],
@@ -79,11 +79,13 @@ export default {
       }
     }
     return {
-      areaLists2: areaLists,
+      areaLists2:[],
       chooseAddress: [],
+      levelFourList: [],
       province: null,
       city: null,
       area: null,
+      street: null,
       areaCode: null,
       ruleForm: {
         receiptName: '',
@@ -109,19 +111,79 @@ export default {
       operatorId: ''
     }
   },
+  created() {
+    this.getAreaLists();
+  },
   methods: {
-    // 级联城市级联
-    handleChange(data) {
-      // this.areaLists = areaLists
-      const provinces = areaLists.filter((item) => +item.value === +data[0])
+    // 获取地址选项-2
+    handleItemChange(data) {
+      const addressList = this.areaLists2
+      addressList.forEach((res) => {
+        if (data[0] === res.id) {
+          res.children.forEach((ele) => {
+            if (data[1] === +ele.cityCode + 999) {
+              ele.children.forEach((val) => {
+                if (data[2] === val.countyCode) {
+                  this.$http.Express.getCenterAddressTownList(data[2]).then(
+                    (data) => {
+                      const _data = data.payload
+                      _data.forEach((codeVal) => {
+                        const add = {
+                          label: codeVal.townName,
+                          value: codeVal.townCode
+                        }
+                        val.children.push(add)
+                      })
+                      this.levelFourList = _data
+                    }
+                  )
+                }
+              })
+            }
+          })
+        }
+      })
+    },
+   // 获取地址选项
+   async getAreaLists() {
+      this.$http.Express.getCenterAddressList().then((res) => {
+        const _data = res.payload.data
+        _data.forEach((ele) => {
+          ele.label = ele.provinceName
+          ele.value = ele.id
+          ele.children = ele.citys
+          ele.children.forEach((val) => {
+            val.label = val.cityName
+            val.value = +val.cityCode + 999
+            val.children = val.countys
+            val.children.forEach((_value) => {
+              _value.label = _value.countyName
+              _value.value = _value.countyCode
+              _value.children = [{ label: '暂不选择', value: '' }]
+            })
+          })
+        })
+        this.areaLists2 = _data
+      })
+    },
+     // 级联城市级联
+     handleChange(data) {
+      const provinces = this.areaLists2.filter(
+        (item) => +item.value === +data[0]
+      )
       const citys = provinces[0].children.filter(
         (item) => +item.value === +data[1]
       )
       const areas = citys[0].children.filter((item) => +item.value === +data[2])
+      const streets = this.levelFourList.filter(
+        (item) => +item.townCode === +data[3]
+      )
+
       this.province = provinces[0].label
       this.city = citys[0].label
       this.area = areas[0].label
       this.areaCode = data[2]
+      this.street = data[3] ? streets[0].townName : ''
     },
     submitForm(formName) {
       const params = {
@@ -131,6 +193,7 @@ export default {
         province: this.province,
         city: this.city,
         area: this.area,
+        street: this.street,
         addressDetail: this.ruleForm.addressDetail,
         areaCode: this.areaCode
       }

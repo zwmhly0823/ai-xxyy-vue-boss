@@ -342,11 +342,23 @@ export default {
         // 业务类型
         {
           value: '0',
-          label: '首单年课',
+          label: '首单一年',
         },
         {
           value: '1',
-          label: '首单半年课',
+          label: '首单半年',
+        },
+        {
+          value: '2',
+          label: '新签补差半年',
+        },
+        {
+          value: '3',
+          label: '续费补差半年',
+        },
+        {
+          value: '4',
+          label: '续费半年',
         },
         // {
         //   value: '1',
