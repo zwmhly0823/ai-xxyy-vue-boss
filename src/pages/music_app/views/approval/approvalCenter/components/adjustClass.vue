@@ -454,14 +454,14 @@ export default {
   watch: {
     selectClass(newValue) {
       if (newValue === '0') {
-        this.formData.targetClassName= ""
+        this.formData.targetClassName = ''
         this.commonSelectHandleFunction(
           'classChooseClass',
           { stage: this.newData.tempSatge, sup: this.newData.tempSup },
           '选择班级列表'
         )
       } else if (newValue === '1') {
-        this.formData.targetClassName= "system"
+        this.formData.targetClassName = 'system'
         this.commonSelectHandleFunction(
           'classChooseSystem',
           {
@@ -479,19 +479,23 @@ export default {
       immediate: true,
       deep: true,
       async handler(newValue) {
-        this.initData({id:newValue})
+        this.initData({ id: newValue })
       },
     },
   },
   methods: {
     // 根据班级ID获取班级详情
-   async initData(params) {
-      let result = await this.$http.TeamV2.getTeamDetailById(params).then((res) => {
-        if(res.data.StudentTeam) {
-          this.newData.saleDepartmentId = res.data.StudentTeam.teacher_info.departmentInfo.id;
-          this.newData.saleDepartmentPid = res.data.StudentTeam.teacher_info.departmentInfo.pid
+    async initData(params) {
+      let result = await this.$http.TeamV2.getTeamDetailById(params).then(
+        (res) => {
+          if (res.data.StudentTeam) {
+            this.newData.saleDepartmentId =
+              res.data.StudentTeam.teacher_info.departmentInfo.id
+            this.newData.saleDepartmentPid =
+              res.data.StudentTeam.teacher_info.departmentInfo.pid
+          }
         }
-      })
+      )
     },
     // 后退
     back() {
@@ -770,7 +774,7 @@ export default {
           break
         case 'classChooseSystem':
           this.handleCurrentSystem(resData)
-          this.handleChooseClass(resData)
+          this.handleChooseSystem(resData)
           break
       }
     },
@@ -910,6 +914,14 @@ export default {
           }
         }
       })
+    },
+    // 系统分配
+    handleChooseSystem(resData) {
+      this.formData.targetClassName = ''
+      this.formData.targetClassId = ''
+      if(resData && resData.length>0) {
+        this.formData.targetClassId = resData[0].id
+      } 
     },
     // 已上课周期
     handleDoneClass(resData) {
