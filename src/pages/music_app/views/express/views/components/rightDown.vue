@@ -489,7 +489,7 @@
       :page-count="totalPages"
       :total="totalElements"
       :class="$style['m-pagination']"
-      :pageSizeArr="[20, 100, 200, 500]"
+      :pageSizeArr="[20, 100, 200]"
       @current-change="handleSizeChange"
       @current-pagesizes="handleChangeSize"
       show-pager
