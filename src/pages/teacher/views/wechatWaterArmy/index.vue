@@ -167,10 +167,14 @@ export default {
       }
       const { id } = this.currentWechat
       this.$http.Teacher.deleteWaterArmy({ id, del: 1 }).then((res) => {
-            this.$message.success('删除成功')
-            this.deleteDialog = false
-            this.listQuery.currentPage = 1
-            this.getDataList()
+            if (res.code === 0) {
+              this.$message.success('删除成功')
+              this.deleteDialog = false
+              this.listQuery.currentPage = 1
+              this.getDataList()
+            } else {
+              this.$message.error('删除失败')
+            }
       })
     },
 
