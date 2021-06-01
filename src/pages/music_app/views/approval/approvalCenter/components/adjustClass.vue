@@ -454,12 +454,14 @@ export default {
   watch: {
     selectClass(newValue) {
       if (newValue === '0') {
+        this.formData.targetClassName= ""
         this.commonSelectHandleFunction(
           'classChooseClass',
           { stage: this.newData.tempSatge, sup: this.newData.tempSup },
           '选择班级列表'
         )
       } else if (newValue === '1') {
+        this.formData.targetClassName= "system"
         this.commonSelectHandleFunction(
           'classChooseSystem',
           {
@@ -473,8 +475,24 @@ export default {
         )
       }
     },
+    'newData.teamId': {
+      immediate: true,
+      deep: true,
+      async handler(newValue) {
+        this.initData({id:newValue})
+      },
+    },
   },
   methods: {
+    // 根据班级ID获取班级详情
+   async initData(params) {
+      let result = await this.$http.TeamV2.getTeamDetailById(params).then((res) => {
+        if(res.data.StudentTeam) {
+          this.newData.saleDepartmentId = res.data.StudentTeam.teacher_info.departmentInfo.id;
+          this.newData.saleDepartmentPid = res.data.StudentTeam.teacher_info.departmentInfo.pid
+        }
+      })
+    },
     // 后退
     back() {
       this.$router.push('/approval')
@@ -574,9 +592,7 @@ export default {
                   tempSatge: orderItem.stage,
                   tempSup: orderItem.sup,
                   orderNo: orderItem.id,
-                  saleDepartmentId: orderItem.saleDepartmentId,
-                  saleDepartmentPid: orderItem.saleDepartmentPid,
-                  teamId: orderItem.teamId,
+                  teamId: orderItem.lastTeamId,
                 },
               })
               item.stage.push(orderItem.stage)

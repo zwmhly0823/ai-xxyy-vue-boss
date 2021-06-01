@@ -103,6 +103,10 @@ export default {
             weixin{
               weixin_no
             }
+            departmentInfo{
+              id
+              pid
+            }
           }
           teacher_wechat_info{
             wechat_no
