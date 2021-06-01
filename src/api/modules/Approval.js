@@ -11,119 +11,127 @@ import axios from '../axiosConfig'
 
 export default {
   // 通过订单查当前开课日期
-  getCurrentClassDate(query) {
+  getCurrentClassDate (query) {
     return axios.get(
       `/api/ts/v1/teaching/findSystemCourseManagementByOrderNo?orderNo=${query.orderNo}`
     )
   },
   // 调期获取调整开课日期列表
-  getAdjustStartClassDateList(query) {
+  getAdjustStartClassDateList (query) {
     return axios.get(
       `/api/s/v2/management/getManagementListByCourseDayGreaterThan?courseDay=${new Date().getTime()}&type=SYSTEMCOURSE`
     )
   },
+  // 系统分配获取班级列表
+  getChooseSystemList (query) {
+    query.teamType = "YEAR"
+    return axios.post(
+      `/api/ts/v1/teaching/studentTeam/getTeamByRandom`,
+      query
+    )
+  },
   // 调期获取班级列表
-  getChooseClassList(query) {
+  getChooseClassList (query) {
     return axios.get(
       `/api/ts/v1/teaching/student/team/get/by/sup/term/type?teamType=YEAR&term=${query.stage}&sup=${query.sup}`
     )
   },
   // 调期获取已上课周期
-  getDonePeriodicClass(query) {
+  getDonePeriodicClass (query) {
     return axios.get(
       `/api/ts/v1/teaching/student/system/getTeamInfoByOrderNo?orderNo=${query.orderNo}`
     )
   },
   // 调期调级调班
-  adjustApply(data) {
+  adjustApply (data) {
     return axios.post(`/api/b/v1/backend/apply/adjustment/flow`, data)
   },
   // 获取调期、调级、调班审批详情
-  getAdjustDetail(flowApprovalId) {
+  getAdjustDetail (flowApprovalId) {
     return axios.get(
       `/api/b/v1/backend/adjustment/flow/info?flowApprovalId=${flowApprovalId}`
     )
   },
-  isAggrePass(params) {
+  isAggrePass (params) {
     return axios.post(
       `/api/b/v1/backend/completed/reissue/flow?flowApprovalId=${params.flowApprovalId}&staffName=${params.staffName}&staffId=${params.staffId}&isConfirm=${params.isConfirm}&approvalRemark=${params.approvalRemark}`
     )
   },
 
   // 获取当前物流信息
-  getExpressByOrderId(query) {
+  getExpressByOrderId (query) {
     return axios.get(
       `/api/ex/v1/express/getExpressByOrderId?orderId=${query.orderId}`
     )
   },
   // 通过当前物流信息获取商品信息
-  getCourseMaterialsMoreThanLevel(query) {
+  getCourseMaterialsMoreThanLevel (query) {
     return axios.get(
       `/api/p/v1/product/getCourseMaterialsMoreThanLevel?courseDifficulty=${query.sup}&courseLevel=${query.level}`
     )
   },
   // 申请随材打包
-  packageboxFlow(query) {
+  packageboxFlow (query) {
     return axios.post(
       `/api/b/v1/backend/v1/backend/apply/packagebox/flow`,
       query
     )
   },
   // 随材打包审批详情
-  getPackageInfo(id) {
+  getPackageInfo (id) {
     return axios.get(
       `/api/b/v1/backend/v1/backend/packagebox/flow/info?flowApprovalId=${id}`
     )
   },
-  getProductByTypes() {
+  getProductByTypes () {
     return axios.get(
       `/api/p/v1/product/getProductByTypes?types=ACTUAL_GOODS,VIRTUAL_GOODS`
     )
   },
   // 退款审批获取挽留单子的flow tags
-  getTagsFangTao() {
+  getTagsFangTao () {
     return axios.get(`/api/toss/v1/toss-api/label/getMarketingLabelInfo`, {
       type: 1
     })
   },
   // 校验退款的时候是否有审核中的关单赠品数据审批信息：
   // orderId
-  findOrderGiftApprovalStatus(query) {
+  findOrderGiftApprovalStatus (query) {
     return axios.post(`/api/b/v1/backend/refund/system/findOrderGiftApprovalStatus?orderId=${query}`)
   },
   // 查询赠品相关的信息（金额、产品列表等信息）
   // orderId
-  findOrderGiftInfo(query) {
+  findOrderGiftInfo (query) {
     return axios.post(`/api/b/v1/backend/refund/system/findOrderGiftInfo?orderId=${query}`)
   },
-  findSystemByOrderNo(orderNo) {
+  findSystemByOrderNo (orderNo) {
     return axios.get(
       `/api/ts/v1/teaching/student/system/findSystemByOrderNo?orderNo=${orderNo}`
     )
   },
-  findTrailByOrderNo(orderNo) {
+  findTrailByOrderNo (orderNo) {
     return axios.get(
       `/api/ts/v1/teaching/student/trial/findTrailByOrderNo?orderNo=${orderNo}`
     )
   },
-  refundFlowsRequest(params) {
+  refundFlowsRequest (params) {
     return axios.post(
       `/api/b/v1/backend/batch/completed/flow?ids=${params.ids}&version=${params.version}&staffId=${params.staffId}&staffName=${params.staffName}&approvalRemark=${params.approvalRemark}&isRecover=${params.isRecover}&isConfirm=${params.isConfirm}`
     )
   },
 
   // 查询所有有效活动
-  getPromotionsList({ userId, orderId }) {
+  getPromotionsList ({ userId, orderId }) {
     return axios.get(
       `/api/b/v1/backend/promotions/flow/getPromotionsListByUserIdAndOrderId`,
       { userId, orderId }
     )
   },
   // 新建关单赠品申请
-  applyGiftAdd(data = {}) {
+  applyGiftAdd (data = {}) {
     const params = Object.assign(data, { role: 1 })
     return axios.post(`/api/b/v1/backend/promotions/detail/add`, params)
-  },diologRefundTagChange(param) {
+  }, diologRefundTagChange (param) {
     return axios.post(`/api/b/v1/backend/flowApproval/updateTag`, param)
   },
 }
