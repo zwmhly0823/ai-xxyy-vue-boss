@@ -114,7 +114,10 @@
         <el-option label="补偿" value="补偿"></el-option>
         <el-option label="降一年包" value="降一年课包"></el-option>
         <el-option label="降一年半年包" value="降一年半年课包"></el-option>
-        <el-option label="系统预售-优惠券退款" value="系统预售-优惠券退款"></el-option>
+        <el-option
+          label="系统预售-优惠券退款"
+          value="系统预售-优惠券退款"
+        ></el-option>
         <el-option label="器材退款" value="器材退款"></el-option>
         <el-option label="体验课退差价" value="体验课退差价"></el-option>
       </el-select>
@@ -554,7 +557,7 @@
                   5: '降1年半包',
                   6: '系统课预付款优惠券退款',
                   7: '硬件乐器退款',
-                  8: '体验课退差价'
+                  8: '体验课退差价',
                 }[drawerApprovalDeatail.refundType]
               }}
             </el-col>
@@ -650,7 +653,11 @@
               {{ drawerApprovalDeatail.refundFee }}
             </el-col>
             <el-col v-if="isStaffId" :span="13" :offset="1">
-              <mark @click="dialogFormVisible = true" style="background-color: rgba(31, 116, 249, 0.7); color: white">修改金额</mark>
+              <mark
+                @click="dialogFormVisible = true"
+                style="background-color: rgba(31, 116, 249, 0.7); color: white"
+                >修改金额</mark
+              >
             </el-col>
           </el-row>
           <el-row>
@@ -671,7 +678,7 @@
               <div class="demo-image__preview">
                 <el-image
                   v-if="drawerApprovalDeatail.attsUrl"
-                  style="width: 220px; height: 120px;"
+                  style="width: 220px; height: 120px"
                   :src="drawerApprovalDeatail.attsUrl"
                   fit="contain"
                   :preview-src-list="[drawerApprovalDeatail.attsUrl]"
@@ -1285,8 +1292,10 @@ export default {
     },
     // 获取审批权限
     async initData() {
-      let result = await this.$http.Backend.checkpriviles({ type: this.checkType })
-      if(result.status =='OK') {
+      let result = await this.$http.Backend.checkpriviles({
+        type: this.checkType,
+      })
+      if (result.status == 'OK') {
         this.checkStatus = result.payload
       }
     },
@@ -1878,6 +1887,10 @@ export default {
                 {
                   label: '选择班级',
                   value: courseLevelReplace(payData.targetClassName),
+                },
+                {
+                  label: '分配类型',
+                  value: payData.assignType ==='0'?'指定班级':payData.assignType ==='1'?'系统分配':'-',
                 },
                 {
                   label: '调级理由',
