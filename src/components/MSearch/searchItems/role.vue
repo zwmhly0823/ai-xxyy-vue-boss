@@ -40,7 +40,6 @@
     <el-col :span="15" :offset="1" v-if="isShow">
       <el-input
         v-model="name"
-        oninput="if(value.length>11)value=value.slice(0,11)"
         clearable
         @change="selectName"
         @clear="clearName"

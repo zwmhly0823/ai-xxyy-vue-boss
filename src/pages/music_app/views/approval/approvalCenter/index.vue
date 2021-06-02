@@ -29,6 +29,6 @@ export default {
 </style>
 <style lang="scss">
 .el-image-viewer__wrapper{
-  z-index: 2010!important;
+  z-index: 20000!important;
 }
 </style>

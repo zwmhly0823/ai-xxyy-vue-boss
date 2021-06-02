@@ -2309,8 +2309,3 @@ export default {
   }
 }
 </style>
-<style lang="scss">
-.el-image-viewer__mask .el-image-viewer__img {
-  z-index: 8888 !important;
-}
-</style>
