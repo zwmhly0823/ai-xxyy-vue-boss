@@ -133,7 +133,7 @@ export default {
 </style>
 
 <style lang="scss">
- /deep/ .el-image-viewer__wrapper {
-  z-index: 2888 !important;
+.el-image-viewer__wrapper {
+  z-index: 200000 !important;
 }
 </style>
