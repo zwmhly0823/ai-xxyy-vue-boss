@@ -10,7 +10,7 @@
       </el-table-column>
       <el-table-column label="下单时间" prop="ctime" width="160">
       </el-table-column>
-       <el-table-column label="商品信息" min-width="260">
+      <el-table-column label="商品信息" min-width="260">
         <template slot-scope="scope">
           <p>
             {{
@@ -37,12 +37,15 @@
                 : '-'
             }}
             {{
-              (scope.row.amount-scope.row.instrument_order_total_amount)>0 && scope.row.course_product_name
-                ? (scope.row.amount*100-scope.row.instrument_order_total_amount*100)/100
+              scope.row.amount - scope.row.instrument_order_total_amount > 0 &&
+              scope.row.course_product_name
+                ? (scope.row.amount * 100 -
+                    scope.row.instrument_order_total_amount * 100) /
+                  100
                 : '-'
             }}
           </p>
-            <p>
+          <p>
             {{
               scope.row.instrument_product_name
                 ? scope.row.instrument_product_name
@@ -58,7 +61,13 @@
       </el-table-column>
       <el-table-column label="支付信息" width="120">
         <template slot-scope="scope">
-          <div v-if="scope.row.discount_amount">优惠券：{{ scope.row.discount_amount?scope.row.discount_amount+'元':'0元' }}</div>
+          <div v-if="scope.row.discount_amount">
+            优惠券：{{
+              scope.row.discount_amount
+                ? scope.row.discount_amount + '元'
+                : '0元'
+            }}
+          </div>
           <div>实际支付：{{ scope.row.amount }}元</div>
         </template>
       </el-table-column>
@@ -123,9 +132,7 @@
               {{ item.gifts_name }}
             </div>
           </div>
-          <div v-else>
-            -
-          </div>
+          <div v-else>-</div>
         </template>
       </el-table-column>
       <el-table-column label="母订单编号-订单交易流水号" width="220">
@@ -154,13 +161,13 @@
             <div
               class="logistics"
               @click="goTrack(scope.row)"
-              style="color:#0099FF"
+              style="color: #0099ff"
             >
               物流追踪
             </div>
             <div
               class="logistics"
-              style="color:#0099FF"
+              style="color: #0099ff"
               @click="clickSee(scope.row)"
             >
               查看退费
@@ -168,17 +175,25 @@
           </div>
           <div class="pay_order_operation">
             <!-- 体验课、特价课、主题课类型订单不显示 -->
-            <div
-              v-if="![1, 12, 13].includes(scope.row.regtype)"
-              class="logistics"
-              style="color:#0099FF"
-              @click="openTeams(scope.row)"
-            >
-              申请赠品
+            <div v-if="![1, 12, 13].includes(scope.row.regtype)">
+              <template v-if="scope.row.promotions_status === 1">
+                <span>赠品已申请</span>
+              </template>
+              <template v-else-if="scope.row.promotions_status === 0">
+                <span
+                  :class="{
+                    canApplayStyle: scope.row.availablePromotions.length,
+                  }"
+                  @click="
+                    scope.row.availablePromotions.length && openTeams(scope.row)
+                  "
+                  >申请赠品</span
+                >
+              </template>
             </div>
             <div
               class="logistics"
-              style="color:#0099FF"
+              style="color: #0099ff"
               @click="openTeam(scope.row)"
             >
               申请退款
@@ -197,10 +212,10 @@ import { openBrowserTab } from '@/utils/index'
 export default {
   name: 'logistics',
   components: {
-    seeRefund
+    seeRefund,
   },
   props: {
-    Tabledata: {}
+    Tabledata: {},
   },
   mounted() {},
   data() {
@@ -218,8 +233,8 @@ export default {
         8: '兑换',
         9: '营销活动',
         10: '新签补差',
-        11: '续费补差'
-      }
+        11: '续费补差',
+      },
     }
   },
   methods: {
@@ -229,7 +244,7 @@ export default {
     },
     clickSee(e) {
       const params = {
-        outTradeNo: e.out_trade_no
+        outTradeNo: e.out_trade_no,
       }
       this.$http.Finance.getTable(params).then((res) => {
         console.log(res)
@@ -253,9 +268,9 @@ export default {
     openRecommender(uid) {
       if (!uid) return
       openBrowserTab(`/music_app/#/details/${uid}`)
-    }
+    },
   },
-  computed: {}
+  computed: {},
 }
 </script>
 
