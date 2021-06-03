@@ -167,9 +167,9 @@ export default {
         currentClassName: [
           { required: true, message: '请选择当前班级', trigger: 'change' },
         ],
-        targetClassName: [
-          { required: true, message: '请选择班级', trigger: 'change' },
-        ],
+        // targetClassName: [
+        //   { required: true, message: '请选择班级', trigger: 'change' },
+        // ],
         adjustReason: [{ required: true, message: '', trigger: 'change' }],
       },
       // 公共的formData部分
@@ -453,23 +453,23 @@ export default {
   },
   watch: {
     selectClass(newValue) {
+      console.log(this.formData,this.newData,"123412341234");
       if (newValue === '0') {
-        this.formData.targetClassName = ''
         this.commonSelectHandleFunction(
           'classChooseClass',
-          { stage: this.newData.tempSatge, sup: this.newData.tempSup },
+          { stage: this.formData.targetStage && this.formData.targetStage.targetTerm || this.newData.tempSatge, sup: this.formData.orderId.tempSup },
           '选择班级列表'
         )
       } else if (newValue === '1') {
-        this.formData.targetClassName = 'system'
         this.commonSelectHandleFunction(
           'classChooseSystem',
           {
-            stage: this.newData.tempSatge,
-            sup: this.newData.tempSup,
-            teamId: this.newData.teamId,
+            term:  this.formData.targetStage &&this.formData.targetStage.targetTerm || this.newData.tempSatge,
+            sup: this.formData.orderId.tempSup,
+            teamId: this.formData.orderId.teamId,
             saleDepartmentId: this.newData.saleDepartmentId,
             saleDepartmentPid: this.newData.saleDepartmentPid,
+            userId:this.formData.userId
           },
           '选择班级列表'
         )
@@ -919,9 +919,10 @@ export default {
     handleChooseSystem(resData) {
       this.formData.targetClassName = ''
       this.formData.targetClassId = ''
-      if(resData && resData.length>0) {
-        this.formData.targetClassId = resData[0].id
-      } 
+      if(resData) {
+        this.formData.targetClassId = resData.id;
+        this.formData.targetClassName = resData.teamName+'-'+resData.teacherRealName
+      }
     },
     // 已上课周期
     handleDoneClass(resData) {
