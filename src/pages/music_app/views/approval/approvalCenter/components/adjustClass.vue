@@ -167,9 +167,9 @@ export default {
         currentClassName: [
           { required: true, message: '请选择当前班级', trigger: 'change' },
         ],
-        // targetClassName: [
-        //   { required: true, message: '请选择班级', trigger: 'change' },
-        // ],
+        targetClassName: [
+          { required: true, message: '请选择班级', trigger: 'change' },
+        ],
         adjustReason: [{ required: true, message: '', trigger: 'change' }],
       },
       // 公共的formData部分
