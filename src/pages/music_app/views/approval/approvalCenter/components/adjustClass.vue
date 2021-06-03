@@ -134,7 +134,7 @@ export default {
   },
   data() {
     return {
-      selectClass: '0',
+      selectClass: '',
       // 调期调级调课：1/2/3
       adjustType: this.$route.query.adjustType - 0,
       // 最终显示的模版数据
