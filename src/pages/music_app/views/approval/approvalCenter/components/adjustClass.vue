@@ -453,7 +453,6 @@ export default {
   },
   watch: {
     selectClass(newValue) {
-      console.log(this.formData,this.newData,"123412341234");
       if (newValue === '0') {
         this.commonSelectHandleFunction(
           'classChooseClass',
@@ -773,7 +772,6 @@ export default {
           this.handleCurrentClass(resData)
           break
         case 'classChooseSystem':
-          this.handleCurrentClass(resData)
           this.handleChooseSystem(resData)
           break
       }
@@ -917,11 +915,12 @@ export default {
     },
     // 系统分配
     handleChooseSystem(resData) {
+      console.log(this.formData);
       this.formData.targetClassName = ''
       this.formData.targetClassId = ''
       if(resData) {
         this.formData.targetClassId = resData.id;
-        this.formData.targetClassName = resData.teamName+'-'+resData.teacherRealName
+        this.formData.targetClassName = resData.teamName+'-'+resData.teacherRealName;
       }
     },
     // 已上课周期
