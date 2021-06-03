@@ -773,7 +773,7 @@ export default {
           this.handleCurrentClass(resData)
           break
         case 'classChooseSystem':
-          this.handleCurrentSystem(resData)
+          this.handleCurrentClass(resData)
           this.handleChooseSystem(resData)
           break
       }
@@ -985,35 +985,9 @@ export default {
     },
     // 调班-当前班级
     handleCurrentClass(resData) {
-      console.log('resData', this.formData)
       this.formData.currentClassId = resData.id
       const teamName = courseLevelReplace(resData.teamName)
       this.formData.currentClassName = `${teamName}-${resData.teacherRealName}`
-      // 调班-调整班级列表,需要先获取到currentClassId
-      this.commonSelectHandleFunction(
-        'classChooseClass',
-        { stage: resData.term, sup: resData.currentSuper },
-        '选择班级列表'
-      )
-    },
-    // 系统课-当前班级
-    handleCurrentSystem(resData) {
-      this.formData.currentClassId = resData.id
-      const teamName = courseLevelReplace(resData.teamName)
-      this.formData.currentClassName = `${teamName}-${resData.teacherRealName}`
-
-      // 调班-调整班级列表,需要先获取到currentClassId
-      this.commonSelectHandleFunction(
-        'classChooseSystem',
-        {
-          stage: resData.term,
-          sup: resData.currentSuper,
-          teamId: resData.id,
-          saleDepartmentId: this.newData.saleDepartmentId,
-          saleDepartmentPid: this.newData.saleDepartmentPid,
-        },
-        '选择班级列表'
-      )
     },
     // 提交
     async submitForm(formName) {
