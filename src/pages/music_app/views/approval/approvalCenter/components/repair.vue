@@ -398,7 +398,6 @@ export default {
   // 学员详情跳转来审批query lk
   async mounted() {
     if (this.$route.query && this.$route.query.cellphone) {
-      console.info('captured学员详情跳转而来')
       // 显示手机号
       this.$refs.toGetPhone.input = this.$route.query.cellphone
       // 手机号查uid
@@ -407,7 +406,6 @@ export default {
       } = await this.$http.RefundApproval.getUid_lk({
         mobile: this.$route.query.cellphone,
       }).catch((err) => {
-        console.error(err)
         this.$message.error('跳转来的手机号获取uid失败')
       })
       if (blurrySearch && blurrySearch[0] && blurrySearch[0].id) {
@@ -437,7 +435,6 @@ export default {
     }
     var validateProduct = (rule, value, callback) => {
       setTimeout(() => {
-        console.info('触发商品校验', this.selectName.length, this.selectName)
         if (this.selectName.length) {
           callback() // 自定义校验-以获取到保存到商品信息
         } else {
@@ -580,7 +577,6 @@ export default {
   methods: {
     // 设置子订单号
     setChildrenId(val) {
-      console.log(val)
       // subOrderType 1 课程  2  硬件
       this.childOrderType =
         val.subOrderType == 1 ? false : val.subOrderType == 2 ? true : false
@@ -591,7 +587,6 @@ export default {
       const promiseAll = this.fileListC.map((item) =>
         new UploadFile(item.raw).init()
       )
-      console.info('返回promise结果数组', promiseAll)
       return promiseAll
     },
     uploadAll() {
@@ -600,11 +595,9 @@ export default {
         .then((res) => {
           // 静态方法all 整体都是resolve返回时
           // this.fileListC = res
-          console.info('整体成功', res)
           this.formRepair.attsUrl = res.map((item) => item.fileUrl).join()
         })
         .catch((err) => {
-          console.log('Promise.all-err', err)
         })
     },
     // 超过个数限制
@@ -626,27 +619,20 @@ export default {
     },
     // 移除文件
     onRemove(file, fileList) {
-      console.info('你移除的文件是', file.name)
     },
     // 文件上传成功
     onSuccess(response, file, fileList) {
-      console.info('文件上传成功', file.name)
     },
     // 文件上传失败
     onError(err2, file, fileList) {
-      console.info('文件上传失败')
     },
     // 文件上传中
     onProgress(event, file, fileList) {
-      console.info('文件正在上传中', file.name)
     },
     // 文件变化都捕获
     onChange(file, fileList) {
       this.fileListC = fileList
-      console.info(
-        '文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用'
-      )
-    },
+     },
     // 上传前-做文件校验
     beforeUpload(file) {
       // const isJPG = file.type === 'image/jpeg'
@@ -668,7 +654,6 @@ export default {
       this.$router.push('/approval')
     },
     getSeletOrder(val) {
-      console.log(val, 'val')
     },
     cancelAddress(val) {
       this.addresDialog = false
@@ -752,13 +737,11 @@ export default {
         item.canOperating = true
       })
       this.selectName = val
-      console.info('复选选入筐', this.selectName)
     },
     // 单选(只能靠这个事件模拟实现-用SINGLE排除对复选影响)
     handleCurrentChange(val) {
       if (this.formRepair.mode !== 'SINGLE') {
         this.selectName = [val]
-        console.info('单选入筐', this.selectName)
       }
     },
     // getPackageId 获取子组件传来的系统课或者体验课
@@ -1044,7 +1027,6 @@ export default {
           }
         })
         .catch((err) => {
-          console.log(err)
         })
     },
 
@@ -1157,7 +1139,6 @@ export default {
       this.clearAllData()
     },
     confirmButton(formName) {
-      console.log((this.formRepair.attsUrl = 'sssssssssssssss'))
 
       if(this.formRepair.packagesType == ''){
         this.formRepair.packagesType = this.formRepair.type;
@@ -1215,7 +1196,6 @@ export default {
             }, 1000)
           })
         } else {
-          console.log('error submit!!')
           return false
         }
       })

@@ -461,6 +461,10 @@ export default {
       },
     },
     selectClass(newValue) {
+      if(!this.formData.orderId) {
+         this.$message.error("请优先选择订单");
+         return false
+      };
       if (newValue === '0') {
         this.commonSelectHandleFunction(
           'classChooseClass',

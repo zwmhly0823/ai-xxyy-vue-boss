@@ -765,7 +765,6 @@ export default {
   },
   methods: {
     getSearchData1(val) {
-      console.info('选择部门获取值:', val)
       this.params.page = 1
       this.currentPage = 1
       this.params.departmentIds = val.DepartmentIds
@@ -774,7 +773,6 @@ export default {
       this.checkPending(this.params)
     },
     getSearchData2(val) {
-      console.info('选择老师获取值:', val)
       this.params.page = 1
       this.currentPage = 1
       this.params.teacherIds = val.groupSell ? String(val.groupSell) : ''
@@ -829,7 +827,6 @@ export default {
     },
     // 新加手机号
     getPhone(val) {
-      console.info(val)
       Object.assign(this.params, val)
       this.currentPage = 1
       this.params.page = 1
@@ -876,7 +873,6 @@ export default {
             res.payload.ctimeFormdate = timestamp(res.payload.ctime, 2)
             this.drawerApprovalDeatail = res.payload
             // 对传过来的对象做处理
-            console.log(this.drawerApprovalDeatail)
             this.drawerApproval = true
           }
         })
@@ -888,7 +884,6 @@ export default {
             res.payload.ctimeFormdate = timestamp(res.payload.ctime, 2)
             this.drawerApprovalDeatail = res.payload
             // 对传过来的对象做处理
-            console.log(this.drawerApprovalDeatail)
             this.drawerApproval = true
           }
         })
