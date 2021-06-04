@@ -567,7 +567,7 @@ export default {
     orderData(queryObj = {}, page = 1) {
       // 最终搜索条件
       this.$emit('get-params', queryObj)
-      this.$http.Order.OrderOptStatisticsPage(
+      this.$http.Order.OrderOptStatisticsPageManager(
         `${JSON.stringify(queryObj)}`,
         page
       )
