@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="automatic-config">
-      <el-dropdown @command="handleCommand" v-if="powerStatus ==='1'">
+      <el-dropdown @command="handleCommand" v-if="powerStatus =='1'">
         <span class="el-dropdown-link">
           <span><i class="el-icon-setting"></i>设置</span>
         </span>
