@@ -180,7 +180,7 @@
       </el-form-item>
       <el-form-item>
         <div style="margin-left: 50px">
-          <el-button type="primary" :disabled="this.ruleForm.export == 0 && this.tableData.length == 1" @click="submitForm('ruleForm')"
+          <el-button type="primary" :disabled="this.ruleForm.export == 0 && this.tableData.length != 1" @click="submitForm('ruleForm')"
             >提交</el-button
           >
           <el-button @click="resetForm('ruleForm')">取消</el-button>
