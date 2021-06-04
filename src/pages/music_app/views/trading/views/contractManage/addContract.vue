@@ -366,7 +366,17 @@ export default {
           isDisabled: true,
           price: '9.9',
           radioSel: '9.9',
-
+        },
+        {
+          packageName: '22元双周体验课',
+          packageId: '508',
+          classHour: '2',
+          contractPrice: undefined,
+          settlePrice: undefined,
+          orderPrice: '',
+          isDisabled: true,
+          price: '22',
+          radioSel: '22',
         },
         {
           packageName: '19元单周体验课',
