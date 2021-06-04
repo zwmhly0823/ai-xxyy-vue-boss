@@ -112,7 +112,6 @@ export default {
   // 学员详情跳转来审批query lk
   async mounted() {
     if (this.$route.query && this.$route.query.cellphone) {
-      console.info('captured学员详情跳转而来')
       // 显示手机号
       this.$refs.searchPhone[0].input = this.$route.query.cellphone
       // 手机号查uid
@@ -121,7 +120,6 @@ export default {
       } = await this.$http.RefundApproval.getUid_lk({
         mobile: this.$route.query.cellphone,
       }).catch((err) => {
-        console.error(err)
         this.$message.error('跳转来的手机号获取uid失败')
       })
       if (blurrySearch && blurrySearch[0] && blurrySearch[0].id) {
@@ -463,7 +461,6 @@ export default {
       },
     },
     selectClass(newValue) {
-      console.log(this.newData, '22222222')
       if (newValue === '0') {
         this.commonSelectHandleFunction(
           'classChooseClass',
@@ -938,7 +935,6 @@ export default {
     },
     // 系统分配
     handleChooseSystem(resData) {
-      console.log(this.formData)
       this.formData.targetClassName = ''
       this.formData.targetClassId = ''
       if (resData) {
@@ -990,7 +986,6 @@ export default {
       //     })
       //   }
       // })
-      console.log(this.formData)
       const levelList =
         this.formData.courseCategory == 0
           ? SUP_LEVEL_LIST_UPPER
