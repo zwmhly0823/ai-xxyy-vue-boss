@@ -111,11 +111,11 @@
         </el-form-item>
         <el-form-item label="补发类别" prop="type">
           <el-radio-group v-model="formRepair.type" @change="chooseType">
-            <el-radio label="MATERIALS">盒子随材</el-radio>
-            <el-radio label="STORE">商城礼品</el-radio>
-            <el-radio label="RECOMMEND">推荐有礼</el-radio>
-            <el-radio label="INVITATION">邀请有奖</el-radio>
-            <el-radio label="HARDWARE">硬件</el-radio>
+            <el-radio :disabled="childOrderType" label="MATERIALS">盒子随材</el-radio>
+            <el-radio :disabled="childOrderType" label="STORE">商城礼品</el-radio>
+            <el-radio :disabled="childOrderType" label="RECOMMEND">推荐有礼</el-radio>
+            <el-radio :disabled="childOrderType" label="INVITATION">邀请有奖</el-radio>
+            <el-radio :disabled="!childOrderType" label="HARDWARE">硬件</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item
@@ -140,8 +140,7 @@
             <div
               class="reapirProduct-detail"
               v-if="
-                formRepair.type == 'MATERIALS' &&
-                formRepair.type !== 'HARDWARE'
+                formRepair.type == 'MATERIALS' && formRepair.type !== 'HARDWARE'
               "
             >
               <package
@@ -229,8 +228,7 @@
               </el-radio>
               <el-radio
                 v-show="
-                  formRepair.mode === 'SINGLE' &&
-                  formRepair.type !== 'HARDWARE'
+                  formRepair.mode === 'SINGLE' && formRepair.type !== 'HARDWARE'
                 "
                 label="SINGLE_QUALITY"
               >
@@ -257,10 +255,10 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item
-          v-if="formRepair.type == 'HARDWARE'"
+          v-if="formRepair.replenishReason=='SEND_BACK_REPAIR_OR_CHANGE'"
           label="寄回单号"
           class="address-recept"
-          prop='sendBackTrackingNum'
+          prop="sendBackTrackingNum"
         >
           <el-input v-model="formRepair.sendBackTrackingNum"> </el-input>
         </el-form-item>
@@ -268,7 +266,7 @@
         <el-form-item
           label="SN号"
           prop='snNum'
-          v-if="formRepair.type == 'HARDWARE'"
+          v-if="formRepair.replenishReason==='SEND_BACK_REPAIR_OR_CHANGE'"
           class="address-recept"
         >
           <el-input v-model="formRepair.snNum"> </el-input>
@@ -575,17 +573,21 @@ export default {
         ],
       },
       now: new Date().getTime(),
+      childOrderType: false,
     }
   },
 
   methods: {
     // 设置子订单号
     setChildrenId(val) {
+      console.log(val)
+      // subOrderType 1 课程  2  硬件
+      this.childOrderType =
+        val.subOrderType == 1 ? false : val.subOrderType == 2 ? true : false
       this.formRepair.childOrderId = val.id
       this.formRepair.childOutTradeNo = val.outTradeNo
     },
     singglefileListPromise() {
-      console.info(this.fileListC)
       const promiseAll = this.fileListC.map((item) =>
         new UploadFile(item.raw).init()
       )
@@ -687,11 +689,11 @@ export default {
     clearAllData() {
       this.fileListC = []
       this.formRepair = {
-        showChildOrder:'',
-        childOutTradeNo:'',//子订单订单号
-        childOrderId:'',//子订单号
-        snNum:'',//sn 号
-        sendBackTrackingNum:'',//寄回单号
+        showChildOrder: '',
+        childOutTradeNo: '', //子订单订单号
+        childOrderId: '', //子订单号
+        snNum: '', //sn 号
+        sendBackTrackingNum: '', //寄回单号
         totalAddress: '', // 补上
         userId: '', // 用户id
         applyDepartment: '', // 申请人所在部门  --非必传
@@ -853,8 +855,16 @@ export default {
         courseLevel: 'LEVEL1',
         proVersion: 'v1.0',
       }
+      this.formRepair.packagesType = productType
       this.$http.Order.getHardwareProductList(query).then((res) => {
-        this.giftList = res.payload
+        res.payload.forEach((item) => {
+          this.giftList.push({
+            id: item.id,
+            name: item.name,
+            count: 1,
+            canOperating: false,
+          })
+        })
       })
     },
     // 通过订单id查询物流信息
@@ -1147,7 +1157,11 @@ export default {
       this.clearAllData()
     },
     confirmButton(formName) {
-      // console.log((this.formRepair.attsUrl = 'sssssssssssssss'))
+      console.log((this.formRepair.attsUrl = 'sssssssssssssss'))
+
+      if(this.formRepair.packagesType == ''){
+        this.formRepair.packagesType = this.formRepair.type;
+      }
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (!this.formRepair.reissueMsg.trim()) {
@@ -1179,7 +1193,7 @@ export default {
             }
           }
           if (this.formRepair.mode === '') {
-            this.formRepair.packagesType = 0
+            this.formRepair.packagesType = this.formRepair.type;
 
             delete this.formRepair.mode
           }

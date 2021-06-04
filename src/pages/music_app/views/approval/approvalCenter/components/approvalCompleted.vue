@@ -173,6 +173,19 @@
                 scope.row.applyId
               )
             "
+            v-show="scope.row.status === 'PENDING'"
+            class="wait-pending"
+          >
+            审批未完成
+          </div>
+          <div
+            @click="
+              getApprovalDeatail(
+                scope.row.type,
+                scope.row.id,
+                scope.row.applyId
+              )
+            "
             v-show="scope.row.status === 'COMPLETED'"
             class="wait-pending"
           >
@@ -369,6 +382,42 @@
           <el-col :span="3">备注:</el-col>
           <el-col :span="20" :offset="1">
             {{ drawerApprovalDeatail.approvalRemark }}
+          </el-col>
+        </el-row>
+        <el-row v-if="tableDataNode.length > 0">
+          <el-col :offset="1" :span="23"><h3>审批节点</h3></el-col>
+          <el-col :offset="1" :span="22">
+            <el-table
+              :data="tableDataNode"
+              :header-cell-style="{
+                background: 'rgba(31,116,249,.7)',
+                color: '#fff',
+              }"
+            >
+              <el-table-column
+                prop="approvalName"
+                label="发起人/审核人"
+                align="center"
+              >
+              </el-table-column>
+              <el-table-column
+                prop="statusStr"
+                label="审批状态"
+                align="center"
+              >
+              </el-table-column>
+              <el-table-column
+                prop="approvalRemark"
+                label="审批意见"
+                align="center"
+              >
+              </el-table-column>
+              <el-table-column label="操作时间" align="center">
+                <template slot-scope="scope">
+                  {{ formatDate(scope.row.utime) }}
+                </template>
+              </el-table-column>
+            </el-table>
           </el-col>
         </el-row>
       </div>
@@ -821,6 +870,7 @@ export default {
         MULTI_TIMEOUT_RETURN: '超时退回',
         MULTI_ADJUSTMENT_SUP: '调级补发',
         SINGLE_QUALITY: '产品质量问题',
+        SEND_BACK_REPAIR_OR_CHANGE:'寄回维修/换货'
         // SINGLE_PIGMENT_LEAKAGE: '颜料撒漏'
       },
       courseOptions: { TESTCOURSE: '体验课', SYSTEMCOURSE: '系统课', TESTCOURSE_SINGLE:'体验课'},
@@ -978,6 +1028,17 @@ export default {
             this.drawerApproval = true
           }
         })
+        this.$http.RefundApproval.getFlowDetailNodeTable(id).then(
+          ({ code, payload }) => {
+            if (!code) {
+              this.tableDataNode = payload
+              // this.tableDataNode = payload.reduce((pre, cur, index) => {
+              //   pre.push(cur[0])
+              //   return pre
+              // }, [])
+            }
+          }
+        )
       }
       // 退款详情
       if (type === 'REFUND') {

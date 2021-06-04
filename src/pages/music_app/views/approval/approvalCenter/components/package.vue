@@ -48,12 +48,14 @@ export default {
       productVersion: [
         { name: '双周体验课', value: 'EXPERIENCE_COURSE' },
         { name: '单周体验课', value: 'TESTCOURSE_SINGLE' },
-        { name: '系统课', value: 'SYSTEM_COURSE' }
+        { name: '系统课', value: 'SYSTEM_COURSE' },
+
       ],
       packageDataInner: ''
     }
   },
   methods: {
+
     onChange(data) {
       this.$emit('result', data)
     },
