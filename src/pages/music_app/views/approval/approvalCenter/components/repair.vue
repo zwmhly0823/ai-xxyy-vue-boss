@@ -1157,7 +1157,7 @@ export default {
       this.clearAllData()
     },
     confirmButton(formName) {
-      console.log((this.formRepair.attsUrl = 'sssssssssssssss'))
+      // console.log((this.formRepair.attsUrl = 'sssssssssssssss'))
 
       if(this.formRepair.packagesType == ''){
         this.formRepair.packagesType = this.formRepair.type;
