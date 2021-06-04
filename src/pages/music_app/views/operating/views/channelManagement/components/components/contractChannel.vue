@@ -22,7 +22,7 @@
         <el-form-item label="合同类型:">
           <el-select
             clearable
-            style="width:100px"
+            style="width: 100px"
             size="mini"
             placeholder="请选择"
             v-model="searchQuery.contractType"
@@ -44,6 +44,7 @@
       style="width: 100%"
       v-loading="loading"
       @selection-change="handleSelectionChange"
+      @row-click="rowClick"
     >
       <el-table-column type="selection" width="45"> </el-table-column>
       <el-table-column prop="contract.id" label="合同ID" width="80">
@@ -78,7 +79,7 @@
             v-for="(item, index) in scope.row.contractPriceDetailList"
             :key="index"
             :style="{
-              color: item.priceType == 'DISCOUNT' ? '#2E8B57' : '#606266'
+              color: item.priceType == 'DISCOUNT' ? '#2E8B57' : '#606266',
             }"
           >
             <!-- DISCOUNT 为绿色 -->
@@ -97,7 +98,7 @@
             v-for="(item, index) in scope.row.contractPriceDetailList"
             :key="index"
             :style="{
-              color: item.priceType == 'DISCOUNT' ? '#2E8B57' : '#606266'
+              color: item.priceType == 'DISCOUNT' ? '#2E8B57' : '#606266',
             }"
           >
             {{ item.packageName + ' ' + item.orderPrice }}
@@ -105,9 +106,9 @@
         </template>
       </el-table-column>
     </el-table>
-    <div style="height:40px;">
+    <div style="height: 40px">
       <el-pagination
-        style="margin-top:10px;float: right;"
+        style="margin-top: 10px; float: right"
         @current-change="handleCurrentChange"
         :current-page="listQuery.currentPage"
         layout="prev, pager, next, total"
@@ -132,8 +133,8 @@ export default {
   name: 'contractDialog',
   props: {
     dateId: {
-      type: Object
-    }
+      type: Object,
+    },
   },
   components: { contractName, contractBodys },
   data() {
@@ -146,7 +147,7 @@ export default {
         number: '',
         contractType: '',
         beginTime: '',
-        endTime: ''
+        endTime: '',
       },
       loading: false,
       contractList: [], // 表格数据
@@ -155,8 +156,8 @@ export default {
         currentPage: 1,
         totalElements: 0,
         totalPages: 0,
-        pageSize: 15
-      }
+        pageSize: 15,
+      },
     }
   },
   mounted() {},
@@ -190,7 +191,7 @@ export default {
           // 合同分类
           this.searchQuery = {
             ...this.searchQuery,
-            [key]: res
+            [key]: res,
           }
         } else {
           if (key === 'time') {
@@ -198,12 +199,12 @@ export default {
             this.searchQuery = {
               ...this.searchQuery,
               beginTime: formatData(res[0].time.gte, 's'),
-              endTime: formatData(res[0].time.lte, 's')
+              endTime: formatData(res[0].time.lte, 's'),
             }
           } else {
             this.searchQuery = {
               ...this.searchQuery,
-              ...search
+              ...search,
             }
           }
         }
@@ -219,6 +220,7 @@ export default {
     },
     // 选择表格
     handleSelectionChange(val) {
+      console.log(val)
       // 控制单选
       if (val.length > 1) {
         this.$refs.listDom.clearSelection()
@@ -227,16 +229,23 @@ export default {
         this.multipleSelection = val
       }
     },
+    rowClick(val) {
+      let arr = []
+      arr.push(val)
+      this.$refs.listDom.clearSelection()
+      this.$refs.listDom.toggleRowSelection(val)
+      this.multipleSelection = arr
+    },
     async getData() {
       try {
         this.loading = true
         const pages = {
           page: this.listQuery.currentPage,
-          size: this.listQuery.pageSize
+          size: this.listQuery.pageSize,
         }
         const {
           code,
-          payload: { content = [], totalElements = 0, totalPages = 0 }
+          payload: { content = [], totalElements = 0, totalPages = 0 },
         } = await this.$http.Express.getContracts(this.searchQuery, pages)
         if (code === 0) {
           // 渠道合同赋值
@@ -265,7 +274,7 @@ export default {
           this.contractList = content
           Object.assign(this.listQuery, {
             totalElements: +totalElements,
-            totalPages: +totalPages
+            totalPages: +totalPages,
           })
         }
       } catch (err) {
@@ -291,11 +300,11 @@ export default {
     },
     backClick() {
       this.$router.push('/wechartsendList')
-    }
+    },
   },
   created() {
     this.getChannelType()
-  }
+  },
 }
 </script>
 

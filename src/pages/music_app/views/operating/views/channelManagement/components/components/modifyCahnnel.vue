@@ -170,6 +170,7 @@
       <el-form-item label="渠道状态" prop="status">
         <el-switch
           v-model="ruleForm.status"
+          :disabled="tableData.length>0"
           active-text="启用"
           inactive-text="停用"
           active-value="1"
