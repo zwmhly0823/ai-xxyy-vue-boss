@@ -441,7 +441,78 @@
             ></video>
           </el-col>
         </el-row>
-        <el-row class="BOTTOM" v-if="isStaffId">
+        <el-row v-if="tableDataNode.length > 0">
+          <el-col :offset="1" :span="23">
+            <h3>审批节点</h3>
+          </el-col>
+          <el-col :offset="1" :span="23" style="margin-bottom: 10px">
+            <mark>当前类别(可更改):</mark>
+            <el-select
+              :style="{ 'margin-left': '10px', width: '140px' }"
+              size="mini"
+              v-model="diologRefundTag"
+              @change="diologRefundTagChange"
+            >
+              <el-option
+                v-for="(value, key) in {
+                  未分类: 'NONE',
+                  家长考虑中: 'PARENT_HESITANT',
+                  物流退回中: 'EXPRESS_NOT_RETURN',
+                  未联系上家长: 'CANT_CONTACT_PARENT',
+                  挽单试听1V1: 'WD_TRIAL_1V1',
+                  挽单试听小班课: 'WD_TRIAL_SMALL',
+                }"
+                :key="value"
+                :label="key"
+                :value="value"
+              ></el-option>
+            </el-select>
+          </el-col>
+          <el-col :offset="1" :span="22">
+            <el-table
+              :data="tableDataNode"
+              :header-cell-style="{
+                background: 'rgba(31,116,249,.7)',
+                color: '#fff',
+              }"
+            >
+              <el-table-column
+                prop="approvalName"
+                label="发起人/审核人"
+                align="center"
+              ></el-table-column>
+              <el-table-column
+                prop="statusStr"
+                label="审批状态"
+                align="center"
+              ></el-table-column>
+              <el-table-column
+                prop="approvalRemark"
+                label="审批意见"
+                align="center"
+              ></el-table-column>
+              <el-table-column label="操作时间" align="center">
+                <template slot-scope="scope">{{
+                  formatDate(scope.row.utime)
+                }}</template>
+              </el-table-column>
+            </el-table>
+          </el-col>
+        </el-row>
+        <el-row class="BOTTOM" v-if="isStaffId &&
+            drawerApprovalDeatail.type !== 'HARDWARE' &&
+            drawerApprovalDeatail.type !== 'HARDWARE_MATERIALS_PARTS' ">
+          <el-col :span="19" :offset="1">
+            <el-button type="button" @click="dialogFormVisible_checkbox = true"
+              >拒 绝</el-button
+            >
+            <el-button type="button" @click="ensureReplenish">同 意</el-button>
+          </el-col>
+        </el-row>
+        <el-row class="BOTTOM" v-if="isStaffId &&
+            (drawerApprovalDeatail.type === 'HARDWARE' ||
+            drawerApprovalDeatail.type === 'HARDWARE_MATERIALS_PARTS') &&
+            hardwareApprovalIdSet.indexOf(resetParams.staffId) >= 0">
           <el-col :span="19" :offset="1">
             <el-button type="button" @click="dialogFormVisible_checkbox = true"
               >拒 绝</el-button
@@ -1153,6 +1224,7 @@ export default {
     }
     return {
       roleIdList: [],
+      hardwareApprovalIdSet: [],  //硬件补发货审批人员
       tableHeight: 0,
       forSonDataApprovalPersonId: '',
       forSonDataApprovalId: '',
@@ -1225,6 +1297,7 @@ export default {
         MULTI_TIMEOUT_RETURN: '超时退回',
         MULTI_ADJUSTMENT_SUP: '调级补发',
         SINGLE_QUALITY: '产品质量问题',
+        SEND_BACK_REPAIR_OR_CHANGE:'寄回维修/换货'
         // SINGLE_PIGMENT_LEAKAGE: '颜料撒漏'
       },
       courseOptions: {
@@ -1287,7 +1360,8 @@ export default {
   methods: {
     getRoleIdList() {
       this.$http.Backend.getStaffIds().then((res) => {
-        this.roleIdList = res.payload.approvalIdSet
+        this.roleIdList = res.payload.approvalIdSet;
+        this.hardwareApprovalIdSet = res.payload.hardwareApprovalIdSet;
       })
     },
     // 获取审批权限
@@ -1708,6 +1782,7 @@ export default {
       }
       // 补发货详情
       if (type === 'REISSUE') {
+        this.diologRefundTagId = id
         this.$http.Backend.getReplenishDetail(id).then((res) => {
           if (res && res.payload) {
             res.payload.ctimeFormdate = timestamp(res.payload.ctime, 2)
@@ -1721,6 +1796,18 @@ export default {
             this.drawerApproval = true
           }
         })
+
+        this.$http.RefundApproval.getFlowDetailNodeTable(id).then(
+          ({ code, payload }) => {
+            if (!code) {
+              this.tableDataNode = payload
+              // this.tableDataNode = payload.reduce((pre, cur, index) => {
+              //   pre.push(cur[0])
+              //   return pre
+              // }, [])
+            }
+          }
+        )
       }
       // 退款详情
       if (type === 'REFUND') {
@@ -2320,5 +2407,10 @@ export default {
       }
     }
   }
+}
+</style>
+<style lang="scss">
+.el-image-viewer__mask .el-image-viewer__img {
+  z-index: 8888 !important;
 }
 </style>
