@@ -167,9 +167,9 @@ export default {
         currentClassName: [
           { required: true, message: '请选择当前班级', trigger: 'change' },
         ],
-        targetClassName: [
-          { required: true, message: '请选择班级', trigger: 'change' },
-        ],
+        // targetClassName: [
+        //   { required: true, message: '请选择班级', trigger: 'change' },
+        // ],
         adjustReason: [{ required: true, message: '', trigger: 'change' }],
       },
       // 公共的formData部分
@@ -210,6 +210,7 @@ export default {
       adjustClassDefault: {},
       // 新增接口数据
       newData: {},
+      teacherId: null,
     }
   },
   created() {
@@ -452,46 +453,66 @@ export default {
     }
   },
   watch: {
+    'newData.teamId': {
+      immediate: true,
+      deep: true,
+      async handler(newValue) {
+        if (newValue) {
+          this.initData({ id: newValue })
+        }
+      },
+    },
     selectClass(newValue) {
+      console.log(this.newData, '22222222')
       if (newValue === '0') {
         this.commonSelectHandleFunction(
           'classChooseClass',
-          { stage: this.formData.targetStage && this.formData.targetStage.targetTerm || this.newData.tempSatge, sup: this.formData.orderId.tempSup },
+          {
+            stage:
+              (this.formData.targetStage &&
+                this.formData.targetStage.targetTerm) ||
+              this.newData.tempSatge,
+            sup: this.formData.orderId.tempSup,
+          },
           '选择班级列表'
         )
       } else if (newValue === '1') {
         this.commonSelectHandleFunction(
           'classChooseSystem',
           {
-            term:  this.formData.targetStage &&this.formData.targetStage.targetTerm || this.newData.tempSatge,
+            term:
+              (this.formData.targetStage &&
+                this.formData.targetStage.targetTerm) ||
+              this.newData.tempSatge,
             sup: this.formData.orderId.tempSup,
             teamId: this.formData.orderId.teamId,
             saleDepartmentId: this.newData.saleDepartmentId,
             saleDepartmentPid: this.newData.saleDepartmentPid,
-            userId:this.formData.userId
+            userId: this.formData.userId,
           },
           '选择班级列表'
         )
       }
     },
-    'newData.teamId': {
-      immediate: true,
-      deep: true,
-      async handler(newValue) {
-        this.initData({ id: newValue })
-      },
-    },
   },
   methods: {
     // 根据班级ID获取班级详情
     async initData(params) {
-      let result = await this.$http.TeamV2.getTeamDetailById(params).then(
+      let result = await this.$http.TeamV2.getTeamApproval(params).then(
         (res) => {
           if (res.data.StudentTeam) {
-            this.newData.saleDepartmentId =
-              res.data.StudentTeam.teacher_info.departmentInfo.id
-            this.newData.saleDepartmentPid =
-              res.data.StudentTeam.teacher_info.departmentInfo.pid
+            this.teacherId = res.data.StudentTeam.teacher_id
+            this.initDepartment({ id: this.teacherId })
+          }
+        }
+      )
+    },
+    initDepartment(params) {
+      let result = this.$http.TeamV2.getTeacherApproval(params).then(
+        (res) => {
+          if (res.data.Teacher) {
+            this.newData.saleDepartmentId = res.data.Teacher.departmentInfo.id
+            this.newData.saleDepartmentPid = res.data.Teacher.departmentInfo.pid
           }
         }
       )
@@ -622,7 +643,9 @@ export default {
     // select change
     // 处理所有需要选择后再走的逻辑
     selectChange(event, data) {
-      this.newData = data.options[0].value
+      if(data.labelText!="调整开课日期:") {
+        this.newData = data.options[0].value
+      }
       // 选择班级这儿逻辑稍微复杂一些，调班时用户选完订单后即可渲染班级列表，调级时选完订单后还得选申请调级级别，同理调期时还得选了调整开课日期
       this.handleStageAndSupChooseClass(event, data)
 
@@ -915,12 +938,13 @@ export default {
     },
     // 系统分配
     handleChooseSystem(resData) {
-      console.log(this.formData);
+      console.log(this.formData)
       this.formData.targetClassName = ''
       this.formData.targetClassId = ''
-      if(resData) {
-        this.formData.targetClassId = resData.id;
-        this.formData.targetClassName = resData.teamName+'-'+resData.teacherRealName;
+      if (resData) {
+        this.formData.targetClassId = resData.id
+        this.formData.targetClassName =
+          resData.teamName + '-' + resData.teacherRealName
       }
     },
     // 已上课周期

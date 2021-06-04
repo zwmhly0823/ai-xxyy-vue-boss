@@ -119,7 +119,31 @@ export default {
       }`
     })
   },
-
+  // 审批中心根据班级获取老师id
+  getTeamApproval(params = {}) {
+    // const query = { id: params.id }
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentTeam(query: ${JSON.stringify(JSON.stringify(params)) || null}) {
+          teacher_id
+        }
+      }`
+    })
+  },
+ // 审批中心根据老师的id 获取部门的id
+  getTeacherApproval(params = {}) {
+    // const query = { id: params.id }
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        Teacher(query: ${JSON.stringify(JSON.stringify(params)) || null}) {
+          departmentInfo{
+            id
+            pid
+          }
+        }
+      }`
+    })
+  },
   // 获取班级详情 顶部 统计数据
   // getTeacherStatistic(teamId) {
   //   const queryParams = `[{id:${teamId}}]`
