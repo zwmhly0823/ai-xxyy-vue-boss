@@ -441,7 +441,78 @@
             ></video>
           </el-col>
         </el-row>
-        <el-row class="BOTTOM" v-if="isStaffId">
+        <el-row v-if="tableDataNode.length > 0">
+          <el-col :offset="1" :span="23">
+            <h3>审批节点</h3>
+          </el-col>
+          <el-col :offset="1" :span="23" style="margin-bottom: 10px">
+            <mark>当前类别(可更改):</mark>
+            <el-select
+              :style="{ 'margin-left': '10px', width: '140px' }"
+              size="mini"
+              v-model="diologRefundTag"
+              @change="diologRefundTagChange"
+            >
+              <el-option
+                v-for="(value, key) in {
+                  未分类: 'NONE',
+                  家长考虑中: 'PARENT_HESITANT',
+                  物流退回中: 'EXPRESS_NOT_RETURN',
+                  未联系上家长: 'CANT_CONTACT_PARENT',
+                  挽单试听1V1: 'WD_TRIAL_1V1',
+                  挽单试听小班课: 'WD_TRIAL_SMALL',
+                }"
+                :key="value"
+                :label="key"
+                :value="value"
+              ></el-option>
+            </el-select>
+          </el-col>
+          <el-col :offset="1" :span="22">
+            <el-table
+              :data="tableDataNode"
+              :header-cell-style="{
+                background: 'rgba(31,116,249,.7)',
+                color: '#fff',
+              }"
+            >
+              <el-table-column
+                prop="approvalName"
+                label="发起人/审核人"
+                align="center"
+              ></el-table-column>
+              <el-table-column
+                prop="statusStr"
+                label="审批状态"
+                align="center"
+              ></el-table-column>
+              <el-table-column
+                prop="approvalRemark"
+                label="审批意见"
+                align="center"
+              ></el-table-column>
+              <el-table-column label="操作时间" align="center">
+                <template slot-scope="scope">{{
+                  formatDate(scope.row.utime)
+                }}</template>
+              </el-table-column>
+            </el-table>
+          </el-col>
+        </el-row>
+        <el-row class="BOTTOM" v-if="isStaffId &&
+            drawerApprovalDeatail.type !== 'HARDWARE' &&
+            drawerApprovalDeatail.type !== 'HARDWARE_MATERIALS_PARTS' ">
+          <el-col :span="19" :offset="1">
+            <el-button type="button" @click="dialogFormVisible_checkbox = true"
+              >拒 绝</el-button
+            >
+            <el-button type="button" @click="ensureReplenish">同 意</el-button>
+          </el-col>
+        </el-row>
+        <el-row class="BOTTOM" v-if="isStaffId &&
+            (drawerApprovalDeatail.type === 'HARDWARE' ||
+            drawerApprovalDeatail.type === 'HARDWARE_MATERIALS_PARTS') &&
+            hardwareApprovalIdSet.indexOf(resetParams.staffId) >= 0">
           <el-col :span="19" :offset="1">
             <el-button type="button" @click="dialogFormVisible_checkbox = true"
               >拒 绝</el-button
@@ -1153,6 +1224,7 @@ export default {
     }
     return {
       roleIdList: [],
+      hardwareApprovalIdSet: [],  //硬件补发货审批人员
       tableHeight: 0,
       forSonDataApprovalPersonId: '',
       forSonDataApprovalId: '',
@@ -1225,6 +1297,7 @@ export default {
         MULTI_TIMEOUT_RETURN: '超时退回',
         MULTI_ADJUSTMENT_SUP: '调级补发',
         SINGLE_QUALITY: '产品质量问题',
+        SEND_BACK_REPAIR_OR_CHANGE:'寄回维修/换货'
         // SINGLE_PIGMENT_LEAKAGE: '颜料撒漏'
       },
       courseOptions: {
@@ -1244,14 +1317,12 @@ export default {
     // 身份类型，4是财务，具体见wiki
     const roleList = JSON.parse(localStorage.getItem('staff')).roleList
 
-    console.log(roleList, 'roleList')
     let roleId = roleList ? roleList[0] : ''
     this.roleId = roleId
     this.getRoleIdList()
   },
   mounted() {
     const staff = getStaffInfo()
-    console.log(staff, 'staff')
     this.resetParams = staff
     this.staffId = staff.staffId // storage体验或系统课老师id
     this.isStaffId = staff.isStaffId // 只有boss且position==='1' 为true
@@ -1280,14 +1351,14 @@ export default {
       // 父组件mounted时刻请求数据 2 带课程类型参数 只拿体验课
       // this.params.managementType = 'TESTCOURSE'
     }
-    console.log('父组件mounted时刻:请求数据了', this.params)
     this.checkPending(this.params)
   },
 
   methods: {
     getRoleIdList() {
       this.$http.Backend.getStaffIds().then((res) => {
-        this.roleIdList = res.payload.approvalIdSet
+        this.roleIdList = res.payload.approvalIdSet;
+        this.hardwareApprovalIdSet = res.payload.hardwareApprovalIdSet;
       })
     },
     // 获取审批权限
@@ -1300,7 +1371,6 @@ export default {
       }
     },
     getSearchData1(val) {
-      console.info('选择部门获取值:', val)
       this.params.page = 1
       this.currentPage = 1
       this.params.departmentIds = val.DepartmentIds
@@ -1309,7 +1379,6 @@ export default {
       this.checkPending(this.params)
     },
     getSearchData2(val) {
-      console.info('选择老师获取值:', val)
       this.params.page = 1
       this.currentPage = 1
       this.params.teacherIds = val.groupSell ? String(val.groupSell) : ''
@@ -1318,7 +1387,6 @@ export default {
     // 期数查询
     getTeamId(val) {
       if (val) {
-        console.info('子组件课程类型变化,父组件请求新数据')
         this.currentPage = 1
         Object.assign(this.params, {
           managementType: val.managementType,
@@ -1327,7 +1395,6 @@ export default {
         })
         this.checkPending(this.params)
       } else {
-        console.info('子组件课程类型变化,父组件不作为_因为是清空')
         // 防止点x 请求全类别数据
         // this.params.managementType = ''
         // this.params.period = ''
@@ -1367,7 +1434,6 @@ export default {
             message: '商品数量修改失败',
             type: 'error',
           })
-          console.info(err)
         })
         .finally(() => {
           // 刷新抽屉数据=>获取最新的数量(填坑:本地数量操作 用的是同个数组v-model)
@@ -1403,7 +1469,6 @@ export default {
               message: '修改金额失败',
               type: 'error',
             })
-            console.info(err)
           })
           if (code === 0) {
             this.$message({
@@ -1426,7 +1491,6 @@ export default {
     confirmCheckbox() {
       this.$refs.refundForm_checkbox.validate(async (valid) => {
         if (valid) {
-          console.info(this.drawerApprovalDeatail.addressId)
           const params = {
             isRecover: this.form_checkbox.isRecover ? 1 : 0,
             approvalRemark: this.form_checkbox.reason,
@@ -1442,7 +1506,6 @@ export default {
             delete params.isRecover
           }
           this.$http.Backend.isAggrePass(params).then((res) => {
-            console.log(res)
             if (!res.code) {
               this.checkPending(this.params)
               this.dialogFormVisible_checkbox = false // 关闭弹窗
@@ -1500,7 +1563,6 @@ export default {
 
       Object.assign(this.params, { type: val })
       this.type_lk = val
-      console.log(this.type_lk)
 
       this.currentPage = 1
       this.params.page = 1
@@ -1527,7 +1589,6 @@ export default {
     bind_tagChange(val) {
       this.params.page = 1
       this.currentPage = 1
-      console.info(val, typeof val, Object.prototype.toString.call(val))
       Object.assign(this.params, { tag: val })
       if (!val) {
         this.$delete(this.params, 'tag')
@@ -1545,7 +1606,6 @@ export default {
     },
     // 新加手机号
     getPhone(val) {
-      console.info(val)
       Object.assign(this.params, val)
       this.currentPage = 1
       this.params.page = 1
@@ -1585,7 +1645,6 @@ export default {
           })
         })
         .catch((err) => {
-          console.log(err)
         })
     },
     // 拒绝弹窗（赠品）
@@ -1645,7 +1704,6 @@ export default {
             })
         })
         .catch((err) => {
-          console.log(err)
         })
     },
 
@@ -1695,9 +1753,7 @@ export default {
     getApprovalDeatail(type, id, applyId, tag) {
       this.checkType = type
       this.initData()
-      console.log(arguments)
       this.currentType = type // 全局配置:申请单类型
-      console.log(type)
       // 体验课调级详情
       if (type === 'ADJUSTMENT_SUP_TRIAL') {
         this.forSonDataApprovalId = id
@@ -1708,19 +1764,28 @@ export default {
       }
       // 补发货详情
       if (type === 'REISSUE') {
+        this.diologRefundTagId = id
         this.$http.Backend.getReplenishDetail(id).then((res) => {
           if (res && res.payload) {
             res.payload.ctimeFormdate = timestamp(res.payload.ctime, 2)
             this.drawerApprovalDeatail = res.payload
             // 对传过来的对象做处理
-            console.log(
-              this.drawerApprovalDeatail,
-              'this.drawerApprovalDeatail'
-            )
             this.giftList = res.payload.productdetails // for 修改补发货数量弹窗数据
             this.drawerApproval = true
           }
         })
+
+        this.$http.RefundApproval.getFlowDetailNodeTable(id).then(
+          ({ code, payload }) => {
+            if (!code) {
+              this.tableDataNode = payload
+              // this.tableDataNode = payload.reduce((pre, cur, index) => {
+              //   pre.push(cur[0])
+              //   return pre
+              // }, [])
+            }
+          }
+        )
       }
       // 退款详情
       if (type === 'REFUND') {
@@ -1732,7 +1797,6 @@ export default {
             res.payload.ctimeFormdate = timestamp(res.payload.ctime, 2)
             this.drawerApprovalDeatail = res.payload
             // 对传过来的对象做处理
-            console.log(this.drawerApprovalDeatail)
             this.drawerApproval = true
             this.userId_wandan = res.payload.userId // 挽救单子表单提交用到
           }
@@ -1990,11 +2054,8 @@ export default {
     handleSelectionChange(val) {
       this.flowApprovalIdList = []
       val.forEach((item) => {
-        console.log(item.id)
         this.flowApprovalIdList.push(item.id)
-        console.log(this.flowApprovalIdList)
       })
-      console.log(val.id, 'checkbox多选改变')
     },
     refundSelection() {},
     // 批量审批
@@ -2030,7 +2091,6 @@ export default {
           }
         })
         .catch((error) => {
-          console.log(error)
           this.$message.error('提交出错啦')
         })
     },
@@ -2100,7 +2160,6 @@ export default {
       ) {
         Object.assign(params, { page: 1, size: 300 })
       }
-      console.log(params, 'paramsparamsparams')
       this.vLoading = true
       this.$http.Backend.checkListPending(params)
         .then(async (res) => {
@@ -2191,14 +2250,12 @@ export default {
       }
       this.$http.Approval.isAggrePass(params)
         .then((res) => {
-          // console.log(res)
           this.adjustResultDialogShow = false
           this.$refs.adjustDrawerCom.handleDrawerClose()
           this.adjustDrawerData.checkSuggestion = ''
           this.$emit('approvalDone')
         })
         .catch((error) => {
-          console.log(error)
           this.$message.error('提交出错啦')
         })
     },
@@ -2320,5 +2377,10 @@ export default {
       }
     }
   }
+}
+</style>
+<style lang="scss">
+.el-image-viewer__mask .el-image-viewer__img {
+  z-index: 8888 !important;
 }
 </style>
