@@ -170,7 +170,7 @@
       <el-form-item label="渠道状态" prop="status">
         <el-switch
           v-model="ruleForm.status"
-          :disabled="tableData.length>0"
+          
           active-text="启用"
           inactive-text="停用"
           active-value="1"
@@ -180,7 +180,7 @@
       </el-form-item>
       <el-form-item>
         <div style="margin-left: 50px">
-          <el-button type="primary" :disabled="this.ruleForm.export == 0 && this.tableData.length != 1" @click="submitForm('ruleForm')"
+          <el-button type="primary" :disabled="this.ruleForm.export == 0 && this.tableData.length == 1" @click="submitForm('ruleForm')"
             >提交</el-button
           >
           <el-button @click="resetForm('ruleForm')">取消</el-button>
