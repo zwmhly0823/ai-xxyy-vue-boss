@@ -78,7 +78,7 @@ export default {
       // 他的下线
       const {
         data: { UserExtendsList },
-      } = await this.$http.User.gesrc/pages/music_app/views/users/views/details/portfolio/index.vuetRecommendList({
+      } = await this.$http.User.getRecommendList({
         send_id: this.pUserId,
         subject: this.$store.state.subjects.subjectCode,
       }).catch((err) => {
