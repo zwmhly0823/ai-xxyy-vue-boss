@@ -123,7 +123,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="是否生成物流" prop="isCardNo">
+        <el-form-item label="是否生成物流" prop="sendExpress">
           <el-radio-group v-model="form.sendExpress">
             <el-radio :label="1">是</el-radio>
             <el-radio :label="0">否</el-radio>
@@ -131,6 +131,12 @@
         </el-form-item>
         <el-form-item label="是否生成卡号" prop="isCardNo">
           <el-radio-group v-model="form.isCardNo">
+            <el-radio :label="1">是</el-radio>
+            <el-radio :label="0">否</el-radio>
+          </el-radio-group>
+        </el-form-item>
+          <el-form-item label="是否立即放课" prop="isSendCourse">
+          <el-radio-group v-model="form.isSendCourse">
             <el-radio :label="1">是</el-radio>
             <el-radio :label="0">否</el-radio>
           </el-radio-group>
@@ -263,7 +269,8 @@ export default {
         // 是否生成卡号  0 不生成 1生成
         isCardNo: 1,
         sendExpress: 1,
-        courseLevel: 'N'
+        courseLevel: 'N',
+        isSendCourse:1,
       },
       levelList: [
         {
