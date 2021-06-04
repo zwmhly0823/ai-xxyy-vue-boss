@@ -136,10 +136,9 @@ export default {
       return result;
     },
     handleParentChange(data) {
-      console.log('ss', data);
     },
     handleSearchEmployees(res) {
-      this.form.roles = [res[0].term];
+      this.form.roles = [res[0].roleId.roleId];
     },
     handleSubmit() {
       const { form } = this
@@ -151,7 +150,6 @@ export default {
         delete form.id
       }
 
-      console.log('hhh', form);
       const flag = Object.keys(form).some((item) => {
         return form[item] === ''
       })

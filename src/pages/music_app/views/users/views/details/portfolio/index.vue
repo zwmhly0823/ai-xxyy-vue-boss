@@ -352,7 +352,6 @@ export default {
       immediate: false,
       deep: true,
       handler(newValue, oldValue) {
-        console.info('作品集-手动切换科目')
         this.reqStudentCourseTaskPage()
       }
     },
@@ -415,14 +414,12 @@ export default {
             }
           },
           (err) => {
-            console.warn(err)
           }
         )
       })
     },
     // 切换课程
     courseBtn(r) {
-      console.info(r)
       if (r.$attrs.courseIds && r.$attrs.courseIds.length) {
         // 写字0元体验课
         this.courseId = r.$attrs.courseIds
@@ -436,7 +433,6 @@ export default {
     },
     // 翻页
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
       this.currentPage = val
       this.reqStudentCourseTaskPage()
     },
@@ -445,13 +441,12 @@ export default {
       this.$http.User.getStudentCourseTaskPage({
         page: this.currentPage,
         subject: this.changeSubject,
-        // studentId: this.studentId,
+        studentId: this.studentId,
         cid: this.studentId,
 
         teamId: this.teamId, // 班级Id
         courseId: this.courseId // 写字0元体验课
       }).then((res) => {
-        console.log('作品集模块接口', res)
         const _data =
           res.data.StudentCourseTaskPage &&
           res.data.StudentCourseTaskPage.content
@@ -483,7 +478,6 @@ export default {
     // 下载图片
     downImg(val) {
       const that = this
-      console.log('下载', val)
       const canvas = document.createElement('canvas')
       const typeName = val.cover_path.lastIndexOf('.')
       const type = val.cover_path.substr(typeName + 1)

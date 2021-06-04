@@ -198,7 +198,7 @@
     <el-drawer
       :visible.sync="drawerApproval"
       :destroy-on-close="true"
-      size="50%"
+      size="30%"
       class="drawer-approval-detail"
       :modal="false"
     >
@@ -854,7 +854,6 @@ export default {
   },
   methods: {
     getSearchData1(val) {
-      console.info('选择部门获取值:', val)
       this.params.page = 1
       this.currentPage = 1
       this.params.departmentIds = val.DepartmentIds
@@ -863,7 +862,6 @@ export default {
       this.checkPending(this.params)
     },
     getSearchData2(val) {
-      console.info('选择老师获取值:', val)
       this.params.page = 1
       this.currentPage = 1
       this.params.teacherIds = val.groupSell ? String(val.groupSell) : ''
@@ -927,7 +925,6 @@ export default {
 
     // 新加手机号
     getPhone(val) {
-      console.info(val)
       Object.assign(this.params, val)
       this.currentPage = 1
       this.params.page = 1
@@ -974,7 +971,6 @@ export default {
             res.payload.ctimeFormdate = timestamp(res.payload.ctime, 2)
             this.drawerApprovalDeatail = res.payload
             // 对传过来的对象做处理
-            console.log(this.drawerApprovalDeatail)
             this.drawerApproval = true
           }
         })
@@ -986,7 +982,6 @@ export default {
             res.payload.ctimeFormdate = timestamp(res.payload.ctime, 2)
             this.drawerApprovalDeatail = res.payload
             // 对传过来的对象做处理
-            console.log(this.drawerApprovalDeatail)
             this.drawerApproval = true
           }
         })
@@ -1060,7 +1055,6 @@ export default {
         .then((res) => {
           if (res && res.payload) {
             const payData = res.payload
-            console.log(payData)
             // 用于显示的和一些杂项
             // 公共部分
             Object.assign(this.adjustDrawerData, {
@@ -1253,7 +1247,6 @@ export default {
             // item.applyDepartment = ''
             return item
           })
-          console.log()
         }
       })
     },
@@ -1315,11 +1308,8 @@ export default {
   }
 }
 </style>
-<style lang="scss" scoped>
+<style lang="scss">
 .el-tabs--border-card > .el-tabs__content {
   padding: 0px;
-}
-/deep/ .el-image-viewer__mask .el-image-viewer__img {
-  z-index: 2888 !important;
 }
 </style>

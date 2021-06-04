@@ -29,26 +29,26 @@
       <searchPhone
         name="userTel"
         @result_lk="getPhone"
-        style="margin-right:20px"
+        style="margin-right: 20px"
       />
       <courseTeam
         @result="getTeamId"
-        style="margin-left:0px;margin-right:20px"
+        style="margin-left: 0px; margin-right: 20px"
       />
       <department
-        style="margin-right:20px"
+        style="margin-right: 20px"
         name="DepartmentIds"
         placeholder="全部部门"
         :onlyDept="1"
         @result="getSearchData1"
       />
       <group-sell
-        style="margin-right:20px"
+        style="margin-right: 20px"
         @result="getSearchData2"
         :name="'groupSell'"
         tip="请选择老师"
       />
-      <tabTimeSelect style="margin-left:0px" @result="getSeacherTime" />
+      <tabTimeSelect style="margin-left: 0px" @result="getSeacherTime" />
       <ActivityName
         v-if="checkTypeAssert !== 'REISSUE'"
         class="inline-search margin_left_20"
@@ -98,33 +98,17 @@
       </el-table-column>
       <el-table-column label="审批类型">
         <template slot-scope="scope">
-          <div v-show="scope.row.type === 'REISSUE'">
-            补发货
-          </div>
-          <div v-show="scope.row.type === 'REFUND'">
-            退款
-          </div>
+          <div v-show="scope.row.type === 'REISSUE'">补发货</div>
+          <div v-show="scope.row.type === 'REFUND'">退款</div>
           <div v-show="scope.row.type === 'ADJUSTMENT_SUP_TRIAL'">
             体验课调级
           </div>
-          <div v-if="scope.row.type === 'ADJUSTMENT_CLASS'">
-            调班
-          </div>
-          <div v-else-if="scope.row.type === 'ADJUSTMENT_SUP'">
-            调级
-          </div>
-          <div v-else-if="scope.row.type === 'ADJUSTMENT_STAGE'">
-            调期
-          </div>
-          <div v-if="scope.row.type === 'PACKAGE_BOX'">
-            随材打包
-          </div>
-          <div v-if="scope.row.type === 'UNCREDITED'">
-            无归属订单审批
-          </div>
-          <div v-if="scope.row.type === 'PROMOTIONS'">
-            赠品
-          </div>
+          <div v-if="scope.row.type === 'ADJUSTMENT_CLASS'">调班</div>
+          <div v-else-if="scope.row.type === 'ADJUSTMENT_SUP'">调级</div>
+          <div v-else-if="scope.row.type === 'ADJUSTMENT_STAGE'">调期</div>
+          <div v-if="scope.row.type === 'PACKAGE_BOX'">随材打包</div>
+          <div v-if="scope.row.type === 'UNCREDITED'">无归属订单审批</div>
+          <div v-if="scope.row.type === 'PROMOTIONS'">赠品</div>
         </template>
       </el-table-column>
       <el-table-column label="用户电话" width="180" prop="userTel">
@@ -199,7 +183,7 @@
     <el-drawer
       :visible.sync="drawerApproval"
       :destroy-on-close="true"
-      size="50%"
+      size="30%"
       class="drawer-approval-detail"
       :modal="false"
     >
@@ -244,15 +228,19 @@
         <el-row>
           <el-col :span="3">收货信息:</el-col>
           <el-col :span="20" :offset="1">{{
-            `${drawerApprovalDeatail.receiptName +
+            `${
+              drawerApprovalDeatail.receiptName +
               '' +
-              drawerApprovalDeatail.receiptTel}~~${drawerApprovalDeatail.receiptAddressProvince +
+              drawerApprovalDeatail.receiptTel
+            }~~${
+              drawerApprovalDeatail.receiptAddressProvince +
               '' +
               drawerApprovalDeatail.receiptAddressCity +
               '' +
               drawerApprovalDeatail.receiptAddressArea +
               '' +
-              drawerApprovalDeatail.receiptAddressDetail}`
+              drawerApprovalDeatail.receiptAddressDetail
+            }`
           }}</el-col>
         </el-row>
         <el-row>
@@ -274,8 +262,8 @@
             <span
               v-if="
                 drawerApprovalDeatail.mode === 'SINGLE' &&
-                  (drawerApprovalDeatail.productInfo.includes('体验') ||
-                    drawerApprovalDeatail.productInfo.includes('系统'))
+                (drawerApprovalDeatail.productInfo.includes('体验') ||
+                  drawerApprovalDeatail.productInfo.includes('系统'))
               "
             >
               （
@@ -335,7 +323,7 @@
           <el-col :span="3">附件:</el-col>
           <el-col :span="18" :offset="1">
             <video
-              style="width: 220px; height: 120px"
+              style="width: 220px; height: 120px;"
               :src="drawerApprovalDeatail.attsUrl"
               controls
             ></video>
@@ -376,7 +364,7 @@
           <el-col :span="5">订单号:</el-col>
           <el-col :span="18" :offset="1"
             >{{ drawerApprovalDeatail.outTradeNo
-            }}<span style="color:red" v-if="drawerApprovalDeatail.isImport"
+            }}<span style="color: red" v-if="drawerApprovalDeatail.isImport"
               >(此为第三方导入订单)</span
             ></el-col
           >
@@ -442,7 +430,7 @@
                 5: '降1年半包',
                 6: '系统课预付款优惠券退款',
                 7: '硬件乐器退款',
-                8: '体验课退差价'
+                8: '体验课退差价',
               }[drawerApprovalDeatail.refundType]
             }}</el-col>
           </el-row>
@@ -450,15 +438,20 @@
             <el-col :span="5">已上课周期:</el-col>
             <el-col :span="18" :offset="1">{{
               `
-           ${Math.floor(
-             drawerApprovalDeatail.periodAlready / 4
-           )}月${drawerApprovalDeatail.periodAlready % 4}周
+           ${Math.floor(drawerApprovalDeatail.periodAlready / 4)}月${
+                drawerApprovalDeatail.periodAlready % 4
+              }周
            `
             }}</el-col>
           </el-row>
-            <el-row>
+          <el-row>
             <el-col :span="5">关联订单:</el-col>
-            <el-col :span="18" :offset="1">{{drawerApprovalDeatail.associatedOrderOutTradeNo && drawerApprovalDeatail.associatedOrderOutTradeNo!=0?`${drawerApprovalDeatail.associatedPackagesName},金额${drawerApprovalDeatail.associatedOrderAmout},订单号${drawerApprovalDeatail.associatedOrderOutTradeNo}`:'无关联'}}</el-col>
+            <el-col :span="18" :offset="1">{{
+              drawerApprovalDeatail.associatedOrderOutTradeNo &&
+              drawerApprovalDeatail.associatedOrderOutTradeNo != 0
+                ? `${drawerApprovalDeatail.associatedPackagesName},金额${drawerApprovalDeatail.associatedOrderAmout},订单号${drawerApprovalDeatail.associatedOrderOutTradeNo}`
+                : '无关联'
+            }}</el-col>
           </el-row>
           <el-row>
             <el-col :span="5">关单赠品:</el-col>
@@ -480,7 +473,7 @@
                 style="width: 50%"
                 v-if="
                   drawerApprovalDeatail.productList &&
-                    drawerApprovalDeatail.productList.length
+                  drawerApprovalDeatail.productList.length
                 "
               >
                 <el-table-column
@@ -498,7 +491,7 @@
           <el-row
             v-if="
               drawerApprovalDeatail.deductMonth === 1 ||
-                drawerApprovalDeatail.deductMonth === 0
+              drawerApprovalDeatail.deductMonth === 0
             "
           >
             <el-col :span="5">次月课程:</el-col>
@@ -509,7 +502,7 @@
           <el-row
             v-if="
               drawerApprovalDeatail.deductMaterial === 1 ||
-                drawerApprovalDeatail.deductMaterial === 0
+              drawerApprovalDeatail.deductMaterial === 0
             "
           >
             <el-col :span="5">随材盒子:</el-col>
@@ -542,7 +535,7 @@
             <el-col :span="18" :offset="1">
               <el-image
                 v-if="drawerApprovalDeatail.attsUrl"
-                style="width: 220px; height: 120px"
+                style="width: 220px; height: 120px;"
                 :src="drawerApprovalDeatail.attsUrl"
                 fit="contain"
                 :preview-src-list="[drawerApprovalDeatail.attsUrl]"
@@ -587,15 +580,14 @@
                 target="_blank"
                 >{{
                   (JSON.parse(drawerApprovalDeatail.sendInfo).mobile || '-') +
-                    '*' +
-                    (JSON.parse(drawerApprovalDeatail.sendInfo).teamName ||
-                      '-') +
-                    '*' +
-                    (JSON.parse(drawerApprovalDeatail.sendInfo)
-                      .departmentName || '-') +
-                    '*' +
-                    (JSON.parse(drawerApprovalDeatail.sendInfo)
-                      .teacherNickname || '-')
+                  '*' +
+                  (JSON.parse(drawerApprovalDeatail.sendInfo).teamName || '-') +
+                  '*' +
+                  (JSON.parse(drawerApprovalDeatail.sendInfo).departmentName ||
+                    '-') +
+                  '*' +
+                  (JSON.parse(drawerApprovalDeatail.sendInfo).teacherNickname ||
+                    '-')
                 }}</el-link
               ></el-col
             >
@@ -687,7 +679,7 @@ export default {
     ActivityName,
     adjustDrawer,
     courseTeam,
-    ApprovalGiftDetail
+    ApprovalGiftDetail,
   },
   watch: {
     activeName(val) {
@@ -699,7 +691,7 @@ export default {
       if (!val) {
         this.currentType = ''
       }
-    }
+    },
   },
   data() {
     return {
@@ -725,7 +717,7 @@ export default {
       // 调期调级调班的drawer数据
       adjustDrawerData: {
         width: '130px',
-        loading: false
+        loading: false,
       },
       isStaffId: false,
       reasonList: {
@@ -739,8 +731,12 @@ export default {
         SINGLE_QUALITY: '产品质量问题',
         // SINGLE_PIGMENT_LEAKAGE: '颜料撒漏'
       },
-      courseOptions: { TESTCOURSE: '体验课', SYSTEMCOURSE: '系统课', TESTCOURSE_SINGLE:'体验课'},
-      currentType: ''
+      courseOptions: {
+        TESTCOURSE: '体验课',
+        SYSTEMCOURSE: '系统课',
+        TESTCOURSE_SINGLE: '体验课',
+      },
+      currentType: '',
     }
   },
   created() {
@@ -760,7 +756,7 @@ export default {
       departmentIds: '', // 新添部门
       teacherIds: '', // 新添老师
       page: 1,
-      size: 20
+      size: 20,
     }
     this.params.isOperation = this.isStaffId ? this.isStaffId : false
 
@@ -768,7 +764,6 @@ export default {
   },
   methods: {
     getSearchData1(val) {
-      console.info('选择部门获取值:', val)
       this.params.page = 1
       this.currentPage = 1
       this.params.departmentIds = val.DepartmentIds
@@ -777,7 +772,6 @@ export default {
       this.checkPending(this.params)
     },
     getSearchData2(val) {
-      console.info('选择老师获取值:', val)
       this.params.page = 1
       this.currentPage = 1
       this.params.teacherIds = val.groupSell ? String(val.groupSell) : ''
@@ -790,7 +784,7 @@ export default {
       if (val) {
         Object.assign(this.params, {
           managementType: val.managementType,
-          period: val.period
+          period: val.period,
         })
         this.checkPending(this.params)
       } else {
@@ -832,7 +826,6 @@ export default {
     },
     // 新加手机号
     getPhone(val) {
-      console.info(val)
       Object.assign(this.params, val)
       this.currentPage = 1
       this.params.page = 1
@@ -845,12 +838,12 @@ export default {
       if (val) {
         Object.assign(this.params, {
           startTime: val.ctime.gte,
-          endTime: val.ctime.lte
+          endTime: val.ctime.lte,
         })
       } else {
         Object.assign(this.params, {
           startTime: '',
-          endTime: ''
+          endTime: '',
         })
       }
       this.checkPending(this.params)
@@ -879,7 +872,6 @@ export default {
             res.payload.ctimeFormdate = timestamp(res.payload.ctime, 2)
             this.drawerApprovalDeatail = res.payload
             // 对传过来的对象做处理
-            console.log(this.drawerApprovalDeatail)
             this.drawerApproval = true
           }
         })
@@ -891,7 +883,6 @@ export default {
             res.payload.ctimeFormdate = timestamp(res.payload.ctime, 2)
             this.drawerApprovalDeatail = res.payload
             // 对传过来的对象做处理
-            console.log(this.drawerApprovalDeatail)
             this.drawerApproval = true
           }
         })
@@ -925,7 +916,7 @@ export default {
       const ADJUST_TYPE = [
         'ADJUSTMENT_CLASS',
         'ADJUSTMENT_STAGE',
-        'ADJUSTMENT_SUP'
+        'ADJUSTMENT_SUP',
       ]
       if (ADJUST_TYPE.includes(type)) {
         this.openAdjustDetail(type, id)
@@ -963,26 +954,26 @@ export default {
               content: [
                 {
                   label: '申请人',
-                  value: payData.applyUserName
+                  value: payData.applyUserName,
                 },
                 {
                   label: '申请人部门',
-                  value: payData.applyUserDeapartmentName
+                  value: payData.applyUserDeapartmentName,
                 },
                 {
                   label: '用户电话',
                   value: payData.userTel,
-                  valueId: payData.userId
+                  valueId: payData.userId,
                 },
                 {
                   label: '订单号',
-                  value: payData.outTradeNo
+                  value: payData.outTradeNo,
                 },
                 {
                   label: '审批类型',
-                  value: typeText
-                }
-              ]
+                  value: typeText,
+                },
+              ],
             })
             // 调期
             if (type === 'ADJUSTMENT_STAGE') {
@@ -990,12 +981,12 @@ export default {
                 [
                   {
                     label: '当前开课时间',
-                    value: payData.currentStartClassDate
+                    value: payData.currentStartClassDate,
                   },
                   {
                     label: '申请开课时间',
-                    value: payData.targetStage
-                  }
+                    value: payData.targetStage,
+                  },
                 ]
               )
             }
@@ -1005,12 +996,12 @@ export default {
                 [
                   {
                     label: '已上课周期',
-                    value: courseLevelReplace(payData.currentPeriod)
+                    value: courseLevelReplace(payData.currentPeriod),
                   },
                   {
                     label: '调级级别',
-                    value: SUP_LEVEL_ALL[payData.targetSup] || '-'
-                  }
+                    value: SUP_LEVEL_ALL[payData.targetSup] || '-',
+                  },
                 ]
               )
             }
@@ -1020,8 +1011,8 @@ export default {
                 [
                   {
                     label: '当前班级',
-                    value: courseLevelReplace(payData.currentClassName)
-                  }
+                    value: courseLevelReplace(payData.currentClassName),
+                  },
                 ]
               )
             }
@@ -1030,20 +1021,20 @@ export default {
               [
                 {
                   label: '选择班级',
-                  value: courseLevelReplace(payData.targetClassName)
+                  value: courseLevelReplace(payData.targetClassName),
                 },
                 {
                   label: '调级理由',
-                  value: payData.adjustReason
+                  value: payData.adjustReason,
                 },
                 {
                   label: '发起时间',
-                  value: timestamp(payData.applyTime, 2)
+                  value: timestamp(payData.applyTime, 2),
                 },
                 {
                   label: '状态',
-                  value: '已撤销'
-                }
+                  value: '已撤销',
+                },
               ]
             )
           }
@@ -1068,39 +1059,39 @@ export default {
               content: [
                 {
                   label: '申请人',
-                  value: payData.applyName
+                  value: payData.applyName,
                 },
                 {
                   label: '申请人部门',
-                  value: payData.applyDepartment
+                  value: payData.applyDepartment,
                 },
                 {
                   label: '用户电话',
                   value: payData.userTel,
-                  valueId: payData.userId
+                  valueId: payData.userId,
                 },
                 {
                   label: '订单号',
-                  value: payData.outTradeNo
+                  value: payData.outTradeNo,
                 },
                 {
                   label: '当前物流状态',
-                  value: payData.currentExpress
+                  value: payData.currentExpress,
                 },
                 {
                   label: '打包数量',
-                  value: payData.packageCount
+                  value: payData.packageCount,
                 },
                 {
                   label: '商品信息',
                   type: 'arrayInfo',
-                  value: JSON.parse(payData.packageProduct)
+                  value: JSON.parse(payData.packageProduct),
                 },
                 {
                   label: '申请理由',
-                  value: payData.applyReason
-                }
-              ]
+                  value: payData.applyReason,
+                },
+              ],
             })
           }
         })
@@ -1125,17 +1116,17 @@ export default {
       if (type === 'ADJUSTMENT_STAGE') {
         this.$router.push({
           path: '/approval/adjust',
-          query: { adjustType: 1 }
+          query: { adjustType: 1 },
         })
       } else if (type === 'ADJUSTMENT_SUP') {
         this.$router.push({
           path: '/approval/adjust',
-          query: { adjustType: 2 }
+          query: { adjustType: 2 },
         })
       } else if (type === 'ADJUSTMENT_CLASS') {
         this.$router.push({
           path: '/approval/adjust',
-          query: { adjustType: 3 }
+          query: { adjustType: 3 },
         })
       }
     },
@@ -1174,8 +1165,8 @@ export default {
           document.body.clientHeight - this.$refs.tableInner.offsetTop - 160
         this.tableHeight = tableHeight + ''
       })
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -1215,3 +1206,4 @@ export default {
   padding: 0px;
 }
 </style>
+

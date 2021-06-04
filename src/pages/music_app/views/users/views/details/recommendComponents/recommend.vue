@@ -19,8 +19,8 @@
           >
             {{
               (recommendHuman.username || '-') +
-                '-' +
-                (recommendHuman.user_num || '-')
+              '-' +
+              (recommendHuman.user_num || '-')
             }}</el-link
           ></el-col
         >
@@ -60,29 +60,28 @@ export default {
     recommendHuman: {
       type: Object,
       default: () => {},
-      required: true
+      required: true,
     },
     pUserId: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
   data() {
     return {
       recommendInfo: false,
-      recommendList: []
+      recommendList: [],
     }
   },
   methods: {
     async getRecommendList() {
       // 他的下线
       const {
-        data: { UserExtendsList }
-      } = await this.$http.User.getRecommendList({
+        data: { UserExtendsList },
+      } = await this.$http.User.gesrc/pages/music_app/views/users/views/details/portfolio/index.vuetRecommendList({
         send_id: this.pUserId,
-        subject: this.$store.state.subjects.subjectCode
+        subject: this.$store.state.subjects.subjectCode,
       }).catch((err) => {
-        console.error(err)
         this.$message.error('该学员推荐下线获取失败')
       })
       if (UserExtendsList.length) {
@@ -91,11 +90,13 @@ export default {
       // else {
       //   this.$message.warning('加油,该学员没有下线')
       // }
-    }
+    },
   },
   mounted() {
-    this.getRecommendList()
-  }
+    if (this.pUserId) {
+      this.getRecommendList()
+    }
+  },
 }
 </script>
 

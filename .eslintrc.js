@@ -4,7 +4,7 @@ module.exports = {
     node: true
   },
   extends: [
-    'plugin:vue/essential',
+    'plugin:vue/essential'
     // '@vue/standard',
     // 'prettier',
     // 'prettier/vue',
@@ -15,8 +15,8 @@ module.exports = {
     parser: 'babel-eslint'
   },
   rules: {
-    'no-console': 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
+    'no-console':'error',
+    'no-debugger':'error'
   },
   overrides: [
     {

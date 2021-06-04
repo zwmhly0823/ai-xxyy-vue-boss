@@ -10,8 +10,7 @@
 // import axios from '../axios'
 import axios from '../axiosConfig'
 import { getAppSubjectCode, injectSubject } from '@/utils/index'
-const subject = getAppSubjectCode()
-console.log(subject)
+const subject = 3
 export default {
   /**
    * 修改学员是否已加微信、已进群状态
@@ -205,6 +204,8 @@ export default {
             user_intention_type
             user_intention_describe
             send_course_count
+            task_course_count
+            last_task_time
             join_course_count
             all_join_course_count
             complete_course_count
@@ -271,6 +272,12 @@ export default {
             }
             expressInfo{
               express_status
+            }
+            userExtends {
+              wechat_no
+              wechat_id
+              wechat_avatar
+              wechat_nick_name
             }
             questionnaire_count
             bi_label
@@ -620,13 +627,11 @@ export default {
   },
   // 学习记录基本信息
   getStudentDetail(term, course_id, sup) {
-    // console.log(query)
     const formattingQuery = JSON.stringify({
       term,
       course_id,
       sup: sup.toLowerCase()
     })
-    console.log(formattingQuery)
     return axios.post(`/graphql/v1/toss`, {
       query: `{
         StudentTrialRecordDetailBossStatistics(
@@ -672,7 +677,7 @@ export default {
   },
   // 学习记录详情页
   getStudentTRecordList(query, teamName = '', sup, page = 1, sort = 'desc') {
-    console.log(teamName)
+    
     teamName &&
       Object.assign(query, {
         'team_name.like': { 'team_name.keyword': `*${teamName}*` }
@@ -681,7 +686,6 @@ export default {
       ...query,
       sup: sup.toLowerCase()
     })
-    console.log(formattingQuery)
     const formattingSort = JSON.stringify({ ctime: sort })
     return axios.post(`/graphql/v1/toss`, {
       query: `{
@@ -813,7 +817,7 @@ export default {
     page,
     subject,
     cid,
-    // studentId,
+    studentId,
     teamId, // 只普通用
     courseId // 只写字0元体验课用
   }) {
@@ -821,18 +825,18 @@ export default {
       courseId && courseId.length
         ? {
             del: 0,
-            subject,
-            cid: cid,
-            // student_id: studentId,
+            subject:3,
+            // cid: cid,
+            cid: studentId,
             team_id: 0,
             // 写字0元体验课
             course_id: courseId
           }
         : {
             del: 0,
-            subject,
-            cid: cid,
-            // student_id: studentId,
+            subject:3,
+            // cid: cid,
+            cid: studentId,
             // normal 体验系统课
             team_id: teamId
           }
@@ -840,7 +844,7 @@ export default {
     return axios.post(`/graphql/v1/toss`, {
       query: `{
         StudentCourseTaskPage(query:${JSON.stringify(formattingQuery)},
-        sort: ${JSON.stringify(`{ "ctime": "asc" }`)},
+        sort: ${JSON.stringify(`{ "ctime": "desc" }`)},
           page: ${page},
           size:20){
             totalPages
@@ -1101,7 +1105,6 @@ export default {
     ctime,
     size = 20
   ) {
-    console.info('小熊币接口触发trans_type值', trans_type)
     const formattingQuery = JSON.stringify({
       subject,
       uid: query,
@@ -1520,7 +1523,6 @@ export default {
 
   // 转介绍记录tab给index取转介绍相关数据
   getDataStatiscsForDetailInDex(query) {
-    console.warn('查询转介绍人数据对象')
     return axios.post('/graphql/v1/toss', {
       query: `{
         Order(
