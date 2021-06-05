@@ -227,13 +227,4 @@ export default {
         })
     })
   },
-  /**
-   * 导出日志
-   */
-   operateExportLog (query) {
-    return axios.post(
-      `/api/b/v1/operateExportLog/add`,
-      query
-    )
-  },
 }

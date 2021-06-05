@@ -15,7 +15,7 @@ const entranceMixins = {
   },
   methods: {
     initOperateExportLog(params) {
-      this.$http.DownloadExcel.operateExportLog(params).then((res) => {}).catch((err) => {
+      this.$http.liveBroadcast.operateExportLog(params).then((res) => {}).catch((err) => {
         this.$message.error(err)
       })
     },
