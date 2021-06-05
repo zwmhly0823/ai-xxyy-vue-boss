@@ -270,7 +270,7 @@ export default {
         isCardNo: 1,
         sendExpress: 1,
         courseLevel: 'N',
-        isSendCourse:1,
+        isSendCourse:0,
       },
       levelList: [
         {
