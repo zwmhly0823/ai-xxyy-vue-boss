@@ -15,8 +15,8 @@ var double = 36
 function geturl(){  
   let urlStr = window.location.origin;
   if(urlStr.indexOf('live')>0){
-    single = 41
-    double = 36
+    single = 39
+    double = 16
   }else if(urlStr.indexOf('prod')>0){
     single = 41
     double = 36
