@@ -51,7 +51,7 @@
         <coinWrite
           ref="colorBear"
           :changeSubject="changeSubject"
-          :bearAmount="bear_amount"
+          :bearAmount="{bear_amount}"
           :childTab="assetCurPane"
           v-else
         />
@@ -167,7 +167,6 @@ export default {
         u_id: this.studentId,
         subject: this.changeSubject,
       }).catch((err) => {
-        console.error(err)
         this.$message.error('获取用户资产_头部数据_失败')
       })
       if (UserExtends) {
