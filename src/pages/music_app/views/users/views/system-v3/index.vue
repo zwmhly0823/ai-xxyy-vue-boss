@@ -26,7 +26,10 @@
         @toggle="handleToggle"
         ref="sidebar"
       />
-      <div :style="`width:calc(100vw - ${systemUserListleftWidth}px)`" ref="systemCon">
+      <div
+        :style="`width:calc(100vw - ${systemUserListleftWidth}px)`"
+        ref="systemCon"
+      >
         <search-system
           @search="getSearchQuery"
           :teacherIds="teacherIds"
@@ -40,7 +43,7 @@
             <div class="statistics-section-left">
               当前结果：学员共计 {{ totalElements }} 名
             </div>
-            <div style="display:flex; align-items:center;">
+            <div style="display: flex; align-items: center">
               数据更新时间：{{ formatDate(new Date(), 'm') || '-' }}
               <el-tooltip class="item" effect="dark" placement="left">
                 <div slot="content">
@@ -68,7 +71,7 @@
                     2、待续费：代表这个用户只有一笔系统课新报订单，没有续费订单
                   </p>
                 </div>
-                <i class="el-icon-warning" style="padding-left:20px;"></i>
+                <i class="el-icon-warning" style="padding-left: 20px"></i>
               </el-tooltip>
 
               <div class="sys-set">
@@ -100,7 +103,7 @@
                     <el-dropdown-item
                       :class="{
                         'sys-v2-background':
-                          tableList.expression.fontSize === '12px'
+                          tableList.expression.fontSize === '12px',
                       }"
                       command="12"
                       >小</el-dropdown-item
@@ -108,7 +111,7 @@
                     <el-dropdown-item
                       :class="{
                         'sys-v2-background':
-                          tableList.expression.fontSize === '14px'
+                          tableList.expression.fontSize === '14px',
                       }"
                       command="14"
                       >中</el-dropdown-item
@@ -116,7 +119,7 @@
                     <el-dropdown-item
                       :class="{
                         'sys-v2-background':
-                          tableList.expression.fontSize === '16px'
+                          tableList.expression.fontSize === '16px',
                       }"
                       command="16"
                       >大</el-dropdown-item
@@ -139,21 +142,27 @@
           >
             <el-table-column label="手机号/ID" width="120" fixed>
               <template slot-scope="scope">
-                <p @click="userHandle(scope.row)" class="primary-text">
-                  {{ scope.row.mobile }}
+                <p @click.self="userHandle(scope.row)" class="primary-text">
+                  {{scope.row.mobile }}
 
-                  <i
+                  <!-- <i
                     @click.stop="handLeCopy(scope.row)"
                     class="el-icon-document-copy"
                   >
-                  </i>
+                  </i> -->
+                  <i
+                    class="el-icon-view mg-l-5"
+                    style="margin-left:10px"
+                    @click="getNumber(scope.row.studentid)"
+                  ></i>
                 </p>
+
                 <p>
                   <span v-if="scope.row.user_num_text"
                     >ID: {{ scope.row.user_num_text }} · </span
                   ><span
                     v-if="scope.row.send_id > 0"
-                    style="color: rgb(255, 139, 140);"
+                    style="color: rgb(255, 139, 140)"
                     >R</span
                   >
                 </p>
@@ -199,7 +208,7 @@
                               (sortKeys['taskcount'] != 'asc' &&
                                 sortActive == 'taskcount') ||
                               (sortKeys['flagcount'] != 'asc' &&
-                                sortActive == 'flagcount')
+                                sortActive == 'flagcount'),
                           }"
                         ></i>
                         <i
@@ -217,7 +226,7 @@
                               (sortKeys['taskcount'] == 'asc' &&
                                 sortActive == 'taskcount') ||
                               (sortKeys['flagcount'] == 'asc' &&
-                                sortActive == 'flagcount')
+                                sortActive == 'flagcount'),
                           }"
                         ></i>
                       </div>
@@ -227,7 +236,7 @@
                         <div
                           class="sort-operate-box"
                           :style="{
-                            'font-size': tableList.expression.fontSize
+                            'font-size': tableList.expression.fontSize,
                           }"
                         >
                           <span>按参课节数</span>
@@ -237,7 +246,7 @@
                               :class="{
                                 active:
                                   sortKeys['noactivecount'] != 'asc' &&
-                                  sortActive == 'noactivecount'
+                                  sortActive == 'noactivecount',
                               }"
                             ></i>
                             <i
@@ -245,7 +254,7 @@
                               :class="{
                                 active:
                                   sortKeys['noactivecount'] == 'asc' &&
-                                  sortActive == 'noactivecount'
+                                  sortActive == 'noactivecount',
                               }"
                             ></i>
                           </div>
@@ -255,7 +264,7 @@
                         <div
                           class="sort-operate-box"
                           :style="{
-                            'font-size': tableList.expression.fontSize
+                            'font-size': tableList.expression.fontSize,
                           }"
                         >
                           <span>按完课节数</span>
@@ -265,7 +274,7 @@
                               :class="{
                                 active:
                                   sortKeys['activecount'] != 'asc' &&
-                                  sortActive == 'activecount'
+                                  sortActive == 'activecount',
                               }"
                             ></i>
                             <i
@@ -273,7 +282,7 @@
                               :class="{
                                 active:
                                   sortKeys['activecount'] == 'asc' &&
-                                  sortActive == 'activecount'
+                                  sortActive == 'activecount',
                               }"
                             ></i>
                           </div>
@@ -283,7 +292,7 @@
                         <div
                           class="sort-operate-box"
                           :style="{
-                            'font-size': tableList.expression.fontSize
+                            'font-size': tableList.expression.fontSize,
                           }"
                         >
                           <span>按点评次数</span>
@@ -293,7 +302,7 @@
                               :class="{
                                 active:
                                   sortKeys['flag_total_count'] != 'asc' &&
-                                  sortActive == 'flag_total_count'
+                                  sortActive == 'flag_total_count',
                               }"
                             ></i>
                             <i
@@ -301,7 +310,7 @@
                               :class="{
                                 active:
                                   sortKeys['flag_total_count'] == 'asc' &&
-                                  sortActive == 'flag_total_count'
+                                  sortActive == 'flag_total_count',
                               }"
                             ></i>
                           </div>
@@ -311,7 +320,7 @@
                         <div
                           class="sort-operate-box"
                           :style="{
-                            'font-size': tableList.expression.fontSize
+                            'font-size': tableList.expression.fontSize,
                           }"
                         >
                           <span>按打开APP次数</span>
@@ -321,7 +330,7 @@
                               :class="{
                                 active:
                                   sortKeys['open_app_count'] != 'asc' &&
-                                  sortActive == 'open_app_count'
+                                  sortActive == 'open_app_count',
                               }"
                             ></i>
                             <i
@@ -329,7 +338,7 @@
                               :class="{
                                 active:
                                   sortKeys['open_app_count'] == 'asc' &&
-                                  sortActive == 'open_app_count'
+                                  sortActive == 'open_app_count',
                               }"
                             ></i>
                           </div>
@@ -339,7 +348,7 @@
                         <div
                           class="sort-operate-box"
                           :style="{
-                            'font-size': tableList.expression.fontSize
+                            'font-size': tableList.expression.fontSize,
                           }"
                         >
                           <span>按上传作品张数</span>
@@ -349,7 +358,7 @@
                               :class="{
                                 active:
                                   sortKeys['taskcount'] != 'asc' &&
-                                  sortActive == 'taskcount'
+                                  sortActive == 'taskcount',
                               }"
                             ></i>
                             <i
@@ -357,7 +366,7 @@
                               :class="{
                                 active:
                                   sortKeys['taskcount'] == 'asc' &&
-                                  sortActive == 'taskcount'
+                                  sortActive == 'taskcount',
                               }"
                             ></i>
                           </div>
@@ -367,7 +376,7 @@
                         <div
                           class="sort-operate-box"
                           :style="{
-                            'font-size': tableList.expression.fontSize
+                            'font-size': tableList.expression.fontSize,
                           }"
                         >
                           <span>按听点评次数</span>
@@ -377,7 +386,7 @@
                               :class="{
                                 active:
                                   sortKeys['flagcount'] != 'asc' &&
-                                  sortActive == 'flagcount'
+                                  sortActive == 'flagcount',
                               }"
                             ></i>
                             <i
@@ -385,7 +394,7 @@
                               :class="{
                                 active:
                                   sortKeys['flagcount'] == 'asc' &&
-                                  sortActive == 'flagcount'
+                                  sortActive == 'flagcount',
                               }"
                             ></i>
                           </div>
@@ -411,7 +420,7 @@
                           class="sys-v2-head"
                           :src="
                             scope.row.userExtends &&
-                              scope.row.userExtends.wechat_avatar
+                            scope.row.userExtends.wechat_avatar
                           "
                           alt=""
                         />
@@ -427,8 +436,9 @@
                   <!-- 学习进度 -->
                   <div v-if="item.title === '学习进度' && item.flag">
                     <p>
-                      {{ SUP_LEVEL_ALL[scope.row.currentsuper] }}{{ scope.row.currentlevel
-                      }}{{ scope.row.currentunit }}{{ scope.row.currentlesson }}
+                      {{ SUP_LEVEL_ALL[scope.row.currentsuper]
+                      }}{{ scope.row.currentlevel }}{{ scope.row.currentunit
+                      }}{{ scope.row.currentlesson }}
                     </p>
                   </div>
                   <!-- 学习概况 -->
@@ -465,8 +475,10 @@
                     <p v-if="!scope.row.teamname || scope.row.teamname === '-'">
                       -
                     </p>
-                    <p class="btn-text " v-else @click="openTeam(scope.row)">
-                      {{ scope.row.realname }} ({{ courseLevelReplace(scope.row.teamname) }})
+                    <p class="btn-text" v-else @click="openTeam(scope.row)">
+                      {{ scope.row.realname }} ({{
+                        courseLevelReplace(scope.row.teamname)
+                      }})
                     </p>
                     <p>{{ scope.row.departmentname }}</p>
                   </div>
@@ -500,7 +512,7 @@
                   </div>
                   <!-- 剩余周数 -->
                   <div v-if="item.title === '剩余周数' && item.flag">
-                    <p>{{ scope.row.remaining_week}}</p>
+                    <p>{{ scope.row.remaining_week }}</p>
                   </div>
                   <!-- 放课/结课时间 -->
                   <div v-if="item.title === '放课/结课时间' && item.flag">
@@ -527,8 +539,8 @@
                     <p
                       v-if="
                         scope.row.user_status === 5 ||
-                          scope.row.user_status === 6 ||
-                          scope.row.user_status === 7
+                        scope.row.user_status === 6 ||
+                        scope.row.user_status === 7
                       "
                     >
                       年课
@@ -536,7 +548,7 @@
                     <p
                       v-if="
                         scope.row.user_status === 11 ||
-                          scope.row.user_status === 12
+                        scope.row.user_status === 12
                       "
                     >
                       半年课
@@ -683,7 +695,7 @@ import ModifyAddress from '../../components/ModifyAddress.vue'
 import enums from '../../components/searchData'
 import { formatData, openBrowserTab } from '@/utils/index'
 import { FOLLOW_EXPRESS_STATUS, ISREFUND } from '@/utils/enums'
-import {SUP_LEVEL_ALL,courseLevelReplace} from '@/utils/supList'
+import { SUP_LEVEL_ALL, courseLevelReplace } from '@/utils/supList'
 import CouponPopover from '../../../studentTeam/components/TabPane/components/couponPopover'
 export default {
   name: 'systemUsers',
@@ -698,20 +710,20 @@ export default {
     ModifyAddress,
     // labelCheckbox,
     NewBaseUserInfo,
-    CouponPopover
+    CouponPopover,
   },
   computed: {
     searchParams() {
       return {
         ...this.search,
-        ...this.filterParams
+        ...this.filterParams,
         // life_cycle: this.life_cycle.split(',')
       }
-    }
+    },
   },
   data() {
     return {
-      systemUserListleftWidth:375,
+      systemUserListleftWidth: 375,
       SUP_LEVEL_ALL,
       courseLevelReplace,
       openColumnLsit: false,
@@ -726,8 +738,8 @@ export default {
       tableList: {
         expression: {
           column: [],
-          fontSize: '12px'
-        }
+          fontSize: '12px',
+        },
       },
       isOpened: true,
       conversionType: enums.conversionType,
@@ -744,7 +756,7 @@ export default {
         flag_total_count: 'desc',
         activecount: 'desc',
         taskcount: 'desc',
-        open_app_count: 'desc' // 打开app
+        open_app_count: 'desc', // 打开app
       },
       sortActive: '',
       couponData: [],
@@ -753,13 +765,13 @@ export default {
       studentid: '',
       teacher_: {},
       filterParams: {},
-      currentDate: ''
+      currentDate: '',
+      operatorId: '',
+      userPhone:''
     }
   },
   watch: {
     searchParams(params) {
-      console.log(params, 'searchParamssearchParams')
-      console.info('llllllll', this.life_cycle)
       // dashboard_lk
       if (Object.keys(this.$route.query).length > 0) {
         for (const key in this.$route.query) {
@@ -769,7 +781,7 @@ export default {
             [key]:
               key === 'expressstatus'
                 ? [this.$route.query[key]]
-                : +this.$route.query[key]
+                : +this.$route.query[key],
           })
         }
         return
@@ -778,8 +790,7 @@ export default {
       this.getData()
     },
     search(val) {
-      console.log(val, 'val')
-    }
+    },
   },
   created() {
     this.init()
@@ -789,11 +800,29 @@ export default {
       const key = Object.keys(this.$route.query)[0]
       this.$root.$emit(key + '_lk', this.$route.query[key])
     }
+    this.operatorId = JSON.parse(localStorage.getItem('staff')).id
   },
   methods: {
+    //获取学生号码
+    getNumber(uid) {
+      this.$http.User.getUserPhoneNumber({
+        uid: uid,
+        teacherId: this.operatorId,
+      }).then((res) => {
+        if (res.code == 0) {
+          this.userPhone = res.payload.mobile
+          this.dataList.forEach((item,index) => {
+             if(item.studentid == uid) {
+               this.dataList[index].mobile = this.userPhone 
+             }
+          });
+        } else {
+          this.$message.error('网络异常，请稍后再试！')
+        }
+      })
+    },
     // 操作列的下拉
     handleColumnCommand(command, user = {}, index) {
-      console.log(command, user, index)
       this.currentUser = user
       this.studentid = user.studentid
       this.$refs.couponDialog.issueCoupons = true
@@ -828,7 +857,7 @@ export default {
         lock: true,
         text: '加载中',
         spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.1)'
+        background: 'rgba(0, 0, 0, 0.1)',
       })
       //   const teacher = {}
       //   if (!Object.keys(this.searchParams).includes('teacherid')) {
@@ -855,14 +884,16 @@ export default {
         cid: value.id,
         type: 'PERSONAL',
         systemType: 'BOSS',
-        pageCode: 'boss_system_student_list_page'
+        pageCode: 'boss_system_student_list_page',
       }
       this.$http.User.getTeacherFollowGroups(data)
         .then((res) => {
-          console.log(res.payload[res.payload.length - 1], '获取自定义列表')
-      
+
           if (res.code === 0) {
-            if (res.payload.length > 0&&JSON.parse(res.payload[0].expression).column.length>0) {
+            if (
+              res.payload.length > 0 &&
+              JSON.parse(res.payload[0].expression).column.length > 0
+            ) {
               this.columnLsit = true
               res.payload[res.payload.length - 1].expression = JSON.parse(
                 res.payload[res.payload.length - 1].expression
@@ -886,10 +917,10 @@ export default {
                     { title: '最近一条服务记录', flag: true, size: '220' },
                     { title: '最近一次活跃', flag: true, size: '160' },
                     { title: '销售/班级', flag: true, size: '190' },
-                    { title: '续费次数', flag: true, size: '90' }
+                    { title: '续费次数', flag: true, size: '90' },
                   ],
-                  fontSize: '12px'
-                }
+                  fontSize: '12px',
+                },
               }
               this.keyDate = new Date().getTime()
             }
@@ -902,17 +933,16 @@ export default {
     // 修改列表
     tableSet(val) {
       const value = JSON.parse(localStorage.getItem('staff'))
-      console.log(this.columnLsit, 'columnLsit-------------')
       let params
       if (val) {
         params = {
           column: val,
-          fontSize: this.tableList.expression.fontSize
+          fontSize: this.tableList.expression.fontSize,
         }
       } else {
         params = {
           column: this.tableList.expression.column,
-          fontSize: this.tableList.expression.fontSize
+          fontSize: this.tableList.expression.fontSize,
         }
       }
       const data = {
@@ -921,12 +951,11 @@ export default {
         systemType: 'BOSS',
         pageCode: 'boss_system_student_list_page',
         name: '系统课学员自定义排版',
-        expression: JSON.stringify(params)
+        expression: JSON.stringify(params),
       }
       if (this.columnLsit) {
         const obj = Object.assign(data, { id: this.tableList.id })
         this.$http.User.updateTeacherFollowGroup(obj).then((res) => {
-          console.log(res)
           if (res.code === 0) {
             this.keyDate = new Date().getTime()
             res.payload.expression = JSON.parse(res.payload.expression)
@@ -935,7 +964,6 @@ export default {
         })
       } else {
         this.$http.User.addTeacherFollowGroup(data).then((res) => {
-          console.log(res)
           if (res.code === 0) {
             this.columnLsit = true
             this.keyDate = new Date().getTime()
@@ -947,7 +975,6 @@ export default {
     },
     // 修改字号
     async handleFontSize(res) {
-      console.log('字号', res)
       this.tableList.expression.fontSize = (await res) + 'px'
       this.tableSet()
     },
@@ -959,16 +986,14 @@ export default {
     },
     // 多选
     handleSelectionChange(data) {
-      console.log(data)
     },
     getFilter(data) {
       this.filterParams = data || {}
-      console.log(this.filterParams, 'filter')
     },
     // 左侧伸缩开关
     handleToggle(data) {
-      this.isOpened = data;
-      this.systemUserListleftWidth = data?375:0;
+      this.isOpened = data
+      this.systemUserListleftWidth = data ? 375 : 0
     },
     handLeCopy(row) {
       const url = row.mobile
@@ -979,12 +1004,11 @@ export default {
       document.execCommand('Copy')
       this.$message({
         message: '复制成功',
-        type: 'success'
+        type: 'success',
       })
       oInput.remove()
     },
     getSearchQuery(res) {
-      console.log(res, 'search result')
       this.search = res
     },
     onRefresh(data) {
@@ -1039,7 +1063,7 @@ export default {
         lock: true,
         text: '加载中',
         spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.1)'
+        background: 'rgba(0, 0, 0, 0.1)',
       })
       // 如果搜索销售，用获取的老师id替换权限老师id
       // const teacher = {}
@@ -1052,7 +1076,6 @@ export default {
         this.searchParams.life_cycle = ['0', '1', '2', '3', '91']
       }
       const query = Object.assign({}, this.searchParams)
-      console.log(query)
       const page = this.currentPage
       const sort = {}
       if (this.sortActive) {
@@ -1060,7 +1083,6 @@ export default {
       }
       this.$http.User.systemCourseUsers(query, page, sort)
         .then((res) => {
-          console.log(res)
           const payload =
             res && res.data && res.data.StudentSystemStatisticsPage
           var defTotalElements = 0
@@ -1083,15 +1105,13 @@ export default {
     },
     // dashboard_lk
     getData_dashBoard(query) {
-      console.info(query)
       const teacherid = JSON.parse(localStorage.getItem('teacher')).id // 带不带老师id
       setTimeout(() => {
-        console.info('3秒后我来了')
         const loading = this.$loading({
           lock: true,
           text: '来自m.2星球',
           spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.1)'
+          background: 'rgba(0, 0, 0, 0.1)',
         })
         this.$http.User.systemCourseUsers(
           Object.assign(
@@ -1100,7 +1120,6 @@ export default {
           ) // 带不带老师id
         )
           .then((res) => {
-            console.info('来自m.2星球的网络请求')
             const payload =
               res && res.data && res.data.StudentSystemStatisticsPage
             var defTotalElements = 0
@@ -1113,7 +1132,6 @@ export default {
               defContent = content
             }
             this.dataList = defContent
-            console.log(this.dataList)
             this.totalPages = +defTotalPages
             this.totalElements = +defTotalElements
             loading.close()
@@ -1124,7 +1142,6 @@ export default {
       }, 1500) // 等一手初始化数据再覆盖它
     },
     handleSizeChange(page) {
-      console.log(this.page)
       this.currentPage = page
       this.getData()
     },
@@ -1145,18 +1162,16 @@ export default {
         this.sortKeys[this.sortActive] =
           this.sortKeys[this.sortActive] === 'asc' ? 'desc' : 'asc'
       }
-      console.log(sortKey, 'sortkkkkkk')
       this.sortActive = sortKey
       this.getData()
     },
     // 修改开关
     changeSwitch(val, data, index, type) {
-      console.log(data, 'data------')
       const params = {
         teamId: data.teamid,
         courseType:
           data.teamInfo && +data.teamInfo.team_type === 0 ? 'TRAIL' : 'YEAR',
-        studentId: data.studentid
+        studentId: data.studentid,
       }
       if (type === 'wechat') {
         params.addedWechat = val
@@ -1167,7 +1182,7 @@ export default {
         if (res && res.code === 0) {
           this.$message({
             message: '修改成功',
-            type: 'success'
+            type: 'success',
           })
         } else {
           // 换成原值
@@ -1182,7 +1197,6 @@ export default {
     },
     // 填写地址
     modifyAddress(row) {
-      console.log(row)
       /**
         orderId: this.formData.orderid,
         expressId: this.formData.id,
@@ -1191,7 +1205,7 @@ export default {
       const params = {
         userid: row.studentid,
         orderid: row.orderid,
-        id: row.express_id
+        id: row.express_id,
       }
       this.modifyFormData = params
       this.showModifyAddress = true
@@ -1236,7 +1250,7 @@ export default {
         addedwechat,
         follow,
         studentid,
-        teamid
+        teamid,
       } = row
       return {
         team_type: teamtype,
@@ -1244,7 +1258,7 @@ export default {
         added_wechat: addedwechat,
         follow,
         id: studentid,
-        team_id: teamid
+        team_id: teamid,
       }
     },
     // 点击班级名称，打开班级详情
@@ -1312,8 +1326,8 @@ export default {
     },
     formatDate(date, flag = 's') {
       return formatData(date, flag)
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>
@@ -1414,11 +1428,11 @@ $primary-color: rgb(255, 139, 140);
 }
 </style>
 <style lang="scss">
-.systemUserList{
-  .system-container-sidebar{
+.systemUserList {
+  .system-container-sidebar {
     &.closed {
-      .system-list-sidebar{
-        width:0;
+      .system-list-sidebar {
+        width: 0;
       }
     }
   }
