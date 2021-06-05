@@ -55,11 +55,13 @@ export default {
   },
   /**
    * 获取体验课、系统课列表
+   * 
    */
   getCourseListByType (params) {
     const page = params.page - 1
+
     return axios.get(
-      `/api/s/v1/management/enroll/count/page?courseType=${params.courseType}&pageSize=${params.size}&pageNumber=` +
+      `/api/s/v1/management/v/enroll/count/page?courseType=${params.courseType}&pageSize=${params.size}&separatePeriod=52&pageNumber=` +
       page
     )
   },
@@ -126,9 +128,9 @@ export default {
   /**
    * 招生排期第一步，第二步之间 分配占比设置-add
    */
-  addLeads (params, period) {
+  addLeads (params, period, courseType='') {
     return axios.post(
-      `/api/t/v1/teacher/course/enroll/teacher/channel/config/save?period=${period}`,
+      `/api/t/v1/teacher/course/enroll/teacher/channel/config/save?period=${period}${courseType?'&courseType='+courseType:''}`,
       params
     )
   },
@@ -198,6 +200,8 @@ export default {
   /**
    *
    *招生排期 详情 列表
+   * 单周  双周  系统
+   * 2 0 1
    */
   getScheduleDetailList (params) {
     return axios.get(
@@ -221,6 +225,11 @@ export default {
   getScheduleDetailStatistic (params) {
     return axios.get(
       `/api/s/v1/management/enroll/calculation/byPeriod?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&level=${params.level}&courseType=${params.courseType}&period=${params.period}&courseDifficulties=${params.courseDifficulties}`
+    )
+  },
+  getDividerPeriod (params) {
+    return axios.get(
+      `/api/s/v1/management/getNewManagement?type=${params.type}&category=${params.category}`
     )
   },
   /**
@@ -410,6 +419,8 @@ export default {
             channel_class_name
             p_channel_class_name
             p_channel_class_id
+            contract_id
+            contract_name
           }
         }
       }`
@@ -707,6 +718,34 @@ export default {
       `/api/t/v1/enroll/updateStatusByPeriod?period=${params.period}&status=${params.status}&courseType=${params.courseType}`
     )
   },
+  /**
+   * 获取招生容量 列表
+   *
+   */
+  getScheduleVolumeList (params) {
+    let pageNum = params.pageNum
+    return axios.post(
+      `/api/t/v1/teacher/course/enrollSchedule/teacher/config?pageNum=${--pageNum}&pageSize=${params.size
+      }&courseType=${params.courseType}&period=${params.period
+      }&courseDifficulty=${params.courseDifficulty}&departmentIds=${params.departmentIds
+      }&teacherWechatIds=${params.teacherWechatIds}&levels=${params.levels
+      }&courseVersion=${params.courseVersion}`,
+      params.ids
+    )
+  },
+  /**
+   * @description 新版体验课 设置招生容量列表
+   */
+  trialSetVolumeList (params) {
+    let pageNum = params.pageNum
+    return axios.post(
+      `/api/t/v1/teacher/course/v/enroll/teacher/config?pageNum=${--pageNum}&pageSize=${params.size
+      }&courseType=${params.courseType}&period=${params.period
+      }&courseDifficulty=${params.courseDifficulty}`,
+      params.ids
+    )
+  },
+
   // 转介绍招生数
   getIntroduceCountByIds (query) {
     return axios.get(
@@ -763,7 +802,7 @@ export default {
     )
   },
   // 体验课定向排期列表
-  getTrialOperPeroid(params) {
+  getTrialOperPeroid (params) {
     return axios.get(
       `/api/s/v1/managementChannel/getConfigPage?channelIds=${params.channelIds
       }&pageNumber=${params.pageNumber}&pageSize=${params.pageSize}&type=${params.type
@@ -775,13 +814,21 @@ export default {
   * @description 获取课程类型
   * @params courseType { 0: 体验课； 1： 系统课}
   */
-  getCourseListByCourseType(params) {
+  getCourseListByCourseType (params) {
     return axios.get(
       `/api/t/v1/teacher/category/config/getByCourseType?courseType=${params.courseType}`
     )
   },
   // 体验课新建定向招生渠道
-  saveConfigTrialOperPeroid(params) {
+  saveConfigTrialOperPeroid (params) {
+    return axios.post(
+      '/api/s/v1/managementChannel/saveConfig',
+      JSON.stringify(params)
+    )
+  },
+
+  // 体验课新建定向招生渠道
+  saveConfigTrialOperPeroid (params) {
     return axios.post(
       '/api/s/v1/managementChannel/saveConfig',
       JSON.stringify(params)
@@ -789,7 +836,7 @@ export default {
   },
 
   // 体验课编辑定向招生渠道
-  editConfigTrialOperPeroid(params) {
+  editConfigTrialOperPeroid (params) {
     const curstomQuery = {
       id: params.id,
       period: params.period,
@@ -802,7 +849,140 @@ export default {
   },
 
   // 体验课定向招生渠道切换启用、禁用状态
-  switchStatusTrialOperPeroid(params) {
+  switchStatusTrialOperPeroid (params) {
     return axios.post('/api/s/v1/managementChannel/switchStatus', params)
-  }
+  },
+  /**
+   * 新版体验课 新增招生排期第一步-edit获取数据
+   */
+  getTrialScheduleFirstStep (params) {
+    return axios.get(
+      `/api/s/v1/management/enroll/sell?courseType=${params.courseType}&period=${params.period}`
+    )
+  },
+  /**
+   * 体验课 新增招生排期第一步-add
+   */
+  addTrialScheduleFirstStep (params) {
+    return axios.post(`/api/s/v1/management/enroll/sell/save`, params)
+  },
+  /**
+   * 招生排期 保存老师 
+   * 其中  courseType    0 双周|3单周|2系统课
+   */
+  saveAddTeacherWxList (params) {
+    const { courseDifficulty, period, wxList, courseType } = params
+    return axios.post(`/api/t/v1/teacher/course/v/enroll/teacher/teacherInfo?courseDifficulty=${courseDifficulty}&period=${period}&courseType=${courseType}`, wxList)
+  },
+  /**
+ * 保存 招生排期 设置
+ */
+  saveTrialVolumeRow (params) {
+    const { courseType, period, category } = params
+    return axios.post(
+      `/api/t/v1/teacher/course/v/enroll/config/save?courseType=${courseType}&period=${period}&category=${category ||
+      ''}`,
+      params.body
+    )
+  },
+  /**
+   *
+   *渠道查询（根据期数查询，作用于新版体验课）
+   */
+  getTrialChannelList (params = '') {
+    return axios.get(
+      `/api/t/v1/teacher/direct/getAllChannel?period=${params.period
+      }&courseType=${params.courseType}`
+    )
+  },
+  // 获取渠道来源 filter: 过滤关键词  eg：filter:"抖音"
+  getChannel (params) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        ChannelAllList(query:${JSON.stringify(
+        JSON.stringify(params.subject)
+      )}) {
+            id
+            channel_class_id
+            channel_outer_name
+          }
+        }
+      `
+    })
+  },
+  /** 添加定向分配老师下拉菜单 */
+  getDirectTeacherList (params) {
+    return axios.get(
+      `/api/t/v1/teacher/direct/getDirectTeacher?courseType=${params.courseType
+      }&period=${params.period}&category=${params.category || ''}`
+    )
+  },
+  /** 保存定向分配渠道 */
+  saveDirectChannel (params) {
+    const { directConfigList = [], courseType = '0', category } = params
+    return axios.post(
+      `/api/t/v1/teacher/direct/saveDirectChannel?courseType=${courseType}&category=${category ||
+      ''}`,
+      directConfigList
+    )
+  },
+  /**
+   * 定向渠道列表
+   */
+  getDirecteChannelList (params) {
+    const {
+      channelIds = [],
+      teacherIds = '',
+      pageNum = '0',
+      pageSize = 5,
+      courseType = '0',
+      period
+    } = params
+    return axios.get(
+      `/api/t/v1/teacher/direct/findDirectList?channelIds=${channelIds}&teacherIds=${teacherIds}&pageNum=${pageNum -
+      1}&pageSize=${pageSize}&courseType=${courseType}&period=${period}`
+    )
+  },
+  /** 修改定向状态 */
+  updateDirectStatus (params) {
+    return axios.get(
+      `/api/t/v1/teacher/direct/updateSelfStatus?status=${params.status}&id=${params.id}`
+    )
+  },
+  /** 修改其它状态 */
+  updateOthertStatus (params) {
+    return axios.get(
+      `/api/t/v1/teacher/direct/updateOtherStatus?status=${params.status}&id=${params.id}`
+    )
+  },
+  /**
+   *
+   *招生排期(新版体验课) 详情 基本信息表格统计
+   */
+  getTrialDetailStatistic (params) {
+    return axios.get(
+      `/api/s/v1/management/v/enroll/calculation/byPeriod?channelIds=${params.channel}&category=${params.category}&overshootStatus=${params.overshootStatus}&conversionStatus=${params.conversionStatus}&marketStatus=${params.marketStatus}&teacherIds=${params.teacherId}&departmentIds=${params.departmentIds}&courseType=${params.courseType}&period=${params.period}&courseDifficulties=${params.courseDifficulties}`
+    )
+  },
+  /**
+   *
+   *招生排期(新版体验课) 详情 平均招生完成率
+   */
+   getTrialEnrollRate(params) {
+    return axios.post(
+      `/api/t/v1/teacher/course/getEnrollRate?period=${params.period}&courseType=${params.courseType}`
+    )
+  },
+  /**
+   *
+   *招生排期 详情 列表(新版)
+   * 单周  双周  系统
+   * 3 0 2
+   */
+   getTrialDetailList(params) {
+    return axios.get(
+      `/api/s/v1/management/v/enroll/getDetail?teacherIds=${params.teacherId}&departmentIds=${params.departmentIds}&courseType=${params.courseType}&period=${params.period}&courseDifficulties=${params.courseDifficulties}&overshootStatus=${params.overshootStatus}&channelIds=${params.channel}&conversionStatus=${params.conversionStatus}&marketStatus=${params.marketStatus}&pageSize=${params.size}&pageNumber=` +
+        params.pageNum
+    )
+  },
 }
