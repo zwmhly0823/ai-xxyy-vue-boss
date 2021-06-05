@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-24 15:22:49
+ * @LastEditTime: 2021-03-17 17:00:24
  -->
 <template>
   <div>
@@ -140,25 +140,30 @@
             align="center"
             prop="planTeam"
             label="计划班级人数"
+            width="100"
           ></el-table-column>
-          <el-table-column prop="realTeam" label="已开班级数"></el-table-column>
+          <el-table-column
+            align="center"
+            prop="realTeam"
+            label="已开班级数"
+          ></el-table-column>
           <el-table-column
             align="center"
             prop="teacherWechatNos"
             label="绑定微信号"
-          >
-             <template slot-scope="scope">
-              {{scope.row.weixinNo||scope.row.teacherWechatNos}}
-            </template>
-          </el-table-column>
+          ></el-table-column>
           <el-table-column
             align="center"
             prop="courseVersion"
             label="课程和材料版本"
             width="120"
           ></el-table-column>
-           <el-table-column label="课程类型" width="120" align="center">
-            <template slot-scope="scope">
+          <el-table-column
+            label="课程类型"
+            width="140"
+            align="center"
+          >
+          <template slot-scope="scope">
               <span>{{ classIdTranName(scope.row.courseCategory) }}</span>
             </template>
           </el-table-column>
@@ -171,49 +176,48 @@
 <script>
 import EleTable from '@/components/Table/EleTable'
 import { COURSECATEGORY } from '@/utils/enums'
-import { SUP_LEVEL_ALL,Sup_scheduleSubmit,Sup_scheduleIndex } from '@/utils/supList'
+import {SUP_LEVEL_ALL,Sup_scheduleIndex} from '@/utils/supList'
 export default {
   props: {
     paramsInfo: {
       type: Object,
-      default: () => ({}),
-    },
+      default: () => ({})
+    }
   },
   components: {
-    EleTable,
+    EleTable
   },
   data() {
     return {
+      courseCategoryList:[],
       SUP_LEVEL_ALL,
       courseCategory: {
         0: '双周体验课',
         2: '年系统课',
         3: '单周体验课',
-        4: '半年系统课',
+        4: '半年系统课'
       },
       courseType: '0',
       totalElements: 0,
       flags: {
-        loading: false,
+        loading: false
       },
       resultStatistics: {},
       tabQuery: {
         size: 20,
-        pageNum: 1,
+        pageNum: 1
       },
       // 总页数
       totalPages: 1,
       // 当前页数
       // 表格数据
-      tableData: [],
-      courseArr: [],
+      tableData: []
     }
   },
   computed: {
     calcIndex() {
       return this.tabQuery.size * (this.tabQuery.pageNum - 1)
     },
-    // 课程类型 id转换 name
     classIdTranName() {
       return (data) => {
         if (data && data.length) {
@@ -234,31 +238,28 @@ export default {
         this.tabQuery = {
           ...this.tabQuery,
           ...val,
-          pageNum: 1,
+          pageNum: 1
         }
         this.init()
         // 表格内统计
         // this.getScheduleDetailStatistic()
-      },
-    },
+      }
+    }
   },
   async created() {
     this.init()
-    },
-  mounted() {
-    this.initData()
+    // 表格内统计
   },
   methods: {
     async init() {
       const { period = '', courseType = '0' } = this.$route.params
       this.courseType = courseType
       Object.assign(this.tabQuery, { period, courseType:Sup_scheduleIndex[courseType] })
-      // 表格内统计
-      this.getScheduleDetailStatistic()
       this.flags.loading = true
 
       try {
         const _list = await this.getScheduleDetailList()
+        this.getScheduleDetailStatistic()
         const { content = [] } = _list
         const idsArr = []
         content.forEach((item) => {
@@ -266,7 +267,7 @@ export default {
         })
         const query = {
           ids: idsArr.join(','),
-          term: this.paramsInfo.period,
+          term: this.paramsInfo.period
         }
         // 转介绍招生数
         const intruStuNumRes = await this.getIntroduceCountByIds(query)
@@ -274,10 +275,6 @@ export default {
           content.forEach((value) => {
             if (item.id === value.teacherId) {
               value.intruNum = item.count || 0
-              value.realSumTeamSize = value.realSumTeamSize
-                ? value.realSumTeamSize
-                : 0
-              value.realTeam = value.realTeam ? value.realTeam : 0
               // 市场招生数
               value.marketStuNum = value.realSumTeamSize - value.intruNum
               // 招生完成率
@@ -289,33 +286,47 @@ export default {
           })
         })
 
+        // const COURSECATEGORY = await this.getCourseType()
         content.forEach((value) => {
           let { courseCategory, courseCategoryCHN = '' } = value
           courseCategory.split(',').forEach((course) => {
-            this.courseArr.forEach((item, index) => {
-              if (item.value === course) {
-                courseCategoryCHN += item.name
-              }
-            })
-            value.courseCategoryCHN = courseCategoryCHN
+            courseCategoryCHN += ' ' + COURSECATEGORY[course]
           })
+
+          value.courseCategoryCHN = courseCategoryCHN
+          // value.courseDifficulty =
+          //   SUP_LEVEL_ALL(this.courseType)[value.courseDifficulty] || ''
         })
+
         this.tableData = content
+
         this.totalElements = +_list.totalElements
         this.flags.loading = false
-      } catch (err) {}
-    },
-    // 获取全部课程类型
-    async initData() {
-      let result = await this.$http.Operating.getAllCategory()
-      if (result.code == 0) {
-        this.courseArr = [
-          ...result.payload.singleWeek,
-          ...result.payload.doubleWeek,
-          ...result.payload.systemWeek,
-        ]
+      } catch (err) {
       }
     },
+    courseTypeKeyVal(list = []) {
+      const obj = {}
+      list.forEach((course) => {
+        const { category, area, name } = course
+        obj[category] = area ? `${area}-${name}` : name
+      })
+      return obj
+    },
+    // 获取课程类型列表
+    getCourseType() {
+      const { getCourseListByCourseType } = this.$http.Operating
+      const { courseType } = this
+
+      return new Promise((resolve) => {
+        getCourseListByCourseType({ courseType }).then((res) => {
+          const { code, payload } = res
+
+          if (code === 0) resolve(this.courseTypeKeyVal(payload))
+        })
+      })
+    },
+
     // 表格 内 统计数据
     async getScheduleDetailStatistic() {
       try {
@@ -338,7 +349,7 @@ export default {
           S2: {},
           S3: {},
           S4: {},
-          S5: {},
+          S5: {}
         }
 
         payload.forEach((item, index) => {
@@ -348,8 +359,8 @@ export default {
           const sup = {
             [item.courseDifficulty]: {
               planSumTeamSize: item.planSumTeamSize || 0,
-              realSumTeamSize: item.realSumTeamSize || 0,
-            },
+              realSumTeamSize: item.realSumTeamSize || 0
+            }
           }
           Object.assign(obj, sup)
 
@@ -372,13 +383,8 @@ export default {
     // 表格详情数据
     async getScheduleDetailList() {
       try {
-        let {courseType} = this.$route.params
-        let obj = {
-          ...this.tabQuery,
-          courseType:Sup_scheduleSubmit[courseType]
-        }
         const tableList = this.$http.Operating.getScheduleDetailList(
-          obj
+          this.tabQuery
         )
         return tableList
       } catch (err) {
@@ -403,8 +409,8 @@ export default {
     pageChange_handler(page) {
       this.tabQuery.pageNum = page
       this.init()
-    },
-  },
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>
