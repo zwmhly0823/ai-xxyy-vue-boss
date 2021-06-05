@@ -561,7 +561,7 @@ export default {
         tableName,
         name,
         headers,
-        query,
+        query:this.queryObj,
         sort,
       }
       // operateExportLog
