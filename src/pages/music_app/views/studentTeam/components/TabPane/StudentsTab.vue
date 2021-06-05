@@ -71,6 +71,11 @@
                 <span @click="openUserDetail(scope.row)">
                   {{ scope.row.mobile }}
                 </span>
+                <i
+                  class="el-icon-view mg-l-5"
+                  style="margin-left: 10px"
+                  @click="getNumber(scope.row.id)"
+                ></i>
               </div>
               <div @click="openUserDetail(scope.row)" class="age primary-text">
                 {{ scope.row.sex }} · {{ scope.row.birthday }}
@@ -189,7 +194,7 @@ export default {
       searchUid: '',
       defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png',
       operatorId: '',
-      userPhone:''
+      userPhone: '',
     }
   },
   computed: {
@@ -203,7 +208,7 @@ export default {
     this.studentsList()
     this.getstatusList()
     this.couponList()
-     this.operatorId = JSON.parse(localStorage.getItem('staff')).id
+    this.operatorId = JSON.parse(localStorage.getItem('staff')).id
   },
   watch: {
     searchUser(val) {
@@ -241,9 +246,9 @@ export default {
       }).then((res) => {
         if (res.code == 0) {
           this.userPhone = res.payload.mobile
-          this.dataList.forEach((item, index) => {
+          this.tableData.forEach((item, index) => {
             if (item.studentid == uid) {
-              this.dataList[index].mobile = this.userPhone
+              this.tableData[index].mobile = this.userPhone
             }
           })
         } else {
