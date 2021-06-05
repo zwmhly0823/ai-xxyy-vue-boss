@@ -231,7 +231,6 @@ export default {
       },
       packages_id: '',
       operatorObj: {
-        operateType: 1,
         extra: '',
       },
       queryObj: null,
@@ -282,6 +281,7 @@ export default {
           this.uploading = false
           if (res.code === 0 && res.payload.length < 1 && res.payload) {
             this.initParams()
+            this.operatorObj.operateType ="express_export"
             this.initOperateExportLog(this.operatorObj)
             this.$message({
               showClose: true,
@@ -600,7 +600,9 @@ export default {
       ] = this.searchIn
     },
     initOperateExportLog(params) {
-      this.$http.DownloadExcel.operateExportLog(params).then((res) => {})
+      this.$http.DownloadExcel.operateExportLog(params).then((res) => {}).catch((err) => {
+        this.$message.error(err)
+      })
     },
     // 下载文件
     downloadFn(data, name = '下载') {

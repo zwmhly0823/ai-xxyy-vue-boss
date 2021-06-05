@@ -193,6 +193,7 @@ import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhone
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
 import { isToss } from '@/utils/index'
 import { downloadHandle } from '@/utils/download'
+import entranceMixins from './mixins/exportLog'
 export default {
   props: {
     // 订单支付状态 3-已完成
@@ -215,7 +216,7 @@ export default {
     SearchPhoneAndUsername,
     SimpleSelect,
   },
-
+  mixins: [entranceMixins],
   data() {
     return {
       cur0: false,
@@ -284,7 +285,6 @@ export default {
     },
     // 订单号、手机号
     getOrderSearch(res) {
-      console.log(res)
       const key = Object.keys(res || {})[0]
       const val = res[key] ? res : ''
       this.setSeachParmas(val, [key])
@@ -295,7 +295,6 @@ export default {
     },
     // 难度
     supCallBack(res) {
-      console.log(res, 'res')
       this.setSeachParmas(res, ['sup'], 'terms')
     },
     // 选择订单下单时间
@@ -400,7 +399,6 @@ export default {
     },
     // 体验课难度
     supCallBackTrial(res) {
-      console.log(res, 'res')
       this.setSeachParmas(res, ['sup'], 'terms')
     },
     getTrialTeamName(res) {
@@ -506,8 +504,6 @@ export default {
     },
     // 导出
     exportOrderHandle() {
-      console.log(this.searchParams)
-      console.log('exportOrderHandle', this.$parent.$children[1])
       const chooseExport = this.chooseExport
       if (this.searchParams.length === 0) {
         this.$message.error('请选择筛选条件')
@@ -517,8 +513,6 @@ export default {
       // 获取查询条件
       const query = this.$parent.$children[1].finalParams
       query.subject = 3
-      console.log('query======')
-      console.log(query)
 
       const fileTitle = dayjs(new Date()).format('YYYY-MM-DD')
       const fileTitleTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
@@ -549,13 +543,14 @@ export default {
           query: JSON.stringify(query),
           // query: '{"status":3}'
         }
+        this.operatorObj.query = JSON.stringify(query)
         this.$http.DownloadExcel.exportOrder(params)
           .then((res) => {
-            console.log(res,"导出数据")
             downloadHandle(res, `兑换码订单导出-${fileTitle}`, () => {
               loading.close()
               this.showChooseDialog = false
               this.$message.success('导出成功')
+              this.initOperateExportLog(this.operatorObj)
             })
           })
           .catch(() => loading.close())
