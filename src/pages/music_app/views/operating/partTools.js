@@ -12,18 +12,18 @@
 export const viliderPeriod = 52
 var single = 43
 var double = 36
-function geturl(){  
+function geturl () {
   let urlStr = window.location.origin;
-  if(urlStr.indexOf('live')>0){
+  if (urlStr.indexOf('live') > 0 || urlStr.indexOf('boss.xiaoxiongyinyue')>0) {
     single = 39
     double = 16
-  }else if(urlStr.indexOf('prod')>0){
-    single = 41
-    double = 36
-  }else if(urlStr.indexOf('test')>0){
+  } else if (urlStr.indexOf('prod') > 0) {
+    single = 39
+    double = 16
+  } else if (urlStr.indexOf('test') > 0) {
     single = 43
     double = 36
-  }else if(urlStr.indexOf('default')>0||urlStr.indexOf('192')>0){
+  } else if (urlStr.indexOf('default') > 0 || urlStr.indexOf('192') > 0) {
     single = 57
     double = 74
   }
