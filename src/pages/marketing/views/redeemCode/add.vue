@@ -332,7 +332,6 @@ export default {
      */
     handleAdd(formName) {
       this.$refs[formName].validate((valid) => {
-        console.log(this.form)
         if (valid) {
           const obj = deepClone(this.form)
           // 组装开始-结束时间
@@ -344,7 +343,6 @@ export default {
           delete obj.date
 
           // TODO:套餐名称，渠道名称，标签名称
-          console.log(this.packageProduct)
           const packageName = this.packageProduct?.name || ''
           const channelName =
             this.channelList.filter(
@@ -365,13 +363,11 @@ export default {
             channelName,
             customerSignName
           })
-          console.log(obj)
 
           // 提交
           this.loading = true
           this.$http.Marketing.addRedeemCode(obj)
             .then((res) => {
-              console.log(res)
               if (res?.code === 0) {
                 this.resetForm()
 
@@ -391,7 +387,6 @@ export default {
               this.loading = false
             })
         } else {
-          console.log('error submit!!')
           return false
         }
       })
@@ -419,7 +414,6 @@ export default {
 
     // 获取套餐ID
     getPackageId(res) {
-      console.log(res)
       this.form.packageId = res.id || ''
       this.packageProduct = res
       this.dialogPackageVisible = false
@@ -445,7 +439,6 @@ export default {
           query
         ).then(({ data }) => {
           if (data) {
-            console.log(data.ChannelDetailStatisticsPage)
             data.ChannelDetailStatisticsPage.content.forEach(item => {
               let obj = {}
               obj.id = item.id
