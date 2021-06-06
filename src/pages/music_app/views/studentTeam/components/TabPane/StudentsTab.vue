@@ -247,7 +247,7 @@ export default {
         if (res.code == 0) {
           this.userPhone = res.payload.mobile
           this.tableData.forEach((item, index) => {
-            if (item.studentid == uid) {
+            if (item.id == uid) {
               this.tableData[index].mobile = this.userPhone
             }
           })
