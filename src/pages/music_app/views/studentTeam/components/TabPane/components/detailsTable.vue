@@ -396,6 +396,11 @@
                 @click="openUserDetail(scope.row.id)"
                 >{{ scope.row.mobile }}</span
               >
+              <i
+                class="el-icon-view mg-l-5 primary-text"
+                style="margin-left: 10px"
+                @click="getNumber(scope.row.id)"
+              ></i>
               <br />
               <span>{{ scope.row.express_ctime }}</span>
             </div>
@@ -459,6 +464,11 @@
                 @click="openUserDetail(scope.row.student_id)"
                 >{{ scope.row.mobile }}</span
               >
+              <i
+                class="el-icon-view mg-l-5 primary-text"
+                style="margin-left: 10px"
+                @click="getNumber(scope.row.student_id)"
+              ></i>
               <br />
               <span>{{ scope.row.buy_time }}</span>
             </div>
@@ -542,6 +552,11 @@
                 @click="openUserDetail(scope.row.student_id)"
                 >{{ scope.row.mobile }}</span
               >
+              <i
+                class="el-icon-view mg-l-5 primary-text"
+                style="margin-left: 10px"
+                @click="getNumber(scope.row.student_id)"
+              ></i>
               <br />
               <span>{{ scope.row.buytime }}</span>
               <br />
@@ -749,7 +764,11 @@ export default {
         if (res.code == 0) {
           this.userPhone = res.payload.mobile
           this.tables.tableData.forEach((item, index) => {
-            if (item.student_id == uid || item.user_id ==uid) {
+            if (
+              item.student_id == uid ||
+              item.user_id == uid ||
+              item.id == uid
+            ) {
               this.tables.tableData[index].mobile = this.userPhone
             }
           })
