@@ -251,12 +251,7 @@ export default {
   methods: {
     // 上传进度
     uploadProgress(event, file, fileList) {
-      console.log(
-        event,
-        file,
-        fileList,
-        'event, file, fileList--------------------'
-      )
+      
     },
     // 上传物流关闭符号
     handleCloseUpdata() {
@@ -347,7 +342,6 @@ export default {
         query = { bool: { must: [{ terms: { id: uid } }] } } // 自行通过前端选择的条件进行动态组装
         sessionStorage.removeItem('uid')
       } else {
-        console.log(this.searchIn, 'this.searchIn-=')
         const term = this.searchIn.map((item, index) => {
           if (item && item.terms) {
             if (item.terms && item.terms.sup) {
@@ -464,10 +458,8 @@ export default {
             if (Object.keys(item.term).length === 0) delete item.term
             // console.log(Object.keys(item.term), 'Object.keys(item.term)')
           }
-          console.log(item, 'item++++++')
           return item
         })
-        console.log(arrFlag, 'arrFlag==')
         const myTerm = term.concat(arrFlag)
 
         // term数组有空对象的，删除掉
@@ -567,7 +559,6 @@ export default {
     },
     dosomething() {},
     handleSearch(search) {
-      console.log(search, 'search==')
       this.searchIn = deepClone(search)
       this.searchIn.forEach((item) => {
         if (item.terms && (item.terms.sup || item.terms.product_type)) {
@@ -584,7 +575,6 @@ export default {
       })
 
       this.$emit('result', this.searchIn)
-      console.log(this.searchIn, 'this.searchIn===')
       switchTabSearchIn[
         `searchIn${this.regtype}${this.source_type}`
       ] = this.searchIn

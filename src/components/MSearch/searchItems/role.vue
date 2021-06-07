@@ -87,7 +87,6 @@ export default {
         this.options = res.payload.content
         localStorage.setItem('roleLit', JSON.stringify(this.options))
       } catch (error) {
-        console.log(error)
       }
     },
     handleSelect(val) {

@@ -677,6 +677,7 @@ export default {
   },
   // 学习记录详情页
   getStudentTRecordList(query, teamName = '', sup, page = 1, sort = 'desc') {
+    
     teamName &&
       Object.assign(query, {
         'team_name.like': { 'team_name.keyword': `*${teamName}*` }

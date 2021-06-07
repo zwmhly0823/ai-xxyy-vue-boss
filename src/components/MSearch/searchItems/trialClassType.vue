@@ -105,7 +105,7 @@ export default {
       // 物流
       typeList3: [
         {
-          id: ['500', '502', '503', '505'],
+          id: ['500', '502', '503', '505','508'],
           text: '全部',
         },
         {
@@ -115,6 +115,10 @@ export default {
         {
           id: ['505'],
           text: '9.9元双周体验课',
+        },
+        {
+          id: ['508'],
+          text: '22元双周体验课',
         },
         {
           id: ['503'],
@@ -188,7 +192,6 @@ export default {
     // }
   },
   mounted() {
-    console.log('搜索数据', this.name)
     if (this.name == 'category' && this.typeB != 1) {
       this.typeList = this.typeList2
     } else if (this.name == 'packages_type') {
@@ -232,7 +235,6 @@ export default {
           item !== undefined ? [{ [this.name]: item }] : ''
         )
       } else {
-        console.log({ [this.name]: item }, '选择的值')
         this.$emit('result', item !== undefined ? { [this.name]: item } : '')
       }
     },
