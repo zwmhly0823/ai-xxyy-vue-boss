@@ -18,12 +18,13 @@
         }}</span>
       </p>
       <p>
-        <!-- <i
+        <i class="el-icon-view mg-l-5" @click="getNumber(user.id)"></i>
+        <i
           v-if="user && user.mobile"
           class="el-icon-document-copy mg-r-5"
-          @click="handLeCopy(user.mobile)"
-        ></i> -->
-        <i class="el-icon-view mg-l-5" @click="getNumber(user.id)"></i>
+          style="margin-left:10px"
+          @click="handLeCopy(userPhone || user.mobile)"
+        ></i>
         <!-- vip 会员标识 -->
         <svg class="iconfont-vip mg-r-5" v-if="is_sys_label_vip">
           <use xlink:href="#iconvip"></use>

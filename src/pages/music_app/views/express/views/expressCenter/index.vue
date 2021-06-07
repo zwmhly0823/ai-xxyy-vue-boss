@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="automatic-config">
-      <el-dropdown @command="handleCommand" v-if="powerStatus =='1' || role =='5'">
+      <el-dropdown @command="handleCommand" v-if="powerStatus =='1' || role =='5' && (activeName =='0' || activeName =='1' || activeName =='4')">
         <span class="el-dropdown-link">
           <span><i class="el-icon-setting"></i>设置</span>
         </span>
@@ -14,7 +14,7 @@
             >自动发货设置</el-dropdown-item
           > -->
           <el-dropdown-item
-            v-show="(activeName === '0' || activeName === '1') && role =='5'"
+            v-show="(activeName === '0' || activeName === '1' || activeName === '4') && role =='5'"
             command="delivery"
             >一键批量发货</el-dropdown-item
           >

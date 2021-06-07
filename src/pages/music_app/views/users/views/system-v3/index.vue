@@ -140,21 +140,20 @@
             :style="{ 'font-size': tableList.expression.fontSize }"
             @cell-mouse-enter="hoverRow"
           >
-            <el-table-column label="手机号/ID" width="120" fixed>
+            <el-table-column label="手机号/ID" width="140" fixed>
               <template slot-scope="scope">
                 <p @click.self="userHandle(scope.row)" class="primary-text">
-                  {{scope.row.mobile }}
-
-                  <!-- <i
-                    @click.stop="handLeCopy(scope.row)"
-                    class="el-icon-document-copy"
-                  >
-                  </i> -->
+                  {{ scope.row.mobile }}
                   <i
                     class="el-icon-view mg-l-5"
-                    style="margin-left:10px"
                     @click="getNumber(scope.row.studentid)"
                   ></i>
+                  <i
+                    @click.stop="handLeCopy(scope.row)"
+                    style="margin-left: 10px"
+                    class="el-icon-document-copy"
+                  >
+                  </i>
                 </p>
 
                 <p>
@@ -767,7 +766,7 @@ export default {
       filterParams: {},
       currentDate: '',
       operatorId: '',
-      userPhone:''
+      userPhone: '',
     }
   },
   watch: {
@@ -789,8 +788,7 @@ export default {
       this.currentPage = 1
       this.getData()
     },
-    search(val) {
-    },
+    search(val) {},
   },
   created() {
     this.init()
@@ -811,11 +809,11 @@ export default {
       }).then((res) => {
         if (res.code == 0) {
           this.userPhone = res.payload.mobile
-          this.dataList.forEach((item,index) => {
-             if(item.studentid == uid) {
-               this.dataList[index].mobile = this.userPhone 
-             }
-          });
+          this.dataList.forEach((item, index) => {
+            if (item.studentid == uid) {
+              this.dataList[index].mobile = this.userPhone
+            }
+          })
         } else {
           this.$message.error('网络异常，请稍后再试！')
         }
@@ -888,7 +886,6 @@ export default {
       }
       this.$http.User.getTeacherFollowGroups(data)
         .then((res) => {
-
           if (res.code === 0) {
             if (
               res.payload.length > 0 &&
@@ -985,8 +982,7 @@ export default {
       this.showDialogFormVisible = true
     },
     // 多选
-    handleSelectionChange(data) {
-    },
+    handleSelectionChange(data) {},
     getFilter(data) {
       this.filterParams = data || {}
     },
