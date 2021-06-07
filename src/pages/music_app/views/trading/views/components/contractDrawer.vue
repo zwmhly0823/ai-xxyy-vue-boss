@@ -178,7 +178,7 @@ export default {
       // 前端写死套餐，变更需要同时更改 ../contractManage/addContract.vue 中set_mealList
       set_mealList: [
         {
-          packageName: '49元单周体验课',
+          packageName: '49元双周体验课',
           packageId: '500',
           classHour: '2',
           price: '49'
@@ -200,6 +200,12 @@ export default {
           packageId: '505',
           classHour: '2',
           price: '9.9'
+        },
+        {
+          packageName: '22元双周体验课',
+          packageId: '508',
+          classHour: '2',
+          price: '22'
         },
         {
           packageName: '19元单周体验课',

@@ -650,7 +650,6 @@ export default {
   },
   watch: {
     search(val) {
-      console.log(val, 'val===11')
       this.currentPage = 1
       this.searchIn = val
       if (sessionStorage.getItem('val')) {
@@ -802,7 +801,6 @@ export default {
       } else {
         this.enclosurevideo = row.approvalReissueInfo.atts_url
       }
-      console.log(row, 'row')
     },
     // 关闭附件详情
     handleCloseEnclosure() {
@@ -954,7 +952,6 @@ export default {
           )
         })
         .catch((err) => {
-          console.log(err)
         })
     },
     handlePass(val) {
@@ -997,7 +994,6 @@ export default {
           }
         })
         .catch((err) => {
-          console.log(err, 'err')
         })
     },
     // 全选
@@ -1064,7 +1060,6 @@ export default {
         this.teacherId && (timeType.teacher_id = this.teacherIds.join())
       }
       this.searchIn.forEach((item) => {
-        console.log(item, 'item===物流参数')
         if (item && item.term) {
           // 新增类型的时候这里要改
           if (item.term.regType == '500, 503, 505, 508') {

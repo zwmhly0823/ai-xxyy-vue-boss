@@ -12,7 +12,7 @@
       :model="ruleForm"
       :rules="rules"
       ref="ruleForm"
-      label-width="100px"
+      label-width="120px"
       class="demo-ruleForm"
     >
       <el-form-item label="渠道ID">
@@ -86,9 +86,91 @@
           v-model="ruleForm.desc"
         ></el-input>
       </el-form-item>
+      <el-form-item label="是否支持导入订单" prop="export" required>
+        <el-radio-group v-model="ruleForm.export">
+          <el-radio
+            :disabled="+ruleForm.contract_id > 0 ? true : false"
+            :label="0"
+            >支持</el-radio
+          >
+          <el-radio
+            :disabled="+ruleForm.contract_id > 0 ? true : false"
+            :label="1"
+            >不支持</el-radio
+          >
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="关联合同" required v-if="ruleForm.export == 0">
+        <div v-if="tableData.length === 0">
+          <el-button
+            type="primary"
+            size="mini"
+            icon="el-icon-plus"
+            @click="dialogVisible = true"
+            >选择合同</el-button
+          >
+        </div>
+        <div v-else>
+          <el-table :data="tableData" border style="width: 95%">
+            <el-table-column prop="contract.id" label="合同id" width="60">
+            </el-table-column>
+            <el-table-column prop="contract.contractName" label="合同名称">
+            </el-table-column>
+            <el-table-column
+              prop="contractPriceDetailList"
+              label="实际结算课单价（元）"
+              min-width="125"
+            >
+              <template slot-scope="scope">
+                <p v-if="scope.row.contractPriceDetailList.length === 0">-</p>
+                <p
+                  v-else
+                  v-for="(item, index) in scope.row.contractPriceDetailList"
+                  :key="index"
+                  :style="{
+                    color: item.priceType == 'DISCOUNT' ? '#2E8B57' : '#606266',
+                    padding: 0
+                  }"
+                >
+                  <!-- DISCOUNT 为绿色 -->
+                  {{ item.packageName + ' ' + item.settlePrice }}
+                </p>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="contractPriceDetailList"
+              label="订单入库价格（元）"
+              min-width="125"
+            >
+              <template slot-scope="scope">
+                <p v-if="scope.row.contractPriceDetailList.length === 0">-</p>
+                <p
+                  v-else
+                  v-for="(item, index) in scope.row.contractPriceDetailList"
+                  :key="index"
+                  :style="{
+                    color: item.priceType == 'DISCOUNT' ? '#2E8B57' : '#606266',
+                    padding: 0
+                  }"
+                >
+                  {{ item.packageName + ' ' + item.orderPrice }}
+                </p>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-button
+            size="mini"
+            icon="el-icon-plus"
+            v-if="+ruleForm.contract_id > 0 ? false : true"
+            @click="dialogVisible = true"
+            >更换合同</el-button
+          >
+        </div>
+      </el-form-item>
       <el-form-item label="渠道状态" prop="status">
         <el-switch
           v-model="ruleForm.status"
+          
           active-text="启用"
           inactive-text="停用"
           active-value="1"
@@ -98,20 +180,36 @@
       </el-form-item>
       <el-form-item>
         <div style="margin-left: 50px">
-          <el-button type="primary" @click="submitForm('ruleForm')"
+          <el-button type="primary" :disabled="this.ruleForm.export == 0 && this.tableData.length != 1" @click="submitForm('ruleForm')"
             >提交</el-button
           >
           <el-button @click="resetForm('ruleForm')">取消</el-button>
         </div>
       </el-form-item>
     </el-form>
+     <el-dialog
+      title="选择关联合同"
+      append-to-body
+      width="80%"
+      :visible.sync="dialogVisible"
+    >
+      <contract-dialog
+        @close="visibleHide"
+        @getData="getData"
+      ></contract-dialog>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { channelList } from '@/utils/supList'
+import contractDialog from './contractChannel'
+
 export default {
   props: ['modifyRow'],
+  components:{
+    contractDialog
+  },
   data() {
     var channelSort = (rule, value, callback) => {
       if (value === '') {
@@ -125,6 +223,8 @@ export default {
       }
     }
     return {
+      dialogVisible:false,
+      tableData:[],
       channelId: '',
       channelTwoDisabled: true,
       channelThreeDisabled: true,
@@ -142,6 +242,9 @@ export default {
         status: '1',
         channelLevel: '',
         experience: '',
+        export: 1,
+        contract_id: '', // 合同id
+        contract_name: '' // 合同名称
       },
       rules: {
         channelOne: [
@@ -168,6 +271,15 @@ export default {
     this.getChannelDetailStatisticsPage()
   },
   methods: {
+    visibleHide() {
+      this.dialogVisible = false
+    },
+    getData(val) {
+      if (val && val.length === 1) {
+        this.tableData = val
+        this.dialogVisible = false
+      }
+    },
     getChannelDetailStatisticsPage() {
       const id = `id:${this.modifyRow.id}`
       this.$http.Operating.ChannelDetailStatisticsPage(JSON.stringify(id)).then(
@@ -193,9 +305,25 @@ export default {
             });
             this.ruleForm.status = item.status.toString()
             this.ruleForm.channelLevel = item.channel_level
+            this.ruleForm.contract_name = item.contract_name
+            this.ruleForm.contract_id = item.contract_id
+            this.ruleForm.export = +item.contract_id > 0 ? 0 : 1
           })
         }
       )
+      // 查询渠道关联合同
+      this.$http.Operating.getChannelAndContractDetailByIdAndTimeStamp(
+        this.modifyRow.id
+      ).then((res) => {
+        const { code, payload } = res
+        if (
+          code === 0 &&
+          payload?.contractPriceDetailList &&
+          payload?.contract
+        ) {
+          this.tableData = [payload]
+        }
+      })
     },
     channelTwo() {
       if (typeof this.ruleForm.channelOne === 'string') {
@@ -278,7 +406,21 @@ export default {
               channelLevel: this.getLevel(this.ruleForm.channelLevel), // 渠道等级
             }
           }
-
+          const obj = {
+            contractId:
+              this.ruleForm.export !== 0
+                ? 0
+                : this.tableData.map((item) => item.contract.id)[0],
+            contractName:
+              this.ruleForm.export !== 0
+                ? null
+                : this.tableData.map((item) => item.contract.contractName)[0],
+            contractBody:
+              this.ruleForm.export !== 0
+                ? null
+                : this.tableData.map((item) => item.contract.contractBody)[0]
+          }
+          Object.assign(this.props, obj)
           this.$http.Operating.updateChannel(this.props).then((res) => {
             console.log(res)
             if (res.code === 0) {

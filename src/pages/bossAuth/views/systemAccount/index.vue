@@ -198,7 +198,6 @@ export default {
         this.totalElements = +res.payload.totalElements
         this.loading = false
       } catch (error) {
-        console.log(error)
         this.loading = false
       }
     },
@@ -206,7 +205,6 @@ export default {
     handleSearch(data) {
       if (data.length > 0) {
         this.tabQuery.pageNum = 1;
-        console.log('data', data);
       } else {
         this.searchQuery = ''
       }
@@ -214,7 +212,6 @@ export default {
     },
     // 员工身份搜索
     handleSearchEmployees(data) {
-      console.log(data,"data");
       const query = {
         pageSize: 20,
         pageNum: 1,
@@ -295,7 +292,6 @@ export default {
           }, 1000)
         }
       } catch (error) {
-        console.log(error)
       }
     },
     handleSure() {

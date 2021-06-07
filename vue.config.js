@@ -51,7 +51,6 @@ if (env === 'dev') {
 }
 
 // editOperation('构建')
-console.log(NODE_ENV)
 
 module.exports = {
   lintOnSave: false,

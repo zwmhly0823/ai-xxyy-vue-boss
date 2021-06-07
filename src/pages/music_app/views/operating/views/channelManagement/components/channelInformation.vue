@@ -17,14 +17,24 @@
           @channelInputValue="channelInputValue"
           @channelLevelValue="channelLevelValue"
         ></channel-search>
-        <el-button class="add-btn" @click="onAddChannel" size="mini" type="primary">添加渠道</el-button>
+        <el-button
+          class="add-btn"
+          @click="onAddChannel"
+          size="mini"
+          type="primary"
+          >添加渠道</el-button
+        >
+        <el-button type="primary" size="mini" @click="showImport = true">
+          批量修改渠道等级
+        </el-button>
         <el-button
           class="bulkDownload"
           size="mini"
           type="primary"
           @click="onBulkDownload"
           :loading="downLoad"
-        >批量下载</el-button>
+          >批量下载</el-button
+        >
       </div>
     </div>
     <div class="channelAdd-table">
@@ -38,24 +48,33 @@
           <template slot-scope="scope">
             <el-Popover popper-class="batch-btn" trigger="hover">
               <div size="mini" type="text" @click="batchBtn(scope.row)">
-                <span style="cursor:pointer">编辑</span>
+                <span style="cursor: pointer">编辑</span>
               </div>
-              <div @mouseenter="handleEdit(scope.$index, scope.row)" slot="reference">
+              <div
+                @mouseenter="handleEdit(scope.$index, scope.row)"
+                slot="reference"
+              >
                 <img src="@/assets/images/point.png" />
               </div>
             </el-Popover>
           </template>
         </el-table-column>
-        <el-table-column type="index" label="序号" align="center"></el-table-column>
-        <el-table-column prop="id" label="渠道id" align="center"></el-table-column>
+        <el-table-column
+          type="index"
+          label="序号"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="id"
+          label="渠道id"
+          align="center"
+        ></el-table-column>
         <el-table-column label="渠道分类" width="180" align="center">
           <template slot-scope="scope">
             <div class="logistics-wx-box">
               <span>{{ scope.row.p_channel_class_name }}</span>
-              <span style="margin-left:20px">
-                {{
-                scope.row.channel_class_name
-                }}
+              <span style="margin-left: 20px">
+                {{ scope.row.channel_class_name }}
               </span>
             </div>
           </template>
@@ -66,8 +85,27 @@
           align="center"
           show-overflow-tooltip
         ></el-table-column>
-        <el-table-column prop="channel_level" label="渠道等级" align="center" show-overflow-tooltip>
-          <template slot-scope="scope">{{ scope.row.channel_level | channelLevelFilter }}</template>
+        <el-table-column
+          prop="channel_level"
+          label="渠道等级"
+          align="center"
+          show-overflow-tooltip
+        >
+          <template slot-scope="scope">{{
+            scope.row.channel_level | channelLevelFilter
+          }}</template>
+        </el-table-column>
+        <el-table-column label="是否支持导入订单" align="center">
+          <template slot-scope="scope">
+            <span>{{ +scope.row.contract_id > 0 ? '支持' : '不支持' }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="关联合同名称" align="center">
+          <template slot-scope="scope">
+            <span>{{
+              scope.row.contract_name ? scope.row.contract_name : '-'
+            }}</span>
+          </template>
         </el-table-column>
         <el-table-column prop="status" label="渠道状态" align="center">
           <template slot-scope="scope">
@@ -76,9 +114,11 @@
           </template>
         </el-table-column>
 
-         <el-table-column prop="channel_link" width="300" label="模版">
+        <el-table-column prop="channel_link" width="300" label="模版">
           <template slot-scope="scope">
-            <span>{{scope.row.channel_link?scope.row.channel_link:'-'}}</span>
+            <span>{{
+              scope.row.channel_link ? scope.row.channel_link : '-'
+            }}</span>
           </template>
         </el-table-column>
         <el-table-column label="渠道备注" align="center" show-overflow-tooltip>
@@ -87,10 +127,22 @@
             <span v-else>-</span>
           </template>
         </el-table-column>
-        <el-table-column prop="ctime" label="创建时间" width="160" align="center"></el-table-column>
-        <el-table-column prop="create_user" label="创建人名称" width="160" align="center">
-             <template slot-scope="scope">
-            <span v-if="scope.row.create_user">{{ scope.row.create_user?scope.row.create_user:'-' }}</span>
+        <el-table-column
+          prop="ctime"
+          label="创建时间"
+          width="160"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="create_user"
+          label="创建人名称"
+          width="160"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <span v-if="scope.row.create_user">{{
+              scope.row.create_user ? scope.row.create_user : '-'
+            }}</span>
             <span v-else>-</span>
           </template>
         </el-table-column>
@@ -99,30 +151,38 @@
             <div
               v-if="
                 scope.row.channel_link ||
-                  scope.row.short_er_code ||
-                  scope.row.isExtension
+                scope.row.short_er_code ||
+                scope.row.isExtension
               "
               class="logistics-wx-box"
             >
               <a
                 v-if="scope.row.channel_link"
-                style="color:#2a75ed;font-size:12px;"
+                style="color: #2a75ed; font-size: 12px"
                 @click="onLink(scope.row)"
                 target="_blank"
-              >查看链接</a>
+                >查看链接</a
+              >
               <a
                 v-if="scope.row.short_er_code"
-                style="color:#2a75ed;font-size:12px;margin-left:10px;margin-right:10px;"
+                style="
+                  color: #2a75ed;
+                  font-size: 12px;
+                  margin-left: 10px;
+                  margin-right: 10px;
+                "
                 size="mini"
                 type="text"
                 @click="onUpload(scope.row)"
-              >下载二维码</a>
+                >下载二维码</a
+              >
               <a
                 v-if="scope.row.isExtension"
-                style="color:#2a75ed;font-size:12px;"
+                style="color: #2a75ed; font-size: 12px"
                 @click="onExtension(scope.row)"
                 target="_blank"
-              >推广人统计</a>
+                >推广人统计</a
+              >
             </div>
             <div v-else class="logistics-wx-box">
               <span>-</span>
@@ -143,16 +203,19 @@
       :show-close="showClose"
       :visible.sync="addDrawer"
       :modal="false"
-      size="30%"
+      size="40%"
     >
-      <add-cahnnel @addChannelShowBtn="addChannelShowBtn" @addChannelShow="addChannelShow" />
+      <add-cahnnel
+        @addChannelShowBtn="addChannelShowBtn"
+        @addChannelShow="addChannelShow"
+      />
     </el-drawer>
     <el-drawer
       class="drawer-detail"
       :show-close="showClose"
       :visible.sync="modifyDrawer"
       :modal="false"
-      size="30%"
+      size="40%"
     >
       <modify-cahnnel
         v-if="modifyDrawer"
@@ -161,6 +224,41 @@
         @modifyChannelShow="modifyChannelShow"
       />
     </el-drawer>
+    <!-- 导入数据 -->
+    <el-dialog
+      title="导入数据"
+      :visible.sync="showImport"
+      :before-close="handleCloseUpdata"
+      width="30%"
+    >
+      <el-upload
+        ref="upload"
+        action=""
+        accept=".xls, .xlsx"
+        :headers="headers"
+        :auto-upload="false"
+        :limit="1"
+        :http-request="uploadFile"
+      >
+        <el-button
+          slot="trigger"
+          size="small"
+          type="primary"
+          :disabled="uploading"
+          >选取文件</el-button
+        >
+        <el-button
+          style="margin-left: 10px;"
+          size="small"
+          type="success"
+          @click="submitUpload"
+          :disabled="uploading"
+          >上传到服务器</el-button
+        >
+        <!-- :loading="uploading" -->
+        <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件</div>
+      </el-upload>
+    </el-dialog>
   </div>
 </template>
 
@@ -172,20 +270,20 @@ import MPagination from '@/components/MPagination/index.vue'
 import { timestamp } from '../../../../../../../utils/index'
 import {
   downloadByBlob,
-  downImgAll
+  downImgAll,
 } from '../components/components/downloadQRcode'
 export default {
   props: {
     tabIndex: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
   components: {
     channelSearch,
     MPagination,
     addCahnnel,
-    modifyCahnnel
+    modifyCahnnel,
   },
   filters: {
     channelLevelFilter(val) {
@@ -194,10 +292,13 @@ export default {
         return levelNames[val]
       }
       return '-'
-    }
+    },
   },
   data() {
     return {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      uploading: false,
+      showImport:false,
       downLoad: false,
       channelDate: false,
       scheduling: false,
@@ -213,45 +314,45 @@ export default {
       imgList: [
         {
           channelId: '21',
-          img: 'https://s1.meixiu.mobi/h5/headPic/1587896513277.jpg'
+          img: 'https://s1.meixiu.mobi/h5/headPic/1587896513277.jpg',
         },
         {
           channelId: '26',
           img:
-            'http://s1.meixiu.mobi/iOSImage/4e41b93c7f7ec80dc943d12aa94fa528.jpg'
+            'http://s1.meixiu.mobi/iOSImage/4e41b93c7f7ec80dc943d12aa94fa528.jpg',
         },
         {
           channelId: '31',
           img:
-            'http://s1.meixiu.mobi/iOSImage/bbd1b2f1ad446840aa09663b533ff0a6.jpg'
+            'http://s1.meixiu.mobi/iOSImage/bbd1b2f1ad446840aa09663b533ff0a6.jpg',
         },
         {
           channelId: '32',
           img:
-            'http://s1.meixiu.mobi/android-images/2020-04-30/7ff9aa1f04644a829313ccdbbdfd0774.jpeg'
+            'http://s1.meixiu.mobi/android-images/2020-04-30/7ff9aa1f04644a829313ccdbbdfd0774.jpeg',
         },
         {
           channelId: '11',
           img:
-            'http://s1.meixiu.mobi/iOSImage/7e360fb83ca6be1b09bff5f37a7d328c.jpg'
+            'http://s1.meixiu.mobi/iOSImage/7e360fb83ca6be1b09bff5f37a7d328c.jpg',
         },
         {
           channelId: '22',
           img:
-            'http://s1.meixiu.mobi/iOSImage/72d1f779396b80cc7ee00c3b4346ed93.jpg'
+            'http://s1.meixiu.mobi/iOSImage/72d1f779396b80cc7ee00c3b4346ed93.jpg',
         },
         {
           channelId: '33',
           img:
-            'http://s1.meixiu.mobi/iOSImage/30b80ff5402873d95b5c75123d931829.jpg'
+            'http://s1.meixiu.mobi/iOSImage/30b80ff5402873d95b5c75123d931829.jpg',
         },
         {
           channelId: '44',
           img:
-            'http://s1.meixiu.mobi/android-images/2020-05-03/4b01192047ef43a9b4377d1a43c85fa8.jpeg'
-        }
+            'http://s1.meixiu.mobi/android-images/2020-05-03/4b01192047ef43a9b4377d1a43c85fa8.jpeg',
+        },
       ],
-      tableInfoObj: {}
+      tableInfoObj: {},
     }
   },
   watch: {
@@ -261,12 +362,64 @@ export default {
         this.currentPage = 1
         this.getChannelOne()
       }
-    }
+    },
   },
   created() {
     this.getChannelOne()
   },
   methods: {
+    /** 导入数据 关闭事件 */
+    handleCloseUpdata() {
+      this.showImport = false
+      this.$refs.upload.clearFiles()
+    },
+    /** 导入数据上传 */
+    uploadFile(params) {
+      const formData = new FormData()
+      const adminId = localStorage.getItem('staff')
+      const file = params.file
+      formData.append('file', file)
+      formData.append('adminId', JSON.parse(adminId).id)
+      this.uploading = true
+      this.$http.DownloadExcel.importBatchModifyChannelLevel(formData)
+        .then((res) => {
+          if (res && Object.prototype.toString.call(res) === '[object Blob]') {
+            this.$refs.upload.clearFiles()
+            this.showImport = false
+            this.downloadFn(res, file.name, () => {
+              // this.$emit('setExcelStatus', 'complete')
+              this.$message.success('上传成功！')
+            })
+          } else {
+            console.log('res', res)
+            this.$message.error(`上传失败，${res.errors || '请检测文件！'}`)
+          }
+        })
+        .catch((err) => {
+          console.log('err-00', err)
+        })
+        .finally(() => {
+          this.uploading = false
+        })
+    },
+    // 下载文件
+    downloadFn(data, fileName = '下载', cb) {
+      if (!data) return
+      const blob = new Blob([data])
+      const elink = document.createElement('a')
+      elink.download = fileName
+      elink.style.display = 'none'
+      elink.href = URL.createObjectURL(blob)
+      document.body.appendChild(elink)
+      elink.click()
+      URL.revokeObjectURL(elink.href) // 释放URL 对象
+      document.body.removeChild(elink)
+
+      cb && cb()
+    },
+    submitUpload(file, filelist) {
+      this.$refs.upload.submit()
+    },
     // 获取渠道id
     getChannelOne() {
       const arrOne = []
@@ -346,7 +499,7 @@ export default {
         })
         const channelClassid = {
           channel_class_id: Array.from(new Set(channelClassId)),
-          id: channelId
+          id: channelId,
         }
         // const id = {  }
         this.queryList = `${JSON.stringify(JSON.stringify(channelClassid))}`
@@ -482,8 +635,8 @@ export default {
         // window.location.href = res
         window.open(res)
       })
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>
@@ -518,6 +671,14 @@ export default {
   }
   .drawer-detail {
     margin: 50px 10px 10px 10px;
+  }
+}
+</style>
+<style lang="scss">
+.channelAdd-box {
+  .el-drawer.rtl {
+    height: 100%;
+    overflow: scroll;
   }
 }
 </style>

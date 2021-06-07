@@ -80,7 +80,6 @@ export default {
     getRouterData() {
       this.activeName =
         this.$route.params.activeApprove || this.activeNameBySearch || 'first'
-      console.log(this.activeName, 'this.activeName')
     },
     handleClick(tab, event) {
       // console.log(tab, event)
