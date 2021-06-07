@@ -177,7 +177,6 @@ export default {
     // 订单管理 -- 赠品操作
     this.paramOrderId = this.getUrlKey('id')
     const mobile = this.getUrlKey('mobile') || ''
-    console.log(this.paramOrderId, mobile)
     if (mobile) {
       this.$http.RefundApproval.getUid_lk({ mobile }).then((res) => {
         const uid = res.data.blurrySearch[0].id
@@ -206,13 +205,10 @@ export default {
     this.formGift.applyUserName = staff.realName
     this.formGift.applyUserDeapartmentId = staff.departmentId
     this.formGift.applyUserDeapartmentName = staff.department
-    console.log(staff.department, 'staff.department===')
   },
   data() {
     const validateName = (rule, value, callback) => {
-      console.info(this.$refs.toGetPhone.input, '++++', this.userId)
       setTimeout(() => {
-        console.info(this.$refs.toGetPhone.input, '---', this.userId)
         if (this.userId && this.$refs.toGetPhone.input) {
           callback()
         } else {
@@ -286,31 +282,26 @@ export default {
   methods: {
     // 选择活动
     getActivityId(val) {
-      console.log(val, '选择活动')
       this.products = []
       this.activityList.forEach((item) => {
         if (val === item.id) {
           this.gifts = item.gifts
           this.formGift.promotionsName = item.promotionsName
-          console.log(item.promotionsName, this.formGift.promotionsId)
         }
       })
     },
     // 选取赠品
     getChooseGift(val) {
-      console.log(val, '选择赠品')
       this.gifts.forEach((item) => {
         if (val === item.id) {
           this.products = item.products
           this.formGift.giftsName = item.giftsName
           this.formGift.expressCount = item.expressCount
-          console.log(this.formGift.giftsId, this.formGift.giftsName)
         }
       })
     },
     // 根据用户电话获取uid 获取关联订单
     getSearchPhone(val) {
-      console.log(val, '获取uid')
       this.formGift.showMessage = ''
       this.formGift.receiptName = ''
       this.formGift.receiptTel = ''
@@ -321,7 +312,6 @@ export default {
         this.$http.Order.getOrdersByUid(this.userId)
           .then((res) => {
             if (res.payload && res.payload.content.length) {
-              console.log(res, 'new-getOrderByRegtypesAndStatus')
               if (this.paramOrderId) {
                 this.orderDisable = true
               } else {
@@ -352,7 +342,6 @@ export default {
             }
           })
           .catch((err) => {
-            console.log(err)
           })
       } else {
         // this.formGift = {}
@@ -366,7 +355,6 @@ export default {
     },
     // 改变关联订单
     getSeletInput(val) {
-      console.log(val, '关联订单')
       this.formGift.receiptName = ''
       this.formGift.receiptTel = ''
       this.formGift.totalAddress = ''
@@ -391,7 +379,6 @@ export default {
       //     this.formGift.receiptAddressStreet = res.payload.street
       //     this.formGift.receiptAddressDetail = res.payload.addressDetail
       //     this.formGift.totalAddress = `${res.payload.province}${res.payload.city}${res.payload.area}${res.payload.addressDetail}`
-      //     console.log(res, 'res==')
       //   }
       // })
       this.$http.Express.getAddressById(val.addressId).then((res) => {
@@ -404,7 +391,6 @@ export default {
           this.formGift.receiptAddressStreet = res.payload.street
           this.formGift.receiptAddressDetail = res.payload.addressDetail
           this.formGift.totalAddress = `${res.payload.province}${res.payload.city}${res.payload.area}${res.payload.addressDetail}`
-          console.log(res, 'res==')
         }
       })
       const pararm = {
@@ -415,7 +401,6 @@ export default {
         if (res && res.payload.length) {
           const refundlist = res.payload
           refundlist.forEach((item) => {
-            console.log(item, 'item==')
             if (item.status === 'PENDING' || item.status === 'COMPLETED') {
               this.orderRefundStatus = true
               return false
@@ -456,7 +441,6 @@ export default {
     },
     // 提交
     confirmButton(formName) {
-      console.log(formName)
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.sendDisabled = true
@@ -468,7 +452,6 @@ export default {
             userId: this.userId,
             cellPhone: this.$refs.toGetPhone.input
           }
-          console.log(this.formGift, 'formGift', obj)
           if (this.orderRefundStatus) {
             this.$message.error('此订单退费中/已退费，不符合赠品审评')
           } else {
@@ -482,12 +465,9 @@ export default {
                 })
                 //
               }
-              console.log(res)
             })
           }
-          console.log('ooooo')
         } else {
-          console.log('error submit!!')
           return false
         }
       })
@@ -507,7 +487,6 @@ export default {
       this.$http.RefundApproval.getUid_lk({
         mobile: phonenum
       }).catch((err) => {
-        console.error(err)
         this.$message.error('跳转来的手机号获取uid失败')
       })
     },
@@ -523,7 +502,6 @@ export default {
           this.activityList = []
           this.$message.error('该订单没有匹配的活动，无法申请赠品')
         }
-        console.log(payload, '获取所有有效活动')
       })
     },
     // 获取参数

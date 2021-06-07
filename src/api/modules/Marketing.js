@@ -15,7 +15,6 @@ export default {
   },
   // 添加白名单
   addMktWhite(params) {
-    console.log(params)
     return axios.post(`/api/o/h5/v1/order/addMktWhite`, params)
   },
   // 删除白名单

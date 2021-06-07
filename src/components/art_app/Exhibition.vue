@@ -78,11 +78,9 @@ export default {
   computed: {
     listinfo() {
       return this.listData || []
-      // console.log('child - receive ----> res:', value)
       // this.listinfo = value.data.getStuTaskRankingList.concat(
       //   value.data.getStuTaskRankingList
       // )
-      // console.log('listinfo -------', this.listinfo)
     }
   }
 }

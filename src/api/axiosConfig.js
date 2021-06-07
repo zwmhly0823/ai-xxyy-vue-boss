@@ -95,11 +95,9 @@ export default {
             .replace(')', '}')
             .replace(/\\/g, '')
           try {
-            // console.log(strToJson(str))
             const visableData = strToJson(str)
             params = { ...params, data: visableData }
           } catch (error) {
-            console.log(error)
           }
         }
       }
@@ -147,11 +145,9 @@ export default {
             .replace(')', '}')
             .replace(/\\/g, '')
           try {
-            // console.log(strToJson(str))
             const visableData = strToJson(str)
             params = { ...params, data: visableData }
           } catch (error) {
-            console.log(error)
           }
         }
       }

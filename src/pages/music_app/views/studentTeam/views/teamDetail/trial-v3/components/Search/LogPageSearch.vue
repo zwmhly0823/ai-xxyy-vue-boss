@@ -22,6 +22,7 @@
               style="margin-right: 10px;"
               type="2"
               :team-id="teamId"
+              need-uid="id"
               tablename="StudentTrialV2StatisticsList"
               @result="getSearchData('user', arguments)"
             />
