@@ -195,7 +195,7 @@ export default {
       regtype: [2, 3]
     }
     const query = Object.assign({}, regtype, params || {})
-  
+
     return axios.post('/graphql/v1/toss', {
       query: `{
         OrderPage(query: ${JSON.stringify(
@@ -312,5 +312,12 @@ export default {
         today_complete_course_count
       `
     }
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentTrialTeamStatisticsExtra(query: ${queryStr}){
+          ${fileds}
+        }
+      }`
+    })
   }
 }
