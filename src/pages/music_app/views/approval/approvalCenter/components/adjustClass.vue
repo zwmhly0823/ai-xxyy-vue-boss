@@ -536,10 +536,10 @@ export default {
         this.formData.userId = ''
         return callback(new Error('手机号不能为空'))
       }
-      if (!/^1[3456789]\d{9}$/.test(phoneNum)) {
-        this.formData.userId = ''
-        return callback(new Error('请输入正确的手机号'))
-      }
+      // if (!/^1[3456789]\d{9}$/.test(phoneNum)) {
+      //   this.formData.userId = ''
+      //   return callback(new Error('请输入正确的手机号'))
+      // }
       // 手机号输入正确后需要获取到userId，获取userId的是个异步方法getSearchPhoneData(data)，需要从公共组件传值，没法儿用promise，
       // 一时没想到啥好办法- -
       const validateInterval = setInterval(() => {
@@ -647,6 +647,8 @@ export default {
       if(data.labelText!="调整开课日期:") {
         this.newData = data.options[0].value
       }
+      this.formData.targetClassName = ''
+      this.formData.targetClassId = ''
       // 选择班级这儿逻辑稍微复杂一些，调班时用户选完订单后即可渲染班级列表，调级时选完订单后还得选申请调级级别，同理调期时还得选了调整开课日期
       this.handleStageAndSupChooseClass(event, data)
 

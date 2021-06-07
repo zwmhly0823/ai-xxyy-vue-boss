@@ -23,7 +23,7 @@
           v-if="user && user.mobile"
           class="el-icon-document-copy mg-r-5"
           style="margin-left:10px"
-          @click="handLeCopy(user.mobile)"
+          @click="handLeCopy(userPhone || user.mobile)"
         ></i>
         <!-- vip 会员标识 -->
         <svg class="iconfont-vip mg-r-5" v-if="is_sys_label_vip">
