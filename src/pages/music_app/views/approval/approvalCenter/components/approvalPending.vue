@@ -445,29 +445,6 @@
           <el-col :offset="1" :span="23">
             <h3>审批节点</h3>
           </el-col>
-          <el-col :offset="1" :span="23" style="margin-bottom: 10px">
-            <mark>当前类别(可更改):</mark>
-            <el-select
-              :style="{ 'margin-left': '10px', width: '140px' }"
-              size="mini"
-              v-model="diologRefundTag"
-              @change="diologRefundTagChange"
-            >
-              <el-option
-                v-for="(value, key) in {
-                  未分类: 'NONE',
-                  家长考虑中: 'PARENT_HESITANT',
-                  物流退回中: 'EXPRESS_NOT_RETURN',
-                  未联系上家长: 'CANT_CONTACT_PARENT',
-                  挽单试听1V1: 'WD_TRIAL_1V1',
-                  挽单试听小班课: 'WD_TRIAL_SMALL',
-                }"
-                :key="value"
-                :label="key"
-                :value="value"
-              ></el-option>
-            </el-select>
-          </el-col>
           <el-col :offset="1" :span="22">
             <el-table
               :data="tableDataNode"
@@ -891,7 +868,8 @@
         </div>
         <!-- 1-2-4退款操作按钮 -->
         <div v-if="currentType !== 'UNCREDITED'">
-          <el-row class="BOTTOM" v-if="isStaffId">
+          <el-row class="BOTTOM" v-if="isStaffId &&
+          ((drawerApprovalDeatail.regType === '体验课' && testCourseIdSet.indexOf(resetParams.staffId) >= 0) || (drawerApprovalDeatail.regType === '系统课' && systemCourseIdSet.indexOf(resetParams.staffId) >= 0))">
             <el-col :span="19" :offset="1">
               <a
                 :href="'/music_app/#/details/' + drawerApprovalDeatail.userId"
@@ -1225,6 +1203,8 @@ export default {
     return {
       roleIdList: [],
       hardwareApprovalIdSet: [],  //硬件补发货审批人员
+      testCourseIdSet: [],  //体验课审批人员
+      systemCourseIdSet: [],  //系统课审批人员
       tableHeight: 0,
       forSonDataApprovalPersonId: '',
       forSonDataApprovalId: '',
@@ -1358,6 +1338,8 @@ export default {
       this.$http.Backend.getStaffIds().then((res) => {
         this.roleIdList = res.payload.approvalIdSet;
         this.hardwareApprovalIdSet = res.payload.hardwareApprovalIdSet;
+        this.testCourseIdSet = res.payload.testCourseIdSet;
+        this.systemCourseIdSet = res.payload.systemCourseIdSet;
       })
     },
     // 获取审批权限
