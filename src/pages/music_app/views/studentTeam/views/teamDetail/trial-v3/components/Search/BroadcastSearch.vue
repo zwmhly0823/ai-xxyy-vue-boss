@@ -23,6 +23,7 @@
               type="2"
               :team-id="teamId"
               :activeId="activeId"
+              need-uid="uid"
               tablename="ActivityUserStatisticsList"
               @result="getSearchData('user', arguments)"
             />

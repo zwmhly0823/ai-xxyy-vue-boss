@@ -647,6 +647,8 @@ export default {
       if(data.labelText!="调整开课日期:") {
         this.newData = data.options[0].value
       }
+      this.formData.targetClassName = ''
+      this.formData.targetClassId = ''
       // 选择班级这儿逻辑稍微复杂一些，调班时用户选完订单后即可渲染班级列表，调级时选完订单后还得选申请调级级别，同理调期时还得选了调整开课日期
       this.handleStageAndSupChooseClass(event, data)
 

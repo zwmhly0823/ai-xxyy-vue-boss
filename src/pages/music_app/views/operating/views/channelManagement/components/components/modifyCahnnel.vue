@@ -361,7 +361,6 @@ export default {
       })
     },
     onChannelOne(data) {
-      console.log(this.ruleForm.channelOne, 'this.ruleForm.channelOne', data)
       if (data) {
         this.channelTwoDisabled = false
       } else {
@@ -422,7 +421,6 @@ export default {
           }
           Object.assign(this.props, obj)
           this.$http.Operating.updateChannel(this.props).then((res) => {
-            console.log(res)
             if (res.code === 0) {
               this.$message.success('渠道修改成功')
               this.$refs[formName].resetFields()

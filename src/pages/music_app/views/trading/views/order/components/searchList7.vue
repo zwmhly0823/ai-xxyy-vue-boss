@@ -89,13 +89,13 @@ import dayjs from 'dayjs'
 import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // add
 import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'
 import { downloadHandle } from '@/utils/download'
-
+import entranceMixins from './mixins/exportLog'
 export default {
   components: {
     orderSearch,
     DatePicker,
   },
-
+  mixins: [entranceMixins],
   data() {
     return {
       cur0: false,
@@ -142,12 +142,10 @@ export default {
     },
     // 选择状态
     getStatus(res) {
-      console.log(res, '选择状态')
       this.setSeachParmas(res, ['coupon_status'], 'terms')
     },
     // 难度
     supCallBack(res) {
-      console.log(res, 'res')
       this.setSeachParmas(res, ['sup'], 'terms')
     },
     // 选择订单下单时间
@@ -313,8 +311,6 @@ export default {
     },
     // 导出
     exportOrderHandle() {
-      console.log(this.searchParams)
-      console.log(this.$parent.$children[1].finalParams)
       const chooseExport = this.chooseExport
       if (this.searchParams.length === 0) {
         this.$message.error('请选择筛选条件')
@@ -350,13 +346,13 @@ export default {
           fileName: `乐器订单导出-${fileTitleTime}`, // 文件名称
           query: JSON.stringify(query),
         }
-        // console.log(exportExcel)
+        this.operatorObj.query = JSON.stringify(query)
         this.$http.DownloadExcel.exportOrder(params)
           .then((res) => {
-            console.log(res)
             downloadHandle(res, `乐器订单导出-${fileTitle}`, () => {
               loading.close()
               this.$message.success('导出成功')
+              this.initOperateExportLog(this.operatorObj)
             })
           })
           .catch(() => loading.close())
@@ -390,15 +386,14 @@ export default {
           query: JSON.stringify(query),
           // query: '{"status":3}'
         }
-        // console.log(exportExcel)
-
+        this.operatorObj.query = JSON.stringify(query)
         this.$http.DownloadExcel.exportOrder(params)
           .then((res) => {
-            console.log(res)
             downloadHandle(res, `体验课订单薪资核算表-${fileTitle}`, () => {
               loading.close()
               this.showChooseDialog = false
               this.$message.success('导出成功')
+              this.initOperateExportLog(this.operatorObj)
             })
           })
           .catch(() => loading.close())

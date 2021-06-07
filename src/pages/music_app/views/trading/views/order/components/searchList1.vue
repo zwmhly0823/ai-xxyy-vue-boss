@@ -291,6 +291,7 @@ import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhone
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
 import { isToss } from '@/utils/index'
 import { downloadHandle } from '@/utils/download'
+import entranceMixins from './mixins/exportLog'
 // import axios from '@/api/axiosConfig'
 
 export default {
@@ -319,9 +320,9 @@ export default {
     orderAttr,
     SearchPhoneAndUsername,
     SimpleSelect,
-    SearchStageEC
+    SearchStageEC,
   },
-
+  mixins: [entranceMixins],
   data() {
     return {
       associated_order_id: '全部',
@@ -449,15 +450,12 @@ export default {
     },
     // 订单号、手机号
     getOrderSearch(res) {
-      console.log('手机号', res)
       const key = Object.keys(res || {})[0]
       const val = res[key] ? res : ''
-      console.log(key, val)
       this.setSeachParmas(val, [key])
     },
     // 清空渠道选项
     clearChannel(res) {
-      console.log(res)
       if (res) {
         this.setSeachParmas({ pay_channel: '' }, ['pay_channel'], 'terms')
       } else {
@@ -472,15 +470,14 @@ export default {
     selectOrder(val) {
       this.searchParams.forEach((item, index) => {
         if (
-         item.terms&& item.terms.associated_order_id ||
-          item.terms &&item.terms.associated_order_id == 0
+          (item.terms && item.terms.associated_order_id) ||
+          (item.terms && item.terms.associated_order_id == 0)
         ) {
           this.searchParams.splice(index, 1)
         }
       })
       let res = { associated_order_id: val }
       this.setSeachParmas(res, ['associated_order_id'], 'terms')
-      console.log(this.searchParams, 'this.searchParams')
     },
     // 选择渠道
     getChannel(res) {
@@ -509,12 +506,10 @@ export default {
     },
     // 系统课难度
     supCallBack(res) {
-      console.log(res, 'res')
       this.setSeachParmas(res, ['sup'], 'terms')
     },
     // 体验课难度
     supCallBackTrial(res) {
-      console.log(res, 'res')
       this.setSeachParmas(res, ['trial_team_id'], 'terms')
     },
     // 选择订单下单时间
@@ -660,7 +655,7 @@ export default {
       })
       this.setSeachParmas(res, ['packages_type'])
     },
-    getDepartment(res,res1) {
+    getDepartment(res, res1) {
       this.teacherscope = res1.pay_teacher_id || null
       this.setSeachParmas(res, ['pay_teacher_id'], 'terms')
     },
@@ -671,17 +666,10 @@ export default {
       this.setSeachParmas(res, ['trial_team_id'], 'terms')
     },
     async getSendUser(res) {
-      console.log(res)
       this.setSeachParmas(res, ['first_order_send_id'], 'terms')
     },
     // fix
     getFirstOrder(res) {
-      console.log(res)
-      // this.$refs.phoneName.handleEmpty()
-      // this.setSeachParmas({ is_first_order_send_id: '' }, [
-      //   'is_first_order_send_id'
-      // ])
-      // console.log(res[0].is_first_order_send_id)
       if (res && res.is_first_order_send_id === '0') {
         this.$refs.phoneName.handleEmpty()
         this.setSeachParmas({ is_first_order_send_id: '' }, [
@@ -704,7 +692,6 @@ export default {
       }
     },
     getOrderType(res) {
-      console.log(res)
       this.setSeachParmas(res, ['regtype'])
     },
     getExpChange(res) {
@@ -715,7 +702,6 @@ export default {
       } else {
         this.setSeachParmas({ trial_team_id: { gte: 0 } }, ['trial_team_id'])
       }
-      console.log(res, 'res')
     },
     getPerformType(res) {
       this.setSeachParmas(res, ['pay_teacher_duty_id'])
@@ -728,7 +714,6 @@ export default {
      * @name: String 结果放到上层表达式中的位置，默认must. 可指定 should
      */
     setSeachParmas(res, key = [], extraKey = 'term', name = 'must') {
-      console.info(res)
       const { must, should } = this
       const temp = name === 'must' ? must : should
       key.forEach((k) => {
@@ -785,7 +770,6 @@ export default {
           }
         })
         this.searchParams = temp
-        console.log('参数', temp)
         this.$emit('search', temp)
 
         return
@@ -812,8 +796,6 @@ export default {
     },
     // 导出
     exportOrderHandle() {
-      console.log(this.searchParams)
-      console.log('exportOrderHandle', this.$parent.$children[1])
       const chooseExport = this.chooseExport
       if (this.searchParams.length === 0) {
         this.$message.error('请选择筛选条件')
@@ -823,7 +805,6 @@ export default {
       // 获取查询条件
       const query = this.$parent.$children[1].finalParams
       query.subject = 3
-      console.log('query======')
 
       const fileTitle = dayjs(new Date()).format('YYYY-MM-DD')
       const fileTitleTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
@@ -862,15 +843,14 @@ export default {
           query: JSON.stringify(query),
           // query: '{"status":3}'
         }
-        // console.log(exportExcel)
-
+        this.operatorObj.query = JSON.stringify(query)
         this.$http.DownloadExcel.exportOrder(params)
           .then((res) => {
-            console.log(res)
             downloadHandle(res, `系统课订单导出-${fileTitle}`, () => {
               loading.close()
               this.showChooseDialog = false
               this.$message.success('导出成功')
+              this.initOperateExportLog(this.operatorObj)
             })
           })
           .catch(() => loading.close())
@@ -880,7 +860,6 @@ export default {
           trial_team_id: 0,
           pay_teacher_id: { gt: 0 },
         })
-        console.log(queryF)
         const params = {
           apiName: 'OrderPage',
           header: {
@@ -901,11 +880,9 @@ export default {
           query: JSON.stringify(queryF),
           // query: '{"status":3}'
         }
-        // console.log(exportExcel)
 
         this.$http.DownloadExcel.exportOrder(params)
           .then((res) => {
-            console.log(res)
             downloadHandle(res, `系统课订单薪资核算表-${fileTitle}`, () => {
               loading.close()
               this.showChooseDialog = false

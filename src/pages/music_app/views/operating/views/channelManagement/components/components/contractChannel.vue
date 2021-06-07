@@ -177,7 +177,6 @@ export default {
     // 提交选中
     submitContract() {
       this.$emit('getData', this.multipleSelection)
-      console.log(this.multipleSelection)
     },
     // 取消
     prevSteps() {
@@ -216,11 +215,9 @@ export default {
         this.searchQuery[key] = ''
       }
       this.getData()
-      console.log('query', this.searchQuery)
     },
     // 选择表格
     handleSelectionChange(val) {
-      console.log(val)
       // 控制单选
       if (val.length > 1) {
         this.$refs.listDom.clearSelection()
@@ -270,7 +267,6 @@ export default {
               })
             })
           }
-          console.log('-', content)
           this.contractList = content
           Object.assign(this.listQuery, {
             totalElements: +totalElements,
@@ -278,7 +274,6 @@ export default {
           })
         }
       } catch (err) {
-        console.error(err)
       } finally {
         this.loading = false
       }

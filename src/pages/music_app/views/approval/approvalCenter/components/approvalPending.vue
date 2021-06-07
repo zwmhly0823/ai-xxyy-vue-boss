@@ -1296,7 +1296,6 @@ export default {
   created() {
     // 身份类型，4是财务，具体见wiki
     const roleList = JSON.parse(localStorage.getItem('staff')).roleList
-
     let roleId = roleList ? roleList[0] : ''
     this.roleId = roleId
     this.getRoleIdList()
@@ -1545,7 +1544,6 @@ export default {
 
       Object.assign(this.params, { type: val })
       this.type_lk = val
-
       this.currentPage = 1
       this.params.page = 1
       this.checkPending(this.params)
@@ -1854,7 +1852,6 @@ export default {
         .then((res) => {
           if (res && res.payload) {
             const payData = res.payload
-            // console.log(payData)
             // 用于显示的和一些杂项
             // 公共部分
             Object.assign(this.adjustDrawerData, {
@@ -2063,7 +2060,6 @@ export default {
       }
       this.$http.Backend.batchApproval(params)
         .then((res) => {
-          // console.log(res)
           if (res.code === 0) {
             this.$message({
               message: '批量审批通过',

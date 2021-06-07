@@ -561,6 +561,7 @@ export default {
           user_num
           birthday
           mobile
+          u_id
           join_date
           weixinUser {
             follow
@@ -1872,5 +1873,13 @@ export default {
         }
 }`
     })
+  },
+  // 获取学生手机号
+  getUserPhoneNumber(params) {
+    const { uid, teacherId } = params
+    return axios.get(
+      `/api/u/v1/user/userManner/queryUserMobile?subject=MUSIC_APP&uid=${uid}&operatorId=${teacherId}`
+
+    )
   },
 }

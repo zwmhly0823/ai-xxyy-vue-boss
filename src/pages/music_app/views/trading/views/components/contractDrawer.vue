@@ -335,7 +335,7 @@ export default {
             this.timeData = []
           }
         })
-        .catch((err) => console.log(err))
+        .catch((err) => {})
         .finally(() => {
           this.loading = false
         })
@@ -361,13 +361,11 @@ export default {
                 this.$message.error('操作失败')
               }
             } catch (err) {
-              console.log(err)
             } finally {
               this.loading = false
             }
           })
           .catch((e) => {
-            console.log('取消')
           })
       } else {
         this.$message.error('合同id错误')
@@ -405,7 +403,6 @@ export default {
           this.pricesTableData = res.payload || []
         }
       } catch (err) {
-        console.log(err)
       } finally {
         this.loading = false
       }

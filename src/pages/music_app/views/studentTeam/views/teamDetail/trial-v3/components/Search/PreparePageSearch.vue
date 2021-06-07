@@ -21,6 +21,7 @@
               style="margin-right: 10px;"
               type="2"
               :team-id="teamId"
+              need-uid="id"
               tablename="StudentTrialV2StatisticsList"
               @result="getSearchData('user', arguments)"
             />
@@ -114,7 +115,7 @@ export default {
     getSearchData(key, res) {
       const search = res && res[0]
       if (search) {
-        console.log(search)
+        // console.log(search)
         // 盒子物流
         if (key === 'express_status') {
           const { express_status: expressStatus } = search

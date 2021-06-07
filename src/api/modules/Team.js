@@ -176,7 +176,6 @@ export default {
     sup.length && Object.assign(query, { 'sup.keyword': sup })
     // 社群销售下的过滤
     teacherId && Object.assign(query, { teacher_id: teacherId })
-    console.log(teacherIdArr)
     // 老师权限下的过滤 TODO:
     !teacherId &&
       teacherIdArr.length &&

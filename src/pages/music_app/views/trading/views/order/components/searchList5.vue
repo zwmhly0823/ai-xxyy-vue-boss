@@ -103,14 +103,14 @@ import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // ad
 import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'
 import productStatus from '@/components/MSearch/searchItems/productStatus.vue'
 import { downloadHandle } from '@/utils/download'
-
+import entranceMixins from './mixins/exportLog'
 export default {
   components: {
     orderSearch,
     productStatus,
     DatePicker,
   },
-
+ mixins: [entranceMixins],
   data() {
     return {
       cur0: false,
@@ -164,7 +164,6 @@ export default {
     },
     // 难度
     supCallBack(res) {
-      console.log(res, 'res')
       this.setSeachParmas(res, ['sup'], 'terms')
     },
     // 选择订单下单时间
@@ -330,8 +329,6 @@ export default {
     },
     // 导出
     exportOrderHandle() {
-      console.log(this.searchParams)
-      console.log(this.$parent.$children[1].finalParams)
       const chooseExport = this.chooseExport
       if (this.searchParams.length === 0) {
         this.$message.error('请选择筛选条件')
@@ -373,12 +370,13 @@ export default {
           query: JSON.stringify(query),
         }
         // console.log(exportExcel)
+        this.operatorObj.query = JSON.stringify(query)
         this.$http.DownloadExcel.exportOrder(params)
           .then((res) => {
-            console.log(res)
             downloadHandle(res, `预付款优惠券订单导出-${fileTitle}`, () => {
               loading.close()
               this.$message.success('导出成功')
+              this.initOperateExportLog(this.operatorObj)
             })
           })
           .catch(() => loading.close())
@@ -413,14 +411,14 @@ export default {
           // query: '{"status":3}'
         }
         // console.log(exportExcel)
-
+        this.operatorObj.query = JSON.stringify(query)
         this.$http.DownloadExcel.exportOrder(params)
           .then((res) => {
-            console.log(res)
             downloadHandle(res, `体验课订单薪资核算表-${fileTitle}`, () => {
               loading.close()
               this.showChooseDialog = false
               this.$message.success('导出成功')
+              this.initOperateExportLog(this.operatorObj)
             })
           })
           .catch(() => loading.close())
