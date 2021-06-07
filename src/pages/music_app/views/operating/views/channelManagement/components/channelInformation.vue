@@ -24,9 +24,9 @@
           type="primary"
           >添加渠道</el-button
         >
-        <el-button type="primary" size="mini" @click="showImport = true">
+        <!-- <el-button type="primary" size="mini" @click="showImport = true">
           批量修改渠道等级
-        </el-button>
+        </el-button> -->
         <el-button
           class="bulkDownload"
           size="mini"
@@ -391,12 +391,10 @@ export default {
               this.$message.success('上传成功！')
             })
           } else {
-            console.log('res', res)
             this.$message.error(`上传失败，${res.errors || '请检测文件！'}`)
           }
         })
         .catch((err) => {
-          console.log('err-00', err)
         })
         .finally(() => {
           this.uploading = false
@@ -457,7 +455,6 @@ export default {
         this.queryList,
         this.currentPage
       ).then((res) => {
-        console.log(res)
         this.currentPage = res.data.ChannelDetailStatisticsPage.number
         this.totalElements = res.data.ChannelDetailStatisticsPage.totalElements
         const _data = res.data.ChannelDetailStatisticsPage.content
@@ -622,7 +619,6 @@ export default {
         .catch((err) => {
           // loadingInstance.close()
           this.downLoad = false
-          console.log(err)
         })
     },
     // 点击查看链接
