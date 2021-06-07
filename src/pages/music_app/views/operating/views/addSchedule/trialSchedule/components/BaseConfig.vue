@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2021-03-01 19:47:38
+ * @LastEditTime: 2021-04-20 20:08:17
  -->
 <template>
   <div class="first-step">
@@ -12,7 +12,6 @@
       <!-- 排期基本设置 -->
       <div class="divider-title">
         <h4>
-          <!-- <span v-if="courseType == 0">体验课</span><span v-else>系统课</span> -->
           <span>{{ courseTypeObj[courseType] }}</span>
           <span>排期-基本设置</span>
         </h4>
@@ -21,10 +20,20 @@
       <el-form :model="formInfo" :inline="true" :rules="rules" ref="formInfo">
         <div class="time-select">
           <el-row>
-            <el-col :span="8">
+            <el-col :span="11">
               <h4>售卖周期</h4>
               <el-form-item label="" prop="sellCycleTime">
                 <el-date-picker
+                  size="small"
+                  v-model="formInfo.sellCycleTime"
+                  type="daterange"
+                  range-separator="-"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                  @change="sellCycleTimeChange"
+                >
+                </el-date-picker>
+                <!-- <el-date-picker
                   size="small"
                   v-model="formInfo.sellCycleTime"
                   format="yyyy 年 MM 月 dd 日"
@@ -34,12 +43,12 @@
                   :default-time="['00:00:00', '00:00:00']"
                   @change="sellCycleTimeChange"
                 >
-                </el-date-picker>
+                </el-date-picker> -->
               </el-form-item>
 
               <h6>建议体验课售卖周期从本周五至下周五</h6>
             </el-col>
-            <el-col :span="10" :offset="1">
+            <el-col :span="13">
               <h4>上课周期</h4>
               <el-form-item label="" prop="attendClassTimeStart">
                 <el-date-picker
@@ -50,6 +59,10 @@
                   :picker-options="pickerBeginDateBefore"
                   value-format="timestamp"
                   @change="startClassChange"
+                  :default-value="
+                    this.sellCycleObj.endDate
+                      ? this.sellCycleObj.endDate
+                      : new Date()"
                 >
                 </el-date-picker>
               </el-form-item>
@@ -65,44 +78,9 @@
                   @change="endClassChange"
                 >
                 </el-date-picker>
-                <!-- <el-date-picker
-                  size="small"
-                  v-model="formInfo.attendClassTimeEnd"
-                  type="date"
-                  placeholder="结课时期"
-                  :picker-options="pickerBeginDateAfter"
-                >
-                </el-date-picker> -->
-                <!-- value-format="yyyy-MM-dd" <el-date-picker
-                  size="small"
-                  v-model="formInfo.attendClassTime"
-                  format="yyyy 年 MM 月 dd 日"
-                  type="datetimerange"
-                  start-placeholder="开始日期"
-                  end-placeholder="结束日期"
-                  :default-time="['12:00:00']"
-                  @change="attendClassTimeChange"
-                >
-                </el-date-picker> -->
               </el-form-item>
               <h6>开始上课时间必须从星期一开始</h6>
             </el-col>
-            <el-col
-              v-if="courseType == '1' || courseType == '3'"
-              :span="4"
-              :offset="1"
-            >
-              <h4>接速设置</h4>
-              <el-form-item label="" prop="robinNum">
-                <el-input
-                  size="small"
-                  v-model.number="formInfo.robinNum"
-                  placeholder="请输入学生数"
-                ></el-input>
-              </el-form-item>
-              <h6>轮询分配的学生数设置</h6>
-            </el-col>
-            <el-col v-else :span="4" :offset="1"></el-col>
           </el-row>
         </div>
         <!-- 售卖周期设置 -->
@@ -113,9 +91,12 @@
         <div class="sale-time" v-if="diffDay">
           <el-row>
             <el-col :span="3"><span class="t-head">售卖日期</span></el-col>
-            <el-col :span="3"><span class="t-head">限售(对内)</span></el-col>
-            <el-col :span="3"><span class="t-head">限售(对外)</span></el-col>
-            <el-col :span="3"><span class="t-head">已售(对外)</span></el-col>
+            <el-col :span="3" :offset="1"
+              ><span class="t-head">限售(对外)</span></el-col
+            >
+            <el-col :span="3" :offset="1"
+              ><span class="t-head">已售(对外)</span></el-col
+            >
           </el-row>
           <el-row v-for="(item, index) in diffDay" :key="index" :gutter="10">
             <el-col :span="3">
@@ -127,33 +108,7 @@
                   placeholder="售卖日期"
                 ></el-input></el-form-item
             ></el-col>
-            <el-col :span="2">
-              <el-form-item
-                label=""
-                :inline="true"
-                :prop="`limit_${index}`"
-                :rules="[
-                  {
-                    required: true,
-                    message: '不能为空',
-                    trigger: 'blur'
-                  },
-                  {
-                    type: 'number',
-                    transform: (value) => Number(value),
-                    message: '必须为数字',
-                    trigger: 'blur'
-                  }
-                ]"
-              >
-                <el-input
-                  v-model="formInfo[`limit_${index}`]"
-                  size="mini"
-                  placeholder="限售(对内)"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="2" :offset="1">
+            <el-col :span="3" :offset="1">
               <el-form-item
                 label=""
                 :prop="`fakeLimit_${index}`"
@@ -178,7 +133,7 @@
                 ></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="2" :offset="1">
+            <el-col :span="3" :offset="1">
               <el-form-item
                 label=""
                 :prop="`fakeSales_${index}`"
@@ -221,9 +176,15 @@
 </template>
 <script>
 import { Loading } from 'element-ui'
-import { courseTypeObj } from '../../../courseType'
+import { courseTypeObj } from '@/pages/music_app/views/operating/courseType'
+import { Sup_scheduleSubmit,Sup_scheduleIndex } from '@/utils/supList'
 export default {
-  props: ['stepStatus'],
+  props: {
+    category: {
+      type: [Number, String],
+      default: ''
+    }
+  },
   data() {
     var checkNumber = (rule, value, callback) => {
       if (!value) {
@@ -235,9 +196,12 @@ export default {
       }
     }
     return {
+      passWeek: [1],
       courseTypeObj,
       courseType: 0, // 课程类型；0 体验课；1系统课
       formInfo: {
+        startDate: '',
+        endDate: '',
         sellCycleTime: '',
         attendClassTimeStart: '',
         attendClassTimeEnd: '',
@@ -280,10 +244,14 @@ export default {
       },
       pickerBeginDateBefore: {
         disabledDate: (time) => {
-          const endDateVal = this.formInfo.attendClassTimeEnd
-          // const now = new Date().getTime() - 86400000
-          if (endDateVal) {
-            return time.getTime() > endDateVal
+          var endDate = this.sellCycleObj.endDate
+          if (time.getTime() < endDate) {
+            return true
+          } else {
+            // 体验课周三，系统课周五
+            if (this.passWeek.indexOf(time.getDay()) < 0) {
+              return true
+            }
           }
         }
       },
@@ -295,7 +263,8 @@ export default {
           }
         }
       },
-      outSellNum: '1200'
+      outSellNum: '15000'
+      // trial_28_category: ''
     }
   },
   computed: {},
@@ -303,13 +272,21 @@ export default {
   async created() {
     const { period = '', courseType = '0' } = this.$route.params
     this.period = period
-    if (courseType === '0') this.outSellNum = '8000'
+    // if (courseType === '0') this.outSellNum = '15000'
     this.courseType = courseType
-
+    let submitCourseType = Sup_scheduleSubmit[courseType]
+    // await this.getCourseType()
+      this.courseType == 0 || this.courseType == 2
+      ? (this.passWeek = [5])
+      : (this.passWeek = [5])
+    // 编辑页面
+    
     if (+period) {
-      // 编辑页面 TODO:
       try {
-        const _data = await this.getScheduleFirstStep({ period, courseType })
+        const _data = await this.getScheduleFirstStep({
+          period,
+          courseType:submitCourseType
+        })
         const {
           courseDay = '',
           endCourseDay = '',
@@ -328,16 +305,10 @@ export default {
           sellCycleTime,
           attendClassTimeStart: new Date(Number(`${courseDay}`)),
           attendClassTimeEnd: new Date(Number(`${endCourseDay}`)),
-          // attendClassTime: [
-          //   new Date(Number(`${courseDay}`)),
-          //   new Date(Number(`${endCourseDay}`))
-          // ],
           sellCycle,
           robinNum // 接速设置
         }
-        // this.startClassChange()
         this.sellCycleTimeChange(sellCycleTime)
-        // this.attendClassTimeChange(this.formInfo.attendClassTime)
       } catch (err) {
       }
     }
@@ -351,19 +322,18 @@ export default {
         courseDay && this.endClassChange(courseDay + 13 * 24 * 3600 * 1000)
       }
     },
-    // 节课时期
+    // 结课时期
     endClassChange(endCourseDay) {
       this.formInfo.attendClassTimeEnd = endCourseDay || ''
     },
-    // // 上课周期
-    // attendClassTimeChange(val) {
-    //   const [courseDay = '', endCourseDay = ''] = val || []
-    //   this.attendClassObj = {
-    //     ...this.attendClassObj,
-    //     courseDay: courseDay ? courseDay.getTime() : '',
-    //     endCourseDay: endCourseDay ? endCourseDay.getTime() : ''
-    //   }
-    // },
+    // 开始售卖日期
+    startDateChange(startDate = '') {
+      Object.assign(this.formInfo, { startDate })
+    },
+    // 结束售卖日期
+    endDateChange(endDate = '') {
+      Object.assign(this.formInfo, { endDate })
+    },
     // 售卖周期
     sellCycleTimeChange(val) {
       const [startDate = '', endDate = ''] = val || []
@@ -375,17 +345,12 @@ export default {
         ? Math.floor(diffTime / (24 * 3600 * 1000)) + 1
         : 0
 
-      const { sellCycle = new Array(this.diffDay) } = this.formInfo
+      const sellCycle = this.formInfo.sellCycle || new Array(this.diffDay)
       for (let i = 0; i < this.diffDay; i++) {
         this.$set(
           this.formInfo,
           `sellDate_${i}`,
           this.calcSellYear(startDate, i)
-        )
-        this.$set(
-          this.formInfo,
-          `limit_${i}`,
-          (sellCycle[i] && sellCycle[i].limit) || '10000'
         )
         this.$set(
           this.formInfo,
@@ -395,7 +360,7 @@ export default {
         this.$set(
           this.formInfo,
           `fakeSales_${i}`,
-          (sellCycle[i] && sellCycle[i].fakeSales) || '100'
+          (sellCycle[i] && sellCycle[i].fakeSales) || '2000'
         )
       }
       this.sellCycleObj = {
@@ -430,7 +395,9 @@ export default {
         fullscreen: true
       })
       try {
-        const _res = await this.$http.Operating.addScheduleFirstStep(params)
+        const _res = await this.$http.Operating.addTrialScheduleFirstStep(
+          params
+        )
         if (_res.code === 0) cb(_res)
       } catch (err) {
         this.$message({
@@ -445,19 +412,17 @@ export default {
     // 新增招生排期第一步-edit获取数据
     async getScheduleFirstStep(params) {
       try {
-        const _res = await this.$http.Operating.getScheduleFirstStep(params)
+        const _res = await this.$http.Operating.getTrialScheduleFirstStep(
+          params
+        )
         return Promise.resolve(_res)
       } catch (err) {
-        this.$message({
-          message: '获取列表出错',
-          type: 'warning'
-        })
+        this.$message.warning('获取列表出错')
         return Promise.reject(err)
       }
     },
     // 点击下一步时封装数据
     pacakageFormInfo() {
-      const sendFrom = {}
       for (let i = 0; i < this.diffDay; i++) {
         const obj = {
           sellDate: new Date(this.formInfo[`sellDate_${i}`]).getTime(),
@@ -471,34 +436,38 @@ export default {
       const courseDay = new Date(this.formInfo.attendClassTimeStart).setHours(0)
 
       const endCourseDay = new Date(this.formInfo.attendClassTimeEnd).getTime()
+        // 这个对象里面的type，0 体验课；1系统课;2单周体验课
 
-      Object.assign(sendFrom, {
+      return {
         ...this.sellCycleObj,
         courseDay,
         endCourseDay,
         robinNum: this.formInfo.robinNum,
         sellCycle: this.setSellTimeForm,
-        type: this.courseType,
+        type: Sup_scheduleIndex[this.courseType],
         period: +this.period || ''
-      })
+      }
+    },
+    async getCourseType() {
+      const { getCourseListByCourseType } = this.$http.Operating
 
-      return sendFrom
+      const res = await getCourseListByCourseType({ courseType: 4 })
+      const { code, payload } = res
+      if (code === 0) {
+        const first = payload.length ? payload[0] : {}
+      }
     },
     nextStep() {
-      const sendFrom = this.pacakageFormInfo() // TODO:
+      const sendFrom = this.pacakageFormInfo()
       this.$refs.formInfo.validate((valid) => {
         if (valid) {
-          const cb = (_res) => {
-            const {
-              payload: { period }
-            } = _res
+          const cb = (res) => {
+            this.period = res.payload?.period || ''
 
-            this.period = period
-
-            this.$store.commit('setSchedulePeriod', period)
+            this.$store.commit('setSchedulePeriod', this.period)
             this.$emit('listenStepStatus', sendFrom)
           }
-          // 掉接口 TODO:
+          // 掉接口
           this.addScheduleFirstStep(sendFrom, cb)
         } else {
           return false

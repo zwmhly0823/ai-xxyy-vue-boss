@@ -3,53 +3,108 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-16 10:18:42
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-11-12 17:22:53
  -->
 <template>
   <div class="second-step">
     <div class="step-container step-two-container">
-      <div class="secondContent">
-        <div>
+      <div class="btn-area">
+        <el-button
+          type="primary"
+          size="small"
+          class="btn-directed"
+          @click="exportExcel"
+        >
+          导入数据
+        </el-button>
+      </div>
+      <el-row :gutter="20">
+        <el-col :span="4" :offset="3">
           <org-dept @changeOrgDept="changeOrgDept"></org-dept>
-        </div>
-        <div>
-          <el-transfer
-            style="text-align: left; display: inline-block"
-            v-model="transferVal"
-            filterable
-            :right-default-checked="rightDefaultChecked"
-            :props="{
-                label: 'realname',
+        </el-col>
+        <el-col :span="16">
+          <div class="transfer-container">
+            <el-transfer
+              style="text-align: left; display: inline-block"
+              v-model="transferVal"
+              filterable
+              :right-default-checked="rightDefaultChecked"
+              :props="{
                 key: 'id',
+                label: 'realname'
               }"
-            :render-content="renderFunc"
-            :titles="['待选择', '已选择']"
-            :button-texts="['到左边', '到右边']"
-            :format="{
+              :render-content="renderFunc"
+              :titles="['待选择', '已选择']"
+              :button-texts="['到左边', '到右边']"
+              :format="{
                 noChecked: '${total}',
                 hasChecked: '${checked}/${total}'
               }"
-            @change="handleChange"
-            :data="transferData"
-          ></el-transfer>
-        </div>
-      </div>
+              @change="handleChange"
+              :data="transferData"
+            >
+            </el-transfer>
+          </div>
+        </el-col>
+      </el-row>
+
       <!-- 取消、下一步 -->
       <div class="operate-btn">
-        <el-button size="small" type="primary" @click="stepOperate(0)">上一步</el-button>
-        <el-button size="small" type="primary" @click="stepOperate(1)">下一步</el-button>
+        <el-button size="small" type="primary" @click="stepOperate(0)"
+          >上一步</el-button
+        >
+        <el-button size="small" type="primary" @click="stepOperate(1)"
+          >下一步</el-button
+        >
       </div>
     </div>
+    <!-- 导入数据模态框 -->
+    <el-dialog
+      title="导入数据"
+      :visible.sync="dialogVisible"
+      :before-close="handleCloseUpdata"
+      width="30%"
+    >
+      <el-upload
+        ref="upload"
+        action=""
+        accept=".xls, .xlsx"
+        :headers="headers"
+        :auto-upload="false"
+        :limit="1"
+        :http-request="uploadFile"
+      >
+        <el-button
+          slot="trigger"
+          size="small"
+          type="primary"
+          :disabled="uploading"
+          >选取文件</el-button
+        >
+        <el-button
+          style="margin-left: 10px;"
+          size="small"
+          type="success"
+          @click="submitUpload"
+          :disabled="uploading"
+          >上传到服务器</el-button
+        >
+        <!-- :loading="uploading" -->
+        <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件</div>
+      </el-upload>
+    </el-dialog>
   </div>
 </template>
 <script>
 import OrgDept from './OrgDept'
-import { Sup_scheduleIndex,Sup_scheduleSubmit} from '@/utils/supList'
 export default {
   props: ['stepStatus'],
   data() {
     return {
+      dialogVisible: false,
+      headers: { 'Content-Type': 'multipart/form-data' },
+      uploading: false,
       params: {
         period: '',
         courseType: '0'
@@ -63,7 +118,7 @@ export default {
       renderFunc(h, option) {
         return (
           <span>
-            {option.realname} - {option.id}
+            {option.id} - {option.realname}
           </span>
         )
       }
@@ -74,9 +129,9 @@ export default {
   },
   watch: {},
   async created() {
-    let { period = 0, courseType = '0' } = this.$route.params
-    courseType = Sup_scheduleSubmit[courseType]
+    const { period = 0, courseType = '0' } = this.$route.params
     Object.assign(this.params, { period, courseType })
+
     await this.getTeacherByDept()
     if (+period) {
       const teachers = await this.getTeacherIdArray()
@@ -87,7 +142,7 @@ export default {
     }
   },
   methods: {
-    // 编辑页获取所 选择的 teacher：TODO:
+    // 编辑页获取所 选择的 teacher：
     async getHasSelectTeacher() {
       try {
         const teacherList = await this.$http.Operating.getHasSelectTeacher(
@@ -133,12 +188,6 @@ export default {
       if (this.departmentQuery) {
         this.query = Object.assign({}, this.departmentQuery || {})
       }
-      var courseType = this.params.courseType == 2 ? 2 : 1
-     if (this.query) {
-        this.query.duty_id = courseType
-      } else {
-        this.query = { duty_id: courseType, status: 0 }
-      }
       const query = this.query ? JSON.stringify(this.query) : ''
       // tab数据
       const res = await this.$http.Teacher.getTeacherRealnameAndId(
@@ -147,17 +196,64 @@ export default {
         3000
       )
       if (res && res.data) {
-        var { content = [], number } = res.data.TeacherManagePage || {}
-        var contentList = []
-        // 过滤未绑定微信的销售
-        content.map((item,index) => {
-          if (item.weixin_ids !== '') {
-            contentList.push(item)
-          }
-        })
-        this.transferData = contentList
+        const { content = [], number } = res.data.TeacherManagePage || {}
+
+        this.transferData = content
         this.currentPage = +number
       }
+    },
+    /** 导入数据 */
+    exportExcel() {
+      this.dialogVisible = true
+    },
+    /** 导入数据 关闭事件 */
+    handleCloseUpdata() {
+      this.dialogVisible = false
+      this.$refs.upload.clearFiles()
+    },
+    /** 导入数据上传 */
+    uploadFile(params) {
+      const { courseType = 1 } = this.$route.params
+      const formdata = new FormData()
+      const { file } = params
+      formdata.append('file', file)
+
+      this.uploading = true
+      Object.assign(formdata, { courseType })
+
+      this.$http.DownloadExcel.updateScheduleExcel(formdata)
+        .then((res) => {
+          if (res && Object.prototype.toString.call(res) === '[object Blob]') {
+            this.$refs.upload.clearFiles()
+            this.dialogVisible = false
+            this.downloadFn(res, file.name, () => {
+              this.$emit('setExcelStatus', 'complete')
+            })
+          } else {
+            this.$message.error('上传失败，请检测文件！')
+          }
+        })
+        .finally(() => {
+          this.uploading = false
+        })
+    },
+    // 下载文件
+    downloadFn(data, fileName = '下载', cb) {
+      if (!data) return
+      const blob = new Blob([data])
+      const elink = document.createElement('a')
+      elink.download = fileName
+      elink.style.display = 'none'
+      elink.href = URL.createObjectURL(blob)
+      document.body.appendChild(elink)
+      elink.click()
+      URL.revokeObjectURL(elink.href) // 释放URL 对象
+      document.body.removeChild(elink)
+
+      cb && cb()
+    },
+    submitUpload(file, filelist) {
+      this.$refs.upload.submit()
     },
     changeOrgDept(data) {
       this.department(data)
@@ -187,45 +283,25 @@ export default {
   display: block;
   width: auto;
 }
-.secondContent {
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-}
-.secondContent > div {
-  margin-bottom: 20px;
-}
-.el-transfer {
-  height: 350px;
-}
-.el-transfer-panel {
-  height: 100%;
+.el-transfer-panel__body {
+  height: 300px;
 }
 .el-transfer-panel__list.is-filterable {
-  height: 246px;
-}
-
-.step-two-container .transfer-container .el-transfer-panel {
-  width: 350px;
-}
-.step-two-container .transfer-container .el-transfer__buttons .el-button {
-  display: block;
-  margin-right: 0;
-  margin-left: 0;
-  width: 100%;
-}
-@media (max-width: 1550px) {
-  .step-two-container .transfer-container .el-transfer-panel {
-    width: 200px;
-  }
+  height: 270px;
 }
 </style>
 <style lang="scss" scoped>
 .step-two-container {
-  margin: 60px 0;
+  // margin: 60px 0;
   .transfer-container {
-    min-width: 570px;
     text-align: center;
+  }
+  .btn-area {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 0;
+    max-width: 1250px;
+    margin: 0 auto;
   }
   .operate-btn {
     display: flex;

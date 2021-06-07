@@ -3,195 +3,77 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-16 11:48:23
+ * @LastEditors: Shentong
+ * @LastEditTime: 2021-04-12 21:15:50
  -->
 <template>
-  <div class="app-main height add-schedule-container">
+  <div class="add-schedule-container">
     <div class="grid-content">
       <el-scrollbar wrap-class="scrollbar-wrapper">
-        <div class="scroll-container">
-          <h3 class="title-todo">新建{{ courseName }}招生排期</h3>
-          <div class="step-container-status">
-            <el-steps :active="stepStatus">
-              <el-step title="设置基本信息" icon="el-icon-edit"></el-step>
-              <el-step
-                v-if="courseType == '0' || courseType == '1'"
-                title="设置分配线索规则"
-                icon="el-icon-s-tools"
-              ></el-step>
-              <el-step title="选择带班销售" icon="el-icon-s-flag"></el-step>
-              <el-step title="设置招生容量" icon="el-icon-s-check"></el-step>
-              <!-- <el-step title="完成" icon="el-icon-success"></el-step> -->
-            </el-steps>
-          </div>
-          <!-- 第一步 -->
-          <first-step
-            v-show="stepStatus == 1"
-            :stepStatus="stepStatus"
-            @listenStepStatus="oneStepNext"
-          ></first-step>
-
-          <!-- 插入一步 设置分配线索 仅体验课显示 -->
-          <set-leads
-            v-if="(courseType == '0' || courseType == '1') && stepStatus == 2"
-            @listenStepStatus="fSstepStatus"
-            @setExcelStatus="excelStatus"
-          ></set-leads>
-
-          <!-- 第二步 -->
-          <second-step
-            v-show="isShowSecondStep"
-            :stepStatus="stepStatus"
-            @listenStepStatus="fSstepStatus"
-          ></second-step>
-          <!-- 第三步 -->
-          <third-step
-            v-if="isShowThirdStep"
-            :stepStatus="stepStatus"
-            @listenStepStatus="fSstepStatus"
-          ></third-step>
-          <!-- 第四步 -->
-          <div
-            class="step-container step-four-container"
-            v-show="isShowLastStep"
-          >
-            <div class="complete-container">
-              <i class="el-icon-success"></i>
-              <p>保存成功</p>
-              <div class="succ-operate">
-                <el-button size="small" type="info" @click="containerEdit"
-                  >继续修改</el-button
-                >
-                <el-button size="small" type="success" @click="backList"
-                  >返回列表</el-button
-                >
-              </div>
-            </div>
-          </div>
-        </div>
+        <component :is="curtComponent"></component>
       </el-scrollbar>
     </div>
   </div>
 </template>
 
 <script>
-import FirstStep from './components/FirstStep'
-import SecondStep from './components/SecondStep'
-import ThirdStep from './components/ThirdStep'
-import SetLeads from './components/SetLeads'
-import { Sup_scheduleIndex, Sup_scheduleSubmit } from '@/utils/supList'
+import TrialSchedule from './trialSchedule' // 新版体验课
+import SystemCourse from './systemCourse' // 系统课
+import {
+  singlePeriod,
+  doublePeriod,
+} from '@/pages/music_app/views/operating/partTools'
 export default {
-  props: [],
+  props: {},
   data() {
     return {
-      isComplete: false,
-      stepStatus: 1,
-      teacherSelectInfo: {},
-      courseType: '0',
-      courseName: '体验课',
+      comps: {},
     }
   },
   components: {
-    FirstStep,
-    SecondStep,
-    ThirdStep,
-    SetLeads,
+    TrialSchedule,
+    SystemCourse
   },
-  watch: {
-    stepStatus(val) {
-      this.setStatus(val)
-    },
-  },
+  created() {},
   computed: {
-    isShowSecondStep() {
-      return (
-        (this.courseType === '0' && this.stepStatus === 3) ||
-        (this.courseType === '1' && this.stepStatus === 3) ||
-        (this.courseType === '2' && this.stepStatus === 2)
-      )
-    },
-    isShowThirdStep() {
-      return (
-        (this.courseType === '0' && this.stepStatus === 4) ||
-        (this.courseType === '1' && this.stepStatus === 4) ||
-        (this.courseType === '2' && this.stepStatus === 3)
-      )
-    },
-    isShowLastStep() {
-      console.log(this.courseType, this.stepStatus)
-      return (
-        (this.courseType === '0' && this.stepStatus === 5) ||
-        (this.courseType === '1' && this.stepStatus === 5) ||
-        (this.courseType === '2' && this.stepStatus === 6)
-      )
-    },
-  },
-  created() {
-    const { courseType = '0' } = this.$route.params
-    this.courseType = courseType
-    this.courseName =
-      courseType === '0'
-        ? '单周体验课'
-        : courseType === '1'
-        ? '双周体验课'
-        : '系统课'
-    let staff = JSON.parse(localStorage.getItem('staff'))
-    if (staff.stepStatus) {
-      this.stepStatus = staff.stepStatus
-    }
-    let _this = this
-  },
-  destroyed() {},
-  methods: {
-    setStatus(val = 1) {
-      var staff = JSON.parse(localStorage.getItem('staff'))
-      staff.stepStatus = val
-      localStorage.setItem('staff', JSON.stringify(staff))
-    },
-    // 第一步 点击下一步 监听
-    oneStepNext(val) {
-      if (val) this.stepStatus++
-    },
-    /**
-     * @description 第一，二步 点击下一步 监听
-     * @param {type } 0： 上一步；1: 下一步
-     */
-    fSstepStatus(type) {
-      if (type) this.stepStatus++
-      else this.stepStatus--
-    },
-    nextStep() {
-      this.stepStatus++
-    },
-    containerEdit() {
-      this.stepStatus = 1
-    },
-    backList() {
-      this.$store.commit('setSchedulePeriod', '')
-      this.$store.commit('setScheduleTeacher', [])
-      this.$router.push({ path: '/operatingSchedule' })
-    },
-    /**
-     * @description "设置分配线索规则"步骤中的《导入数据》工能emit值
-     * @params {res}
-     * @type 返回为'complete'代表导入数据成功，此时直接跳转到完成步骤
-     */
-    excelStatus(res) {
-      res === 'complete' &&
-        (this.stepStatus =
-          this.courseType === '0' || this.courseType === '1' ? 5 : 4)
+    curtComponent: function () {
+      const { period = '0', courseType = '0' } = this.$route.params
+      let str = ''
+      if (courseType === '2') {
+        str = 'system-course'
+      } else if (courseType === '0') {
+        // 单周体验课
+        if (period == 0 || period > singlePeriod) {
+          // 版本控制
+          str = 'trial-schedule'
+        } else {
+          str = 'system-course'
+        }
+      } else if (courseType === '1') {
+        // 双周体验课
+        if (period == 0 || period > doublePeriod) {
+          // 版本控制
+          str = 'trial-schedule'
+        } else {
+          str = 'system-course'
+        }
+      }
+      return str
     },
   },
+  methods: {},
 }
 </script>
 <style lang="scss" scoped>
 .add-schedule-container {
+  background: white;
+  min-height: calc(100vh - 60px);
+  width: 100%;
+  position: relative;
+  overflow: hidden;
   .grid-content {
-    background: white;
     height: 100%;
-    display: flex;
-    flex-direction: column;
+    // overflow: scroll;
     &.right {
       padding: 0;
     }
