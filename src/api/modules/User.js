@@ -561,6 +561,7 @@ export default {
           user_num
           birthday
           mobile
+          u_id
           join_date
           weixinUser {
             follow
