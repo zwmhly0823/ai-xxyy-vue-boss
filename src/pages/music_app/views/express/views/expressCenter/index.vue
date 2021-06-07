@@ -310,7 +310,7 @@
         <el-popconfirm
           confirmButtonText="确定"
           cancelButtonText="取消"
-          @onConfirm="godelivery"
+          @confirm="godelivery"
           v-loading.fullscreen.lock="fullscreenLoading"
           icon="el-icon-info"
           iconColor="red"
