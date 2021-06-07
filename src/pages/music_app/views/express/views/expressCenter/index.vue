@@ -1,20 +1,20 @@
 <template>
   <div class="container">
     <div class="automatic-config">
-      <el-dropdown @command="handleCommand" v-if="powerStatus =='1'">
+      <el-dropdown @command="handleCommand" v-if="powerStatus =='1' || role =='5'">
         <span class="el-dropdown-link">
           <span><i class="el-icon-setting"></i>设置</span>
         </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="import">导入物流信息</el-dropdown-item>
-          <el-dropdown-item command="export">导出物流信息</el-dropdown-item>
+          <el-dropdown-item command="import" v-if="powerStatus =='1'">导入物流信息</el-dropdown-item>
+          <el-dropdown-item command="export" v-if="powerStatus =='1'">导出物流信息</el-dropdown-item>
           <!-- <el-dropdown-item
             v-show="activeName === '0' || activeName === '1'"
             command="setting"
             >自动发货设置</el-dropdown-item
           > -->
           <el-dropdown-item
-            v-show="activeName === '0' || activeName === '1'"
+            v-show="(activeName === '0' || activeName === '1') && role =='5'"
             command="delivery"
             >一键批量发货</el-dropdown-item
           >
@@ -460,6 +460,7 @@ export default {
       seachTotal: 0,
       powerParams: {},
       powerStatus:null,
+      role:null
     }
   },
   mounted() {
@@ -467,6 +468,7 @@ export default {
       this.calcSrollHeight()
     })
     this.powerParams.uid = JSON.parse(localStorage.getItem('staff')).id
+    this.role =JSON.parse(localStorage.getItem('staff')).roleList && JSON.parse(localStorage.getItem('staff')).roleList[0]
     this.powerParams.type = this.activeName
     this.initData(this.powerParams)
   },
