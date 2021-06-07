@@ -11,7 +11,7 @@ import axios from '../axiosConfig'
 
 export default {
   // 获取体验课班级列表
-  getTrialTeamList(params = {}) {
+  getTrialTeamList (params = {}) {
     const { query = {}, page = 1, size = 5, sort = { ctime: 'desc' } } = params
     return axios.post('/graphql/v1/toss', {
       query: `{
@@ -73,7 +73,7 @@ export default {
   },
 
   // 根据班级ID获取班级详情
-  getTeamDetailById(params = {}) {
+  getTeamDetailById (params = {}) {
     // const query = { id: params.id }
     return axios.post('/graphql/v1/toss', {
       query: `{
@@ -120,7 +120,7 @@ export default {
     })
   },
   // 审批中心根据班级获取老师id
-  getTeamApproval(params = {}) {
+  getTeamApproval (params = {}) {
     // const query = { id: params.id }
     return axios.post('/graphql/v1/toss', {
       query: `{
@@ -130,8 +130,8 @@ export default {
       }`
     })
   },
- // 审批中心根据老师的id 获取部门的id
-  getTeacherApproval(params = {}) {
+  // 审批中心根据老师的id 获取部门的id
+  getTeacherApproval (params = {}) {
     // const query = { id: params.id }
     return axios.post('/graphql/v1/toss', {
       query: `{
@@ -190,17 +190,16 @@ export default {
    * 根据班级ID获取班级转化的系统课订单
    * regtype:[2,3]
    */
-  getTrialTeamOrderList(params = {}, page = 1, sort) {
+  getTrialTeamOrderList (params = {}, page = 1, sort) {
     const regtype = {
       regtype: [2, 3]
     }
     const query = Object.assign({}, regtype, params || {})
-    console.log(query)
     return axios.post('/graphql/v1/toss', {
       query: `{
         OrderPage(query: ${JSON.stringify(
-          JSON.stringify(query)
-        )}, page: ${page}, size: 20, sort: ${JSON.stringify(
+        JSON.stringify(query)
+      )}, page: ${page}, size: 20, sort: ${JSON.stringify(
         JSON.stringify(sort)
       )}) {
           totalElements
@@ -247,77 +246,70 @@ export default {
    * 
     @type:  0-课前准备, 1-上课情况, 2-本班订单
    */
-    getTrialTeamStatisticsExtra(params = {}, type = '0') {
-      const query = Object.assign({}, params || {})
-      const queryStr = JSON.stringify(JSON.stringify(query))
-      // 根据不同的状态，请求对应的统计数据
-      let fileds = ''
-      if (type === '0') {
-        fileds = `
-          student_count
-          to_be_delivered_count
-          un_follow_count
-          un_open_app_count
-          no_address_count
-          un_added_wechat_count
-          un_added_group_count
-          today_track_count
-          tomorrow_track_count
-          un_added_wechat_uids
-          un_added_group_uids
-        `
-      }
-      if (type === '1') {
-        fileds = `
-          student_count
-          today_track_count
-          tomorrow_track_count
-          yesterday_join_course_uids
-          yesterday_complete_course_uids
-          yesterday_course_task_uids
-          yesterday_task_comment_uids
-          yesterday_listen_comment_uids
-          yesterday_un_join_course_uids
-          yesterday_un_complete_course_uids
-          # yesterday_un_task_comment_uids
-          yesterday_un_listen_comment_uids
-          yesterday_un_open_app_uids
-          today_join_course_uids
-          today_complete_course_uids
-          today_join_course_count
-          today_complete_course_count
-          today_course_task_uids
-          today_task_comment_uids
-          today_listen_comment_uids
-          today_un_join_course_uids
-          today_un_complete_course_uids
-          # today_un_task_comment_uids
-          today_un_listen_comment_uids
-          today_un_open_app_uids
-          complete_course_count_group
-          send_course_count_per_student
-        `
-      }
-      if (type === '2') {
-        fileds = `
-          student_count
-          total_system_order_count
-          system_order_count
-          system_order_amount
-          yesterday_system_order_amount
-          yesterday_system_order_count
-          today_system_order_amount
-          today_system_order_count
-          today_join_course_count
-          today_complete_course_count
-        `
-      }
-      return axios.post('/graphql/v1/toss', {
-        query: `{
-          StudentTrialTeamStatisticsExtra(query: ${queryStr}){
-            ${fileds}
-          }
-        }`
-      })
+  getTrialTeamStatisticsExtra (params = {}, type = '0') {
+    const query = Object.assign({}, params || {})
+    const queryStr = JSON.stringify(JSON.stringify(query))
+    // 根据不同的状态，请求对应的统计数据
+    let fileds = ''
+    if (type === '0') {
+      fileds = `
+        student_count
+        to_be_delivered_count
+        un_follow_count
+        un_open_app_count
+        no_address_count
+        un_added_wechat_count
+        un_added_group_count
+        today_track_count
+        tomorrow_track_count
+        un_added_wechat_uids
+        un_added_group_uids
+      `
     }
+    if (type === '1') {
+      fileds = `
+        student_count
+        today_track_count
+        tomorrow_track_count
+        yesterday_join_course_uids
+        yesterday_complete_course_uids
+        yesterday_course_task_uids
+        yesterday_task_comment_uids
+        yesterday_listen_comment_uids
+        yesterday_un_join_course_uids
+        yesterday_un_complete_course_uids
+        # yesterday_un_task_comment_uids
+        yesterday_un_listen_comment_uids
+        yesterday_un_open_app_uids
+        today_join_course_uids
+        today_complete_course_uids
+        today_join_course_count
+        today_complete_course_count
+        today_course_task_uids
+        today_task_comment_uids
+        today_listen_comment_uids
+        today_un_join_course_uids
+        today_un_complete_course_uids
+        # today_un_task_comment_uids
+        today_un_listen_comment_uids
+        today_un_open_app_uids
+        complete_course_count_group
+        send_course_count_per_student
+      `
+    }
+    if (type === '2') {
+      fileds = `
+        student_count
+        total_system_order_count
+        system_order_count
+        system_order_amount
+        yesterday_system_order_amount
+        yesterday_system_order_count
+        today_system_order_amount
+        today_system_order_count
+        today_join_course_count
+        today_complete_course_count
+      `
+    }
+  }
 }

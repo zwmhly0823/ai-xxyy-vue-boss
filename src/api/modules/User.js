@@ -627,7 +627,6 @@ export default {
   },
   // 学习记录基本信息
   getStudentDetail(term, course_id, sup) {
-    // console.log(query)
     const formattingQuery = JSON.stringify({
       term,
       course_id,

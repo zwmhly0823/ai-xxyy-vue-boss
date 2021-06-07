@@ -62,7 +62,6 @@ const getEntry = function() {
 
 const editOperation = function(text) {
   if (BASE_URL && execSync('git status -s', { encoding: 'utf-8' }) !== '') {
-    console.log(chalk.red(`同学，请先提交代码再${text}哦~`), '\n')
     process.exit(1)
   }
 }

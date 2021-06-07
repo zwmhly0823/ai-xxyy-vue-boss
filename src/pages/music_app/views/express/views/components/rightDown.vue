@@ -650,7 +650,6 @@ export default {
   },
   watch: {
     search(val) {
-      console.log(val, 'val===11')
       this.currentPage = 1
       this.searchIn = val
       if (sessionStorage.getItem('val')) {
@@ -802,7 +801,6 @@ export default {
       } else {
         this.enclosurevideo = row.approvalReissueInfo.atts_url
       }
-      console.log(row, 'row')
     },
     // 关闭附件详情
     handleCloseEnclosure() {
@@ -954,7 +952,6 @@ export default {
           )
         })
         .catch((err) => {
-          console.log(err)
         })
     },
     handlePass(val) {
@@ -997,7 +994,6 @@ export default {
           }
         })
         .catch((err) => {
-          console.log(err, 'err')
         })
     },
     // 全选
@@ -1064,7 +1060,6 @@ export default {
         this.teacherId && (timeType.teacher_id = this.teacherIds.join())
       }
       this.searchIn.forEach((item) => {
-        console.log(item, 'item===物流参数')
         if (item && item.term) {
           // 新增类型的时候这里要改
           if (item.term.regType == '500, 503, 505, 508') {
@@ -1076,30 +1071,30 @@ export default {
           } else if (item.term.regType == '4,5,6') {
             timeType.product_type = '2,3,4,5,7,8,9,10,11'
           } 
-          // else if (item.term.regType === '7' && !item.term.replenish_type) {
-          //   timeType.product_type = '12, 13' // 单独的硬件补发
-          // } else if (
-          //   !item.term.regType && // 硬件补发+整盒补发
-          //   item.term.replenish_type &&
-          //   item.term.replenish_type[0] === '0' &&
-          //   item.term.replenish_type.length == 1
-          // ) {
-          //   timeType.product_type = '12'
-          // } else if (
-          //   // 硬件补发+单价补发
-          //   !item.term.regType &&
-          //   item.term.replenish_type &&
-          //   item.term.replenish_type[0] === '1' &&
-          //   item.term.replenish_type.length == 1
-          // ) {
-          //   timeType.product_type = '13'
-          // } else if (
-          //   !item.term.regType && // 硬件补发+单价补发+整盒补发
-          //   item.term.replenish_type &&
-          //   item.term.replenish_type.length == 2
-          // ) {
-          //   timeType.product_type = '12, 13'
-          // }
+          else if (item.term.regType === '7' && !item.term.replenish_type) {
+            timeType.product_type = '12, 13' // 单独的硬件补发
+          } else if (
+            !item.term.regType && // 硬件补发+整盒补发
+            item.term.replenish_type &&
+            item.term.replenish_type[0] === '0' &&
+            item.term.replenish_type.length == 1
+          ) {
+            timeType.product_type = '12'
+          } else if (
+            // 硬件补发+单价补发
+            !item.term.regType &&
+            item.term.replenish_type &&
+            item.term.replenish_type[0] === '1' &&
+            item.term.replenish_type.length == 1
+          ) {
+            timeType.product_type = '13'
+          } else if (
+            !item.term.regType && // 硬件补发+单价补发+整盒补发
+            item.term.replenish_type &&
+            item.term.replenish_type.length == 2
+          ) {
+            timeType.product_type = '12, 13'
+          }
           if (item.term.product_type_0) {
             timeType.product_type_0 = item.term.product_type_0
           }

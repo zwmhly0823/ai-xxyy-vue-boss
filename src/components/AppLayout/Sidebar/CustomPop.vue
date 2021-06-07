@@ -97,7 +97,6 @@ export default {
     },
 
     handleOpen(item, index = 0, hasChildren = false) {
-      console.log(item)
       // 外链情况
       if (item.path.includes('http')) {
         this.handleLeave()
