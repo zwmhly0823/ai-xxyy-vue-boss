@@ -236,6 +236,7 @@ export const COURSECATEGORY = (course) => {
     507: '单周体验课-9.9元',
     505: '双周体验课-9.9元',
     503: '双周体验课-29元',
+    508: '双周体验课-22元',
   }
   return TYPE[`${course}`] || ''
 }
