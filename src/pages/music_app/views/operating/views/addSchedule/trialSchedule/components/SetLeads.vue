@@ -1,42 +1,8 @@
 <template>
   <div class="set-leads-container">
     <h4>
-      体验课排期-设置接速
+      体验课排期-渠道比例设置
     </h4>
-    <div class="btn-area">
-      <el-button
-        type="primary"
-        size="small"
-        class="btn-directed"
-        @click="exportExcel('updateScheduleExcel')"
-      >
-        导入数据
-      </el-button>
-      <el-button
-        type="primary"
-        size="small"
-        class="btn-directed"
-        @click="toSetChannelLeads"
-      >
-        渠道线索定向分配
-      </el-button>
-      <el-button
-        type="primary"
-        size="small"
-        class="btn-directed"
-        @click="exportExcel('forConversionfile')"
-      >
-        导入转介绍配置
-      </el-button>
-      <el-button
-        type="primary"
-        size="small"
-        class="btn-directed"
-        @click="exportExcel('updateDifficulty')"
-      >
-        修改班级容量及销售等级
-      </el-button>
-    </div>
     <div class="set-area">
       <div class="set-percent">
         <el-row v-if="leaderLineForm.leaderLine.length">
@@ -53,12 +19,9 @@
         </el-row>
         <el-row :gutter="10" class="row-style">
           <el-col :span="4" class="leads-title">销售等级</el-col>
-          <el-col :span="3" class="leads-title title-center">渠道占比</el-col>
-          <el-col :span="3" class="leads-title title-center">接速设置</el-col>
-          <el-col :span="3" class="leads-title title-center">渠道占比</el-col>
-          <el-col :span="3" class="leads-title title-center">接速设置</el-col>
-          <el-col :span="3" class="leads-title title-center">渠道占比</el-col>
-          <el-col :span="3" class="leads-title title-center">接速设置</el-col>
+          <el-col :span="6" class="leads-title title-center">渠道占比</el-col>
+          <el-col :span="6" class="leads-title title-center">渠道占比</el-col>
+          <el-col :span="6" class="leads-title title-center">渠道占比</el-col>
         </el-row>
         <!-- 线索分配占比设置start -->
         <el-form ref="leaderLineForm" :model="leaderLineForm" :inline="true">
@@ -77,7 +40,6 @@
               :key="i_channel"
             >
               <div class="chanel-item">
-                <!-- :prop="'channelLevelList.' + i_channel + '.rate'" -->
                 <el-form-item
                   :prop="
                     'leaderLine.' +
@@ -96,23 +58,6 @@
                   ></el-input>
                   <span class="gary-txt">%</span>
                 </el-form-item>
-                <el-form-item
-                  :prop="
-                    'leaderLine.' +
-                      index +
-                      '.channelLevelList.' +
-                      i_channel +
-                      '.robinNum'
-                  "
-                  :rules="robinNumRuls"
-                >
-                  <el-input
-                    class="input"
-                    v-model.number="channel.robinNum"
-                    size="mini"
-                    placeholder="输入接速"
-                  ></el-input>
-                </el-form-item>
               </div>
             </el-col>
           </el-row>
@@ -120,10 +65,6 @@
         <!-- 线索分配占比设置end -->
       </div>
     </div>
-    <ChannelThreelist
-      :channelThreededList="channelThreededList"
-      @editRow="editRow"
-    ></ChannelThreelist>
     <!-- 取消、下一步 -->
     <div class="operate-btn">
       <el-button size="small" type="primary" @click="stepOperate(0)">
@@ -136,62 +77,19 @@
         跳过此步
       </el-button>
     </div>
-    <!-- 导入数据模态框 -->
-    <el-dialog
-      title="导入数据"
-      :visible.sync="dialogVisible"
-      :before-close="handleCloseUpdata"
-      width="30%"
-    >
-      <el-upload
-        ref="upload"
-        action=""
-        accept=".xls, .xlsx"
-        :headers="headers"
-        :auto-upload="false"
-        :limit="1"
-        :http-request="uploadFile"
-        :on-progress="uploadProgress"
-      >
-        <el-button
-          slot="trigger"
-          size="small"
-          type="primary"
-          :disabled="uploading"
-          >选取文件</el-button
-        >
-        <el-button
-          style="margin-left: 10px;"
-          size="small"
-          type="success"
-          @click="submitUpload"
-          :disabled="uploading"
-          >上传到服务器</el-button
-        >
-        <!-- :loading="uploading" -->
-        <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件</div>
-      </el-upload>
-    </el-dialog>
-
-    <!-- 渠道线索定向分配模态框 -->
-    <channel-threeded
-      :centerDialogVisible="centerDialogVisible"
-      @dialogOperate="dialogOperate"
-      :editChannelThreeded="editChannelThreeded"
-      v-if="centerDialogVisible"
-    ></channel-threeded>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import ChannelThreeded from './ChannelThreeded'
-import ChannelThreelist from './ChannelThreelist'
 import { Sup_scheduleSubmit } from '@/utils/supList'
-
 export default {
-  props: {},
-  components: { ChannelThreeded, ChannelThreelist },
+  props: {
+    category: {
+      type: [Number, String],
+      default: ''
+    }
+  },
   data() {
     return {
       editChannelThreeded: null,
@@ -200,7 +98,6 @@ export default {
       uploading: false,
       dialogVisible: false,
       exportType: '',
-      headers: { 'Content-Type': 'multipart/form-data' },
       leaderLineForm: {
         leaderLine: []
       },
@@ -238,77 +135,20 @@ export default {
   },
   created() {
     const { courseType = 0 } = this.$route.params
+
     if (this.schedulePeriod) {
-      this.getLeads({ period: this.schedulePeriod, courseType })
+      this.getLeads({
+        period: this.schedulePeriod,
+        courseType
+      })
     }
-    this.getRecord()
+    // this.getRecord()
   },
   methods: {
-    editRow(row) {
-      this.centerDialogVisible = true
-      this.editChannelThreeded = row
-    },
-    dialogOperate(args) {
-      const { close = true, submitSucc = false } = args
-      this.centerDialogVisible = !close
-      this.editChannelThreeded = null
-      if (submitSucc) this.getRecord()
-    },
-    submitUpload(file, filelist) {
-      this.$refs.upload.submit()
-    },
-    /** 导入数据 关闭事件 */
-    handleCloseUpdata() {
-      this.dialogVisible = false
-      this.$refs.upload.clearFiles()
-    },
-    /** 导入数据上传 */
-    uploadFile(params) {
-      const { courseType = 0 } = this.$route.params
-      const formdata = new FormData()
-      const { file } = params
-      formdata.append('file', file)
-
-      this.uploading = true
-      Object.assign(formdata, { courseType })
-
-      this.$http.DownloadExcel[this.exportType](formdata)
-        .then((res) => {
-          // 有可能下载失败，返回{code: '500'},但responseType: 'blob'会把data强制转为blob，导致下载undefined.excel
-          // 解决：将已转为blob类型的data转回json格式，判断是否下载成功
-          if (res && Object.prototype.toString.call(res) === '[object Blob]') {
-            this.$refs.upload.clearFiles()
-            this.dialogVisible = false
-            this.downloadFn(res, file.name, () => {
-              this.$emit('setExcelStatus', 'complete')
-            })
-          } else {
-            this.$message.error('上传失败')
-          }
-        })
-        .finally(() => {
-          this.uploading = false
-        })
-    },
-    // 下载文件
-    downloadFn(data, fileName = '下载', cb) {
-      if (!data) return
-      const blob = new Blob([data])
-      const elink = document.createElement('a')
-      elink.download = fileName
-      elink.style.display = 'none'
-      elink.href = URL.createObjectURL(blob)
-      document.body.appendChild(elink)
-      elink.click()
-      URL.revokeObjectURL(elink.href) // 释放URL 对象
-      document.body.removeChild(elink)
-
-      cb && cb()
-    },
     /** 渠道线索定向分配 教师渠道绑定-查找记录 */
     async getRecord(cb) {
       try {
-        const { period = '' } = this.$route.params
+        const { period = this.schedulePeriod } = this.$route.params
         const res = await this.$http.Operating.getRecord({ period })
         if (res.code === 0) {
           this.channelThreededList = res.payload
@@ -317,16 +157,6 @@ export default {
       } catch (err) {
         this.$message.error('配置出错')
       }
-    },
-    /** 上传进度 */
-    uploadProgress(event, file, fileList) {},
-    /** 导入数据 */
-    exportExcel(type) {
-      this.exportType = type
-      this.dialogVisible = true
-    },
-    toSetChannelLeads() {
-      this.centerDialogVisible = true
     },
     // 修改时获取数据
     getLeads(params) {
@@ -347,18 +177,17 @@ export default {
         this.$emit('listenStepStatus', type)
       } else {
         this.$refs.leaderLineForm.validate((valid) => {
+          const { courseType } = this.$route.params
           if (valid) {
             this.$http.Operating.addLeads(
               this.leaderLineForm.leaderLine,
               this.schedulePeriod,
-              Sup_scheduleSubmit[this.$route.params.courseType]
+              Sup_scheduleSubmit[courseType]
             )
               .then((res) => {
                 if (res.code === 0) {
                   this.$message.success('保存成功')
                   this.$emit('listenStepStatus', type)
-                } else {
-                  this.$message.error('保存失败')
                 }
               })
               .catch((err) => {
@@ -419,7 +248,10 @@ export default {
         }
         .input {
           min-width: 80px;
-          width: 80%;
+          width: 85%;
+          .gary-txt {
+            // width: 20px;
+          }
           & input {
             padding: 0 5px !important;
           }

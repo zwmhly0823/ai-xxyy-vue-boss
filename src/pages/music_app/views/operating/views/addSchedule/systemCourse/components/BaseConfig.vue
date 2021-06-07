@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2021-03-01 19:47:38
+ * @LastEditTime: 2021-03-13 15:11:16
  -->
 <template>
   <div class="first-step">
@@ -88,7 +88,7 @@
               <h6>开始上课时间必须从星期一开始</h6>
             </el-col>
             <el-col
-              v-if="courseType == '1' || courseType == '3'"
+              v-if="courseType == '2'"
               :span="4"
               :offset="1"
             >
@@ -221,7 +221,7 @@
 </template>
 <script>
 import { Loading } from 'element-ui'
-import { courseTypeObj } from '../../../courseType'
+import { courseTypeObj } from '@/pages/music_app/views/operating/courseType'
 export default {
   props: ['stepStatus'],
   data() {
@@ -302,10 +302,10 @@ export default {
   watch: {},
   async created() {
     const { period = '', courseType = '0' } = this.$route.params
-    this.period = period
-    if (courseType === '0') this.outSellNum = '8000'
-    this.courseType = courseType
 
+    this.period = period
+    this.courseType = courseType
+    
     if (+period) {
       // 编辑页面 TODO:
       try {
@@ -346,10 +346,6 @@ export default {
     // 开课时期
     startClassChange(courseDay) {
       this.formInfo.attendClassTimeStart = courseDay || ''
-
-      if (courseDay && this.courseType === '0') {
-        courseDay && this.endClassChange(courseDay + 13 * 24 * 3600 * 1000)
-      }
     },
     // 节课时期
     endClassChange(endCourseDay) {

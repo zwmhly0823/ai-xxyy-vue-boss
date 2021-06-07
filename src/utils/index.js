@@ -496,3 +496,20 @@ export async function calcBrowerClienHeight(_this, ref, minus = 0) {
   //  document.body.clientHeight 返回body元素内容的高度
   return document.body.clientHeight - DomTop - minus + 'px'
 }
+// 下载接口返回的流文件
+export const downLoadBolob = (dataOrigin) => {
+  const { blobRes, fileName = '下载', cb } = dataOrigin
+  if (!blobRes) return
+
+  const blob = new Blob([blobRes])
+  var downloadElement = document.createElement('a')
+  var href = window.URL.createObjectURL(blob) // 创建下载的链接
+  downloadElement.href = href
+  downloadElement.download = `${fileName}.xls` // 下载后文件名
+  document.body.appendChild(downloadElement)
+  downloadElement.click() // 点击下载
+  document.body.removeChild(downloadElement) // 下载完成移除元素
+  window.URL.revokeObjectURL(href) // 释放掉blob对象
+
+  cb && cb()
+}

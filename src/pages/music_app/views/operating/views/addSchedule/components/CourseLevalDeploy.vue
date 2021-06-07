@@ -98,6 +98,7 @@ import { cloneDeep } from 'lodash'
 import { viliderPeriod } from '@/pages/music_app/views/operating/partTools'
 import Department from './department'
 import { mapGetters } from 'vuex'
+import { Sup_scheduleSubmit } from '@/utils/supList'
 export default {
   props: {
     centerDialogVisible: {
@@ -153,7 +154,6 @@ export default {
   },
   async created() {
     const { courseType = '0', period = '' } = this.$route.params
-    console.log('this.$attrs', this.$attrs, this.category)
     this.courseType = courseType
     this.period = period
 
@@ -170,7 +170,7 @@ export default {
       ]
     }
     this.getTeacher()
-    await this.getDividerPeriodByType()
+    // await this.getDividerPeriodByType()
   },
   mounted() {},
   methods: {
@@ -182,7 +182,6 @@ export default {
       this.$emit('dialogOperate', { close: true })
     },
     getDepartment(res) {
-      console.log('dept', res)
       const { data, index } = res
       this.formList[index].teacherscope = data.pay_teacher_id || null
       this.formList[index].teacherId = ''
@@ -208,23 +207,12 @@ export default {
     },
     packageFormData() {
       const wxList = this.formList.map((item) => item.wxNum)
-      // this.courseType 0
-      // courseType    0 双周|3单周|2系统课
       const emitData = {
-        courseType: this.courseType,
+        courseDifficulty:this.activeTab.id,
+        courseType: Sup_scheduleSubmit[this.courseType],
         period: this.period,
         wxList
       }
-      if (this.courseType === '4') {
-        emitData.campCode = this.activeTab.id
-        emitData.period = this.schedulePeriod || 0
-      } else if (this.courseType === '5') {
-        emitData.mealId = this.activeTab.id
-        emitData.period = this.schedulePeriod || 0
-      } else if (this.courseType === '6') {
-        emitData.courseDifficulty = this.activeTab.id
-        emitData.category = this.category
-      } else emitData.courseDifficulty = this.activeTab.id
 
       return emitData
     },
@@ -260,11 +248,10 @@ export default {
           this.wecharNumList = payload
         }
       } catch (error) {
-        console.log(error)
       }
     },
     /** 保存 添加的接生销售 */
-    async submitForm(_reqApi) {
+    async submitForm() {
       const loadingInstance = this.$loading({
         target: 'body',
         lock: true,
@@ -273,29 +260,17 @@ export default {
       try {
         const params = this.packageFormData()
         const {
-          saveAddTeacherWxList: A,
-          saveTrialAddTeacherWxList: TRIAL
+          saveAddTeacherWxList
         } = this.$http.Operating
-        debugger
-        if (this.courseType === '0') _reqApi = TRIAL
-        else if (this.courseType === '1') _reqApi = TRIAL
-        else if (this.courseType === '2') _reqApi = A
-        // else if (this.period !== '0' && +this.period < viliderPeriod) // TODO:
-        // 体验课
-        if (this.courseType === '0') {
-          // 新增
-          if (+this.period === 0) {
-            if (this.divisonPeriod <= viliderPeriod) _reqApi = A
-            else _reqApi = TRIAL
-          } else {
-            // 编辑
-            if (+this.period <= viliderPeriod) _reqApi = A
-            else _reqApi = TRIAL
-          }
-        }
+        var _reqApi = saveAddTeacherWxList
 
         const { code, payload = [] } = await _reqApi(params)
-
+        // for(let i = 0 ; i < payload.length;i++){
+        //   let obj = {enroll:[{
+        //     courseCategory:''
+        //   }]}
+        //   Object.assign(payload[i],obj)
+        // }
         if (code === 0) {
           this.clearFormData()
           this.$emit('dialogOperate', {
