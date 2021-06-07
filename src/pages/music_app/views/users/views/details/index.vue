@@ -87,7 +87,7 @@
               <i
                 class="el-icon-view mg-l-5"
                 style="margin-left: 10px; color: #2a75ed"
-                @click="getNumber(stuInfor_add.u_id, 1)"
+                @click="getNumber(stuInfor_add.u_id)"
               ></i>
             </div>
             <div>ID：{{ stuInfor_add.user_num || '--' }}</div>
@@ -391,7 +391,7 @@ export default {
       },
       userPhone: '',
       operatorId: '',
-      realPhone: ''
+      realPhone: '',
     }
   },
   computed: {
@@ -446,24 +446,15 @@ export default {
     }
     this.operatorId = JSON.parse(localStorage.getItem('staff')).id
   },
-  mounted() {
-    setTimeout(() => {
-      this.getNumber(this.stuInfor_add.u_id, 2)
-    },1000)
-  },
   methods: {
     //获取学生号码
-    getNumber(uid, type) {
+    getNumber(uid) {
       this.$http.User.getUserPhoneNumber({
         uid: uid,
         teacherId: this.operatorId,
       }).then((res) => {
         if (res.code == 0) {
-          if (type == 1) {
-            this.stuInfor_add.mobile = res.payload.mobile
-          } else {
-            this.checkMobile = res.payload.mobile
-          }
+          this.stuInfor_add.mobile = res.payload.mobile
         } else {
           this.$message.error('网络异常，请稍后再试！')
         }
@@ -755,13 +746,13 @@ export default {
         // UserExtends.lesson_sl = LS.map((l) => courseLevelReplace(l))
         this.stuInfor_add = UserExtends ? this.modifyData(UserExtends) : {}
         // 取用户的真实手机号
-        if(this.stuInfor_add.u_id) {
+        if (this.stuInfor_add.u_id) {
           this.$http.User.getUserPhoneNumber({
-              uid: this.stuInfor_add.u_id,
-              teacherId: this.operatorId
-            }).then (res => {
-              if (res.code == 0) {
-               this.realPhone = res.payload.mobile  
+            uid: this.stuInfor_add.u_id,
+            teacherId: this.operatorId,
+          }).then((res) => {
+            if (res.code == 0) {
+              this.realPhone = res.payload.mobile
             } else {
               this.$message.error('网络异常，请稍后再试！')
             }
