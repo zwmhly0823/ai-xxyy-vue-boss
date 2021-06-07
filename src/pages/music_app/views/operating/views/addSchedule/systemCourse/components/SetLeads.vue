@@ -1,22 +1,22 @@
 <template>
   <div class="set-leads-container">
     <div class="btn-area">
-      <!-- <el-button
+      <el-button
         type="primary"
         size="small"
         class="btn-directed"
         @click="exportExcel"
       >
         导入数据
-      </el-button> -->
-      <!-- <el-button
+      </el-button>
+      <el-button
         type="primary"
         size="small"
         class="btn-directed"
         @click="toSetChannelLeads"
       >
         渠道线索定向分配
-      </el-button> -->
+      </el-button>
     </div>
     <div class="set-area">
       <div class="set-percent">
@@ -101,10 +101,10 @@
         <!-- 线索分配占比设置end -->
       </div>
     </div>
-    <!-- <ChannelThreelist
+    <ChannelThreelist
       :channelThreededList="channelThreededList"
       @editRow="editRow"
-    ></ChannelThreelist> -->
+    ></ChannelThreelist>
     <!-- 取消、下一步 -->
     <div class="operate-btn">
       <el-button size="small" type="primary" @click="stepOperate(0)">
@@ -116,7 +116,7 @@
       <el-button size="small" type="info" @click="skip"> 跳过此步 </el-button>
     </div>
     <!-- 导入数据模态框 -->
-    <!-- <el-dialog
+    <el-dialog
       title="导入物流信息"
       :visible.sync="dialogVisible"
       :before-close="handleCloseUpdata"
@@ -149,26 +149,26 @@
         >
         <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件</div>
       </el-upload>
-    </el-dialog> -->
+    </el-dialog>
 
     <!-- 渠道线索定向分配模态框 -->
-    <!-- <channel-threeded
+    <channel-threeded
       :centerDialogVisible="centerDialogVisible"
       @dialogOperate="dialogOperate"
       :editChannelThreeded="editChannelThreeded"
       v-if="centerDialogVisible"
-    ></channel-threeded> -->
+    ></channel-threeded>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-// import ChannelThreeded from './ChannelThreeded'
-// import ChannelThreelist from './ChannelThreelist'
+import ChannelThreeded from './ChannelThreeded'
+import ChannelThreelist from './ChannelThreelist'
 import { Sup_scheduleIndex, Sup_scheduleSubmit } from '@/utils/supList'
 export default {
   props: {},
-  // components: { ChannelThreeded, ChannelThreelist },
+  components: { ChannelThreeded, ChannelThreelist },
   data() {
     return {
       editChannelThreeded: null,
