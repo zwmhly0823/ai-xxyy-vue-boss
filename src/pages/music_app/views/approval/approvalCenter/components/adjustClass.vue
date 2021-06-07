@@ -536,10 +536,10 @@ export default {
         this.formData.userId = ''
         return callback(new Error('手机号不能为空'))
       }
-      // if (!/^1[3456789]\d{9}$/.test(phoneNum)) {
-      //   this.formData.userId = ''
-      //   return callback(new Error('请输入正确的手机号'))
-      // }
+      if (!/^1[3456789]\d{9}$/.test(phoneNum)) {
+        this.formData.userId = ''
+        return callback(new Error('请输入正确的手机号'))
+      }
       // 手机号输入正确后需要获取到userId，获取userId的是个异步方法getSearchPhoneData(data)，需要从公共组件传值，没法儿用promise，
       // 一时没想到啥好办法- -
       const validateInterval = setInterval(() => {
