@@ -140,16 +140,16 @@
             :style="{ 'font-size': tableList.expression.fontSize }"
             @cell-mouse-enter="hoverRow"
           >
-            <el-table-column label="手机号/ID" width="120" fixed>
+            <el-table-column label="手机号/ID" width="140" fixed>
               <template slot-scope="scope">
                 <p @click.self="userHandle(scope.row)" class="primary-text">
                   {{scope.row.mobile }}
 
-                  <!-- <i
+                  <i
                     @click.stop="handLeCopy(scope.row)"
                     class="el-icon-document-copy"
                   >
-                  </i> -->
+                  </i>
                   <i
                     class="el-icon-view mg-l-5"
                     style="margin-left:10px"
