@@ -230,6 +230,10 @@ export default {
         product_type_0: this.addSupS ? 'product_type_0' : '',
       },
       packages_id: '',
+      operatorObj: {
+        extra: '',
+      },
+      queryObj: null,
     }
   },
   watch: {
@@ -245,8 +249,10 @@ export default {
   },
   created() {
     this.teacherId = isToss()
-    this.operatorId =
-      this.teacherId || JSON.parse(localStorage.getItem('staff')).id
+    let staff = JSON.parse(localStorage.getItem('staff'))
+    this.operatorId = staff.id
+    this.operatorObj.uid = staff.id
+    this.operatorObj.loginName = staff.realName
   },
   methods: {
     // 上传进度
@@ -269,12 +275,14 @@ export default {
       formdata.append('file', file)
       this.uploading = true
       Object.assign(formdata, { operatorId: this.operatorId })
-
       this.$http.Express.expressUpload(formdata)
         .then((res) => {
           this.$refs.upload.clearFiles()
           this.uploading = false
           if (res.code === 0 && res.payload.length < 1 && res.payload) {
+            this.initParams()
+            this.operatorObj.operateType ="express_export"
+            this.initOperateExportLog(this.operatorObj)
             this.$message({
               showClose: true,
               message: '恭喜你，文件上传成功',
@@ -315,8 +323,7 @@ export default {
     /**
      * 导出物流信息
      */
-    exportExpress(val) {
-      var query
+    initParams() {
       const tableName = 'o_express'
       const arrFlag = []
       if (
@@ -456,7 +463,6 @@ export default {
               delete item.term.province
             }
             if (Object.keys(item.term).length === 0) delete item.term
-            // console.log(Object.keys(item.term), 'Object.keys(item.term)')
           }
           return item
         })
@@ -484,8 +490,17 @@ export default {
           }
           return item
         })
+        let expressObj = {}
+        finalmust.forEach((item) => {
+          if (item.terms || item.term) {
+            Object.assign(expressObj, item.terms, item.term)
+          }
+        })
+        this.operatorObj.operateType = 'express_export'
+        this.operatorObj.accountType = 1
+        this.operatorObj.query = JSON.stringify(expressObj)
         // finalmust = finaTerm
-        query = {
+        this.queryObj = {
           bool: {
             must: finalmust,
             // filter: {
@@ -498,7 +513,10 @@ export default {
           },
         } // 自行通过前端选择的条件进行动态组装
       }
-
+    },
+    exportExpress(val) {
+      this.initParams()
+      const tableName = 'o_express'
       const sort = { ctime: 'desc' }
       const name = '物流数据'
       const headers = {
@@ -532,7 +550,7 @@ export default {
       if (this.tab === '1') {
         headers.replenish_reason = '补发原因'
       }
-      query.bool.must.forEach((item, index) => {
+      this.queryObj.bool.must.forEach((item, index) => {
         if (item.term && item.term.packages_id) {
           if (item.term.packages_id.length == item.term.packages_id.length) {
             query.bool.must.splice(index, 1)
@@ -543,14 +561,16 @@ export default {
         tableName,
         name,
         headers,
-        query,
+        query:this.queryObj,
         sort,
       }
+      // operateExportLog
       this.exportLoading = true
       this.$http.DownloadExcel.exportExpress(params).then(
         (res) => {
           this.downloadFn(res, '物流下载')
           this.exportLoading = false
+          this.initOperateExportLog(this.operatorObj)
         },
         () => {
           this.exportLoading = false
@@ -578,6 +598,11 @@ export default {
       switchTabSearchIn[
         `searchIn${this.regtype}${this.source_type}`
       ] = this.searchIn
+    },
+    initOperateExportLog(params) {
+      this.$http.liveBroadcast.operateExportLog(params).then((res) => {}).catch((err) => {
+        this.$message.error(err)
+      })
     },
     // 下载文件
     downloadFn(data, name = '下载') {

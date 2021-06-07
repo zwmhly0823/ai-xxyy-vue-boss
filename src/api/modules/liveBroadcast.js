@@ -13,7 +13,7 @@ export default {
    * 获取直播活动分页列表接口
    *
    */
-  liveBroadcastActivityList(params) {
+  liveBroadcastActivityList (params) {
     return axios.get(`/api/ump//live/activity/page/list`, params)
   },
 
@@ -21,7 +21,7 @@ export default {
    * 获取自动联想活动名称接口
    *
    */
-  liveAssociationActivityName(params) {
+  liveAssociationActivityName (params) {
     return axios.get(`/api/ump/live/activity/select/list`, params)
   },
 
@@ -29,7 +29,7 @@ export default {
    * 获取直播活动详情页统计接口
    *
    */
-  liveBroadcastActivityDetailCountDetail(params) {
+  liveBroadcastActivityDetailCountDetail (params) {
     return axios.get(`/api/ump/live/activity/detail/count`, params)
   },
 
@@ -37,7 +37,7 @@ export default {
    * 直播活动详情列表
    * 
    */
-  ActivityUserStatisticsPage(query, page = 1, sort) {
+  ActivityUserStatisticsPage (query, page = 1, sort) {
     return axios.post('/graphql/v1/toss', {
       query: `{
         ActivityUserStatisticsPage(sort:${JSON.stringify(
@@ -111,12 +111,12 @@ export default {
   * 获取直播评论分页列表接口
   * 
   */
-  liveBroadcastChatList(params) {
+  liveBroadcastChatList (params) {
     return axios.get(`/api/ump/live/chat/page/list`, params)
   },
 
   // 获取评论分页
-  getLiveChatList(params) {
+  getLiveChatList (params) {
     return axios.get(
       `/api/ump/live/chat/page/list?activityId=${params.activityId}&userId=${params.userId}&huoUserId=${params.huoUserId}&pageNum=${params.pageNum}&pageSize=${params.pageSize}`
     )
@@ -124,21 +124,21 @@ export default {
   /**
  * 体验课班级直播活动
  */
- // 获取直播活动
-  getLiveActive(params) {
+  // 获取直播活动
+  getLiveActive (params) {
     return axios.get(
       `/api/ump/live/activity/team/trialcourse/select/list?teamId=${params.teamId}`
     )
   },
   // 获取直播活动统计接口
-  getLiveCount(params) {
+  getLiveCount (params) {
     return axios.get(
       `/api/ump/live/activity/team/trialcourse/detail/count?teamId=${params.teamId}&activityId=${params.activityId}`
     )
   },
 
   // 获取直播活动列表
-  getActiveList(
+  getActiveList (
     params = {},
     { page = 1, size = 20 } = {},
   ) {
@@ -205,5 +205,14 @@ export default {
         }
       }`
     })
+  },
+  /**
+ * 导出日志
+ */
+  operateExportLog (query) {
+    return axios.post(
+      `/api/b/v1/operateExportLog/add`,
+      query
+    )
   },
 }
