@@ -175,7 +175,7 @@
           </div>
           <div class="pay_order_operation">
             <!-- 体验课、特价课、主题课类型订单不显示 -->
-            <div v-if="![1, 12, 13].includes(scope.row.regtype)">
+            <div v-if="![1].includes(scope.row.regtype)">
               <template v-if="scope.row.promotions_status === 1">
                 <span>赠品已申请</span>
               </template>
