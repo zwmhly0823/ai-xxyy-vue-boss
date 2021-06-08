@@ -9,6 +9,7 @@
  -->
 <template>
   <div class="container">
+    <phone-search v-if="tabIndex != 2" @result="getSearch" />
     <have-riview-search
       v-if="tabIndex == 2"
       @result="getSearch"
@@ -23,12 +24,7 @@
           <div class="task-image-container" v-if="scope.row.task_image">
             <div
               class="task-image"
-              @click="
-                handleViewLarge(
-                  imgUrl +
-                    scope.row.task_video
-                )
-              "
+              @click="handleViewLarge(imgUrl + scope.row.task_video)"
             >
               <img
                 :src="`${imgUrl}${scope.row.task_image}?x-oss-process=image/resize,l_100`"
@@ -79,7 +75,7 @@
       <el-table-column label="点评内容" align="center" width="180">
         <template slot-scope="scope">
           <p v-if="!scope.row.sound_comment">-</p>
-          
+
           <div v-else class="audio-container">
             <audio
               :src="imgUrl + scope.row.sound_comment"
@@ -277,6 +273,7 @@ export default {
     MPagination: () => import('@/components/MPagination/index.vue'),
     HaveRiviewSearch: () =>
       import('../../../components/search/haveRiviewSearch.vue'),
+    phoneSearch: () => import('../../../components/search/phoneSearch.vue'),
   },
   data() {
     return {
@@ -344,7 +341,6 @@ export default {
         //   this.loading = false
         // }
       } catch (error) {
-        console.log(error)
         this.loading = false
       }
     },
@@ -380,8 +376,8 @@ export default {
      */
     getSearch(res) {
       this.searchParams = res || {}
-      if(res.rank_status ==1) {
-         Object.assign(this.searchParams,{rank_status:{gt:0}})
+      if (res.rank_status == 1) {
+        Object.assign(this.searchParams, { rank_status: { gt: 0 } })
       }
       this.query.pageNum = 1
       this.initList()
