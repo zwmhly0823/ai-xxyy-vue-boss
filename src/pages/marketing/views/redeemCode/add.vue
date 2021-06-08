@@ -123,7 +123,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="是否生成物流" prop="isCardNo">
+        <el-form-item label="是否生成物流" prop="sendExpress">
           <el-radio-group v-model="form.sendExpress">
             <el-radio :label="1">是</el-radio>
             <el-radio :label="0">否</el-radio>
@@ -131,6 +131,12 @@
         </el-form-item>
         <el-form-item label="是否生成卡号" prop="isCardNo">
           <el-radio-group v-model="form.isCardNo">
+            <el-radio :label="1">是</el-radio>
+            <el-radio :label="0">否</el-radio>
+          </el-radio-group>
+        </el-form-item>
+          <el-form-item label="是否立即放课" prop="isSendCourse">
+          <el-radio-group v-model="form.isSendCourse">
             <el-radio :label="1">是</el-radio>
             <el-radio :label="0">否</el-radio>
           </el-radio-group>
@@ -263,7 +269,8 @@ export default {
         // 是否生成卡号  0 不生成 1生成
         isCardNo: 1,
         sendExpress: 1,
-        courseLevel: 'N'
+        courseLevel: 'N',
+        isSendCourse:0,
       },
       levelList: [
         {
@@ -325,7 +332,6 @@ export default {
      */
     handleAdd(formName) {
       this.$refs[formName].validate((valid) => {
-        console.log(this.form)
         if (valid) {
           const obj = deepClone(this.form)
           // 组装开始-结束时间
@@ -337,7 +343,6 @@ export default {
           delete obj.date
 
           // TODO:套餐名称，渠道名称，标签名称
-          console.log(this.packageProduct)
           const packageName = this.packageProduct?.name || ''
           const channelName =
             this.channelList.filter(
@@ -358,13 +363,11 @@ export default {
             channelName,
             customerSignName
           })
-          console.log(obj)
 
           // 提交
           this.loading = true
           this.$http.Marketing.addRedeemCode(obj)
             .then((res) => {
-              console.log(res)
               if (res?.code === 0) {
                 this.resetForm()
 
@@ -384,7 +387,6 @@ export default {
               this.loading = false
             })
         } else {
-          console.log('error submit!!')
           return false
         }
       })
@@ -412,7 +414,6 @@ export default {
 
     // 获取套餐ID
     getPackageId(res) {
-      console.log(res)
       this.form.packageId = res.id || ''
       this.packageProduct = res
       this.dialogPackageVisible = false
@@ -438,7 +439,6 @@ export default {
           query
         ).then(({ data }) => {
           if (data) {
-            console.log(data.ChannelDetailStatisticsPage)
             data.ChannelDetailStatisticsPage.content.forEach(item => {
               let obj = {}
               obj.id = item.id

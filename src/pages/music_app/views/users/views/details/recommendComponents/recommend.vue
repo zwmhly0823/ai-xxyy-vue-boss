@@ -82,7 +82,6 @@ export default {
         send_id: this.pUserId,
         subject: this.$store.state.subjects.subjectCode,
       }).catch((err) => {
-        console.error(err)
         this.$message.error('该学员推荐下线获取失败')
       })
       if (UserExtendsList.length) {

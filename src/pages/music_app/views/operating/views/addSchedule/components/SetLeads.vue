@@ -1,11 +1,14 @@
 <template>
   <div class="set-leads-container">
+    <h4>
+      体验课排期-设置接速
+    </h4>
     <div class="btn-area">
       <el-button
         type="primary"
         size="small"
         class="btn-directed"
-        @click="exportExcel"
+        @click="exportExcel('updateScheduleExcel')"
       >
         导入数据
       </el-button>
@@ -16,6 +19,22 @@
         @click="toSetChannelLeads"
       >
         渠道线索定向分配
+      </el-button>
+      <el-button
+        type="primary"
+        size="small"
+        class="btn-directed"
+        @click="exportExcel('forConversionfile')"
+      >
+        导入转介绍配置
+      </el-button>
+      <el-button
+        type="primary"
+        size="small"
+        class="btn-directed"
+        @click="exportExcel('updateDifficulty')"
+      >
+        修改班级容量及销售等级
       </el-button>
     </div>
     <div class="set-area">
@@ -62,10 +81,10 @@
                 <el-form-item
                   :prop="
                     'leaderLine.' +
-                    index +
-                    '.channelLevelList.' +
-                    i_channel +
-                    '.rate'
+                      index +
+                      '.channelLevelList.' +
+                      i_channel +
+                      '.rate'
                   "
                   :rules="leaderLineRule"
                 >
@@ -80,10 +99,10 @@
                 <el-form-item
                   :prop="
                     'leaderLine.' +
-                    index +
-                    '.channelLevelList.' +
-                    i_channel +
-                    '.robinNum'
+                      index +
+                      '.channelLevelList.' +
+                      i_channel +
+                      '.robinNum'
                   "
                   :rules="robinNumRuls"
                 >
@@ -113,11 +132,13 @@
       <el-button size="small" type="primary" @click="stepOperate(1)">
         下一步
       </el-button>
-      <el-button size="small" type="info" @click="skip"> 跳过此步 </el-button>
+      <el-button size="small" type="info" @click="skip">
+        跳过此步
+      </el-button>
     </div>
     <!-- 导入数据模态框 -->
     <el-dialog
-      title="导入配置信息"
+      title="导入数据"
       :visible.sync="dialogVisible"
       :before-close="handleCloseUpdata"
       width="30%"
@@ -140,7 +161,7 @@
           >选取文件</el-button
         >
         <el-button
-          style="margin-left: 10px"
+          style="margin-left: 10px;"
           size="small"
           type="success"
           @click="submitUpload"
@@ -166,7 +187,8 @@
 import { mapGetters } from 'vuex'
 import ChannelThreeded from './ChannelThreeded'
 import ChannelThreelist from './ChannelThreelist'
-import { Sup_scheduleIndex, Sup_scheduleSubmit } from '@/utils/supList'
+import { Sup_scheduleSubmit } from '@/utils/supList'
+
 export default {
   props: {},
   components: { ChannelThreeded, ChannelThreelist },
@@ -177,22 +199,23 @@ export default {
       centerDialogVisible: false,
       uploading: false,
       dialogVisible: false,
+      exportType: '',
       headers: { 'Content-Type': 'multipart/form-data' },
       leaderLineForm: {
-        leaderLine: [],
+        leaderLine: []
       },
       leaderLineRule: [
         {
           required: true,
           message: '不能为空',
-          trigger: 'blur',
+          trigger: 'blur'
         },
         {
           type: 'number',
           transform: (value) => Number(value),
           message: '必须为数字',
-          trigger: 'blur',
-        },
+          trigger: 'blur'
+        }
       ],
       robinNumRuls: [
         { required: true, message: '不能为空' },
@@ -205,17 +228,16 @@ export default {
               return callback(new Error('接速需>0'))
             }
           },
-          trigger: 'change',
-        },
-      ],
+          trigger: 'change'
+        }
+      ]
     }
   },
   computed: {
-    ...mapGetters(['schedulePeriod']),
+    ...mapGetters(['schedulePeriod'])
   },
   created() {
-    let { courseType = 0 } = this.$route.params
-    courseType = Sup_scheduleSubmit[courseType]
+    const { courseType = 0 } = this.$route.params
     if (this.schedulePeriod) {
       this.getLeads({ period: this.schedulePeriod, courseType })
     }
@@ -242,8 +264,7 @@ export default {
     },
     /** 导入数据上传 */
     uploadFile(params) {
-      let { courseType = 0 } = this.$route.params
-      courseType = Sup_scheduleSubmit[courseType]
+      const { courseType = 0 } = this.$route.params
       const formdata = new FormData()
       const { file } = params
       formdata.append('file', file)
@@ -251,15 +272,10 @@ export default {
       this.uploading = true
       Object.assign(formdata, { courseType })
 
-      this.$http.DownloadExcel.updateScheduleExcel(formdata)
+      this.$http.DownloadExcel[this.exportType](formdata)
         .then((res) => {
-          console.log(res)
           // 有可能下载失败，返回{code: '500'},但responseType: 'blob'会把data强制转为blob，导致下载undefined.excel
           // 解决：将已转为blob类型的data转回json格式，判断是否下载成功
-          //  let r = new FileReader()
-          //   r.onload = function () {
-
-          //   }
           if (res && Object.prototype.toString.call(res) === '[object Blob]') {
             this.$refs.upload.clearFiles()
             this.dialogVisible = false
@@ -305,7 +321,8 @@ export default {
     /** 上传进度 */
     uploadProgress(event, file, fileList) {},
     /** 导入数据 */
-    exportExcel() {
+    exportExcel(type) {
+      this.exportType = type
       this.dialogVisible = true
     },
     toSetChannelLeads() {
@@ -319,7 +336,7 @@ export default {
         } else {
           this.$message({
             message: '获取数据失败',
-            type: 'warning',
+            type: 'warning'
           })
         }
       })
@@ -333,7 +350,8 @@ export default {
           if (valid) {
             this.$http.Operating.addLeads(
               this.leaderLineForm.leaderLine,
-              this.schedulePeriod
+              this.schedulePeriod,
+              Sup_scheduleSubmit[this.$route.params.courseType]
             )
               .then((res) => {
                 if (res.code === 0) {
@@ -344,7 +362,6 @@ export default {
                 }
               })
               .catch((err) => {
-                console.log(err)
                 this.$message.error('保存失败')
               })
           } else {
@@ -356,8 +373,8 @@ export default {
     // 跳过这一步 产品临时需求
     skip() {
       this.$emit('listenStepStatus', 1)
-    },
-  },
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>

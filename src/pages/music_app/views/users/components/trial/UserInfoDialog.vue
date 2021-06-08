@@ -326,7 +326,6 @@ export default {
       this.activeTab = val
     },
     activeTab(newVal, old) {
-      console.log(newVal, old)
       this.currentPage = 1
       this.totalElements = 0
       this.getDataByTab(newVal)
@@ -446,7 +445,6 @@ export default {
     // 下载作品图片
     downImg(val) {
       const that = this
-      console.log('下载', val)
       const canvas = document.createElement('canvas')
       const typeName = this.imgUrl+val.video_path.lastIndexOf('.')
       const type = this.imgUrl+val.video_path.substr(typeName + 1)
