@@ -391,6 +391,11 @@ export default {
     return axios.post('/api/t/v1/navy/saveNavy', params)
   },
 
+  // 删除水军微信号
+  deleteWaterArmy(params = {}) {
+    return axios.post('/api/t/v1/navy/delNavy', params)
+  },
+
   // 水军微信 列表（查询）@weixinNo；@wechat_status body: departmentIds []
   getWaterArmyPage(
     { weixinNo = '', wechat_status = '', departmentIds = [] } = {},
