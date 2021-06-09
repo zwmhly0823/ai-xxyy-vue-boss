@@ -135,6 +135,7 @@ export default {
         }
       } else {
         this.$delete(this.searchQuery, key)
+        delete this.searchQuery.id
       }
 
       // 删除返回值没空数组的情况

@@ -44,7 +44,7 @@
           :label="`${
             item[name[searchType] === 'id' ? 'mobile' : name[searchType]]
           }`"
-          :value="`${needUid ? item.id : item[name[searchType]]}`"
+          :value="`${needUid ? item.u_id || item.id : item[name[searchType]]}`"
         ></el-option>
       </el-select>
       <i class="el-icon-search"></i>
@@ -60,7 +60,7 @@ export default {
   props: {
     needUid: {
       type: String,
-      default: '',
+      default: 'id',
     },
     customStyle: {
       type: Object,
@@ -132,7 +132,7 @@ export default {
       return this.placeholder[this.searchType]
     },
     nameKey() {
-       return this.needUid || this.name[this.searchType]
+      return this.needUid || this.name[this.searchType]
     },
     handleDebounce() {
       return debounce(this.getData, 500)
@@ -211,7 +211,7 @@ export default {
     onChange(data) {
       const _list = [...this.dataList]
       for (const item of _list) {
-        if (item.mobile === data || item.user_num_text === data) {
+        if (item.u_id || item.id === data || item.user_num_text === data) {
           this.uid = item.u_id
         }
       }

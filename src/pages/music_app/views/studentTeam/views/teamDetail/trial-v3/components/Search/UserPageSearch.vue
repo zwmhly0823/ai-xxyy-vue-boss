@@ -243,6 +243,7 @@ export default {
           ...search
         }
       } else {
+        delete this.searchQuery.id
         this.$delete(this.searchQuery, key)
       }
 
