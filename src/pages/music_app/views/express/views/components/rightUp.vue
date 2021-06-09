@@ -342,9 +342,6 @@ export default {
           })
         }
       }
-      var uid = sessionStorage.getItem('uid').split(',')
-      this.queryObj = { bool: { must: [{ terms: { id: uid } }] } } // 自行通过前端选择的条件进行动态组装
-      sessionStorage.removeItem('uid')
       const term = this.searchIn.map((item, index) => {
         if (item && item.terms) {
           if (item.terms && item.terms.sup) {
@@ -486,6 +483,11 @@ export default {
         }
         return item
       })
+      if (sessionStorage.getItem('uid')) {
+        var uid = sessionStorage.getItem('uid').split(',')
+        finalmust.concat([{ terms: { id: uid } }]) // 自行通过前端选择的条件进行动态组装
+        sessionStorage.removeItem('uid')
+      }
       let expressObj = {}
       finalmust.forEach((item) => {
         if (item.terms || item.term) {
