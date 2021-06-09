@@ -9,6 +9,7 @@
  -->
 <template>
   <div class="container">
+    <phone-search v-if="tabIndex != 2" @result="getSearch" />
     <have-riview-search
       v-if="tabIndex == 2"
       @result="getSearch"
@@ -283,6 +284,7 @@ export default {
     MPagination: () => import('@/components/MPagination/index.vue'),
     HaveRiviewSearch: () =>
       import('../../../components/search/haveRiviewSearch.vue'),
+    phoneSearch: () => import('../../../components/search/phoneSearch.vue'),
   },
   data() {
     return {
