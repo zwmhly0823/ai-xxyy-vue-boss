@@ -322,6 +322,7 @@ export default {
      * 导出物流信息
      */
     initParams() {
+      const tableName = 'o_express'
       const arrFlag = []
       if (
         this.exType &&
@@ -341,173 +342,172 @@ export default {
           })
         }
       }
-      if (sessionStorage.getItem('uid')) {
-        var uid = sessionStorage.getItem('uid').split(',')
-        this.queryObj = { bool: { must: [{ terms: { id: uid } }] } } // 自行通过前端选择的条件进行动态组装
-        sessionStorage.removeItem('uid')
-      } else {
-        const term = this.searchIn.map((item, index) => {
-          if (item && item.terms) {
-            if (item.terms && item.terms.sup) {
-              item.terms['sup.keyword'] = item.terms.sup
-              delete item.terms.sup
-            }
-            if (item.terms && item.terms.packages_id) {
-              arrFlag.push({
-                terms: {
-                  packages_id: item.terms.packages_id,
-                },
-              })
-              delete item.terms.packages_id
-            }
-            if (item.terms && item.terms.level) {
-              item.terms['level.keyword'] = item.terms.level
-              delete item.terms.level
-            }
+      var uid = sessionStorage.getItem('uid').split(',')
+      this.queryObj = { bool: { must: [{ terms: { id: uid } }] } } // 自行通过前端选择的条件进行动态组装
+      sessionStorage.removeItem('uid')
+      const term = this.searchIn.map((item, index) => {
+        if (item && item.terms) {
+          if (item.terms && item.terms.sup) {
+            item.terms['sup.keyword'] = item.terms.sup
+            delete item.terms.sup
           }
+          if (item.terms && item.terms.packages_id) {
+            arrFlag.push({
+              terms: {
+                packages_id: item.terms.packages_id,
+              },
+            })
+            delete item.terms.packages_id
+          }
+          if (item.terms && item.terms.level) {
+            item.terms['level.keyword'] = item.terms.level
+            delete item.terms.level
+          }
+        }
 
-          if (item && item.wildcard && item.wildcard.express_nu) {
-            item.wildcard['express_nu.keyword'] = item.wildcard.express_nu
-            delete item.wildcard.express_nu
+        if (item && item.wildcard && item.wildcard.express_nu) {
+          item.wildcard['express_nu.keyword'] = item.wildcard.express_nu
+          delete item.wildcard.express_nu
+        }
+        // if (item.wildcard && item.wildcard.last_team_id) {
+        //   item['term'].team_id = item.wildcard.last_team_id
+        //   delete item.wildcard.last_team_id
+        // }
+        if (item.term) {
+          if (item.term && item.term.consigneePhone) {
+            delete item.term.consigneePhone
           }
-          // if (item.wildcard && item.wildcard.last_team_id) {
-          //   item['term'].team_id = item.wildcard.last_team_id
-          //   delete item.wildcard.last_team_id
-          // }
-          if (item.term) {
-            if (item.term && item.term.consigneePhone) {
-              delete item.term.consigneePhone
-            }
-            if (item.term && item.term.product_name) {
-              arrFlag.push({
-                wildcard: {
-                  'product_name.keyword': `*${item.term.product_name}*`,
-                },
-              })
-              delete item.term.product_name
-            }
-            if (item.term && item.term.product_type) {
-              arrFlag.push({
-                term: {
-                  'product_type.keyword': item.term.product_type,
-                },
-              })
-              delete item.term.product_type
-            }
-            if (item.term && item.term.productType) {
-              arrFlag.push({
-                term: {
-                  product_type: item.term.productType,
-                },
-              })
-              delete item.term.productType
-            }
-            if (item.term && item.term.replenish_reason) {
-              arrFlag.push({
-                terms: {
-                  replenish_reason: item.term.replenish_reason,
-                },
-              })
-              delete item.term.replenish_reason
-            }
-            if (item.term && item.term.replenish_type) {
-              arrFlag.push({
-                terms: {
-                  replenish_type: item.term.replenish_type,
-                },
-              })
-              delete item.term.replenish_type
-            }
+          if (item.term && item.term.product_name) {
+            arrFlag.push({
+              wildcard: {
+                'product_name.keyword': `*${item.term.product_name}*`,
+              },
+            })
+            delete item.term.product_name
+          }
+          if (item.term && item.term.product_type) {
+            arrFlag.push({
+              term: {
+                'product_type.keyword': item.term.product_type,
+              },
+            })
+            delete item.term.product_type
+          }
+          if (item.term && item.term.productType) {
+            arrFlag.push({
+              term: {
+                product_type: item.term.productType,
+              },
+            })
+            delete item.term.productType
+          }
+          if (item.term && item.term.replenish_reason) {
+            arrFlag.push({
+              terms: {
+                replenish_reason: item.term.replenish_reason,
+              },
+            })
+            delete item.term.replenish_reason
+          }
+          if (item.term && item.term.replenish_type) {
+            arrFlag.push({
+              terms: {
+                replenish_type: item.term.replenish_type,
+              },
+            })
+            delete item.term.replenish_type
+          }
+          if (item.term && item.term.regType) {
+            // 新增类型的时候这里要改
             if (item.term && item.term.regType) {
               // 新增类型的时候这里要改
-              if (item.term && item.term.regType) {
-                // 新增类型的时候这里要改
-                if (this.tab == '3') {
-                  arrFlag.push({
-                    terms: {
-                      packages_id: item.term.regType.split(','),
-                    },
-                  })
-                } else {
-                  arrFlag.push({
-                    terms: {
-                      regtype: item.term.regType.split(','),
-                    },
-                  })
-                }
-                // 单周体验课补发移除 regType
-                delete item.term.regType
-              }
-            }
-            if (item.term && item.term.province) {
-              if (item.term.province.provincesCode) {
+              if (this.tab == '3') {
                 arrFlag.push({
-                  term: {
-                    'province.keyword': item.term.province.provincesCode,
+                  terms: {
+                    packages_id: item.term.regType.split(','),
+                  },
+                })
+              } else {
+                arrFlag.push({
+                  terms: {
+                    regtype: item.term.regType.split(','),
                   },
                 })
               }
-              if (item.term.province.citysCode) {
-                arrFlag.push({
-                  term: { 'city.keyword': item.term.province.citysCode },
-                })
-              }
-              if (item.term.province.areasCode) {
-                arrFlag.push({
-                  term: { 'area.keyword': item.term.province.areasCode },
-                })
-              }
-              delete item.term.province
+              // 单周体验课补发移除 regType
+              delete item.term.regType
             }
-            if (Object.keys(item.term).length === 0) delete item.term
           }
-          return item
-        })
-        const myTerm = term.concat(arrFlag)
-
-        // term数组有空对象的，删除掉
-        const newTerm = myTerm.filter((item) => Object.keys(item).length > 0)
-
-        const finaTerm = newTerm.concat([
-          {
-            terms: { source_type: this.source_type.split(',') },
-          },
-          {
-            terms: { regtype: this.regtype.split(',') },
-          },
-          { terms: { express_status: this.expressStatus.split(',') } },
-        ])
-        let finalmust = []
-        finalmust = finaTerm.filter((item) => {
-          if (!item.range) {
-            return (
-              Object.values(Object.values(item)[0])[0] &&
-              Object.values(Object.values(item)[0])[0].length
-            )
+          if (item.term && item.term.province) {
+            if (item.term.province.provincesCode) {
+              arrFlag.push({
+                term: {
+                  'province.keyword': item.term.province.provincesCode,
+                },
+              })
+            }
+            if (item.term.province.citysCode) {
+              arrFlag.push({
+                term: { 'city.keyword': item.term.province.citysCode },
+              })
+            }
+            if (item.term.province.areasCode) {
+              arrFlag.push({
+                term: { 'area.keyword': item.term.province.areasCode },
+              })
+            }
+            delete item.term.province
           }
-          return item
-        })
-        let expressObj = {}
-        finalmust.forEach((item) => {
-          if (item.terms || item.term) {
-            Object.assign(expressObj, item.terms, item.term)
-          }
-        })
+          if (Object.keys(item.term).length === 0) delete item.term
+        }
+        return item
+      })
+      const myTerm = term.concat(arrFlag)
 
-        // finalmust = finaTerm
-        this.queryObj = {
-          bool: {
-            must: finalmust,
-            // filter: {
-            //   bool: {
-            //     should: [
-            //       { terms: { express_status: this.expressStatus.split(',') } }
-            //     ]
-            //   }
-            // }
-          },
-        } // 自行通过前端选择的条件进行动态组装
-      }
+      // term数组有空对象的，删除掉
+      const newTerm = myTerm.filter((item) => Object.keys(item).length > 0)
+
+      const finaTerm = newTerm.concat([
+        {
+          terms: { source_type: this.source_type.split(',') },
+        },
+        {
+          terms: { regtype: this.regtype.split(',') },
+        },
+        { terms: { express_status: this.expressStatus.split(',') } },
+      ])
+      let finalmust = []
+      finalmust = finaTerm.filter((item) => {
+        if (!item.range) {
+          return (
+            Object.values(Object.values(item)[0])[0] &&
+            Object.values(Object.values(item)[0])[0].length
+          )
+        }
+        return item
+      })
+      let expressObj = {}
+      finalmust.forEach((item) => {
+        if (item.terms || item.term) {
+          Object.assign(expressObj, item.terms, item.term)
+        }
+      })
+      this.operatorObj.operateType = 'express_export'
+      this.operatorObj.accountType = 1
+      this.operatorObj.query = JSON.stringify(expressObj)
+      // finalmust = finaTerm
+      this.queryObj = {
+        bool: {
+          must: finalmust,
+          // filter: {
+          //   bool: {
+          //     should: [
+          //       { terms: { express_status: this.expressStatus.split(',') } }
+          //     ]
+          //   }
+          // }
+        },
+      } // 自行通过前端选择的条件进行动态组装
     },
     exportExpress(val) {
       this.initParams()
@@ -552,9 +552,6 @@ export default {
           }
         }
       })
-      this.operatorObj.operateType = 'express_export'
-      this.operatorObj.accountType = 1
-      this.operatorObj.query = JSON.stringify(this.queryObj)
       const params = {
         tableName,
         name,
