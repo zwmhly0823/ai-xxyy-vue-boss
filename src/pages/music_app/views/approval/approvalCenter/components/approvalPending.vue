@@ -877,7 +877,7 @@
         <div
           v-if="
             currentType === 'UNCREDITED' &&
-            roleIdList.indexOf(resetParams.staffId) >= 0
+            checkStatus
           "
         >
           <el-row class="BOTTOM">
