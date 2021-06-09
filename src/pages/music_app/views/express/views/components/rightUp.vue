@@ -324,7 +324,6 @@ export default {
      * 导出物流信息
      */
     initParams() {
-      const tableName = 'o_express'
       const arrFlag = []
       if (
         this.exType &&
@@ -346,7 +345,7 @@ export default {
       }
       if (sessionStorage.getItem('uid')) {
         var uid = sessionStorage.getItem('uid').split(',')
-        query = { bool: { must: [{ terms: { id: uid } }] } } // 自行通过前端选择的条件进行动态组装
+        this.queryObj = { bool: { must: [{ terms: { id: uid } }] } } // 自行通过前端选择的条件进行动态组装
         sessionStorage.removeItem('uid')
       } else {
         const term = this.searchIn.map((item, index) => {
