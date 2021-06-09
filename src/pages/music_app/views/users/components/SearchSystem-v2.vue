@@ -31,7 +31,7 @@
                 :only-dept="1"
                 :departmentId="departmentId"
                 placeholder="选择辅导老师组"
-                style="margin-right: 10px;"
+                style="margin-right: 10px"
                 @result="getSearchData('department_id', arguments)"
               />
               <group-sell
@@ -125,7 +125,7 @@
               <hard-level
                 class="search-group-item"
                 placeholder="全部系统课难度"
-                style="width:140px"
+                style="width: 140px"
                 name="currentsuper"
                 @result="getSearchData('currentsuper', arguments)"
               />
@@ -267,29 +267,29 @@ export default {
     SearchPhoneAndUsername,
     SearchTeamName,
     // DatePickerWithQuickSelect,
-    SimpleSelect
+    SimpleSelect,
   },
   props: {
     // 班级类型： 0-体验课 1-系统课
     teamType: {
       type: String,
-      default: '0'
+      default: '0',
     },
     // 名下所有老师
     teacherIds: {
       type: Array,
       default: () => {
         return null
-      }
+      },
     },
     departmentId: {
       type: String,
-      default: '0'
+      default: '0',
     },
     teacher_: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   data() {
     return {
@@ -313,20 +313,19 @@ export default {
       vipUserStatus: [
         {
           id: 1,
-          text: '是'
-        }
+          text: '是',
+        },
         // {
         //   id: 0,
         //   text: '否'
         // }
-      ]
+      ],
     }
   },
   computed: {
     resetSearch() {
-      console.log(this.nowDate, 'this.nowDate')
       return this.nowDate
-    }
+    },
   },
   created() {},
   methods: {
@@ -335,7 +334,7 @@ export default {
      */
     getSearchData(key, res) {
       const search = res && res[0]
-      console.log(search, '=========================', key)
+
       if (search) {
         if (key === 'currentsuper') {
           const r = search[key].map((item) => `s${item}`)
@@ -384,7 +383,7 @@ export default {
         if (key !== 'dateTime') {
           this.searchQuery = {
             ...this.searchQuery,
-            ...search
+            ...search,
           }
         }
         // 查询时间处理格式
@@ -394,11 +393,12 @@ export default {
           this.searchQuery = {
             ...this.searchQuery,
             startTime,
-            endTime
+            endTime,
           }
         }
       } else {
         // delete this.searchQuery[key]
+        delete this.searchQuery.id
         this.$delete(this.searchQuery, key)
         if (key === 'dateTime') {
           this.$delete(this.searchQuery, 'startTime')
@@ -413,8 +413,7 @@ export default {
         this.$delete(this.searchQuery, key)
       }
       this.$delete(this.searchQuery, 'sys_label')
-      console.log(search, 'getSearchData')
-      console.log(this.searchQuery, 'this.searchQuery')
+
       this.$emit('search', this.searchQuery)
     },
     // getLabelName(labelname) {
@@ -433,10 +432,10 @@ export default {
     handleClear() {
       this.nowDate = new Date().getTime()
       this.searchQuery = {}
-      console.log(this.searchQuery, 'searchQuery')
+
       this.$emit('search', {})
-    }
-  }
+    },
+  },
 }
 </script>
 

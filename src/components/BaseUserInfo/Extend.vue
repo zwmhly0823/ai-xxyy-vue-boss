@@ -13,16 +13,20 @@
     </div>
     <div>
       <p class="primary-text">
-        <span @click="onClick">{{ (user && user.mobile) || '-' }}</span>
+        <span @click="onClick">{{
+         user && user.mobile || '-'
+        }}</span>
       </p>
       <p>
+        <i class="el-icon-view mg-l-5" @click="getNumber(user.id)"></i>
         <i
           v-if="user && user.mobile"
           class="el-icon-document-copy mg-r-5"
-          @click="handLeCopy(user.mobile)"
+          style="margin-left:10px"
+          @click="handLeCopy(userPhone || user.mobile)"
         ></i>
         <!-- vip 会员标识 -->
-        <svg class="iconfont-vip  mg-r-5" v-if="is_sys_label_vip">
+        <svg class="iconfont-vip mg-r-5" v-if="is_sys_label_vip">
           <use xlink:href="#iconvip"></use>
         </svg>
         <!-- 转介绍会员标识 -->
@@ -39,39 +43,42 @@ export default {
     // 是否显示头像
     isHead: {
       type: Boolean,
-      default: true
+      default: true,
     },
     // 自定义style
     myStyle: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     // 点击手机号是否需要自定义 emit 回调事件，默认跳转用户详情
     callback: {
       type: Boolean,
-      default: false
+      default: false,
     },
     // 用户信息
     user: {
       type: Object,
-      default: () => ({})
+      default: () => ({}),
     },
     // 用户系统标签
     sysLabel: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
   data() {
     return {
+      userPhone: '',
+      operatorId: '',
       defaultHead:
-        'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png?x-oss-process=image/resize,l_100'
+        'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png?x-oss-process=image/resize,l_100',
     }
   },
   computed: {
     // 微信头像
     head() {
-      const head = this?.user?.weixinUser?.avatar || this?.user?.head || this.defaultHead
+      const head =
+        this?.user?.weixinUser?.avatar || this?.user?.head || this.defaultHead
       return `${head}`
     },
     // 是不是vip标签 - 固定标签: vip
@@ -79,9 +86,26 @@ export default {
       if (!this.sysLabel || this.sysLabel === '-') return false
       const label = this.sysLabel.split(',')
       return label.includes('vip')
-    }
+    },
+  },
+  created() {
+    this.operatorId = JSON.parse(localStorage.getItem('staff')).id
   },
   methods: {
+    //获取学生号码
+    getNumber(uid) {
+      this.userPhone = ''
+      this.$http.User.getUserPhoneNumber({
+        uid: uid,
+        teacherId: this.operatorId,
+      }).then((res) => {
+        if (res.code == 0) {
+          this.user.mobile = res.payload.mobile
+        } else {
+          this.$message.error('网络异常，请稍后再试！')
+        }
+      })
+    },
     // 点击用户信息事件回调, 参数是用户ID
     onClick() {
       if (this.callback) {
@@ -101,8 +125,8 @@ export default {
     // 复制学员手机号
     handLeCopy(mobile) {
       copyText(mobile, '手机号不存在')
-    }
-  }
+    },
+  },
 }
 </script>
 

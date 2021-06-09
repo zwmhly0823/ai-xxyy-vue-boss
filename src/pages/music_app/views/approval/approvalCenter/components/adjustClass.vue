@@ -29,7 +29,11 @@
           />
         </template>
         <!-- select -->
-        <template v-if="item.type === 'select'">
+        <template
+          v-if="
+            item.type === 'select' && (selectClass === '0' || item.labelText)
+          "
+        >
           <el-select
             v-model="formData[item.model]"
             :placeholder="item.placeholder || ''"
@@ -46,6 +50,11 @@
               :disabled="option.disabled"
             ></el-option>
           </el-select>
+        </template>
+        <!-- radio -->
+        <template v-if="item.type === 'radio'">
+          <el-radio v-model="selectClass" label="0">指定班级</el-radio>
+          <el-radio v-model="selectClass" label="1">系统分配</el-radio>
         </template>
         <!-- 不能输入的input -->
         <template v-if="item.type === 'input' && item.disabled">
@@ -79,9 +88,7 @@
         <el-button type="primary" @click="submitForm('adjustForm')">
           提交
         </el-button>
-        <el-button @click="resetForm('adjustForm')">
-          重置
-        </el-button>
+        <el-button @click="resetForm('adjustForm')"> 重置 </el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -94,27 +101,25 @@ import {
   SUP_LEVEL_ALL,
   SUP_LEVEL_LIST_LOWER,
   SUP_LEVEL_LIST_UPPER,
-  courseLevelReplace
+  courseLevelReplace,
 } from '@/utils/supList'
 
 export default {
   name: 'AdjustClass',
   components: {
-    SearchPhone
+    SearchPhone,
   },
   // 学员详情跳转来审批query lk
   async mounted() {
     if (this.$route.query && this.$route.query.cellphone) {
-      console.info('captured学员详情跳转而来')
       // 显示手机号
       this.$refs.searchPhone[0].input = this.$route.query.cellphone
       // 手机号查uid
       const {
-        data: { blurrySearch }
+        data: { blurrySearch },
       } = await this.$http.RefundApproval.getUid_lk({
-        mobile: this.$route.query.cellphone
+        mobile: this.$route.query.cellphone,
       }).catch((err) => {
-        console.error(err)
         this.$message.error('跳转来的手机号获取uid失败')
       })
       if (blurrySearch && blurrySearch[0] && blurrySearch[0].id) {
@@ -125,9 +130,9 @@ export default {
       }
     }
   },
-
   data() {
     return {
+      selectClass: '',
       // 调期调级调课：1/2/3
       adjustType: this.$route.query.adjustType - 0,
       // 最终显示的模版数据
@@ -139,31 +144,31 @@ export default {
             validator: (rule, value, callback) => {
               this.validatePhone(rule, value, callback)
             },
-            trigger: ['blur', 'change']
-          }
+            trigger: ['blur', 'change'],
+          },
         ],
         orderId: [
-          { required: true, message: '请选择关联订单', trigger: 'change' }
+          { required: true, message: '请选择关联订单', trigger: 'change' },
         ],
         currentStartClassDate: [
-          { required: true, message: '请选择当前开课日期', trigger: 'change' }
+          { required: true, message: '请选择当前开课日期', trigger: 'change' },
         ],
         targetStage: [
-          { required: true, message: '请选择当前开课日期', trigger: 'change' }
+          { required: true, message: '请选择当前开课日期', trigger: 'change' },
         ],
         currentPeriod: [
-          { required: true, message: '请选择已上课周期', trigger: 'change' }
+          { required: true, message: '请选择已上课周期', trigger: 'change' },
         ],
         targetSup: [
-          { required: true, message: '请选择申请调级级别', trigger: 'change' }
+          { required: true, message: '请选择申请调级级别', trigger: 'change' },
         ],
         currentClassName: [
-          { required: true, message: '请选择当前班级', trigger: 'change' }
+          { required: true, message: '请选择当前班级', trigger: 'change' },
         ],
-        targetClassName: [
-          { required: true, message: '请选择班级', trigger: 'change' }
-        ],
-        adjustReason: [{ required: true, message: '', trigger: 'change' }]
+        // targetClassName: [
+        //   { required: true, message: '请选择班级', trigger: 'change' },
+        // ],
+        adjustReason: [{ required: true, message: '', trigger: 'change' }],
       },
       // 公共的formData部分
       formData: {
@@ -171,7 +176,7 @@ export default {
         orderId: '', // 订单id
         adjustReason: '', // 理由
         targetClassName: '', // 选择班级名称
-        targetClassId: '' // 选择班级id
+        targetClassId: '', // 选择班级id
       },
       // 调期报错
       adjustDateError: false,
@@ -191,7 +196,8 @@ export default {
         dateChooseClass: 'getChooseClassList',
         levelDonePeriodicClass: 'getDonePeriodicClass',
         classCurrentClass: 'getDonePeriodicClass',
-        classChooseClass: 'getChooseClassList'
+        classChooseClass: 'getChooseClassList',
+        classChooseSystem: 'getChooseSystemList',
       },
       adjustLoading: false,
       // 调期的模版数据
@@ -199,7 +205,10 @@ export default {
       // 调级的模版数据
       adjustLevelDefault: {},
       // 调班的模版数据
-      adjustClassDefault: {}
+      adjustClassDefault: {},
+      // 新增接口数据
+      newData: {},
+      teacherId: null,
     }
   },
   created() {
@@ -211,7 +220,7 @@ export default {
           labelText: '选择用户:',
           type: 'input',
           autocomplete: true,
-          model: 'userId'
+          model: 'userId',
         },
         {
           labelText: '关联订单:',
@@ -224,16 +233,16 @@ export default {
             {
               value: '0',
               label: '请先选择用户',
-              disabled: true
-            }
-          ]
+              disabled: true,
+            },
+          ],
         },
         {
           labelText: '当前开课日期:',
           type: 'input',
           disabled: true,
           model: 'currentStartClassDate',
-          loading: false
+          loading: false,
         },
         {
           labelText: '调整开课日期:',
@@ -244,12 +253,19 @@ export default {
             {
               value: '0',
               label: '请先选择关联订单',
-              disabled: true
-            }
-          ]
+              disabled: true,
+            },
+          ],
         },
         {
           labelText: '选择班级:',
+          type: 'radio',
+          disabled: true,
+          model: 'selectClass',
+          loading: false,
+        },
+        {
+          labelText: '',
           type: 'select',
           model: 'targetClassName',
           loading: false,
@@ -257,18 +273,18 @@ export default {
             {
               value: '0',
               label: '请先选择关联订单',
-              disabled: true
-            }
-          ]
+              disabled: true,
+            },
+          ],
         },
         {
           labelText: '调期理由:',
           type: 'textarea',
           width: '450px',
           placeholder: '请输入内容',
-          model: 'adjustReason'
-        }
-      ]
+          model: 'adjustReason',
+        },
+      ],
     }
     // 调级的模版数据
     this.adjustLevelDefault = {
@@ -279,7 +295,7 @@ export default {
           type: 'input',
           autocomplete: true,
           placeholder: '手机号搜索',
-          model: 'userId'
+          model: 'userId',
         },
         {
           labelText: '关联订单:',
@@ -292,9 +308,9 @@ export default {
             {
               value: '0',
               label: '请先选择用户',
-              disabled: true
-            }
-          ]
+              disabled: true,
+            },
+          ],
         },
         {
           labelText: '已上课周期:',
@@ -302,7 +318,7 @@ export default {
           supplementaryInstruction: true,
           disabled: true,
           loading: false,
-          model: 'currentPeriod'
+          model: 'currentPeriod',
         },
         {
           labelText: '申请调级级别:',
@@ -312,9 +328,9 @@ export default {
             {
               value: '0',
               label: '请先选择关联订单',
-              disabled: true
-            }
-          ]
+              disabled: true,
+            },
+          ],
         },
         {
           labelText: '选择班级:',
@@ -325,18 +341,18 @@ export default {
             {
               value: '0',
               label: '请先选择关联订单',
-              disabled: true
-            }
-          ]
+              disabled: true,
+            },
+          ],
         },
         {
           labelText: '调级理由:',
           type: 'textarea',
           width: '450px',
           placeholder: '请输入内容',
-          model: 'adjustReason'
-        }
-      ]
+          model: 'adjustReason',
+        },
+      ],
     }
     // 调班的模版数据
     this.adjustClassDefault = {
@@ -347,7 +363,7 @@ export default {
           type: 'input',
           autocomplete: true,
           placeholder: '手机号搜索',
-          model: 'userId'
+          model: 'userId',
         },
         {
           labelText: '关联订单:',
@@ -360,19 +376,26 @@ export default {
             {
               value: '0',
               label: '请先选择用户',
-              disabled: true
-            }
-          ]
+              disabled: true,
+            },
+          ],
         },
         {
           labelText: '当前班级:',
           type: 'input',
           disabled: true,
           model: 'currentClassName',
-          loading: false
+          loading: false,
         },
         {
-          labelText: '申请调整班级:',
+          labelText: '选择班级:',
+          type: 'radio',
+          disabled: true,
+          model: 'selectClass',
+          loading: false,
+        },
+        {
+          labelText: '',
           type: 'select',
           model: 'targetClassName',
           loading: false,
@@ -380,18 +403,18 @@ export default {
             {
               value: '0',
               label: '请先选择关联订单',
-              disabled: true
-            }
-          ]
+              disabled: true,
+            },
+          ],
         },
         {
           labelText: '调班理由:',
           type: 'textarea',
           width: '450px',
           placeholder: '请输入内容',
-          model: 'adjustReason'
-        }
-      ]
+          model: 'adjustReason',
+        },
+      ],
     }
     switch (this.adjustType) {
       // 调期
@@ -401,7 +424,7 @@ export default {
         // form的数据
         this.formData = Object.assign({}, this.formData, {
           currentStartClassDate: '', // 当前开课日期
-          targetStage: '' // 调整开课日期
+          targetStage: '', // 调整开课日期
         })
         // rule
         this.formRules.adjustReason[0].message = '请输入调期理由'
@@ -411,7 +434,7 @@ export default {
         this.showData = _.cloneDeep(this.adjustLevelDefault)
         this.formData = Object.assign({}, this.formData, {
           currentPeriod: '',
-          targetSup: ''
+          targetSup: '',
         })
         // rule
         this.formRules.adjustReason[0].message = '请输入调级理由'
@@ -420,14 +443,81 @@ export default {
       case 3:
         this.showData = _.cloneDeep(this.adjustClassDefault)
         this.formData = Object.assign({}, this.formData, {
-          currentClassName: ''
+          currentClassName: '',
         })
         // rule
         this.formRules.adjustReason[0].message = '请输入调班理由'
         break
     }
   },
+  watch: {
+    'newData.teamId': {
+      immediate: true,
+      deep: true,
+      async handler(newValue) {
+        if (newValue) {
+          this.initData({ id: newValue })
+        }
+      },
+    },
+    selectClass(newValue) {
+      if(!this.formData.orderId) {
+         this.$message.error("请优先选择订单");
+         return false
+      };
+      if (newValue === '0') {
+        this.commonSelectHandleFunction(
+          'classChooseClass',
+          {
+            stage:
+              (this.formData.targetStage &&
+                this.formData.targetStage.targetTerm) ||
+              this.newData.tempSatge,
+            sup: this.formData.orderId.tempSup,
+          },
+          '选择班级列表'
+        )
+      } else if (newValue === '1') {
+        this.commonSelectHandleFunction(
+          'classChooseSystem',
+          {
+            term:
+              (this.formData.targetStage &&
+                this.formData.targetStage.targetTerm) ||
+              this.newData.tempSatge,
+            sup: this.formData.orderId.tempSup,
+            teamId: this.formData.orderId.teamId,
+            saleDepartmentId: this.newData.saleDepartmentId,
+            saleDepartmentPid: this.newData.saleDepartmentPid,
+            userId: this.formData.userId,
+          },
+          '选择班级列表'
+        )
+      }
+    },
+  },
   methods: {
+    // 根据班级ID获取班级详情
+    async initData(params) {
+      let result = await this.$http.TeamV2.getTeamApproval(params).then(
+        (res) => {
+          if (res.data.StudentTeam) {
+            this.teacherId = res.data.StudentTeam.teacher_id
+            this.initDepartment({ id: this.teacherId })
+          }
+        }
+      )
+    },
+    initDepartment(params) {
+      let result = this.$http.TeamV2.getTeacherApproval(params).then(
+        (res) => {
+          if (res.data.Teacher) {
+            this.newData.saleDepartmentId = res.data.Teacher.departmentInfo.id
+            this.newData.saleDepartmentPid = res.data.Teacher.departmentInfo.pid
+          }
+        }
+      )
+    },
     // 后退
     back() {
       this.$router.push('/approval')
@@ -435,7 +525,7 @@ export default {
     // searchPhone的返回值
     getSearchPhoneData(data) {
       // console.log('data')
-      
+
       this.formData.userId = data.userId
       this.formData.userId && this.renderOrderList()
     },
@@ -470,7 +560,7 @@ export default {
           } else {
             this.$message({
               message: '该手机号未查询到订单',
-              type: 'warning'
+              type: 'warning',
             })
             return 'error'
           }
@@ -478,7 +568,7 @@ export default {
         .catch(() => {
           this.$message({
             message: '获取订单列表请求出错请稍后再试～',
-            type: 'warning'
+            type: 'warning',
           })
           return 'error'
         })
@@ -520,13 +610,15 @@ export default {
                 // 依照补发货取的字段
                 label: orderItem.outTradeNo + orderItem.packagesName,
                 value: {
-                  courseCategory:orderItem.courseCategory,
+                  courseCategory: orderItem.courseCategory,
                   orderId: orderItem.id,
                   outTradeNo: orderItem.outTradeNo,
                   index: index++,
                   tempSatge: orderItem.stage,
-                  tempSup: orderItem.sup
-                }
+                  tempSup: orderItem.sup,
+                  orderNo: orderItem.id,
+                  teamId: orderItem.lastTeamId,
+                },
               })
               item.stage.push(orderItem.stage)
               item.sup.push(orderItem.sup)
@@ -539,11 +631,11 @@ export default {
             item.options.push({
               label: '该用户下没有系统订单',
               value: 0,
-              disabled: true
+              disabled: true,
             })
             this.$message({
               message: '该用户下没有系统订单',
-              type: 'warning'
+              type: 'warning',
             })
           }
         }
@@ -552,7 +644,11 @@ export default {
     // select change
     // 处理所有需要选择后再走的逻辑
     selectChange(event, data) {
-      console.log(data)
+      if(data.labelText!="调整开课日期:") {
+        this.newData = data.options[0].value
+      }
+      this.formData.targetClassName = ''
+      this.formData.targetClassId = ''
       // 选择班级这儿逻辑稍微复杂一些，调班时用户选完订单后即可渲染班级列表，调级时选完订单后还得选申请调级级别，同理调期时还得选了调整开课日期
       this.handleStageAndSupChooseClass(event, data)
 
@@ -609,12 +705,11 @@ export default {
     handleStageAndSupChooseClass(event, data) {
       // 调期
       if (this.adjustType === 1 && data.model === 'targetStage') {
-
         this.commonSelectHandleFunction(
           'dateChooseClass',
           {
             stage: this.formData.targetStage.targetTerm,
-            sup: this.formData.orderId.tempSup
+            sup: this.formData.orderId.tempSup,
           },
           '选择班级列表'
         )
@@ -625,7 +720,7 @@ export default {
           'dateChooseClass',
           {
             stage: this.formData.orderId.tempSatge,
-            sup: this.formData.targetSup
+            sup: this.formData.targetSup,
           },
           '选择班级列表'
         )
@@ -645,14 +740,14 @@ export default {
             } else {
               this.$message({
                 message: `获取${msg}失败`,
-                type: 'warning'
+                type: 'warning',
               })
               return 'error'
             }
           } else {
             this.$message({
               message: `获取${msg}失败`,
-              type: 'warning'
+              type: 'warning',
             })
             return 'error'
           }
@@ -660,7 +755,7 @@ export default {
         .catch(() => {
           this.$message({
             message: `获取${msg}请求出错请稍后再试～`,
-            type: 'warning'
+            type: 'warning',
           })
           return 'error'
         })
@@ -674,7 +769,7 @@ export default {
       // 选完订单后的loading
       this.showSelectLoading(name)
       const resData = await this.commonGetDateFunction(name, query, msg)
-      
+
       this.hideSelectLoading(name)
       // console.log(resData)
       if (resData === 'error') {
@@ -701,6 +796,9 @@ export default {
           break
         case 'classCurrentClass':
           this.handleCurrentClass(resData)
+          break
+        case 'classChooseSystem':
+          this.handleChooseSystem(resData)
           break
       }
     },
@@ -752,8 +850,8 @@ export default {
               {
                 value: '0',
                 label: '加载中..',
-                disabled: true
-              }
+                disabled: true,
+              },
             ]
           }
         }
@@ -776,8 +874,9 @@ export default {
         this.adjustDateError = true
       }
       var timestamp = new Date(courseDay)
-      this.formData.currentStartClassDate = `${timestamp.getFullYear()}-${timestamp.getMonth() +
-        1}-${timestamp.getDate()}`
+      this.formData.currentStartClassDate = `${timestamp.getFullYear()}-${
+        timestamp.getMonth() + 1
+      }-${timestamp.getDate()}`
     },
     // 调整开课日期
     handleAdjustDate(resData) {
@@ -803,8 +902,8 @@ export default {
               value: {
                 targetStage: adjustItem.periodName,
                 targetTerm: adjustItem.period,
-                index: adjustKey
-              }
+                index: adjustKey,
+              },
             })
           })
         }
@@ -825,8 +924,8 @@ export default {
                 value: {
                   targetClassName: `${teamName}-${chooseItem.teacherRealName}`,
                   targetClassId: chooseItem.id,
-                  index: chooseKey
-                }
+                  index: chooseKey,
+                },
               })
             }
           })
@@ -834,11 +933,21 @@ export default {
             item.options.push({
               label: '暂时没有可以调整的班级',
               value: 0,
-              disabled: true
+              disabled: true,
             })
           }
         }
       })
+    },
+    // 系统分配
+    handleChooseSystem(resData) {
+      this.formData.targetClassName = ''
+      this.formData.targetClassId = ''
+      if (resData) {
+        this.formData.targetClassId = resData.id
+        this.formData.targetClassName =
+          resData.teamName + '-' + resData.teacherRealName
+      }
     },
     // 已上课周期
     handleDoneClass(resData) {
@@ -883,15 +992,17 @@ export default {
       //     })
       //   }
       // })
-      console.log(this.formData)
-      const levelList = this.formData.courseCategory==0?SUP_LEVEL_LIST_UPPER:SUP_LEVEL_LIST_LOWER
+      const levelList =
+        this.formData.courseCategory == 0
+          ? SUP_LEVEL_LIST_UPPER
+          : SUP_LEVEL_LIST_LOWER
       this.showData.content.forEach((item) => {
         if (item.model === 'targetSup') {
           item.options = []
           levelList.forEach((lItem) => {
             item.options.push({
               label: lItem.text,
-              value: lItem.id
+              value: lItem.id,
             })
           })
         }
@@ -899,18 +1010,9 @@ export default {
     },
     // 调班-当前班级
     handleCurrentClass(resData) {
-      // console.log('resData', resData)
       this.formData.currentClassId = resData.id
       const teamName = courseLevelReplace(resData.teamName)
       this.formData.currentClassName = `${teamName}-${resData.teacherRealName}`
-
-      // 调班-调整班级列表,需要先获取到currentClassId
-      
-      this.commonSelectHandleFunction(
-        'classChooseClass',
-        { stage: resData.term, sup: resData.currentSuper },
-        '选择班级列表'
-      )
     },
     // 提交
     async submitForm(formName) {
@@ -952,7 +1054,8 @@ export default {
             : this.adjustType === 2
             ? 'ADJUSTMENT_SUP'
             : 'ADJUSTMENT_CLASS', // 类型
-        userTel: this.$refs.searchPhone[0].input // 用户电话
+        userTel: this.$refs.searchPhone[0].input, // 用户电话
+        assignType: this.selectClass,
       })
       // 有些form的属性是对象，摊平
       this.curryFromData()
@@ -980,7 +1083,7 @@ export default {
       if (result === 'success') {
         this.$router.push({
           path: '/approval',
-          params: { activeApprove: 'second' }
+          params: { activeApprove: 'second' },
         })
       }
     },
@@ -998,7 +1101,7 @@ export default {
         .catch(() => {
           this.$message({
             message: '提交请求出错请稍后再试～',
-            type: 'warning'
+            type: 'warning',
           })
           return 'error'
         })
@@ -1038,8 +1141,8 @@ export default {
           this.showData = _.cloneDeep(this.adjustClassDefault)
           break
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

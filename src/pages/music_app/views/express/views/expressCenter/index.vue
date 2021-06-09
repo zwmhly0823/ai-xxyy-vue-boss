@@ -1,20 +1,20 @@
 <template>
   <div class="container">
     <div class="automatic-config">
-      <el-dropdown @command="handleCommand">
+      <el-dropdown @command="handleCommand" v-if="powerStatus =='1' || role =='5' && (activeName =='0' || activeName =='1' || activeName =='4')">
         <span class="el-dropdown-link">
           <span><i class="el-icon-setting"></i>设置</span>
         </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="import">导入物流信息</el-dropdown-item>
-          <el-dropdown-item command="export">导出物流信息</el-dropdown-item>
+          <el-dropdown-item command="import" v-if="powerStatus =='1'">导入物流信息</el-dropdown-item>
+          <el-dropdown-item command="export" v-if="powerStatus =='1'">导出物流信息</el-dropdown-item>
           <!-- <el-dropdown-item
             v-show="activeName === '0' || activeName === '1'"
             command="setting"
             >自动发货设置</el-dropdown-item
           > -->
           <el-dropdown-item
-            v-show="activeName === '0' || activeName === '1'"
+            v-show="(activeName === '0' || activeName === '1' || activeName === '4') && role =='5'"
             command="delivery"
             >一键批量发货</el-dropdown-item
           >
@@ -310,7 +310,7 @@
         <el-popconfirm
           confirmButtonText="确定"
           cancelButtonText="取消"
-          @onConfirm="godelivery"
+          @confirm="godelivery"
           v-loading.fullscreen.lock="fullscreenLoading"
           icon="el-icon-info"
           iconColor="red"
@@ -458,14 +458,35 @@ export default {
       allExpressHideSearchItemSystem,
       replenishHideSearchItem,
       seachTotal: 0,
+      powerParams: {},
+      powerStatus:null,
+      role:null
     }
   },
   mounted() {
     this.$nextTick(() => {
       this.calcSrollHeight()
     })
+    this.powerParams.uid = JSON.parse(localStorage.getItem('staff')).id
+    this.role =JSON.parse(localStorage.getItem('staff')).roleList && JSON.parse(localStorage.getItem('staff')).roleList[0]
+    this.powerParams.type = this.activeName
+    this.initData(this.powerParams)
+  },
+  // 判断操作导出权限
+  watch: {
+    activeName(val) {
+      if (val) {
+        this.powerParams.type = val;
+        this.initData(this.powerParams)
+      }
+    },
   },
   methods: {
+   async initData(params) {
+      let result = await this.$http.Express.expressIsSwitch(params).then((res) => {
+        this.powerStatus = res.data.isSwitch.is_allow
+      })
+    },
     handleCommand(command) {
       switch (command) {
         case 'setting':
@@ -615,8 +636,6 @@ export default {
       }
       if (this.activeName === '0') {
         this.deliveryParams.type = 1
-        console.log('体验课')
-        console.log(this.search, 'this.search')
         this.search &&
           this.search.forEach((item) => {
             if (item && item.terms && item.terms.sup) {
@@ -625,13 +644,11 @@ export default {
               } else {
                 this.deliveryParams.sup = item.terms.sup.toString()
                 this.deliveryParams.supText = this.$refs.right0.$refs.msearch.$refs.stagesuplevels.$refs.sup_select.$refs.tags.innerText
-                console.log(item.terms.sup)
               }
             }
             if (item && item.term && item.term.term) {
               this.deliveryParams.term = item.term.term
               this.deliveryParams.termText = this.$refs.right0.$refs.msearch.$refs.schedule.$refs.term_autocomplete.value
-              console.log(item.term.term)
             }
           })
         if (!this.deliveryParams.term || !this.deliveryParams.sup) {
@@ -642,19 +659,15 @@ export default {
       }
       // this.$message.warning('请选择难度、排期')
       if (this.activeName === '1') {
-        console.log('系统课')
         this.deliveryParams.type = 2
-        console.log(this.searchSystem, 'this.searchSystem')
         this.searchSystem &&
           this.searchSystem.forEach((item) => {
-            console.log(item, 'item=-')
             if (item && item.terms && item.terms.sup) {
               if (item.terms.sup.length > 1) {
                 this.$message.warning('请选择单个难度、单个级别')
               } else {
                 this.deliveryParams.sup = item.terms.sup.toString()
                 this.deliveryParams.supText = this.$refs.right1.$refs.msearch.$refs.stagesuplevels.$refs.sup_select.$refs.tags.innerText
-                console.log(item.terms.sup)
               }
             }
             if (item && item.terms && item.terms.level) {
@@ -663,13 +676,11 @@ export default {
               } else {
                 this.deliveryParams.level = item.terms.level.toString()
                 this.deliveryParams.levelText = this.$refs.right1.$refs.msearch.$refs.stagesuplevels.$refs.level_select.$refs.tags.innerText
-                console.log(item.terms.level)
               }
             }
           })
         if (!this.deliveryParams.level || !this.deliveryParams.sup) {
           this.$message.warning('请选择单个难度、单个级别')
-          console.log(this.deliveryParams, 'this.deliveryParams')
         } else {
           this.dialogDelivery = true
         }
@@ -678,7 +689,6 @@ export default {
     // 一键发货按钮
     godelivery() {
       this.fullscreenLoading = true
-      // console.log(this.deliveryParams, 'deliveryParams')
       const params = this.deliveryParams
       this.$http.Express.deliveryByCenter(params).then((res) => {
         if (res.payload.length) {
@@ -688,7 +698,6 @@ export default {
           this.dialogDelivery = false
         }
         this.fullscreenLoading = false
-        console.log(res, 'ressss')
       })
     },
     // 自动发货配置弹窗关闭
@@ -699,7 +708,6 @@ export default {
     showSetUp() {
       this.getSwitchByType()
       this.isShowSetUp = true
-      console.log(this.search, 'this.search')
     },
     // 开关处理
     switchHandle(status) {

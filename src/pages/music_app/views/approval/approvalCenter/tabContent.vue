@@ -80,7 +80,6 @@ export default {
     getRouterData() {
       this.activeName =
         this.$route.params.activeApprove || this.activeNameBySearch || 'first'
-      console.log(this.activeName, 'this.activeName')
     },
     handleClick(tab, event) {
       // console.log(tab, event)
@@ -133,7 +132,7 @@ export default {
 </style>
 
 <style lang="scss">
- /deep/ .el-image-viewer__wrapper {
-  z-index: 2888 !important;
+.el-image-viewer__wrapper {
+  z-index: 200000 !important;
 }
 </style>

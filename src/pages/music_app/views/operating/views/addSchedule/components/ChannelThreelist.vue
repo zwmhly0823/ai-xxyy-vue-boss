@@ -1,5 +1,5 @@
 <!--
- * @Descripttion:
+ * @Descripttion: 
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-08-07 14:03:15
@@ -78,7 +78,6 @@ export default {
   methods: {
     pageChange_handler() {},
     editRow(row) {
-      console.log(row)
       this.$emit('editRow', row)
     }
   }

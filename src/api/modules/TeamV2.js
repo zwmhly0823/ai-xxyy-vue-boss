@@ -11,7 +11,7 @@ import axios from '../axiosConfig'
 
 export default {
   // 获取体验课班级列表
-  getTrialTeamList(params = {}) {
+  getTrialTeamList (params = {}) {
     const { query = {}, page = 1, size = 5, sort = { ctime: 'desc' } } = params
     return axios.post('/graphql/v1/toss', {
       query: `{
@@ -73,7 +73,7 @@ export default {
   },
 
   // 根据班级ID获取班级详情
-  getTeamDetailById(params = {}) {
+  getTeamDetailById (params = {}) {
     // const query = { id: params.id }
     return axios.post('/graphql/v1/toss', {
       query: `{
@@ -103,6 +103,10 @@ export default {
             weixin{
               weixin_no
             }
+            departmentInfo{
+              id
+              pid
+            }
           }
           teacher_wechat_info{
             wechat_no
@@ -115,7 +119,31 @@ export default {
       }`
     })
   },
-
+  // 审批中心根据班级获取老师id
+  getTeamApproval (params = {}) {
+    // const query = { id: params.id }
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentTeam(query: ${JSON.stringify(JSON.stringify(params)) || null}) {
+          teacher_id
+        }
+      }`
+    })
+  },
+  // 审批中心根据老师的id 获取部门的id
+  getTeacherApproval (params = {}) {
+    // const query = { id: params.id }
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        Teacher(query: ${JSON.stringify(JSON.stringify(params)) || null}) {
+          departmentInfo{
+            id
+            pid
+          }
+        }
+      }`
+    })
+  },
   // 获取班级详情 顶部 统计数据
   // getTeacherStatistic(teamId) {
   //   const queryParams = `[{id:${teamId}}]`
@@ -162,17 +190,17 @@ export default {
    * 根据班级ID获取班级转化的系统课订单
    * regtype:[2,3]
    */
-  getTrialTeamOrderList(params = {}, page = 1, sort) {
+  getTrialTeamOrderList (params = {}, page = 1, sort) {
     const regtype = {
       regtype: [2, 3]
     }
     const query = Object.assign({}, regtype, params || {})
-    console.log(query)
+
     return axios.post('/graphql/v1/toss', {
       query: `{
         OrderPage(query: ${JSON.stringify(
-          JSON.stringify(query)
-        )}, page: ${page}, size: 20, sort: ${JSON.stringify(
+        JSON.stringify(query)
+      )}, page: ${page}, size: 20, sort: ${JSON.stringify(
         JSON.stringify(sort)
       )}) {
           totalElements
@@ -219,7 +247,7 @@ export default {
    * 
     @type:  0-课前准备, 1-上课情况, 2-本班订单
    */
-  getTrialTeamStatisticsExtra(params = {}, type = '0') {
+  getTrialTeamStatisticsExtra (params = {}, type = '0') {
     const query = Object.assign({}, params || {})
     const queryStr = JSON.stringify(JSON.stringify(query))
     // 根据不同的状态，请求对应的统计数据
@@ -256,6 +284,8 @@ export default {
         yesterday_un_open_app_uids
         today_join_course_uids
         today_complete_course_uids
+        today_join_course_count
+        today_complete_course_count
         today_course_task_uids
         today_task_comment_uids
         today_listen_comment_uids
@@ -278,6 +308,8 @@ export default {
         yesterday_system_order_count
         today_system_order_amount
         today_system_order_count
+        today_join_course_count
+        today_complete_course_count
       `
     }
     return axios.post('/graphql/v1/toss', {

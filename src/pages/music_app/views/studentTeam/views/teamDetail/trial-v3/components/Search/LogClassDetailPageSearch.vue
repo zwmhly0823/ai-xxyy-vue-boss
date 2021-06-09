@@ -14,6 +14,7 @@
               style="margin-right: 10px;"
               type="2"
               :team-id="teamId"
+              need-uid="uid"
               tablename="StudentTrialV2StatisticsList"
               @result="getSearchData('user', arguments)"
             />
@@ -310,6 +311,7 @@ export default {
           ...search
         }
       } else {
+        delete this.searchQuery.id
         this.$delete(this.searchQuery, key)
       }
 

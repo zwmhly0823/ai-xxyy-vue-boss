@@ -23,6 +23,7 @@
               type="2"
               :team-id="teamId"
               :activeId="activeId"
+              need-uid="uid"
               tablename="ActivityUserStatisticsList"
               @result="getSearchData('user', arguments)"
             />
@@ -183,6 +184,7 @@ export default {
           ...search
         }
       } else {
+        delete this.searchQuery.id
         this.$delete(this.searchQuery, key)
       }
 

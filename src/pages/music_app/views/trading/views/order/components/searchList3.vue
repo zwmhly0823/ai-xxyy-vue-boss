@@ -111,7 +111,6 @@ export default {
     },
     // 订单号搜索
     getOrderSearch(res) {
-      console.log(res)
       const key = Object.keys(res || {})[0]
       const val = res[key] ? res : ''
       this.setSeachParmas(val, [key])
@@ -181,7 +180,6 @@ export default {
     },
 
     getProductType(res) {
-      console.log(res, 'type prudoct')
       // if (res.regtype.length === 0) res.regtype = ['4', '5', '6']
       // this.setSeachParmas(res, ['regtype'], 'term')
       /**

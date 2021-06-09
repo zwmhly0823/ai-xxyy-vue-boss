@@ -231,24 +231,19 @@ export function accessStorageData({
   switch (type) {
     case 0:
       target.setItem(name, JSON.stringify(data))
-      console.log(`存储成功，已将${name}存入${target}`)
       break
     case 1:
       res = JSON.parse(target.getItem(name))
       if (res) {
-        console.log(`读出成功，已将${name}从${target}读出`)
         return res
       } else {
-        console.log(`${target}中未读取到${name}`)
         return null
       }
     case 2:
       res = JSON.parse(target.getItem(name))
       if (res) {
         target.removeItem(name)
-        console.log(`删除成功，已将${name}从${target}删除`)
       } else {
-        console.log(`${target}中未读取到${name} 删除失败`)
       }
 
       break
@@ -362,7 +357,6 @@ export function openBrowserTab(path, out = false) {
     baseUrl = '/' + [pathArr[1]].join('/')
   }
   const pathUrl = `${origin}${baseUrl}${path}`
-  console.log(pathUrl, 'pathUrl')
 
   window.open(pathUrl, '_blank')
 }
@@ -501,4 +495,21 @@ export async function calcBrowerClienHeight(_this, ref, minus = 0) {
   const DomTop = _this.$refs[ref].getBoundingClientRect().y
   //  document.body.clientHeight 返回body元素内容的高度
   return document.body.clientHeight - DomTop - minus + 'px'
+}
+// 下载接口返回的流文件
+export const downLoadBolob = (dataOrigin) => {
+  const { blobRes, fileName = '下载', cb } = dataOrigin
+  if (!blobRes) return
+
+  const blob = new Blob([blobRes])
+  var downloadElement = document.createElement('a')
+  var href = window.URL.createObjectURL(blob) // 创建下载的链接
+  downloadElement.href = href
+  downloadElement.download = `${fileName}.xls` // 下载后文件名
+  document.body.appendChild(downloadElement)
+  downloadElement.click() // 点击下载
+  document.body.removeChild(downloadElement) // 下载完成移除元素
+  window.URL.revokeObjectURL(href) // 释放掉blob对象
+
+  cb && cb()
 }

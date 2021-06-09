@@ -327,6 +327,7 @@ import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhone
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
 import { isToss } from '@/utils/index'
 import { downloadHandle } from '@/utils/download'
+import entranceMixins from './mixins/exportLog'
 // import axios from '@/api/axiosConfig'
 
 export default {
@@ -357,7 +358,7 @@ export default {
     SimpleSelect,
     SearchStageEC,
   },
-
+  mixins: [entranceMixins],
   data() {
     return {
       timeType: '', // 三类导出_类型
@@ -497,7 +498,6 @@ export default {
     getOrderSearch(res) {
       const key = Object.keys(res || {})[0]
       const val = res[key] ? res : ''
-
       this.setSeachParmas(val, [key])
     },
     // 清空渠道选项
@@ -716,11 +716,6 @@ export default {
     },
     // fix
     getFirstOrder(res) {
-      // this.$refs.phoneName.handleEmpty()
-      // this.setSeachParmas({ is_first_order_send_id: '' }, [
-      //   'is_first_order_send_id'
-      // ])
-      //
       if (res && res.is_first_order_send_id === '0') {
         this.$refs.phoneName.handleEmpty()
         this.setSeachParmas({ is_first_order_send_id: '' }, [
@@ -821,7 +816,6 @@ export default {
           }
         })
         this.searchParams = temp
-
         this.$emit('search', temp)
 
         return
@@ -897,14 +891,14 @@ export default {
           query: JSON.stringify(query),
           // query: '{"status":3}'
         }
-        //
-
+        this.operatorObj.query = JSON.stringify(query)
         this.$http.DownloadExcel.exportOrder(params)
           .then((res) => {
             downloadHandle(res, `系统课订单导出-${fileTitle}`, () => {
               loading.close()
               this.showChooseDialog = false
               this.$message.success('导出成功')
+              this.initOperateExportLog(this.operatorObj)
             })
           })
           .catch(() => loading.close())
@@ -934,7 +928,6 @@ export default {
           trial_team_id: 0,
           pay_teacher_id: { gt: 0 },
         })
-
         const params = {
           apiName: 'OrderPage',
           header: {
@@ -955,7 +948,6 @@ export default {
           query: JSON.stringify(queryF),
           // query: '{"status":3}'
         }
-        //
 
         this.$http.DownloadExcel.exportOrder(params)
           .then((res) => {

@@ -322,7 +322,7 @@ export default {
       // 前端写死套餐，变更需要同时更改 ../components/contractDrawer.vue 中set_mealList
       set_mealList: [
         {
-          packageName: '49元单周体验课',
+          packageName: '49元双周体验课',
           // 双周体验课
           packageId: '500',
           classHour: '2',
@@ -366,7 +366,17 @@ export default {
           isDisabled: true,
           price: '9.9',
           radioSel: '9.9',
-
+        },
+        {
+          packageName: '22元双周体验课',
+          packageId: '508',
+          classHour: '2',
+          contractPrice: undefined,
+          settlePrice: undefined,
+          orderPrice: '',
+          isDisabled: true,
+          price: '22',
+          radioSel: '22',
         },
         {
           packageName: '19元单周体验课',
@@ -614,7 +624,6 @@ export default {
             }
           })
         } else {
-          console.log('error submit!!')
           return false
         }
       })

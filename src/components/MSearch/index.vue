@@ -858,22 +858,18 @@ export default {
     },
     // 主题
     getProductTopic(res) {
-      console.log(res, 'res')
       this.setSeachParmas(res, [this.topicType || 'topicType'])
     },
     // 物流类别
     getProductTypelog(res) {
-      console.log(res, 'res')
       this.setSeachParmas(res, [this.productType || 'productType'])
     },
     // 期数
     stageCallBack(res) {
-      console.log(res, 'res')
       this.setSeachParmas(res, [this.stage || 'stage'], 'terms')
     },
     // 排期
     selectSchedule(res) {
-      console.log(res, 'res')
       this.setSeachParmas(res, [this.schedule || 'id'])
     },
     // 硬件及盒子
@@ -882,18 +878,15 @@ export default {
     },
     // 难度
     supCallBack(res) {
-      console.log(res, 'res')
       this.setSeachParmas(res, [this.sup || 'sup'], 'terms')
     },
     // 选择体验课类型
     gettrialClassType(res) {
-      console.log(res, 'packages_id')
       res.packages_id = [res.packages_id]
       this.setSeachParmas(res, [this.packages_id || 'packages_id'], 'terms')
     },
     // 级别
     levelCallBack(res) {
-      console.log(res, 'res111')
       this.LevelArr = res.level
       this.setSeachParmas(res, [this.level || 'current_level'], 'terms')
     },
@@ -903,7 +896,6 @@ export default {
     },
     // 选择手机号
     getPhoneHander(res) {
-      console.log(res, '回调res') // 得到uid
       this.setSeachParmas(res, [this.phone || 'umobile'])
     },
     // 选择老师手机号
@@ -1019,7 +1011,6 @@ export default {
       this.setSeachParmas(res, [this.wxRecordId])
     },
     getAddress(res) {
-      console.log(res, 'getAddress==')
       this.setSeachParmas(res, [this.selectAddress])
     },
     getSearchStage(res) {
@@ -1104,7 +1095,6 @@ export default {
       })
       // must
       if (name === 'must') {
-        console.log(res, 'res==')
         if (res) {
           if (
             this.selectAddress &&
@@ -1122,7 +1112,6 @@ export default {
           this.must = temp
         }
         // this.$emit('search', res === '' ? '' : temp)
-        console.log(temp, 'temp==')
         this.$emit('search', temp)
         return
       }

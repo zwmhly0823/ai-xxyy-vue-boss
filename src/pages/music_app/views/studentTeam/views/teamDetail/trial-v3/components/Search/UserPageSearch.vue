@@ -22,6 +22,7 @@
               style="margin-right: 10px;"
               type="2"
               :team-id="teamId"
+              need-uid="id"
               tablename="StudentTrialV2StatisticsList"
               @result="getSearchData('user', arguments)"
             />
@@ -214,7 +215,7 @@ export default {
     getSearchData(key, res) {
       const search = res && res[0]
       if (search) {
-        console.log(search)
+        // console.log(search)
         // 系统课转化
         if (key === 'user_status') {
           // 未转化
@@ -242,6 +243,7 @@ export default {
           ...search
         }
       } else {
+        delete this.searchQuery.id
         this.$delete(this.searchQuery, key)
       }
 

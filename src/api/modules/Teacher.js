@@ -177,7 +177,6 @@ export default {
   },
   // 新建老师
   createTeacher(params) {
-    console.log(params)
     return axios.post(`/api/t/v1/teacher/createTeacher`, params)
   },
   //  编辑老师
@@ -390,6 +389,11 @@ export default {
   // 创建/编辑水军微信号
   saveWaterArmy(params = {}) {
     return axios.post('/api/t/v1/navy/saveNavy', params)
+  },
+
+  // 删除水军微信号
+  deleteWaterArmy(params = {}) {
+    return axios.post('/api/t/v1/navy/delNavy', params)
   },
 
   // 水军微信 列表（查询）@weixinNo；@wechat_status body: departmentIds []

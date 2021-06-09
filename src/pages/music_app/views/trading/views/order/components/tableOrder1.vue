@@ -408,7 +408,6 @@ export default {
   watch: {
     // 切换tab
     topic(val) {
-      console.log(val, 'team_type')
       this.currentPage = 1
       this.getOrderList()
     },
@@ -437,7 +436,6 @@ export default {
     },
     // 订单关联物流详情展示
     showExpressDetail(what, total) {
-      console.log(what, "what's that?")
       if (total > 0) {
         this.$refs.order_id.drawer = true
         this.order_id = what
@@ -463,7 +461,6 @@ export default {
         //   }
         // })
       }
-      console.log(this.searchIn)
       // 组合搜索条件
       this.searchIn.forEach((item) => {
         if (item.terms && item.terms.associated_order_id == 2) {
@@ -567,7 +564,7 @@ export default {
     orderData(queryObj = {}, page = 1) {
       // 最终搜索条件
       this.$emit('get-params', queryObj)
-      this.$http.Order.OrderOptStatisticsPage(
+      this.$http.Order.OrderOptStatisticsPageManager(
         `${JSON.stringify(queryObj)}`,
         page
       )
@@ -597,7 +594,6 @@ export default {
           if (userIds.length > 0) this.getUserTrialTeam(userIds)
         })
         .catch((err) => {
-          console.log(err)
         })
         .finally(() => {
           this.loading = false
@@ -650,7 +646,7 @@ export default {
     // 打开班级详情
     openDetail(id, row, type) {
       // type 0体验课 2系统课
-      row && console.log(row)
+      
       let str = type == 0 ? 'teamTrialDetail' : 'teamDetail'
       id && openBrowserTab(`/music_app/#/${str}/${id}/${type}`)
     },

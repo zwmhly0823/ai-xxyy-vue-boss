@@ -8,12 +8,19 @@
 -->
 <template>
   <div class="search-item small">
-    <el-table :data="comTableData" border style="width: 100%">
+    <el-table :data="list" border style="width: 100%">
       <el-table-column prop="userName" label="学生姓名" min-width="120">
         <template slot-scope="scope">
           <span class="handle-btn" @click="goDel(scope.row)"
             >{{ scope.row.userName }}-{{ scope.row.userMobile }}</span
           >
+          <span>
+            <!-- <i
+              style="margin-left: 10px; color: blue"
+              class="el-icon-view mg-l-5"
+              @click="getNumber(scope.row.userId)"
+            ></i> -->
+          </span>
         </template>
       </el-table-column>
       <el-table-column prop="complaintNo" label="投诉单号" min-width="80">
@@ -90,11 +97,11 @@ export default {
   props: {
     comTableData: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
   created() {
-    console.log(this.comTableData)
+    this.operatorId = JSON.parse(localStorage.getItem('staff')).id
   },
   components: {},
   data() {
@@ -108,28 +115,35 @@ export default {
         101108: '产品技术相关',
         101105: '赠品问题',
         101106: '费用问题',
-        101107: '其他'
-      }
+        101107: '其他',
+      },
+      operatorId: '',
+      list: [],
     }
   },
-  computed: {},
   watch: {
-    comTableData: () => {
-      console.log('变化')
-      // const that = this
-      // this.comTableData.forEach((el) => {
-      //   el.ctime =
-      //     24 * 60 * 60 * 1000 - (dayjs().valueOf() - dayjs(el.ctime).valueOf())
-
-      //   el.countDown = setInterval(() => {
-      //     that.TimeDeadLine(el)
-      //   }, 1000)
-      //   // 模拟后端发的时间戳
-      //   // that.TimeDeadLine(el) // 调用定时器
-      // })
-    }
+    comTableData(val) {
+      this.list = val
+    },
   },
   methods: {
+    //获取学生号码
+    getNumber(uid) {
+      this.$http.User.getUserPhoneNumber({
+        uid: uid,
+        teacherId: this.operatorId,
+      }).then((res) => {
+        if (res.code == 0) {
+          this.list.forEach((item, index) => {
+            if (item.userId == uid) {
+              this.list[index].userMobile = res.payload.mobile
+            }
+          })
+        } else {
+          this.$message.error('网络异常，请稍后再试！')
+        }
+      })
+    },
     // 数据处理
     handleName(val) {
       if (val.cpStatus === 2 && val.cpStatusSub === 20) {
@@ -141,7 +155,6 @@ export default {
 
     // 去用户页
     goDel(val) {
-      console.log(val)
       // studentid
       const { username, mobile, userId } = val
       // 新标签打开详情页
@@ -170,9 +183,9 @@ export default {
     // 打开抽屉
     openDrawer(val) {
       this.$emit('openDrawer', val)
-    }
+    },
   },
-  mounted() {}
+  mounted() {},
 }
 </script>
 <style lang="scss" scoped>

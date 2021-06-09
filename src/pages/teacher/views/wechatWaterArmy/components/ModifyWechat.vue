@@ -15,7 +15,7 @@
     :key="key"
     @close="onClose"
   >
-    <el-form :model="form" size="mini" style="width: 300px;">
+    <el-form :model="form" size="mini" style="width: 300px">
       <el-form-item label="微信号" required :label-width="formLabelWidth">
         <el-input
           v-model.trim="form.weixinNo"
@@ -55,6 +55,12 @@
           autocomplete="off"
         ></el-input>
       </el-form-item>
+      <el-form-item label="实名" :label-width="formLabelWidth">
+        <el-radio-group v-model="form.realNameStatus">
+          <el-radio :label="1">已实名</el-radio>
+          <el-radio :label="0">未实名</el-radio>
+        </el-radio-group>
+      </el-form-item>
       <el-form-item label="启用状态" required :label-width="formLabelWidth">
         <el-radio-group v-model="form.status">
           <el-radio :label="0">启用</el-radio>
@@ -81,13 +87,13 @@ import GroupSell from '@/components/MSearch/searchItems/groupSell'
 export default {
   components: {
     Department,
-    GroupSell
+    GroupSell,
   },
   props: {
     current: {
       type: Object,
-      default: null
-    }
+      default: null,
+    },
   },
   data() {
     return {
@@ -97,14 +103,15 @@ export default {
       formLabelWidth: '80px',
       params: {},
       form: {
+        realNameStatus: '', //实名状态：0 未实名；1 已实名
         weixinNo: '',
         remark: '',
-        status: 0
+        status: 0,
       },
       key: null,
       id: null,
       tkey: null,
-      dkey: null
+      dkey: null,
     }
   },
   watch: {
@@ -112,20 +119,29 @@ export default {
       this.dkey = Date.now()
       this.tkey = Date.now() + 1
       if (data) {
-        const { weixinNo, departmentId, remark, teacherId, status, id } = data
-        Object.assign(this.form, { weixinNo, remark, status })
+        const {
+          weixinNo,
+          departmentId,
+          remark,
+          teacherId,
+          status,
+          id,
+          realNameStatus,
+        } = data
+        Object.assign(this.form, { weixinNo, remark, status, realNameStatus })
         Object.assign(this.params, {
           teacherId: teacherId !== '0' ? teacherId : '',
-          departmentId
+          departmentId,
         })
         this.id = id
+        this.title = '编辑水军微信'
       } else {
-        this.form = { weixinNo: '', remark: '', status: 0 }
+        this.form = { weixinNo: '', remark: '', status: 0, realNameStatus: '' }
         this.params = {}
         this.id = ''
+        this.title = '新增水军微信'
       }
-      console.log(this.params)
-    }
+    },
   },
   methods: {
     getSearchData(key, res) {
@@ -152,12 +168,12 @@ export default {
         ...this.params,
         departmentId: Array.isArray(departmentId)
           ? departmentId.join(',')
-          : departmentId
+          : departmentId,
       }
       // 保管人不填写时，传空
       if (!this.params.teacherId) {
         Object.assign(params, {
-          teacherId: '0'
+          teacherId: '0',
         })
       }
       // 编辑
@@ -167,7 +183,6 @@ export default {
       this.loading = true
       this.$http.Teacher.saveWaterArmy(params)
         .then((res) => {
-          console.log(res, 'save')
           if (res.code !== 0) {
             return
           }
@@ -196,8 +211,8 @@ export default {
       // 禁止输入中文
       const test = /[\u4e00-\u9fa5]/gi
       this.form.weixinNo = this.form.weixinNo.replace(test, '')
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>

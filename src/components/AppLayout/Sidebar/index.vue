@@ -78,7 +78,6 @@ export default {
               const children = item.children.filter((item) => item.meta.show)
               children.forEach((child, cindex) => {
                 if (child.path === path) active = `${index}-${cindex}`
-                console.log(active)
               })
             }
           } else {

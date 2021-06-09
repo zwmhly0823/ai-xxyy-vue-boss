@@ -257,7 +257,6 @@ export default {
       // 滚动距离
       const scrollLong = document.getElementsByClassName('el-drawer__body')[0]
         .scrollTop
-      // console.log(clientHeight, itemToTop, scrollLong)
       if (clientHeight + scrollLong >= itemToTop + 60) {
         this.getNextPageData()
       }

@@ -192,7 +192,7 @@ import {
   SUP_LEVEL_SYSTEM,
   Sup_scheduleIndex,
   Sup_scheduleSubmit,
-  Sup_scheduleDownload,
+  Sup_scheduleDownload
 } from '@/utils/supList'
 export default {
   props: {
@@ -262,7 +262,7 @@ export default {
         teacherId: '',
         level: '',
         courseDifficulties: '',
-        courseType: Sup_scheduleIndex[this.tabIndex],
+        courseType: Sup_scheduleSubmit[this.tabIndex],
         period: row.period,
       }
       const res = await this.$http.DownloadExcel.downloadExcelByPeriod(params)
@@ -306,14 +306,13 @@ export default {
       var staff = JSON.parse(localStorage.getItem('staff'))
       staff.stepStatus = 1
       localStorage.setItem('staff', JSON.stringify(staff))
-
       this.$router.push({ path: `/addSchedule/${period}/${this.tabIndex}` })
     },
     // 查看详情
     go_detail(row) {
       const { period = '' } = row
       this.$router.push({
-        path: `/scheduleDetail/${period}/${Sup_scheduleIndex[this.tabIndex]}`,
+        path: `/scheduleDetail/${period}/${this.tabIndex}`,
       })
     },
     /**
@@ -323,7 +322,6 @@ export default {
       this.tabQuery.page = page
       this.getCourseListByType()
 
-      // console.log(aa, 'aa')
     },
     /** adolf-end */
     async getCourseListByType() {
@@ -338,7 +336,7 @@ export default {
       this.tabQuery = {
         ...this.tabQuery,
         // page: --this.tabQuery.page,
-        courseType: Sup_scheduleIndex[this.tabIndex],
+        courseType: Sup_scheduleSubmit[this.tabIndex],
       }
       // TODO:
       try {
@@ -378,7 +376,6 @@ export default {
           }
         })
 
-        console.log('enrollArr=>', enrollArr)
         content.forEach((item) => {
           if (['待开课', '上课中', '已结课'].includes(item.status)) {
             item.intruSwitchName = '招生完毕'
@@ -404,7 +401,6 @@ export default {
         })
         this.flags.loading = false
         this.tableData = content
-        console.log(content)
       } catch (err) {
         this.flags.loading = false
         return new Error(err)
@@ -428,19 +424,16 @@ export default {
     },
     // 搜索
     handleSearch(data) {
-      console.log(data)
     },
     click_intru_switch(index, period, name) {
       if (name === '招生完毕') {
         return
       }
-      console.log(name)
       const params = {
         period: period,
         courseType: Sup_scheduleSubmit[this.tabIndex],
         status: name === '停止转介绍' ? 'NOOPEN' : 'OPEN',
       }
-      console.log(params)
       this.flags.loading = true
       this.$http.Operating.updateStatusByPeriod(params)
         .then((res) => {

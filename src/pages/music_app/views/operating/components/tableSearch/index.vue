@@ -129,8 +129,8 @@ export default {
       } catch (err) {}
     },
     getVersionNu(res) {
-      console.log(res, 'version-res')
-      // this.manageChange({ version }, 'version')
+      const version = res.version;
+      this.manageChange({ version }, 'version')
       // this.setSeachParmas(res, [this.moreVersion || 'product_version'])
     },
     getWxSerch(res) {
@@ -139,8 +139,6 @@ export default {
     },
     // 招生级别 TODO:
     scheduleLevel(courseDifficulties) {
-      console.log(courseDifficulties)
-
       this.manageChange({ courseDifficulties }, 'courseDifficulties')
     },
     // 销售等级
