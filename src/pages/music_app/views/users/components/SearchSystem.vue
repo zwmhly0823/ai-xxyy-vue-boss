@@ -166,7 +166,7 @@ export default {
      */
     getSearchData(key, res) {
       const search = res && res[0]
-      console.log(search)
+      
       if (search) {
         if (key === 'currentsuper') {
           const r = search[key].map((item) => `s${item}`)
@@ -190,6 +190,7 @@ export default {
         }
       } else {
         // delete this.searchQuery[key]
+        delete this.searchQuery.id
         this.$delete(this.searchQuery, key)
         if (key === 'dateTime') {
           this.$delete(this.searchQuery, 'startTime')
@@ -200,8 +201,8 @@ export default {
       if (search && search[key].length === 0) {
         this.$delete(this.searchQuery, key)
       }
-      console.log(search, 'getSearchData')
-      console.log(this.searchQuery, 'this.searchQuery')
+      
+      
       this.$emit('search', this.searchQuery)
     }
   }

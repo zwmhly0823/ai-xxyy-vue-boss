@@ -199,7 +199,7 @@ export default {
     getSearchData(key, res) {
       const search = res && res[0]
       if (search) {
-        console.log(search)
+        
         // 系统课转化
         if (key === 'packages_course_week') {
           // 未转化
@@ -234,6 +234,7 @@ export default {
           ...search
         }
       } else {
+        delete this.searchQuery.id
         this.$delete(this.searchQuery, key)
       }
 

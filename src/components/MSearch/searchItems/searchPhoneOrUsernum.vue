@@ -44,7 +44,7 @@
           :label="`${
             item[name[searchType] === 'id' ? 'mobile' : name[searchType]]
           }`"
-          :value="`${needUid ? item.id : item[name[searchType]]}`"
+          :value="`${needUid ? item.id : item.id}`"
         ></el-option>
       </el-select>
       <i class="el-icon-search"></i>
