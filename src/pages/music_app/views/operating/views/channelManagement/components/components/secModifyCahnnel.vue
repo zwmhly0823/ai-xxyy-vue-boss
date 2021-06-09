@@ -20,7 +20,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item style="width:293px" label="二级渠道" prop="channelTwo">
+      <el-form-item style="width: 293px" label="二级渠道" prop="channelTwo">
         <el-input
           v-model="ruleForm.channelTwo"
           placeholder="请输入二级渠道"
@@ -37,7 +37,7 @@
         </span>
       </el-form-item>
       <el-form-item>
-        <div style="margin-left:50px;">
+        <div style="margin-left: 50px">
           <el-button type="primary" @click="submitForm('ruleForm')"
             >提交</el-button
           >
@@ -50,7 +50,7 @@
 
 <script>
 export default {
-  props: ['modifyRow'],
+  props: ['modifyRow', 'channelType'],
   data() {
     return {
       channelId: '',
@@ -59,19 +59,19 @@ export default {
       ruleForm: {
         channelOne: '',
         channelTwo: '',
-        channelLevel: ''
+        channelLevel: '',
       },
       rules: {
         channelOne: [
-          { required: true, message: '请选择一级渠道', trigger: 'change' }
+          { required: true, message: '请选择一级渠道', trigger: 'change' },
         ],
         channelTwo: [
-          { required: true, message: '请填写二级渠道', trigger: 'blur' }
+          { required: true, message: '请填写二级渠道', trigger: 'blur' },
         ],
         channelLevel: [
-          { required: true, message: '请选择渠道等级', trigger: 'change' }
-        ]
-      }
+          { required: true, message: '请选择渠道等级', trigger: 'change' },
+        ],
+      },
     }
   },
   created() {
@@ -105,16 +105,28 @@ export default {
             channelClassId: this.channelId,
             channelClassName: this.ruleForm.channelTwo,
             channelClassParentId: this.ruleForm.channelOne,
-            channelLevel: this.getLevel(this.ruleForm.channelLevel)
+            channelLevel: this.getLevel(this.ruleForm.channelLevel),
           }
-          this.$http.Operating.updateChannelClassV2(params).then((res) => {
-            if (res.code === 0) {
-              this.$message.success('渠道修改成功')
-              this.$refs[formName].resetFields()
-              this.$emit('modifyChannelShow', false)
-              this.$emit('modifyChannelShowBtn', 1)
-            }
-          })
+          if (this.channelType == 'edit') {
+            this.$http.Operating.updateChannelClassV2(params).then((res) => {
+              if (res.code === 0) {
+                this.$message.success('渠道修改成功')
+                this.$refs[formName].resetFields()
+                this.$emit('modifyChannelShow', false)
+                this.$emit('modifyChannelShowBtn', 1)
+              }
+            })
+          } else if (this.channelType == 'add') {
+            delete params.channelClassId
+            this.$http.Operating.createChannelClassV2(params).then((res) => {
+              if (res.code === 0) {
+                this.$message.success('渠道添加成功')
+                this.$refs[formName].resetFields()
+                this.$emit('modifyChannelShow', false)
+                this.$emit('modifyChannelShowBtn', 1)
+              }
+            })
+          }
         } else {
           return false
         }
@@ -134,8 +146,8 @@ export default {
       this.ruleForm.channelTwo = ''
       this.ruleForm.channelLevel = ''
       this.$emit('modifyChannelShow', false)
-    }
-  }
+    },
+  },
 }
 </script>
 

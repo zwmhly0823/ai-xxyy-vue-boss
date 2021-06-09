@@ -84,6 +84,7 @@
       <modify-cahnnel
         v-if="modifyDrawer"
         :modifyRow="modifyRow"
+        :channelType="channelType"
         @modifyChannelShowBtn="modifyChannelShowBtn"
         @modifyChannelShow="modifyChannelShow"
       />
@@ -126,6 +127,7 @@ export default {
       channelSearchIds: [], // 筛选条件选择的渠道id集合
       channelLevels: [], // 筛选条件选择的渠道等级集合
       modifyRow: '', // 传递给修改抽屉数据
+      channelType:null,
     }
   },
   watch: {
@@ -190,10 +192,12 @@ export default {
       // 鼠标移入三个点上面触发的事件
     },
     onAddChannel() {
+      this.channelType = "add"
       this.modifyDrawer = true
     },
     // 点击编辑
     batchBtn(row) {
+      this.channelType ="edit"
       this.modifyDrawer = true
       this.modifyRow = row
     },
