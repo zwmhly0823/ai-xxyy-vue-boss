@@ -251,8 +251,22 @@ export default {
   },
   // renewOrder续费订单导出
   renewOrder (params) {
-    return axios.post(`/api/o/v1/order/exportRenewOrder`, params, {
-      responseType: 'blob'
-    })
+    if (judgeToken()) {
+      return new Promise((resolve, reject) => {
+        axios({
+          method: 'POST',
+          url: `/api/o/v1/order/exportRenewOrder`,
+          responseType: 'blob',
+          headers: getHeaders(),
+          data: params
+        })
+          .then((res) => {
+            resolve(res)
+          })
+          .catch((err) => {
+            reject(err)
+          })
+      })
+    }
   },
 }
