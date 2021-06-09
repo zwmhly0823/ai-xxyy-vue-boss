@@ -256,9 +256,7 @@ export default {
   },
   methods: {
     // 上传进度
-    uploadProgress(event, file, fileList) {
-      
-    },
+    uploadProgress(event, file, fileList) {},
     // 上传物流关闭符号
     handleCloseUpdata() {
       this.dialogVisible = false
@@ -281,7 +279,7 @@ export default {
           this.uploading = false
           if (res.code === 0 && res.payload.length < 1 && res.payload) {
             this.initParams()
-            this.operatorObj.operateType ="express_export"
+            this.operatorObj.operateType = 'express_export'
             this.initOperateExportLog(this.operatorObj)
             this.$message({
               showClose: true,
@@ -495,9 +493,7 @@ export default {
             Object.assign(expressObj, item.terms, item.term)
           }
         })
-        this.operatorObj.operateType = 'express_export'
-        this.operatorObj.accountType = 1
-        this.operatorObj.query = JSON.stringify(expressObj)
+
         // finalmust = finaTerm
         this.queryObj = {
           bool: {
@@ -556,11 +552,14 @@ export default {
           }
         }
       })
+      this.operatorObj.operateType = 'express_export'
+      this.operatorObj.accountType = 1
+      this.operatorObj.query = JSON.stringify(this.queryObj)
       const params = {
         tableName,
         name,
         headers,
-        query:this.queryObj,
+        query: this.queryObj,
         sort,
       }
       // operateExportLog
@@ -594,14 +593,16 @@ export default {
       })
 
       this.$emit('result', this.searchIn)
-      switchTabSearchIn[
-        `searchIn${this.regtype}${this.source_type}`
-      ] = this.searchIn
+      switchTabSearchIn[`searchIn${this.regtype}${this.source_type}`] =
+        this.searchIn
     },
     initOperateExportLog(params) {
-      this.$http.liveBroadcast.operateExportLog(params).then((res) => {}).catch((err) => {
-        this.$message.error(err)
-      })
+      this.$http.liveBroadcast
+        .operateExportLog(params)
+        .then((res) => {})
+        .catch((err) => {
+          this.$message.error(err)
+        })
     },
     // 下载文件
     downloadFn(data, name = '下载') {
