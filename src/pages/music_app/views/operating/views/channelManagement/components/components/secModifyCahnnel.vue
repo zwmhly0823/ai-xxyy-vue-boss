@@ -76,7 +76,9 @@ export default {
   },
   created() {
     this.getChannelOne()
-    this.setModifyData()
+    if (this.channelType == 'edit') {
+      this.setModifyData()
+    }
   },
   methods: {
     // 回显修改数据
