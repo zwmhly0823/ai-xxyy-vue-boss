@@ -7,7 +7,7 @@
       label-width="100px"
       class="demo-ruleForm"
     >
-      <el-form-item label="渠道ID">
+      <el-form-item label="渠道ID" v-if="channelType=='edit'">
         {{ channelId }}
       </el-form-item>
       <el-form-item label="一级渠道" prop="channelOne">

@@ -998,6 +998,6 @@ export default {
      * @param {*} param0
      */
     createChannelClassV2(params) {
-      return axios.get('api/c/v1/channel/createChannelClassV2', params)
+      return axios.get('/api/c/v1/channel/createChannelClassV2', params)
   },
 }
