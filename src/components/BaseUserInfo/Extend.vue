@@ -14,7 +14,7 @@
     <div>
       <p class="primary-text">
         <span @click="onClick">{{
-          userPhone ? userPhone : (user && user.mobile) || '-'
+         user && user.mobile || '-'
         }}</span>
       </p>
       <p>
@@ -94,12 +94,13 @@ export default {
   methods: {
     //获取学生号码
     getNumber(uid) {
+      this.userPhone = ''
       this.$http.User.getUserPhoneNumber({
         uid: uid,
         teacherId: this.operatorId,
       }).then((res) => {
         if (res.code == 0) {
-          this.userPhone = res.payload.mobile
+          this.user.mobile = res.payload.mobile
         } else {
           this.$message.error('网络异常，请稍后再试！')
         }
