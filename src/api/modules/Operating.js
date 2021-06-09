@@ -55,7 +55,7 @@ export default {
   },
   /**
    * 获取体验课、系统课列表
-   * 
+   *
    */
   getCourseListByType (params) {
     const page = params.page - 1
@@ -749,7 +749,7 @@ export default {
     return axios.post(
       `/api/t/v1/teacher/course/v/enroll/teacher/config?pageNum=${--pageNum}&pageSize=${params.size
       }&courseType=${params.courseType}&period=${params.period
-      }&courseDifficulty=${params.courseDifficulty}`,
+      }&courseDifficulty=${params.courseDifficulty}&courseVersion=${params.courseVersion}&teacherWechatIds=${params.teacherWechatIds}&departmentIds=${params.departmentIds}`,
       params.ids
     )
   },
@@ -782,6 +782,18 @@ export default {
   saveEditTeacherWeChat (params) {
     return axios.post(
       `/api/t/v1/wechat/teacher/saveTeacherChangeWeixinRecord?teacherId=${params.teacherId}&oldWeixinNo=${params.oldWeixinNo}&oldWeixinId=${params.oldWeixinId}&weixinId=${params.weixinId}&weixinNo=${params.weixinNo}&courseType=${params.courseType}&period=${params.period}`
+    )
+  },
+  /**
+   * @description 编辑微信保存按钮
+   */
+  saveTrialVolumeTeacherWeChat (params) {
+    return axios.post(
+      `/api/t/v1/wechat/teacher/v/updateWXInfo?teacherId=${params.teacherId
+      }&category=${params.category || ''}&oldWeixinNo=${params.oldWeixinNo
+      }&oldWeixinId=${params.oldWeixinId}&weixinId=${params.weixinId
+      }&weixinNo=${params.weixinNo}&courseType=${params.courseType}&period=${params.period
+      }`
     )
   },
   // 删除定向分配销售
@@ -875,7 +887,7 @@ export default {
     return axios.post(`/api/s/v1/management/enroll/sell/save`, params)
   },
   /**
-   * 招生排期 保存老师 
+   * 招生排期 保存老师
    * 其中  courseType    0 双周|3单周|2系统课
    */
   saveAddTeacherWxList (params) {
