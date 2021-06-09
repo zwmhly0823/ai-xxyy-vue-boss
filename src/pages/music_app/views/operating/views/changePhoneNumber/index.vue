@@ -108,14 +108,14 @@
             <el-table-column prop="old_mobile" label="原手机号">
               <template slot-scope="scope">
                 <div>
-                  <span style="color: #2a75ed">
+                  <span>
                     {{ scope.row.old_mobile }} </span
                   ><span>
-                    <i
+                    <!-- <i
                       style="margin-left: 10px; color: #2a75ed"
                       class="el-icon-view mg-l-5"
                       @click="getNumber(scope.row.user && scope.row.user.id, 1)"
-                    ></i>
+                    ></i> -->
                   </span>
                 </div>
               </template>

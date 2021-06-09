@@ -15,11 +15,11 @@
             >{{ scope.row.userName }}-{{ scope.row.userMobile }}</span
           >
           <span>
-            <i
+            <!-- <i
               style="margin-left: 10px; color: blue"
               class="el-icon-view mg-l-5"
               @click="getNumber(scope.row.userId)"
-            ></i>
+            ></i> -->
           </span>
         </template>
       </el-table-column>
