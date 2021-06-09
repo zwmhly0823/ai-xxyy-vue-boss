@@ -48,7 +48,7 @@ const judgeToken = () => {
 }
 export default {
   // 物流页面导出物流Excle文件
-  exportExpress(params) {
+  exportExpress (params) {
     if (judgeToken()) {
       return axios({
         method: 'POST',
@@ -59,7 +59,7 @@ export default {
       })
     }
   },
-  exportChannel(params) {
+  exportChannel (params) {
     if (judgeToken()) {
       return axios({
         method: 'POST',
@@ -76,7 +76,7 @@ export default {
   /**
    * @description 招生排期下载某一期excel
    */
-  downloadExcelByPeriod(params) {
+  downloadExcelByPeriod (params) {
     if (judgeToken()) {
       return new Promise((resolve, reject) => {
         axios({
@@ -108,7 +108,7 @@ export default {
    * 课程类型
    * 配速
    */
-  updateScheduleExcel(params) {
+  updateScheduleExcel (params) {
     if (judgeToken()) {
       return new Promise((resolve, reject) => {
         axios({
@@ -132,7 +132,7 @@ export default {
    *
    * @param {*} params
    */
-  updateReferralExcel(params) {
+  updateReferralExcel (params) {
     if (judgeToken()) {
       return new Promise((resolve, reject) => {
         axios({
@@ -176,7 +176,7 @@ export default {
       "query": "{\"status\":1}"
       }
    */
-  exportOrder(params) {
+  exportOrder (params) {
     if (judgeToken()) {
       return axios({
         method: 'POST',
@@ -192,7 +192,7 @@ export default {
   /**
    * 营销中心-兑换码记录列表导出
    */
-  exportRedeemCodeLog(params) {
+  exportRedeemCodeLog (params) {
     console.log(params, 'params')
     if (judgeToken()) {
       return new Promise((resolve, reject) => {
@@ -213,7 +213,7 @@ export default {
       })
     }
   },
-  importScheduleExcel(params) {
+  importScheduleExcel (params) {
     const { url } = params
     console.log('params', params)
     return new Promise((resolve, reject) => {
@@ -230,6 +230,12 @@ export default {
         .catch((err) => {
           reject(err)
         })
+    })
+  },
+  // renewOrder续费订单导出
+  renewOrder (params) {
+    return axios.post(`/api/o/v1/order/exportRenewOrder`, params, {
+      responseType: 'blob'
     })
   },
 }

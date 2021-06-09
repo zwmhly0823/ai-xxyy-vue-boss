@@ -265,7 +265,43 @@
               style="padding-left: 5px"
             ></i></el-tooltip
         ></el-radio>
+        <el-radio label="3"
+          ><span>续费开课订单导出</span
+          ><el-tooltip
+            class="item"
+            effect="dark"
+            content="财务人员确认续费订单专用"
+            placement="top"
+            ><i
+              class="el-icon-question"
+              style="padding-left: 5px"
+            ></i></el-tooltip
+        ></el-radio>
       </el-radio-group>
+      <section v-show="chooseExport === '3'">
+        <h4>订单时间区间筛选</h4>
+        <el-form>
+          <el-form-item label="时间查询:">
+            <div style="display: flex; align-items: center">
+              <el-select size="mini" v-model="timeType" placeholder="请选择">
+                <el-option label="订单支付时间" value="0"></el-option>
+                <el-option label="订单开课时间" value="1"></el-option>
+              </el-select>
+              <el-date-picker
+                value-format="timestamp"
+                type="daterange"
+                unlink-panels
+                size="mini"
+                v-model="timeValue"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+              >
+              </el-date-picker>
+            </div>
+          </el-form-item>
+        </el-form>
+      </section>
       <span slot="footer" class="dialog-footer">
         <el-button @click="showChooseDialog = false">取 消</el-button>
         <el-button type="primary" @click="exportOrderHandle">确 定</el-button>
@@ -319,11 +355,13 @@ export default {
     orderAttr,
     SearchPhoneAndUsername,
     SimpleSelect,
-    SearchStageEC
+    SearchStageEC,
   },
 
   data() {
     return {
+      timeType: '', // 三类导出_类型
+      timeValue: [], // 三类导出_时间
       associated_order_id: '全部',
       options1: [
         {
@@ -457,15 +495,13 @@ export default {
     },
     // 订单号、手机号
     getOrderSearch(res) {
-      console.log('手机号', res)
       const key = Object.keys(res || {})[0]
       const val = res[key] ? res : ''
-      console.log(key, val)
+
       this.setSeachParmas(val, [key])
     },
     // 清空渠道选项
     clearChannel(res) {
-      console.log(res)
       if (res) {
         this.setSeachParmas({ pay_channel: '' }, ['pay_channel'], 'terms')
       } else {
@@ -480,15 +516,14 @@ export default {
     selectOrder(val) {
       this.searchParams.forEach((item, index) => {
         if (
-         item.terms&& item.terms.associated_order_id ||
-          item.terms &&item.terms.associated_order_id == 0
+          (item.terms && item.terms.associated_order_id) ||
+          (item.terms && item.terms.associated_order_id == 0)
         ) {
           this.searchParams.splice(index, 1)
         }
       })
       let res = { associated_order_id: val }
       this.setSeachParmas(res, ['associated_order_id'], 'terms')
-      console.log(this.searchParams, 'this.searchParams')
     },
     // 选择渠道
     getChannel(res) {
@@ -517,12 +552,10 @@ export default {
     },
     // 系统课难度
     supCallBack(res) {
-      console.log(res, 'res')
       this.setSeachParmas(res, ['sup'], 'terms')
     },
     // 体验课难度
     supCallBackTrial(res) {
-      console.log(res, 'res')
       this.setSeachParmas(res, ['trial_team_id'], 'terms')
     },
     // 选择订单下单时间
@@ -668,7 +701,7 @@ export default {
       })
       this.setSeachParmas(res, ['packages_type'])
     },
-    getDepartment(res,res1) {
+    getDepartment(res, res1) {
       this.teacherscope = res1.pay_teacher_id || null
       this.setSeachParmas(res, ['pay_teacher_id'], 'terms')
     },
@@ -679,17 +712,15 @@ export default {
       this.setSeachParmas(res, ['trial_team_id'], 'terms')
     },
     async getSendUser(res) {
-      console.log(res)
       this.setSeachParmas(res, ['first_order_send_id'], 'terms')
     },
     // fix
     getFirstOrder(res) {
-      console.log(res)
       // this.$refs.phoneName.handleEmpty()
       // this.setSeachParmas({ is_first_order_send_id: '' }, [
       //   'is_first_order_send_id'
       // ])
-      // console.log(res[0].is_first_order_send_id)
+      //
       if (res && res.is_first_order_send_id === '0') {
         this.$refs.phoneName.handleEmpty()
         this.setSeachParmas({ is_first_order_send_id: '' }, [
@@ -712,7 +743,6 @@ export default {
       }
     },
     getOrderType(res) {
-      console.log(res)
       this.setSeachParmas(res, ['regtype'])
     },
     getExpChange(res) {
@@ -723,7 +753,6 @@ export default {
       } else {
         this.setSeachParmas({ trial_team_id: { gte: 0 } }, ['trial_team_id'])
       }
-      console.log(res, 'res')
     },
     getPerformType(res) {
       this.setSeachParmas(res, ['pay_teacher_duty_id'])
@@ -736,7 +765,6 @@ export default {
      * @name: String 结果放到上层表达式中的位置，默认must. 可指定 should
      */
     setSeachParmas(res, key = [], extraKey = 'term', name = 'must') {
-      console.info(res)
       const { must, should } = this
       const temp = name === 'must' ? must : should
       key.forEach((k) => {
@@ -763,7 +791,7 @@ export default {
         //   temp[0].terms.trial_pay_channel.length <= 0
         // ) {
         //   temp.map((item) => {
-        //     console.log(item)
+        //
         //     delete item.terms.trial_pay_channel
         //   })
 
@@ -793,7 +821,7 @@ export default {
           }
         })
         this.searchParams = temp
-        console.log('参数', temp)
+
         this.$emit('search', temp)
 
         return
@@ -820,10 +848,10 @@ export default {
     },
     // 导出
     exportOrderHandle() {
-      console.log(this.searchParams)
-      console.log('exportOrderHandle', this.$parent.$children[1])
-      const chooseExport = this.chooseExport
-      if (this.searchParams.length === 0) {
+      if (
+        (this.chooseExport === '1' || this.chooseExport === '2') &&
+        this.searchParams.length === 0
+      ) {
         this.$message.error('请选择筛选条件')
         return
       }
@@ -831,7 +859,6 @@ export default {
       // 获取查询条件
       const query = this.$parent.$children[1].finalParams
       query.subject = 3
-      console.log('query======')
 
       const fileTitle = dayjs(new Date()).format('YYYY-MM-DD')
       const fileTitleTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
@@ -841,7 +868,7 @@ export default {
         text: '正在导出，请耐心等待……',
         spinner: 'el-icon-loading',
       })
-      if (chooseExport === '1') {
+      if (this.chooseExport === '1') {
         const params = {
           apiName: 'OrderOptStatistics',
           header: {
@@ -870,11 +897,10 @@ export default {
           query: JSON.stringify(query),
           // query: '{"status":3}'
         }
-        // console.log(exportExcel)
+        //
 
         this.$http.DownloadExcel.exportOrder(params)
           .then((res) => {
-            console.log(res)
             downloadHandle(res, `系统课订单导出-${fileTitle}`, () => {
               loading.close()
               this.showChooseDialog = false
@@ -882,13 +908,33 @@ export default {
             })
           })
           .catch(() => loading.close())
+      } else if (this.chooseExport === '3') {
+        if (this.timeType && this.timeValue.length !== 0) {
+          const params = {
+            timeType: this.timeType,
+            timeValue: { gte: this.timeValue[0], lte: this.timeValue[1] },
+          }
+          this.$http.DownloadExcel.renewOrder(params)
+            .then((res) => {
+              downloadHandle(res, `续费开课订单-${fileTitle}`, () => {
+                this.showChooseDialog = false
+                this.$message.success('导出成功')
+              })
+            })
+            .finally(() => {
+              loading.close()
+            })
+        } else {
+          loading.close()
+          this.$message.warning('请确认选择时间类型与节点')
+        }
       } else {
         const query = this.$parent.$children[1].finalParams
         const queryF = Object.assign({}, query, {
           trial_team_id: 0,
           pay_teacher_id: { gt: 0 },
         })
-        console.log(queryF)
+
         const params = {
           apiName: 'OrderPage',
           header: {
@@ -909,11 +955,10 @@ export default {
           query: JSON.stringify(queryF),
           // query: '{"status":3}'
         }
-        // console.log(exportExcel)
+        //
 
         this.$http.DownloadExcel.exportOrder(params)
           .then((res) => {
-            console.log(res)
             downloadHandle(res, `系统课订单薪资核算表-${fileTitle}`, () => {
               loading.close()
               this.showChooseDialog = false
