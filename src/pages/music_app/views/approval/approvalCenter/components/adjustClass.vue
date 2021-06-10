@@ -461,10 +461,10 @@ export default {
       },
     },
     selectClass(newValue) {
-      if(!this.formData.orderId) {
-         this.$message.error("请优先选择订单");
-         return false
-      };
+      if (!this.formData.orderId) {
+        this.$message.error('请优先选择订单')
+        return false
+      }
       if (newValue === '0') {
         this.commonSelectHandleFunction(
           'classChooseClass',
@@ -509,14 +509,12 @@ export default {
       )
     },
     initDepartment(params) {
-      let result = this.$http.TeamV2.getTeacherApproval(params).then(
-        (res) => {
-          if (res.data.Teacher) {
-            this.newData.saleDepartmentId = res.data.Teacher.departmentInfo.id
-            this.newData.saleDepartmentPid = res.data.Teacher.departmentInfo.pid
-          }
+      let result = this.$http.TeamV2.getTeacherApproval(params).then((res) => {
+        if (res.data.Teacher) {
+          this.newData.saleDepartmentId = res.data.Teacher.departmentInfo.id
+          this.newData.saleDepartmentPid = res.data.Teacher.departmentInfo.pid
         }
-      )
+      })
     },
     // 后退
     back() {
@@ -644,11 +642,13 @@ export default {
     // select change
     // 处理所有需要选择后再走的逻辑
     selectChange(event, data) {
-      if(data.labelText!="调整开课日期:") {
+      if (data.labelText != '调整开课日期:') {
         this.newData = data.options[0].value
       }
-      this.formData.targetClassName = ''
-      this.formData.targetClassId = ''
+      if (data.labelText == '关联订单:' || data.labelText == '选择开课日期') {
+        this.formData.targetClassName = ''
+        this.formData.targetClassId = ''
+      }
       // 选择班级这儿逻辑稍微复杂一些，调班时用户选完订单后即可渲染班级列表，调级时选完订单后还得选申请调级级别，同理调期时还得选了调整开课日期
       this.handleStageAndSupChooseClass(event, data)
 
