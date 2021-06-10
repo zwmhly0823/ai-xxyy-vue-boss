@@ -30,39 +30,51 @@
               >
                 <el-table-column label="用户信息" align="center">
                   <template slot-scope="scope">
-                    <div @click="userHandle(scope.row)" class="primary-text">
+                    <div
+                      @click.self="userHandle(scope.row)"
+                      class="primary-text"
+                    >
                       <p>
                         {{
-                        scope.row.userInfo && scope.row.userInfo.username
-                        ? scope.row.userInfo.username
-                        : '-'
+                          scope.row.userInfo && scope.row.userInfo.username
+                            ? scope.row.userInfo.username
+                            : '-'
                         }}
                       </p>
                       <p>
                         {{
-                        scope.row.userInfo && scope.row.userInfo.mobile
-                        ? scope.row.userInfo.mobile
-                        : '-'
+                          scope.row.userInfo && scope.row.userInfo.mobile
+                            ? scope.row.userInfo.mobile
+                            : '-'
                         }}
+                        <i
+                          style="margin-left: 10px"
+                          class="el-icon-view mg-l-5"
+                          @click="getNumber(scope.row.uid)"
+                        ></i>
                       </p>
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column label="订单编号·订单交易流水号" align="center" min-width="130">
+                <el-table-column
+                  label="订单编号·订单交易流水号"
+                  align="center"
+                  min-width="130"
+                >
                   <template slot-scope="scope">
                     <p>
                       {{
-                      scope.row.orderInfo && scope.row.orderInfo.out_trade_no
-                      ? scope.row.orderInfo.out_trade_no
-                      : '-'
+                        scope.row.orderInfo && scope.row.orderInfo.out_trade_no
+                          ? scope.row.orderInfo.out_trade_no
+                          : '-'
                       }}
                     </p>
                     <p>
                       {{
-                      scope.row.paymentPayInfo &&
-                      scope.row.paymentPayInfo.transaction_id
-                      ? scope.row.paymentPayInfo.transaction_id
-                      : '-'
+                        scope.row.paymentPayInfo &&
+                        scope.row.paymentPayInfo.transaction_id
+                          ? scope.row.paymentPayInfo.transaction_id
+                          : '-'
                       }}
                     </p>
                   </template>
@@ -81,9 +93,22 @@
                 </el-table-column>
                 <el-table-column label="订单类型" align="center">
                   <template slot-scope="scope">
-                    <span v-if="scope.row.content_type === 1 || scope.row.content_type === 0">课程订单</span>
+                    <span
+                      v-if="
+                        scope.row.content_type === 1 ||
+                        scope.row.content_type === 0
+                      "
+                      >课程订单</span
+                    >
                     <span v-if="scope.row.content_type === 2">器材订单</span>
-                    <span v-if="scope.row.content_type !== 1 && scope.row.content_type !== 2 && scope.row.content_type !== 0">--</span>
+                    <span
+                      v-if="
+                        scope.row.content_type !== 1 &&
+                        scope.row.content_type !== 2 &&
+                        scope.row.content_type !== 0
+                      "
+                      >--</span
+                    >
                   </template>
                 </el-table-column>
                 <el-table-column label="发票金额" align="center">
@@ -95,9 +120,9 @@
                   <template slot-scope="scope">
                     <span>
                       {{
-                      scope.row.orderInfo && scope.row.orderInfo.invoice_code
-                      ? scope.row.orderInfo.invoice_code
-                      : '-'
+                        scope.row.orderInfo && scope.row.orderInfo.invoice_code
+                          ? scope.row.orderInfo.invoice_code
+                          : '-'
                       }}
                     </span>
                   </template>
@@ -111,7 +136,7 @@
                   <template slot-scope="scope">
                     <span>
                       {{
-                      scope.row.complete_time ? scope.row.complete_time : '-'
+                        scope.row.complete_time ? scope.row.complete_time : '-'
                       }}
                     </span>
                   </template>
@@ -132,7 +157,8 @@
                       class="editStyle"
                       target="_blank"
                       v-if="scope.row.invoice_pdf"
-                    >详情</a>
+                      >详情</a
+                    >
                     <span v-else>-</span>
                   </template>
                 </el-table-column>
@@ -157,27 +183,45 @@ export default {
       loading: false,
       sourchParams: {
         page: 1,
-        size: 20
+        size: 20,
       },
       totalElements: 0,
-      queryObj: {}
+      queryObj: {},
+      operatorId: '',
     }
   },
   created() {
     this.calcTableHeight()
     this.invoiceData()
+    this.operatorId = JSON.parse(localStorage.getItem('staff')).id
   },
   mounted() {},
   components: {
     EleTable,
-    invoiceSearch
+    invoiceSearch,
   },
   computed: {},
 
   methods: {
+    //获取学生号码
+    getNumber(uid) {
+      this.$http.User.getUserPhoneNumber({
+        uid: uid,
+        teacherId: this.operatorId,
+      }).then((res) => {
+        if (res.code == 0) {
+          this.tableData.forEach((item,index) => {
+            if(item.uid ==uid) {
+              this.tableData[index].userInfo.mobile= res.payload.mobile
+            }
+          })
+        } else {
+          this.$message.error('网络异常，请稍后再试！')
+        }
+      })
+    },
     // 获取search
     getSearch(data) {
-      console.log(data)
       this.queryObj = data
       this.sourchParams.page = 1
       this.invoiceData(this.queryObj, 1)
@@ -198,9 +242,7 @@ export default {
           this.totalElements = Number(res.data.InvoiceRecordPage.totalElements)
           this.loading = false
         })
-        .catch((err) => {
-          console.log(err)
-        })
+        .catch((err) => {})
     },
     // 用户详情页
     userHandle(row) {
@@ -216,14 +258,14 @@ export default {
     calcTableHeight() {
       this.$nextTick(() => {
         // Element.getBoundingClientRect() 方法返回元素的大小及其相对于视口的位置。
-        const tableTopHeight = this.$refs.tableContainer.getBoundingClientRect()
-          .y
+        const tableTopHeight =
+          this.$refs.tableContainer.getBoundingClientRect().y
         //  document.body.clientHeight 返回body元素内容的高度
         const tableHeight = document.body.clientHeight - tableTopHeight - 60
         this.tableHeight = tableHeight + ''
       })
-    }
-  }
+    },
+  },
 }
 </script>
 <style rel="stylesheet/scss" lang="scss">

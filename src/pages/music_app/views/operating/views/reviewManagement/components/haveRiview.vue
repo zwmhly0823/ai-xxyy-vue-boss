@@ -94,9 +94,20 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="用户信息" align="center" width="180">
+      <el-table-column label="用户信息" align="center" width="300">
         <template slot-scope="scope">
-          <div>{{ scope.row.userExtends.mobile }}</div>
+          <div>
+            <span style="color: #2a75ed;">
+              {{ scope.row.userExtends.mobile }}
+            </span>
+            <span>
+              <i
+                style="margin-left: 10px;color: #2a75ed;"
+                class="el-icon-view mg-l-5"
+                @click="getNumber(scope.row.student_id)"
+              ></i>
+            </span>
+          </div>
           <div>{{ scope.row.userExtends.wechat_nikename }}</div>
         </template>
       </el-table-column>
@@ -294,12 +305,31 @@ export default {
       loading: true,
       searchParams: {},
       currentVideo: '',
+      operatorId: '',
     }
   },
   mounted() {
     this.initList()
+    this.operatorId = JSON.parse(localStorage.getItem('staff')).id
   },
   methods: {
+    //获取学生号码
+    getNumber(uid) {
+      this.$http.User.getUserPhoneNumber({
+        uid: uid,
+        teacherId: this.operatorId,
+      }).then((res) => {
+        if (res.code == 0) {
+          this.list.forEach((item, index) => {
+            if (item.student_id == uid) {
+              this.list[index].userExtends.mobile = res.payload.mobile
+            }
+          })
+        } else {
+          this.$message.error('网络异常，请稍后再试！')
+        }
+      })
+    },
     async initList(params = this.searchParams, number = this.query.pageNum) {
       // 增加 已点评 状态
 

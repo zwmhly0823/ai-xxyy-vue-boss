@@ -19,8 +19,8 @@
       class="item-style"
     >
       <el-option
-        v-for="item in dataList"
-        :key="item.id"
+        v-for="(item, index) in dataList"
+        :key="index"
         :label="item.text"
         :value="item.id"
       ></el-option>
@@ -34,34 +34,34 @@ export default {
     // 希望返回的字段名
     name: {
       type: String,
-      default: ''
+      default: '',
     },
     // placeholder
     placeholder: {
       type: String,
-      default: ''
+      default: '',
     },
     dataList: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     multiple: {
       type: Boolean,
-      default: true
+      default: true,
     },
     // 自定义style样式
     myStyle: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     searchProp: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   data() {
     return {
-      value: []
+      value: [],
       // dataList: []
     }
   },
@@ -83,11 +83,9 @@ export default {
   },
   methods: {
     onChange(data) {
-      console.log(data, `${this.name} - ${this.placeholder}`)
-
       this.$emit('result', data !== '' ? { [this.name]: data } : '')
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>

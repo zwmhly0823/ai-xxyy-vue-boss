@@ -287,6 +287,11 @@
               target="_blank"
               >{{ drawerApprovalDeatail.userTel }}</el-link
             >
+            <i
+              style="margin-left: 10px; color: #2a75ed"
+              class="el-icon-view mg-l-5"
+              @click="getNumber(drawerApprovalDeatail.userId)"
+            ></i>
           </el-col>
         </el-row>
         <el-row>
@@ -476,9 +481,14 @@
             </el-table>
           </el-col>
         </el-row>
-        <el-row class="BOTTOM" v-if="isStaffId &&
+        <el-row
+          class="BOTTOM"
+          v-if="
+            isStaffId &&
             drawerApprovalDeatail.type !== 'HARDWARE' &&
-            drawerApprovalDeatail.type !== 'HARDWARE_MATERIALS_PARTS' ">
+            drawerApprovalDeatail.type !== 'HARDWARE_MATERIALS_PARTS'
+          "
+        >
           <el-col :span="19" :offset="1">
             <el-button type="button" @click="dialogFormVisible_checkbox = true"
               >拒 绝</el-button
@@ -486,10 +496,15 @@
             <el-button type="button" @click="ensureReplenish">同 意</el-button>
           </el-col>
         </el-row>
-        <el-row class="BOTTOM" v-if="isStaffId &&
+        <el-row
+          class="BOTTOM"
+          v-if="
+            isStaffId &&
             (drawerApprovalDeatail.type === 'HARDWARE' ||
-            drawerApprovalDeatail.type === 'HARDWARE_MATERIALS_PARTS') &&
-            hardwareApprovalIdSet.indexOf(resetParams.staffId) >= 0">
+              drawerApprovalDeatail.type === 'HARDWARE_MATERIALS_PARTS') &&
+            hardwareApprovalIdSet.indexOf(resetParams.staffId) >= 0
+          "
+        >
           <el-col :span="19" :offset="1">
             <el-button type="button" @click="dialogFormVisible_checkbox = true"
               >拒 绝</el-button
@@ -525,6 +540,11 @@
               target="_blank"
               >{{ drawerApprovalDeatail.customerPhone }}</el-link
             >
+            <i
+              style="margin-left: 10px; color: #2a75ed"
+              class="el-icon-view mg-l-5"
+              @click="getNumber(drawerApprovalDeatail.userId)"
+            ></i>
           </el-col>
         </el-row>
         <el-row>
@@ -868,8 +888,16 @@
         </div>
         <!-- 1-2-4退款操作按钮 -->
         <div v-if="currentType !== 'UNCREDITED'">
-          <el-row class="BOTTOM" v-if="isStaffId &&
-          ((drawerApprovalDeatail.regType === '体验课' && testCourseIdSet.indexOf(resetParams.staffId) >= 0) || (drawerApprovalDeatail.regType === '系统课' && systemCourseIdSet.indexOf(resetParams.staffId) >= 0))">
+          <el-row
+            class="BOTTOM"
+            v-if="
+              isStaffId &&
+              ((drawerApprovalDeatail.regType === '体验课' &&
+                testCourseIdSet.indexOf(resetParams.staffId) >= 0) ||
+                (drawerApprovalDeatail.regType === '系统课' &&
+                  systemCourseIdSet.indexOf(resetParams.staffId) >= 0))
+            "
+          >
             <el-col :span="19" :offset="1">
               <a
                 :href="'/music_app/#/details/' + drawerApprovalDeatail.userId"
@@ -1155,8 +1183,9 @@ export default {
   computed: {
     formatDate: () => formatDate,
     positionIdlk() {
-      const departmentList = JSON.parse(localStorage.getItem('staff'))
-        .departmentList
+      const departmentList = JSON.parse(
+        localStorage.getItem('staff')
+      ).departmentList
       if (departmentList && departmentList.length > 0) {
         return departmentList[0]
       }
@@ -1202,9 +1231,9 @@ export default {
     }
     return {
       roleIdList: [],
-      hardwareApprovalIdSet: [],  //硬件补发货审批人员
-      testCourseIdSet: [],  //体验课审批人员
-      systemCourseIdSet: [],  //系统课审批人员
+      hardwareApprovalIdSet: [], //硬件补发货审批人员
+      testCourseIdSet: [], //体验课审批人员
+      systemCourseIdSet: [], //系统课审批人员
       tableHeight: 0,
       forSonDataApprovalPersonId: '',
       forSonDataApprovalId: '',
@@ -1277,7 +1306,7 @@ export default {
         MULTI_TIMEOUT_RETURN: '超时退回',
         MULTI_ADJUSTMENT_SUP: '调级补发',
         SINGLE_QUALITY: '产品质量问题',
-        SEND_BACK_REPAIR_OR_CHANGE:'寄回维修/换货'
+        SEND_BACK_REPAIR_OR_CHANGE: '寄回维修/换货',
         // SINGLE_PIGMENT_LEAKAGE: '颜料撒漏'
       },
       courseOptions: {
@@ -1295,6 +1324,7 @@ export default {
   },
   created() {
     // 身份类型，4是财务，具体见wiki
+    this.operatorId = JSON.parse(localStorage.getItem('staff')).id
     const roleList = JSON.parse(localStorage.getItem('staff')).roleList
     let roleId = roleList ? roleList[0] : ''
     this.roleId = roleId
@@ -1334,12 +1364,26 @@ export default {
   },
 
   methods: {
+    //获取学生号码
+    getNumber(uid) {
+      this.$http.User.getUserPhoneNumber({
+        uid: uid,
+        teacherId: this.operatorId,
+      }).then((res) => {
+        if (res.code == 0) {
+          this.drawerApprovalDeatail.customerPhone = res.payload.mobile
+          this.drawerApprovalDeatail.userTel = res.payload.mobile
+        } else {
+          this.$message.error('网络异常，请稍后再试！')
+        }
+      })
+    },
     getRoleIdList() {
       this.$http.Backend.getStaffIds().then((res) => {
-        this.roleIdList = res.payload.approvalIdSet;
-        this.hardwareApprovalIdSet = res.payload.hardwareApprovalIdSet;
-        this.testCourseIdSet = res.payload.testCourseIdSet;
-        this.systemCourseIdSet = res.payload.systemCourseIdSet;
+        this.roleIdList = res.payload.approvalIdSet
+        this.hardwareApprovalIdSet = res.payload.hardwareApprovalIdSet
+        this.testCourseIdSet = res.payload.testCourseIdSet
+        this.systemCourseIdSet = res.payload.systemCourseIdSet
       })
     },
     // 获取审批权限
@@ -1624,8 +1668,7 @@ export default {
             this.$emit('result', 'third')
           })
         })
-        .catch((err) => {
-        })
+        .catch((err) => {})
     },
     // 拒绝弹窗（赠品）
     refuseDialog() {
@@ -1651,7 +1694,8 @@ export default {
       this.$prompt('请输入原因', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        inputPattern: /^([\u4E00-\uFA29]|[\，\。\,\.]|[\uE7C7-\uE7F3]|[a-zA-Z0-9_-]){1,225}$/,
+        inputPattern:
+          /^([\u4E00-\uFA29]|[\，\。\,\.]|[\uE7C7-\uE7F3]|[a-zA-Z0-9_-]){1,225}$/,
         inputValue: '同意',
         inputErrorMessage:
           "仅支持长度小于225的中文/英文/数字/'-'/'_'/','/'.'/'，'/'。'",
@@ -1683,8 +1727,7 @@ export default {
               this.$message(`${err},请重选！`)
             })
         })
-        .catch((err) => {
-        })
+        .catch((err) => {})
     },
 
     // 点x关闭按钮
@@ -1884,8 +1927,8 @@ export default {
             })
             // 调期
             if (type === 'ADJUSTMENT_STAGE') {
-              this.adjustDrawerData.content = this.adjustDrawerData.content.concat(
-                [
+              this.adjustDrawerData.content =
+                this.adjustDrawerData.content.concat([
                   {
                     label: '当前开课时间',
                     value: payData.currentStartClassDate,
@@ -1894,13 +1937,12 @@ export default {
                     label: '申请开课时间',
                     value: payData.targetStage,
                   },
-                ]
-              )
+                ])
             }
             // 调级
             if (type === 'ADJUSTMENT_SUP') {
-              this.adjustDrawerData.content = this.adjustDrawerData.content.concat(
-                [
+              this.adjustDrawerData.content =
+                this.adjustDrawerData.content.concat([
                   {
                     label: '已上课周期',
                     value:
@@ -1910,30 +1952,33 @@ export default {
                     label: '调级级别',
                     value: SUP_LEVEL_ALL[payData.targetSup] || '-',
                   },
-                ]
-              )
+                ])
             }
             // 调班
             if (type === 'ADJUSTMENT_CLASS') {
-              this.adjustDrawerData.content = this.adjustDrawerData.content.concat(
-                [
+              this.adjustDrawerData.content =
+                this.adjustDrawerData.content.concat([
                   {
                     label: '当前班级',
                     value: payData.currentClassName,
                   },
-                ]
-              )
+                ])
             }
             // 公共数据
-            this.adjustDrawerData.content = this.adjustDrawerData.content.concat(
-              [
+            this.adjustDrawerData.content =
+              this.adjustDrawerData.content.concat([
                 {
                   label: '选择班级',
                   value: courseLevelReplace(payData.targetClassName),
                 },
                 {
                   label: '分配类型',
-                  value: payData.assignType ==='0'?'指定班级':payData.assignType ==='1'?'系统分配':'-',
+                  value:
+                    payData.assignType === '0'
+                      ? '指定班级'
+                      : payData.assignType === '1'
+                      ? '系统分配'
+                      : '-',
                 },
                 {
                   label: '调级理由',
@@ -1947,8 +1992,7 @@ export default {
                   label: '状态',
                   value: '待审批',
                 },
-              ]
-            )
+              ])
           }
           this.adjustDrawerData.loading = false
         })

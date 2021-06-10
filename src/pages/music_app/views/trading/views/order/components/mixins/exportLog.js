@@ -19,6 +19,7 @@ const entranceMixins = {
         this.$message.error(err)
       })
     },
+    
   }
 };
 

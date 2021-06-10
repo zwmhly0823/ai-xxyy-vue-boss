@@ -83,6 +83,12 @@
                   ''
                 }}
               </el-button>
+              <i
+                v-if="scope.row.user && scope.row.user.mobile"
+                style="margin-left: 10px;color: #2a75ed;"
+                class="el-icon-view mg-l-5 trail"
+                @click="getNumber(scope.row.user.id)"
+              ></i>
             </div>
             <div class="gray-text">{{ scope.row.ctime }}</div>
           </div>
@@ -673,6 +679,7 @@ export default {
     },
   },
   created() {
+    this.operatorId = JSON.parse(localStorage.getItem('staff')).id
     const staff = localStorage.getItem('staff')
     if (staff) {
       this.staffId = JSON.parse(staff).id
@@ -786,9 +793,27 @@ export default {
       showModifyAddress: false,
       modifyFormData: {},
       courseLevelReplace,
+      operatorId: '',
     }
   },
   methods: {
+    //获取学生号码
+    getNumber(uid) {
+      this.$http.User.getUserPhoneNumber({
+        uid: uid,
+        teacherId: this.operatorId,
+      }).then((res) => {
+        if (res.code == 0) {
+          this.tableData.forEach((item, index) => {
+            if (item.user && item.user.id == uid) {
+              this.tableData[index].user.mobile = res.payload.mobile
+            }
+          })
+        } else {
+          this.$message.error('网络异常，请稍后再试！')
+        }
+      })
+    },
     // 附件详情
     showEnclosureDialog(row) {
       this.enclosureDialog = true
@@ -951,8 +976,7 @@ export default {
             }
           )
         })
-        .catch((err) => {
-        })
+        .catch((err) => {})
     },
     handlePass(val) {
       this.dialogVisiblePass = true
@@ -993,8 +1017,7 @@ export default {
             })
           }
         })
-        .catch((err) => {
-        })
+        .catch((err) => {})
     },
     // 全选
     handleAllSelect(selection) {
@@ -1070,8 +1093,7 @@ export default {
             timeType.product_type = '1'
           } else if (item.term.regType == '4,5,6') {
             timeType.product_type = '2,3,4,5,7,8,9,10,11'
-          } 
-          else if (item.term.regType === '7' && !item.term.replenish_type) {
+          } else if (item.term.regType === '7' && !item.term.replenish_type) {
             timeType.product_type = '12, 13' // 单独的硬件补发
           } else if (
             !item.term.regType && // 硬件补发+整盒补发
