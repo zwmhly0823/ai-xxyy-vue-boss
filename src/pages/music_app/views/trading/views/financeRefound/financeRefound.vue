@@ -94,7 +94,7 @@
                 { label: '降一年半包' },
                 { label: '预付款优惠券退款' },
                 { label: '器材退款' },
-                { label: '退差价', value: 8},
+                { label: '退差价', value: 8 },
               ]"
               :label="item.label"
               :value="item.value ? item.value : index"
@@ -170,10 +170,15 @@
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column label="用户信息" width="120" fixed="left">
           <template slot-scope="scope">
-            <div class="usertext" @click="userHandle(scope.row)">
+            <div class="usertext" @click.self="userHandle(scope.row)">
               {{ scope.row.userName ? scope.row.userName : '-' }}
               <br />
               {{ scope.row.mobile }}
+              <i
+                style="margin-left: 10px"
+                class="el-icon-view mg-l-5"
+                @click="getNumber(scope.row.uid)"
+              ></i>
             </div>
           </template>
         </el-table-column>
@@ -344,6 +349,7 @@ export default {
     drawer,
   },
   created() {
+    this.operatorId = JSON.parse(localStorage.getItem('staff')).id
     const roleList = JSON.parse(localStorage.getItem('staff')).roleList
     let roleId = roleList ? roleList[0] : ''
     this.roleId = roleId
@@ -400,12 +406,31 @@ export default {
       drawer: false,
       choutidata: {},
       statusStr: '', // 该条订单退款状态 显示抽屉按钮用
+      userPhone: '',
+      operatorId: '',
     }
   },
   provide() {
     return { self: this }
   },
   methods: {
+    //获取学生号码
+    getNumber(uid) {
+      this.$http.User.getUserPhoneNumber({
+        uid: uid,
+        teacherId: this.operatorId,
+      }).then((res) => {
+        if (res.code == 0) {
+          this.tableData.forEach((item, index) => {
+            if (item.uid == uid) {
+              this.tableData[index].mobile = res.payload.mobile
+            }
+          })
+        } else {
+          this.$message.error('网络异常，请稍后再试！')
+        }
+      })
+    },
     // 用户跳转
     userHandle(user) {
       if (!user || !user.uid) {
@@ -417,7 +442,6 @@ export default {
       uid && openBrowserTab(`/music_app/#/details/${uid}`)
     },
     businessType(val) {
-      console.info(val, typeof val)
       if (val === '1' || val === '2') {
         this.searchJson.regType = Number(val)
         this.arrangeParams()
@@ -427,7 +451,6 @@ export default {
       }
     },
     payMethod(val) {
-      console.info(val, typeof val)
       if (val === '1' || val === '2') {
         this.searchJson.tradeType = Number(val)
         this.arrangeParams()
@@ -437,7 +460,6 @@ export default {
       }
     },
     refundStatus(val) {
-      console.info(val, typeof val)
       if (val === '7' || val === '4' || val === '5') {
         this.searchJson.status = Number(val)
         this.arrangeParams()
@@ -447,7 +469,6 @@ export default {
       }
     },
     refundRule(val) {
-      console.info(val, typeof val)
       if (val === '1' || val === '0') {
         this.searchJson.refundRule = Number(val)
         this.arrangeParams()
@@ -457,7 +478,6 @@ export default {
       }
     },
     refundType(val) {
-      console.info(val, typeof val)
       if (typeof val === 'number') {
         this.searchJson.refundType = val
         this.arrangeParams()
@@ -467,7 +487,6 @@ export default {
       }
     },
     refundPay(val) {
-      console.info(val, typeof val)
       if (val) {
         this.searchJson.refundStatus = +val
         this.arrangeParams()
@@ -479,14 +498,11 @@ export default {
 
     // 申请人
     applicantSearch(val) {
-      console.info(val, typeof val)
       this.searchJson.applyName = val
       this.arrangeParams()
     },
     // 2组关联
     chooseOrder(val) {
-      console.info(val, typeof val)
-      console.log(val, 'val====')
       if (val === '0') {
         // 订单号
         if (this.num1_) {
@@ -534,8 +550,6 @@ export default {
       }
     },
     intoNumber(val) {
-      console.info(val, typeof val)
-      console.log(this.num1)
       if (this.num1 === '0') {
         // 订单号
         if (val) {
@@ -572,7 +586,6 @@ export default {
       }
     },
     whichTime(val) {
-      console.info(val, typeof val)
       if (val === '0') {
         // 订单支付时间
         if (this.num2_.length) {
@@ -635,13 +648,11 @@ export default {
       }
     },
     chooseTime(val) {
-      console.info(val, typeof val)
       if (this.num2 === '0') {
         // 订单支付时间
         this.searchJson.sbuytime = val[0] // 订单支付-开始时
         this.searchJson.ebuytime = val[1] // 订单支付-结束时间
 
-        console.info(val)
         this.searchJson.sctime = '' // 申请退款-开始时间
         this.searchJson.ectime = '' // 申请退款-结束时间
         this.searchJson.srefundTime = '' // 申请完成-开始时间
@@ -676,21 +687,19 @@ export default {
     },
     // 过滤整合参数去拿数据
     async arrangeParams({ page = 1, size = 10 } = {}) {
-      console.warn('开始整理查询参数:先合在剔')
       Object.assign(this.searchJson, { page, size }) // 放心page,size会覆盖原有
       const finalJson = {}
       for (const key in this.searchJson) {
         if (this.searchJson[key] !== '') {
           finalJson[key] = this.searchJson[key]
         } else {
-          // console.info(`给青龙大哥剔牙--${key}-因为它是${this.searchJson[key]}`)
+          //
         }
       }
-      console.warn('整理完毕,去找接口要数据', finalJson)
+
       const { content, totalElements } = await this.$http.Finance.getTable(
         finalJson
       ).catch((err) => {
-        console.info('取数据接口报错,', err)
         this.$message({
           message: 'table数据接口失败',
           type: 'error',
@@ -709,15 +718,14 @@ export default {
         if (this.searchJson[key] !== '') {
           finalJson[key] = this.searchJson[key]
         } else {
-          // console.info(`给青龙大哥剔牙--${key}-因为它是${this.searchJson[key]}`)
+          //
         }
       }
       // 再剔除页码与页容量
       delete finalJson.page
       delete finalJson.size
-      console.warn('导出按钮-整理完毕,去找接口下载excel', finalJson)
+
       const r = await this.$http.Finance.exportExcel(finalJson).catch((err) => {
-        console.info('取数据接口报错,', err)
         this.$message({
           message: '导出数据接口失败',
           type: 'error',
@@ -736,16 +744,13 @@ export default {
     },
     // 分页
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`)
       this.arrangeParams({ page: this.page, size: val })
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
       this.arrangeParams({ page: val, size: this.pageSize })
     },
     // 全选
     handleSelectionChange(e) {
-      console.log(e)
       this.selectData = e
     },
     closeDrawer() {
@@ -802,9 +807,7 @@ export default {
           this.$http.Finance.toAgreeAll({
             refundUid: JSON.parse(localStorage.getItem('staff')).id,
             paymentId: payIds,
-          }).catch((err) => {
-            console.log(err)
-          })
+          }).catch((err) => {})
           this.arrangeParams() // 刷新列表数据
           this.$message({
             type: 'success',
@@ -823,16 +826,13 @@ export default {
     // 操作
 
     async handleEdit() {
-      console.info('index:', arguments[0])
-      console.info('row:', arguments[1])
       this.approveData = await this.$http.Finance.getApprov({
         flowApprovalId: arguments[1].approvalId,
       })
-      console.log(this.approveData)
+
       const { code, payload } = await this.$http.Finance.getDetail({
         paymentId: arguments[1].id,
       }).catch((err) => {
-        console.info('抽屉接口数据boom', err)
         this.$message({
           message: '详情数据请求错误',
           type: 'error',
@@ -852,7 +852,7 @@ export default {
     //     paymentId: this.whichListOrderId
     //     // 默认不传就是1 审核通过
     //   }).catch((err) => {
-    //     console.error(err)
+    //
     //     this.$message({
     //       message: '通过操作失败,稍后再试',
     //       type: 'error'
@@ -887,7 +887,7 @@ export default {
     //       auditType: 2,
     //       rejectReason: value
     //     }).catch((err) => {
-    //       console.error(err)
+    //
     //       this.$message({
     //         message: '驳回操作失败,请稍后再试',
     //         type: 'error'
@@ -931,7 +931,7 @@ export default {
       immediate: true,
       deep: true,
       handler(newValue, oldValue) {
-        // console.count('searchJson变动,触发watch')
+        //
       },
     },
   },

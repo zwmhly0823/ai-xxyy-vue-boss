@@ -21,6 +21,10 @@ const zqClass = {
   1: 'online',
   2: 'unknown'
 }
+const WXname = {
+  0: '未实名',
+  1: '已实名'
+}
 2481632
 export default [
   {
@@ -39,7 +43,7 @@ export default [
   },
   {
     prop: 'zqStatus',
-    label: '微信登录状态',
+    label: '智群登陆',
     render(h, data, row) {
       const text = zqStatus[data] || '未知'
       return h(
@@ -49,6 +53,13 @@ export default [
         },
         text
       )
+    }
+  },
+  {
+    prop: 'realNameStatus',
+    label: '实名',
+    render(h, data, row) {
+      return WXname[data] || '未知' 
     }
   },
   {
@@ -85,7 +96,7 @@ export default [
     fixed: 'right',
     prop: 'id',
     label: '操作',
-    width: '60',
+    width: '90',
     slot: 'handle'
   }
 ]

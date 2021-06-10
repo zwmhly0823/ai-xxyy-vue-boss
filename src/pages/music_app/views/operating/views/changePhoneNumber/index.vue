@@ -13,7 +13,13 @@
       <!-- <el-scrollbar wrap-class="user-wrapper" id="users-scroll"> -->
       <div class="app-main-container-scrollbar change-phone">
         <el-card shadow="never">
-          <el-form :inline="true" size="mini" :model="phoneForm" :rules="rules" ref="phoneForm">
+          <el-form
+            :inline="true"
+            size="mini"
+            :model="phoneForm"
+            :rules="rules"
+            ref="phoneForm"
+          >
             <el-form-item label="原手机号" prop="oldMobile">
               <el-input
                 v-model="phoneForm.oldMobile"
@@ -31,7 +37,9 @@
               ></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="onSubmit('phoneForm')">替换</el-button>
+              <el-button type="primary" @click="onSubmit('phoneForm')"
+                >替换</el-button
+              >
             </el-form-item>
           </el-form>
 
@@ -43,11 +51,18 @@
             ref="cancelPhone"
           >
             <el-form-item label="手机号" prop="phone">
-              <el-input v-model="cancelPhone.phone" placeholder="请输入学员手机号" maxlength="11" clearable></el-input>
+              <el-input
+                v-model="cancelPhone.phone"
+                placeholder="请输入学员手机号"
+                maxlength="11"
+                clearable
+              ></el-input>
             </el-form-item>
 
             <el-form-item>
-              <el-button type="primary" @click="cancelSubmit('cancelPhone')">注销</el-button>
+              <el-button type="primary" @click="cancelSubmit('cancelPhone')"
+                >注销</el-button
+              >
             </el-form-item>
           </el-form>
         </el-card>
@@ -78,23 +93,56 @@
           <!-- dom -->
           <div class="tableInner" ref="tableInner"></div>
 
-          <el-table :data="recordList" :height="tableHeight" style="width: 100%">
+          <el-table
+            :data="recordList"
+            :height="tableHeight"
+            style="width: 100%"
+          >
             <el-table-column label="用户ID">
               <template slot-scope="scope">
-                <p
-                  @click="userHandle(scope.row.user)"
-                  class="primary-text"
-                >{{ scope.row.user && scope.row.user.user_num }}</p>
+                <p @click="userHandle(scope.row.user)" class="primary-text">
+                  {{ scope.row.user && scope.row.user.user_num }}
+                </p>
               </template>
             </el-table-column>
-            <el-table-column prop="old_mobile" label="原手机号"></el-table-column>
-            <el-table-column prop="new_mobile" label="新手机号"></el-table-column>
-            <el-table-column prop="name" label="修改人">
-              <template
-                slot-scope="scope"
-              >{{ (scope.row.staff && scope.row.staff.real_name) || '-' }}</template>
+            <el-table-column prop="old_mobile" label="原手机号">
+              <template slot-scope="scope">
+                <div>
+                  <span>
+                    {{ scope.row.old_mobile }} </span
+                  ><span>
+                    <!-- <i
+                      style="margin-left: 10px; color: #2a75ed"
+                      class="el-icon-view mg-l-5"
+                      @click="getNumber(scope.row.user && scope.row.user.id, 1)"
+                    ></i> -->
+                  </span>
+                </div>
+              </template>
             </el-table-column>
-            <el-table-column prop="utime_text" label="修改时间"></el-table-column>
+            <el-table-column prop="new_mobile" label="新手机号">
+              <template slot-scope="scope">
+                <div>
+                  <span style="color: #2a75ed">{{ scope.row.new_mobile }}</span
+                  ><span>
+                    <i
+                      style="margin-left: 10px; color: #2a75ed"
+                      class="el-icon-view mg-l-5"
+                      @click="getNumber(scope.row.user && scope.row.user.id, 2)"
+                    ></i>
+                  </span>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="name" label="修改人">
+              <template slot-scope="scope">{{
+                (scope.row.staff && scope.row.staff.real_name) || '-'
+              }}</template>
+            </el-table-column>
+            <el-table-column
+              prop="utime_text"
+              label="修改时间"
+            ></el-table-column>
             <!-- <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-popconfirm
@@ -134,16 +182,15 @@ const valid = {
   },
   isUserName(str) {
     return /^[0-9A-Za-z]{2,18}$/.test(str)
-  }
+  },
 }
 export default {
   components: {
     MPagination,
-    SearchPhone
+    SearchPhone,
   },
   data() {
     var checkPhone = (rule, value, callback) => {
-      console.log(rule)
       const type = rule.field === 'oldMobile' ? '原手机号' : '新手机号'
       if (!value) {
         return callback(new Error(`请输入${type}`))
@@ -161,27 +208,29 @@ export default {
       tableHeight: 0,
       phoneForm: {
         oldMobile: '',
-        newMobile: ''
+        newMobile: '',
       },
       cancelPhone: {
-        phone: ''
+        phone: '',
       },
       rules: {
         oldMobile: [
-          { required: true, validator: checkPhone, trigger: 'change' }
+          { required: true, validator: checkPhone, trigger: 'change' },
         ],
         newMobile: [
-          { required: true, validator: checkPhone, trigger: 'change' }
-        ]
+          { required: true, validator: checkPhone, trigger: 'change' },
+        ],
       },
       cancelPhoneRules: {
-        phone: [{ required: true, validator: checkPhone, trigger: 'change' }]
+        phone: [{ required: true, validator: checkPhone, trigger: 'change' }],
       },
       recordList: [],
-      staff: {}
+      staff: {},
+      operatorId: '',
     }
   },
   created() {
+    this.operatorId = JSON.parse(localStorage.getItem('staff')).id
     this.$nextTick(() => {
       const tableHeight =
         document.body.clientHeight - this.$refs.tableInner.offsetTop - 110
@@ -193,12 +242,33 @@ export default {
     this.getLogData()
   },
   methods: {
+    //获取学生号码
+    getNumber(uid, type) {
+      this.$http.User.getUserPhoneNumber({
+        uid: uid,
+        teacherId: this.operatorId,
+      }).then((res) => {
+        if (res.code == 0) {
+          this.recordList.forEach((item, index) => {
+            if (item.user && item.user.id == uid) {
+              if (type == 2) {
+                this.recordList[index].new_mobile = res.payload.mobile
+              } else {
+                this.recordList[index].old_mobile = res.payload.mobile
+              }
+            }
+          })
+        } else {
+          this.$message.error('网络异常，请稍后再试！')
+        }
+      })
+    },
     // 注销用户
     logoutUser(row) {
       let params = {
         staffId: this.staff.id,
         oldMobile: row.old_mobile,
-        subject: 'MUSIC_APP'
+        subject: 'MUSIC_APP',
       }
       this.$http.Operating.channelMobile(params).then((res) => {
         if (res.code === 0) {
@@ -210,14 +280,13 @@ export default {
     cancelSubmit(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log('123成功')
           let rows = {
-            old_mobile: this.cancelPhone.phone
+            old_mobile: this.cancelPhone.phone,
           }
           this.$confirm(`您确定要注销 ${rows.old_mobile} 此手机号吗?`, '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
-            type: 'warning'
+            type: 'warning',
           })
             .then(() => {
               this.logoutUser(rows)
@@ -225,11 +294,10 @@ export default {
             .catch(() => {
               this.$message({
                 type: 'info',
-                message: '已取消删除'
+                message: '已取消删除',
               })
             })
         } else {
-          console.log('error submit!!')
           return false
         }
       })
@@ -241,10 +309,9 @@ export default {
           const params = {
             newMobile,
             oldMobile,
-            staffId: this.staff.id
+            staffId: this.staff.id,
           }
           this.$http.Operating.replaceMobile(params).then((res) => {
-            console.log(res)
             if (res && +res.code === 0) {
               this.$message.success('替换成功！')
               this.currentPage = 1
@@ -255,7 +322,6 @@ export default {
             }
           })
         } else {
-          console.log('error submit!!')
           return false
         }
       })
@@ -277,7 +343,6 @@ export default {
     },
 
     handleCurrentChange(page) {
-      console.log(page)
       this.currentPage = page
       this.getLogData()
     },
@@ -287,7 +352,7 @@ export default {
         lock: true,
         text: '加载中',
         spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.1)'
+        background: 'rgba(0, 0, 0, 0.1)',
       })
       // const query = {}
 
@@ -325,8 +390,8 @@ export default {
       }
       this.currentPage = 1
       this.getLogData()
-    }
-  }
+    },
+  },
 }
 </script>
 

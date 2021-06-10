@@ -110,6 +110,7 @@
               <search-phone-or-usernum
                 style="margin-right: 10px;"
                 type="2"
+                need-uid="id"
                 tablename="StudentTrialV2StatisticsList"
                 @result="getSearchData('user', arguments)"
               />
@@ -358,7 +359,6 @@ export default {
   },
   computed: {
     resetSearch() {
-      console.log(this.nowDate, 'this.nowDate')
       return this.nowDate
     }
   },
@@ -411,13 +411,13 @@ export default {
           search.team_category = search['team_category']
         }
 
-        console.log(search,"search");
         this.searchQuery = {
           ...this.searchQuery,
           ...search
         }
       } else {
         // delete this.searchQuery[key]
+        delete this.searchQuery.id
         this.$delete(this.searchQuery, key)
       }
       // 删除返回值没空数组的情况
@@ -463,7 +463,6 @@ export default {
      * 高级搜索
      */
     advancedSearch() {
-      console.log(this.$parent.$refs.sidebar)
       this.$parent.$refs.sidebar.showDrawer = true
       this.$parent.$refs.sidebar.currentGroupType = 'ADVANCEDSEARCH'
       // this.$parent.$refs.sidebar.currentNode = {}

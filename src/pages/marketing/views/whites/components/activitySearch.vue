@@ -68,24 +68,25 @@ export default {
           ...search
         }
       } else {
+        delete this.searchQuery.id
         this.$delete(this.searchQuery, key)
       }
       // 删除返回值为空数组的情况
       if (search && search[key].length === 0) {
         this.$delete(this.searchQuery, key)
       }
-      console.log(search, 'getSearchData')
-      console.log(this.searchQuery, 'this.searchQuery')
+      
+      
       this.$emit('search', this.searchQuery)
     },
     // 活动名称
     setPromotionsName: debounce(function(event) {
-      console.log(event)
+      
       this.searchQuery = {
         ...this.searchQuery,
         mobile: event
       }
-      console.log(this.searchQuery)
+      
       this.$emit('search', this.searchQuery)
     }, 500)
   }

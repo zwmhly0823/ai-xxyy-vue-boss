@@ -87,8 +87,8 @@ export default {
       required: true,
     },
     bearAmount: {
-      type: Number,
-      default: 0,
+      type: Object,
+      default: () => {},
     },
   },
   data() {
@@ -137,20 +137,23 @@ export default {
     }
   },
   mounted() {
-    setTimeout(() => {
-      this.bear_amount = this.bearAmount
-    }, 1000)
     if (!this.$route.params.isShort) {
       this.studentId = this.$route.params.id
       setTimeout(this.reqGetUserCoin.bind(this, 'mounted'), 2000)
     }
     this.$root.$on('bearCoin', (r) => {
-      console.info('老爹给用户资产-小熊币-基础数据', r)
       this.faProps = r || []
       this.top3Show()
     })
   },
   watch: {
+    'bearAmount.bear_amount': {
+      immediate: true,
+      deep: true,
+      handler(val) {
+        this.bear_amount = val
+      },
+    },
     changeSubject: {
       immediate: false,
       deep: true,
@@ -162,7 +165,6 @@ export default {
       immediate: false,
       deep: true,
       handler(newValue, oldValue) {
-        console.info('捕获任务类型改变', newValue, oldValue)
         this.reqGetUserCoin()
       },
     },
@@ -170,7 +172,6 @@ export default {
       immediate: false,
       deep: true,
       handler(newValue, oldValue) {
-        console.info('捕获时间改变', newValue, oldValue)
         this.reqGetUserCoin()
       },
     },
@@ -193,7 +194,6 @@ export default {
   methods: {
     // 数据接口_用户资产_小熊币
     reqGetUserCoin(other) {
-      console.log('reqGetUserCoinss', this.studentId)
       this.$http.User.getUserAssetsCoin(
         this.changeSubject,
         this.studentId,
@@ -234,7 +234,6 @@ export default {
     },
     // 翻页
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
       this.currentPage = val
       this.reqGetUserCoin()
     },

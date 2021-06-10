@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-06-30 19:21:08
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-04-17 20:16:12
+ * @LastEditors: Shentong
+ * @LastEditTime: 2021-04-26 20:33:54
 -->
 <template>
   <div class="channel-threeded">
@@ -19,7 +19,11 @@
     >
       <div class="dialog-center">
         <div class="channel-list">
-          <div class="channel-item" v-for="(item, index) in formList" :key="index">
+          <div
+            class="channel-item"
+            v-for="(item, index) in formList"
+            :key="index"
+          >
             <div class="label">指定渠道{{ index + 1 }}</div>
             <el-select
               style="margin-left:20px;"
@@ -38,7 +42,8 @@
                 :key="item.id"
                 :label="item.channel_outer_name"
                 :value="item.id"
-              ></el-option>
+              >
+              </el-option>
             </el-select>
             <div class="tip-icon">→</div>
             <!-- <div class="for-teacher"> -->
@@ -54,9 +59,8 @@
               :multiple="true"
               filterable
               remote
-              :reserve-keyword="true"
+              collapse-tags
               size="mini"
-              clearable
               placeholder="社群销售"
               :loading="loading"
               @change="onChange"
@@ -66,7 +70,8 @@
                 :key="item.id"
                 :label="item.realname"
                 :value="item.id"
-              ></el-option>
+              >
+              </el-option>
             </el-select>
             <!-- <group-sell
               :teacherscope="teacherscope"
@@ -75,12 +80,7 @@
               @result="selectPayTeacher"
               name="pay_teacher_id"
               class="margin_l10"
-            />-->
-            <i
-              class="el-icon-remove-outline remove-btn"
-              v-if="formList.length>1"
-              @click="removeFormItem(index)"
-            ></i>
+            /> -->
             <i
               class="el-icon-circle-plus add-btn"
               @click="addFormItem"
@@ -91,8 +91,12 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogOperate('cancel')" size="mini">取 消</el-button>
-        <el-button @click="dialogOperate('submit')" type="primary" size="mini">提交</el-button>
+        <el-button @click="dialogOperate('cancel')" size="mini"
+          >取 消</el-button
+        >
+        <el-button @click="dialogOperate('submit')" type="primary" size="mini"
+          >提交</el-button
+        >
       </span>
     </el-dialog>
   </div>
@@ -101,7 +105,6 @@
 import { cloneDeep } from 'lodash'
 import Department from './department'
 import axios from '@/api/axiosConfig'
-import { Sup_scheduleIndex,Sup_scheduleSubmit} from '@/utils/supList'
 export default {
   props: {
     centerDialogVisible: {
@@ -145,7 +148,6 @@ export default {
   },
   async created() {
     await this.getChannelLeves()
-    console.log(this.editChannelThreeded)
     if (this.editChannelThreeded === null) {
       this.initForm()
     } else {
@@ -154,8 +156,7 @@ export default {
         {
           ...this.formItem,
           channel: channelId,
-          isEdit: true,
-          id: this.editChannelThreeded.id
+          isEdit: true
         }
       ]
     }
@@ -200,21 +201,16 @@ export default {
     },
     packageFormData() {
       const { courseType = '0', period = '', formArr = [] } = this.$route.params
+
       this.formList.forEach((item) => {
         const { channel = '', teacherId = [] } = item
-
-        let editChannelThreededObj = {};
-        if (item.id) editChannelThreededObj = {id:item.id}
-        
         teacherId.forEach((id) => {
-          let obj = {
-            id: item.id,
+          formArr.push({
             period,
             channelId: channel,
             teacherId: id,
-            courseCategory: Sup_scheduleSubmit[courseType]
-          }
-          formArr.push(Object.assign(obj,editChannelThreededObj))
+            courseCategory: courseType !== '0' ? '2' : '0'
+          })
         })
       })
       return formArr
@@ -249,17 +245,12 @@ export default {
     /** 教师渠道绑定-查找记录 */
     async getRecord(cb) {
       try {
-        const { period = '' ,courseType} = this.$route.params
-       courseType = Sup_scheduleSubmit[courseType]
-        const res = await this.$http.Operating.getRecord({ period,courseType })
-        console.log(res, 'getRecord-res')
+        const { period = '' } = this.$route.params
+        const res = await this.$http.Operating.getRecord({ period })
         if (res.code === 0 && cb) cb()
       } catch (err) {
         this.$message.error('配置出错')
       }
-    },
-    removeFormItem(index){
-      this.formList.splice(index,1)
     },
     // 添加一个渠道池
     addFormItem() {
@@ -284,30 +275,6 @@ export default {
           this.channelLeves = res.data.ChannelAllList
         })
     },
-    getTeacher_1(index = 0, query = '') {
-      const { getDepartmentTeacherEx } = this.$http.Department
-      const { teacherscope = null } = this.formList[index]
-      console.log(this.formList, teacherscope)
-      if (teacherscope && teacherscope.length) {
-        this.loading = true
-        const q = {
-          bool: {
-            must: query
-              ? [{ wildcard: { 'realname.keyword': `*${query}*` } }]
-              : []
-          }
-        }
-        q.bool.must.push({ terms: { id: teacherscope } })
-        getDepartmentTeacherEx(JSON.stringify(q))
-          .then((res) => {
-            this.formList[index].teacherList = res.data.TeacherListEx || []
-            this.loading = false
-          })
-          .catch(() => {
-            this.loading = false
-          })
-      }
-    },
     // 社群销售
     getTeacher(index = 0, query = '') {
       const { getDepartmentTeacherEx } = this.$http.Department
@@ -323,7 +290,7 @@ export default {
       if (teacherscope && teacherscope.length) {
         q.bool.must.push({ terms: { id: teacherscope } })
       }
-      getDepartmentTeacherEx(JSON.stringify(q), 3000)
+      getDepartmentTeacherEx(JSON.stringify(q), 10000)
         .then((res) => {
           this.formList[index].teacherList = res.data.TeacherListEx || []
           this.loading = false
@@ -333,7 +300,6 @@ export default {
         })
     },
     onChange(item) {
-      console.log(item, 'teacherid-item')
     }
   }
 }
@@ -351,11 +317,6 @@ export default {
       .add-btn {
         font-size: 25px;
         color: #409eff;
-        cursor: pointer;
-      }
-      .remove-btn {
-        font-size: 25px;
-        color:#409eff;
         cursor: pointer;
       }
     }

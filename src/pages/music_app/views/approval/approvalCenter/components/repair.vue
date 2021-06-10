@@ -111,11 +111,11 @@
         </el-form-item>
         <el-form-item label="补发类别" prop="type">
           <el-radio-group v-model="formRepair.type" @change="chooseType">
-            <el-radio label="MATERIALS">盒子随材</el-radio>
-            <el-radio label="STORE">商城礼品</el-radio>
-            <el-radio label="RECOMMEND">推荐有礼</el-radio>
-            <el-radio label="INVITATION">邀请有奖</el-radio>
-            <el-radio label="HARDWARE">硬件</el-radio>
+            <el-radio :disabled="childOrderType" label="MATERIALS">盒子随材</el-radio>
+            <el-radio :disabled="childOrderType" label="STORE">商城礼品</el-radio>
+            <el-radio :disabled="childOrderType" label="RECOMMEND">推荐有礼</el-radio>
+            <el-radio :disabled="childOrderType" label="INVITATION">邀请有奖</el-radio>
+            <el-radio :disabled="!childOrderType" label="HARDWARE">硬件</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item
@@ -140,8 +140,7 @@
             <div
               class="reapirProduct-detail"
               v-if="
-                formRepair.type == 'MATERIALS' &&
-                formRepair.type !== 'HARDWARE'
+                formRepair.type == 'MATERIALS' && formRepair.type !== 'HARDWARE'
               "
             >
               <package
@@ -229,8 +228,7 @@
               </el-radio>
               <el-radio
                 v-show="
-                  formRepair.mode === 'SINGLE' &&
-                  formRepair.type !== 'HARDWARE'
+                  formRepair.mode === 'SINGLE' && formRepair.type !== 'HARDWARE'
                 "
                 label="SINGLE_QUALITY"
               >
@@ -257,10 +255,10 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item
-          v-if="formRepair.type == 'HARDWARE'"
+          v-if="formRepair.replenishReason=='SEND_BACK_REPAIR_OR_CHANGE'"
           label="寄回单号"
           class="address-recept"
-          prop='sendBackTrackingNum'
+          prop="sendBackTrackingNum"
         >
           <el-input v-model="formRepair.sendBackTrackingNum"> </el-input>
         </el-form-item>
@@ -268,7 +266,7 @@
         <el-form-item
           label="SN号"
           prop='snNum'
-          v-if="formRepair.type == 'HARDWARE'"
+          v-if="formRepair.replenishReason==='SEND_BACK_REPAIR_OR_CHANGE'"
           class="address-recept"
         >
           <el-input v-model="formRepair.snNum"> </el-input>
@@ -400,7 +398,6 @@ export default {
   // 学员详情跳转来审批query lk
   async mounted() {
     if (this.$route.query && this.$route.query.cellphone) {
-      console.info('captured学员详情跳转而来')
       // 显示手机号
       this.$refs.toGetPhone.input = this.$route.query.cellphone
       // 手机号查uid
@@ -409,7 +406,6 @@ export default {
       } = await this.$http.RefundApproval.getUid_lk({
         mobile: this.$route.query.cellphone,
       }).catch((err) => {
-        console.error(err)
         this.$message.error('跳转来的手机号获取uid失败')
       })
       if (blurrySearch && blurrySearch[0] && blurrySearch[0].id) {
@@ -439,7 +435,6 @@ export default {
     }
     var validateProduct = (rule, value, callback) => {
       setTimeout(() => {
-        console.info('触发商品校验', this.selectName.length, this.selectName)
         if (this.selectName.length) {
           callback() // 自定义校验-以获取到保存到商品信息
         } else {
@@ -575,21 +570,23 @@ export default {
         ],
       },
       now: new Date().getTime(),
+      childOrderType: false,
     }
   },
 
   methods: {
     // 设置子订单号
     setChildrenId(val) {
+      // subOrderType 1 课程  2  硬件
+      this.childOrderType =
+        val.subOrderType == 1 ? false : val.subOrderType == 2 ? true : false
       this.formRepair.childOrderId = val.id
       this.formRepair.childOutTradeNo = val.outTradeNo
     },
     singglefileListPromise() {
-      console.info(this.fileListC)
       const promiseAll = this.fileListC.map((item) =>
         new UploadFile(item.raw).init()
       )
-      console.info('返回promise结果数组', promiseAll)
       return promiseAll
     },
     uploadAll() {
@@ -598,11 +595,9 @@ export default {
         .then((res) => {
           // 静态方法all 整体都是resolve返回时
           // this.fileListC = res
-          console.info('整体成功', res)
           this.formRepair.attsUrl = res.map((item) => item.fileUrl).join()
         })
         .catch((err) => {
-          console.log('Promise.all-err', err)
         })
     },
     // 超过个数限制
@@ -624,27 +619,20 @@ export default {
     },
     // 移除文件
     onRemove(file, fileList) {
-      console.info('你移除的文件是', file.name)
     },
     // 文件上传成功
     onSuccess(response, file, fileList) {
-      console.info('文件上传成功', file.name)
     },
     // 文件上传失败
     onError(err2, file, fileList) {
-      console.info('文件上传失败')
     },
     // 文件上传中
     onProgress(event, file, fileList) {
-      console.info('文件正在上传中', file.name)
     },
     // 文件变化都捕获
     onChange(file, fileList) {
       this.fileListC = fileList
-      console.info(
-        '文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用'
-      )
-    },
+     },
     // 上传前-做文件校验
     beforeUpload(file) {
       // const isJPG = file.type === 'image/jpeg'
@@ -666,7 +654,6 @@ export default {
       this.$router.push('/approval')
     },
     getSeletOrder(val) {
-      console.log(val, 'val')
     },
     cancelAddress(val) {
       this.addresDialog = false
@@ -687,11 +674,11 @@ export default {
     clearAllData() {
       this.fileListC = []
       this.formRepair = {
-        showChildOrder:'',
-        childOutTradeNo:'',//子订单订单号
-        childOrderId:'',//子订单号
-        snNum:'',//sn 号
-        sendBackTrackingNum:'',//寄回单号
+        showChildOrder: '',
+        childOutTradeNo: '', //子订单订单号
+        childOrderId: '', //子订单号
+        snNum: '', //sn 号
+        sendBackTrackingNum: '', //寄回单号
         totalAddress: '', // 补上
         userId: '', // 用户id
         applyDepartment: '', // 申请人所在部门  --非必传
@@ -750,13 +737,11 @@ export default {
         item.canOperating = true
       })
       this.selectName = val
-      console.info('复选选入筐', this.selectName)
     },
     // 单选(只能靠这个事件模拟实现-用SINGLE排除对复选影响)
     handleCurrentChange(val) {
       if (this.formRepair.mode !== 'SINGLE') {
         this.selectName = [val]
-        console.info('单选入筐', this.selectName)
       }
     },
     // getPackageId 获取子组件传来的系统课或者体验课
@@ -853,8 +838,16 @@ export default {
         courseLevel: 'LEVEL1',
         proVersion: 'v1.0',
       }
+      this.formRepair.packagesType = productType
       this.$http.Order.getHardwareProductList(query).then((res) => {
-        this.giftList = res.payload
+        res.payload.forEach((item) => {
+          this.giftList.push({
+            id: item.id,
+            name: item.name,
+            count: 1,
+            canOperating: false,
+          })
+        })
       })
     },
     // 通过订单id查询物流信息
@@ -1034,7 +1027,6 @@ export default {
           }
         })
         .catch((err) => {
-          console.log(err)
         })
     },
 
@@ -1147,7 +1139,10 @@ export default {
       this.clearAllData()
     },
     confirmButton(formName) {
-      // console.log((this.formRepair.attsUrl = 'sssssssssssssss'))
+
+      if(this.formRepair.packagesType == ''){
+        this.formRepair.packagesType = this.formRepair.type;
+      }
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (!this.formRepair.reissueMsg.trim()) {
@@ -1179,7 +1174,7 @@ export default {
             }
           }
           if (this.formRepair.mode === '') {
-            this.formRepair.packagesType = 0
+            this.formRepair.packagesType = this.formRepair.type;
 
             delete this.formRepair.mode
           }
@@ -1201,7 +1196,6 @@ export default {
             }, 1000)
           })
         } else {
-          console.log('error submit!!')
           return false
         }
       })

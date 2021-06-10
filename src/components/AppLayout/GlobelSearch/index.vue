@@ -38,16 +38,12 @@ export default {
   },
   methods: {
     selectStu() {
-      console.log('变化', this.student_id)
-
       if (!this.student_id) {
         return
       }
 
       return this.$http.Base.getUserNumPhone(this.student_id).then((res) => {
-        console.log(res.data.UserExtendsListEx.length)
-
-        if (
+         if (
           res.data.UserExtendsListEx &&
           res.data.UserExtendsListEx.length === 1
         ) {
@@ -74,15 +70,12 @@ export default {
             this.$message.error('暂无此学员')
           }
         } else {
-          console.log(222)
           this.$message.error('暂无此学员')
           // debugger
           const oldVal = this.student_id
           this.student_id = ''
-          console.log(1, this.student_id)
           this.$nextTick(() => {
             this.student_id = oldVal
-            console.log(2, this.student_id)
           })
         }
       })

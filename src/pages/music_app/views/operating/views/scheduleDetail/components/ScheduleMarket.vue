@@ -146,22 +146,21 @@
             align="center"
             prop="teacherWechatNos"
             label="绑定微信号"
-          ></el-table-column>
+          >
+             <template slot-scope="scope">
+              {{scope.row.weixinNo||scope.row.teacherWechatNos}}
+            </template>
+          </el-table-column>
           <el-table-column
             align="center"
             prop="courseVersion"
             label="课程和材料版本"
             width="120"
           ></el-table-column>
-          <el-table-column
-            prop="courseCategoryCHN"
-            label="课程类型"
-            width="120"
-            align="center"
-          >
-            <!-- <template slot-scope="scope">
-              <span>{{ courseCategoryCHN }}</span>
-            </template> -->
+           <el-table-column label="课程类型" width="120" align="center">
+            <template slot-scope="scope">
+              <span>{{ classIdTranName(scope.row.courseCategory) }}</span>
+            </template>
           </el-table-column>
         </ele-table>
       </div>
@@ -172,7 +171,7 @@
 <script>
 import EleTable from '@/components/Table/EleTable'
 import { COURSECATEGORY } from '@/utils/enums'
-import { SUP_LEVEL_ALL } from '@/utils/supList'
+import { SUP_LEVEL_ALL,Sup_scheduleSubmit,Sup_scheduleIndex } from '@/utils/supList'
 export default {
   props: {
     paramsInfo: {
@@ -214,6 +213,18 @@ export default {
     calcIndex() {
       return this.tabQuery.size * (this.tabQuery.pageNum - 1)
     },
+    // 课程类型 id转换 name
+    classIdTranName() {
+      return (data) => {
+        if (data && data.length) {
+          return data
+            .split(',')
+            .map((item) => COURSECATEGORY(item))
+            .join(' ')
+        }
+        return ''
+      }
+    },
   },
   watch: {
     paramsInfo: {
@@ -225,25 +236,25 @@ export default {
           ...val,
           pageNum: 1,
         }
-        // console.log('this.tabQuery', this.tabQuery)
         this.init()
         // 表格内统计
-        this.getScheduleDetailStatistic()
+        // this.getScheduleDetailStatistic()
       },
     },
   },
   async created() {
-    const { period = '', courseType = '0' } = this.$route.params
-    this.courseType = courseType
-    Object.assign(this.tabQuery, { period, courseType })
-    // 表格内统计
-    this.getScheduleDetailStatistic()
-  },
+    this.init()
+    },
   mounted() {
     this.initData()
   },
   methods: {
     async init() {
+      const { period = '', courseType = '0' } = this.$route.params
+      this.courseType = courseType
+      Object.assign(this.tabQuery, { period, courseType:Sup_scheduleIndex[courseType] })
+      // 表格内统计
+      this.getScheduleDetailStatistic()
       this.flags.loading = true
 
       try {
@@ -259,8 +270,6 @@ export default {
         }
         // 转介绍招生数
         const intruStuNumRes = await this.getIntroduceCountByIds(query)
-        console.log(content)
-        console.log(intruStuNumRes)
         intruStuNumRes.forEach((item) => {
           content.forEach((value) => {
             if (item.id === value.teacherId) {
@@ -358,14 +367,18 @@ export default {
 
         this.resultStatistics = obj
       } catch (err) {
-        console.log(err)
       }
     },
     // 表格详情数据
     async getScheduleDetailList() {
       try {
+        let {courseType} = this.$route.params
+        let obj = {
+          ...this.tabQuery,
+          courseType:Sup_scheduleSubmit[courseType]
+        }
         const tableList = this.$http.Operating.getScheduleDetailList(
-          this.tabQuery
+          obj
         )
         return tableList
       } catch (err) {
