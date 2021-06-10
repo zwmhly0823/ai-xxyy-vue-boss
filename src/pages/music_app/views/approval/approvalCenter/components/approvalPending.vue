@@ -923,7 +923,7 @@
         </div>
         <!-- 1-2-4退款操作按钮 -->
         <div v-if="currentType !== 'UNCREDITED'">
-          <el-row
+          <!-- <el-row
             class="BOTTOM"
             v-if="
               isStaffId &&
@@ -932,6 +932,10 @@
                 (drawerApprovalDeatail.regType === '系统课' &&
                   systemCourseIdSet.indexOf(resetParams.staffId) >= 0))
             "
+          > -->
+           <el-row
+            class="BOTTOM"
+            v-if="isStaffId"
           >
             <el-col :span="19" :offset="1">
               <a
