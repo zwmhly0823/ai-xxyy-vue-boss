@@ -235,7 +235,7 @@ export default {
             return new Promise((resolve, reject) => {
                 axios({
                         method: 'POST',
-                        url: `/api/b/v1/import/importBatchModifyChannelLevel`,
+                        url: `/api/c/v1/channel/importBatchModifyChannelLevel`,
                         responseType: 'blob',
                         headers: getHeaders(),
                         data: params
