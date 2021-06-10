@@ -174,33 +174,45 @@ export default {
 
   async mounted() {},
   created() {
-    // 订单管理 -- 赠品操作
+   // 订单管理 -- 赠品操作
+    let mobile = ''
+    const staff = JSON.parse(localStorage.getItem('staff') || '{}')
     this.paramOrderId = this.getUrlKey('id')
-    const mobile = this.getUrlKey('mobile') || ''
-    if (mobile) {
-      this.$http.RefundApproval.getUid_lk({ mobile }).then((res) => {
-        const uid = res.data.blurrySearch[0].id
-        if (uid) {
-          this.getSearchPhone({ uid })
+    if (this.paramOrderId) {
+      this.$http.User.getUserPhoneNumber({
+        uid: this.getUrlKey('uid'),
+        teacherId:staff.id
+      }).then (res => {
+        if (res.code == 0) {
+          mobile = res.payload.mobile
+          if (mobile) {
+            this.$http.RefundApproval.getUid_lk({ mobile }).then((res) => {
+              const uid = res.data.blurrySearch[0].id
+              if (uid) {
+                this.getSearchPhone({ uid })
+              }
+            })
+          }
+          this.$nextTick(() => {
+            this.$refs.toGetPhone.input = mobile
+          })
+          if (this.paramOrderId) {
+            const obj = {
+              id: this.paramOrderId
+            }
+            this.$http.Order.getThisOrder(obj).then((res) => {
+              const data = res.data.Order || {}
+              this.formGift.outTradeNo = data.out_trade_no
+            })
+          }
+          setTimeout(() => {
+            this.orderDisable = true
+          }, 2000)
+        } else {
+          this.$message.error('网络异常，请稍后再试！')
         }
       })
     }
-    this.$nextTick(() => {
-      this.$refs.toGetPhone.input = mobile
-    })
-    if (this.paramOrderId) {
-      const obj = {
-        id: this.paramOrderId
-      }
-      this.$http.Order.getThisOrder(obj).then((res) => {
-        const data = res.data.Order || {}
-        this.formGift.outTradeNo = data.out_trade_no
-      })
-    }
-    setTimeout(() => {
-      this.orderDisable = true
-    }, 2000)
-    const staff = JSON.parse(localStorage.getItem('staff') || '{}')
     this.formGift.applyUserId = staff.id
     this.formGift.applyUserName = staff.realName
     this.formGift.applyUserDeapartmentId = staff.departmentId

@@ -247,21 +247,21 @@ export default {
         outTradeNo: e.out_trade_no,
       }
       this.$http.Finance.getTable(params).then((res) => {
-        console.log(res)
+        
         this.outTradeNo = res.content
         this.$refs.see_refund.handleSee()
       })
     },
     // 打开新页面
     openTeam(row) {
-      console.log(row)
+      
       openBrowserTab(
         `/music_app/#/moneyBack?cellphone=${row.user.mobile}&order_no=${row.out_trade_no}`
       )
     },
     openTeams(row) {
       openBrowserTab(
-        `/music_app/#/approvalGift?mobile=${row.user.mobile}&}&id=${row.id}`
+        `/music_app/#/approvalGift?mobile=${row.user.mobile}&}&id=${row.id}&uid=${row.uid}`
       )
     },
     // 推荐人
