@@ -25,14 +25,9 @@ export default [
     width: '160',
     // 自定义组件
     render(h, data, row) {
-      const user = {
-        mobile: row.user.mobile,
-        id: row.user.id
-      }
-      return h(ExtendUserInfo, {
-
-        props: {
-          user: user,
+    return h(ExtendUserInfo, {
+       props: {
+          user: row.user,
           isHead: true
         }
       })
