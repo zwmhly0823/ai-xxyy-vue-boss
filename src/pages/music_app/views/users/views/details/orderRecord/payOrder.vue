@@ -181,9 +181,7 @@
               </template>
               <template v-else-if="scope.row.promotions_status === 0">
                 <span
-                  :class="{
-                    canApplayStyle: scope.row.availablePromotions.length,
-                  }"
+                  style="color: #0099ff"
                   @click="
                     scope.row.availablePromotions.length && openTeams(scope.row)
                   "
@@ -247,14 +245,12 @@ export default {
         outTradeNo: e.out_trade_no,
       }
       this.$http.Finance.getTable(params).then((res) => {
-        
         this.outTradeNo = res.content
         this.$refs.see_refund.handleSee()
       })
     },
     // 打开新页面
     openTeam(row) {
-      
       openBrowserTab(
         `/music_app/#/moneyBack?cellphone=${row.user.mobile}&order_no=${row.out_trade_no}`
       )

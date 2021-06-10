@@ -225,15 +225,16 @@ export default {
             buytime
             order_total_amount
             packages_name
-
+   
             sup
 
             stage
-
+            availablePromotions{
+              id
+            }
             regtype
-
+            promotions_status
             amount
-
             status
 
             order_status
