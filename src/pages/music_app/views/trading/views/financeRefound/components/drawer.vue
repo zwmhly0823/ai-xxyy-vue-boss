@@ -13,7 +13,7 @@
         <p class="line-title">退款支付详情</p>
         <el-table
           :data="payDel"
-          style="width: 95%;border: 1px solid #d7d7e0;"
+          style="width: 95%; border: 1px solid #d7d7e0"
           :header-cell-style="{ background: '#F0F9FD' }"
         >
           <el-table-column prop="status" label="退款支付状态">
@@ -42,14 +42,21 @@
       <div class="drawer-line">
         <p class="line-title">退款订单明细</p>
         <p class="line-delf">
-          <span>用户信息:{{ dataShow(orderData.userName) }}</span>
+          <span style="color: #2a75ed"
+            >用户信息:{{ userPhone ? userPhone : dataShow(orderData.userName) }}
+            <i
+              style="margin-left: 10px; color: #2a75ed"
+              class="el-icon-view mg-l-5"
+              @click="getNumber(orderData.uid)"
+            ></i>
+          </span>
           <span>订单号:{{ dataShow(orderData.outTradeNo) }}</span>
           <span>订单交易流水号:{{ dataShow(orderData.transactionId) }}</span>
           <span>退款订单状态:{{ dataShow(orderData.statusStr) }}</span>
         </p>
         <el-table
           :data="orderDel"
-          style="width: 95%;border: 1px solid #d7d7e0;"
+          style="width: 95%; border: 1px solid #d7d7e0"
           :header-cell-style="{ background: '#F0F9FD' }"
         >
           <el-table-column prop="regTypeDesc" width="100" label="订单业务类型">
@@ -62,29 +69,33 @@
           </el-table-column>
           <el-table-column prop="tradeTypeDesc" label="支付方式">
           </el-table-column>
-           <el-table-column prop="associatedOrderRegtype" width="200" label="关联订单">
-              <template slot-scope="scope">
-            <p>
-              {{
-                scope.row.associatedOrderRegtype == 0
-                  ? '体验课'
-                  : scope.row.associatedOrderRegtype == 1
-                  ? '系统课'
-                  : scope.row.associatedOrderRegtype == 2
-                  ? '优惠券商品'
-                  : ''
-              }}
-            </p>
-            <p>
-              {{
-                scope.row.associatedOrderOutTradeNo
-                  ? scope.row.associatedOrderOutTradeNo
-                  : '-'
-              }}
-            </p>
-          </template>
+          <el-table-column
+            prop="associatedOrderRegtype"
+            width="200"
+            label="关联订单"
+          >
+            <template slot-scope="scope">
+              <p>
+                {{
+                  scope.row.associatedOrderRegtype == 0
+                    ? '体验课'
+                    : scope.row.associatedOrderRegtype == 1
+                    ? '系统课'
+                    : scope.row.associatedOrderRegtype == 2
+                    ? '优惠券商品'
+                    : ''
+                }}
+              </p>
+              <p>
+                {{
+                  scope.row.associatedOrderOutTradeNo
+                    ? scope.row.associatedOrderOutTradeNo
+                    : '-'
+                }}
+              </p>
+            </template>
           </el-table-column>
-           <el-table-column prop="associatedOrderAmount" label="关联金额">
+          <el-table-column prop="associatedOrderAmount" label="关联金额">
           </el-table-column>
           <el-table-column prop="amount" label="实付金额"> </el-table-column>
           <el-table-column prop="periodAlready" label="已上周期">
@@ -119,8 +130,8 @@
       </div>
       <div class="drawer-line">
         <p class="line-title">订单生命周期</p>
-        <p style="width: 95%;height:110px; border: 1px solid #d7d7e0;">
-          <el-steps style="padding-top:10px" :active="6" align-center>
+        <p style="width: 95%; height: 110px; border: 1px solid #d7d7e0">
+          <el-steps style="padding-top: 10px" :active="6" align-center>
             <!-- <el-step
               v-for="item in list"
               :key="item.title"
@@ -155,7 +166,7 @@
         <p class="line-title">审批过程记录</p>
         <el-table
           :data="approveArr"
-          style="width: 95%;border: 1px solid #d7d7e0;"
+          style="width: 95%; border: 1px solid #d7d7e0"
           :header-cell-style="{ background: '#F0F9FD' }"
         >
           <el-table-column prop="approvalName" label="发起人/审批人">
@@ -173,7 +184,7 @@
       <div class="rawer-bot">
         <el-button
           type="primary"
-          v-show="+roleId === 4 &&![5].includes(orderData.status)"
+          v-show="+roleId === 4 && ![5].includes(orderData.status)"
           @click="comfirmRefund"
           >发起退款支付</el-button
         >
@@ -199,12 +210,12 @@ export default {
   props: {
     orderData: {
       type: Object,
-      default: () => ({})
+      default: () => ({}),
     },
     approveData: {
       type: Object,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
   data() {
     return {
@@ -221,18 +232,20 @@ export default {
         '退款取消',
         '退款财务驳回',
         '退款异常',
-        '失败'
+        '失败',
       ],
       styleObject: [
         { color: '#49BF7C' },
         { color: '#FF0505' },
-        { color: '#6E6E6E' }
+        { color: '#6E6E6E' },
       ],
       list: [
         { title: '订单创建时间', word: 111 },
         { title: '订单支付时间', word: 222 },
-        { title: '申请退款时间', word: 222 }
-      ]
+        { title: '申请退款时间', word: 222 },
+      ],
+      operatorId: '',
+      userPhone: null,
     }
   },
   computed: {
@@ -248,21 +261,33 @@ export default {
     },
     orderDel() {
       return [this.orderData]
-    }
+    },
     // stepArr(){
 
     // }
   },
   watch: {},
   created() {
-    const roleList = JSON.parse(localStorage.getItem('staff')).roleList;
-    let roleId = roleList ? roleList[0] : '';
-    this.roleId = roleId;
+    this.operatorId = JSON.parse(localStorage.getItem('staff')).id
+    const roleList = JSON.parse(localStorage.getItem('staff')).roleList
+    let roleId = roleList ? roleList[0] : ''
+    this.roleId = roleId
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
-    //
+    //获取学生号码
+    getNumber(uid) {
+     uid && this.$http.User.getUserPhoneNumber({
+        uid: uid,
+        teacherId: this.operatorId,
+      }).then((res) => {
+        if (res.code == 0) {
+          this.userPhone = res.payload.mobile
+        } else {
+          this.$message.error('网络异常，请稍后再试！')
+        }
+      })
+    },
     payShow(val) {
       if (!val) {
         return '--'
@@ -300,19 +325,19 @@ export default {
       this.$confirm(`请再次确认发起退款`, '确认退款', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       })
         .then(() => {
           this.$http.Finance.toAgree({
             refundUid: JSON.parse(localStorage.getItem('staff')).id,
-            paymentId: this.orderData.paymentId
+            paymentId: this.orderData.paymentId,
             // 默认不传就是1 审核通过
           })
             .then((res) => {
               if (res.code === 0) {
                 this.$message({
                   message: '退款发起成功',
-                  type: 'success'
+                  type: 'success',
                 })
                 this.$emit('closeDrawer')
                 // 跳回列表并刷新
@@ -321,14 +346,14 @@ export default {
               } else {
                 this.$message({
                   message: '通过操作失败,稍后再试',
-                  type: 'warning'
+                  type: 'warning',
                 })
               }
             })
             .catch((err) => {
               this.$message({
                 message: '通过操作失败,稍后再试',
-                type: 'error'
+                type: 'error',
               })
               return err
             })
@@ -336,16 +361,16 @@ export default {
         .catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消退款'
+            message: '已取消退款',
           })
           this.toggleSelection()
         })
-    }
+    },
     // closeFeed() {
     //   localStorage.setItem('feedFlag', true)
     //   this.feedShow = false
     // }
-  }
+  },
 }
 </script>
 
