@@ -121,10 +121,10 @@ export default {
   },
 
   // 查询所有有效活动
-  getPromotionsList ({ userId, orderId }) {
+  getPromotionsList (query) {
     return axios.get(
-      `/api/b/v1/backend/promotions/flow/getPromotionsListByUserIdAndOrderId`,
-      { userId, orderId }
+      `/api/p/v1/promotions/getPromotionsList`,
+      query
     )
   },
   // 新建关单赠品申请

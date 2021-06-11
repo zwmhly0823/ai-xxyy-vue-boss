@@ -68,7 +68,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="选择赠品" prop="giftsId">
-          <el-radio-group v-model="formGift.giftsId" style="width:50%">
+          <el-radio-group v-model="formGift.giftsId" style="width: 50%">
             <el-radio
               v-for="item in gifts"
               :key="item.id"
@@ -101,9 +101,7 @@
           <el-form-item label="收货人" disabled prop="receiptName">
             <el-input disabled v-model="formGift.receiptName"></el-input>
             <div class="repair-address" @click="repairAddress" v-if="userId">
-              <span>
-                修改收货信息
-              </span>
+              <span> 修改收货信息 </span>
             </div>
           </el-form-item>
         </div>
@@ -169,20 +167,20 @@ import SearchPhone from '@/components/MSearch/searchItems/searchPhone'
 export default {
   components: {
     LogisticsForm,
-    SearchPhone
+    SearchPhone,
   },
 
   async mounted() {},
   created() {
-   // 订单管理 -- 赠品操作
+    // 订单管理 -- 赠品操作
     let mobile = ''
     const staff = JSON.parse(localStorage.getItem('staff') || '{}')
     this.paramOrderId = this.getUrlKey('id')
     if (this.paramOrderId) {
       this.$http.User.getUserPhoneNumber({
         uid: this.getUrlKey('uid'),
-        teacherId:staff.id
-      }).then (res => {
+        teacherId: staff.id,
+      }).then((res) => {
         if (res.code == 0) {
           mobile = res.payload.mobile
           if (mobile) {
@@ -198,7 +196,7 @@ export default {
           })
           if (this.paramOrderId) {
             const obj = {
-              id: this.paramOrderId
+              id: this.paramOrderId,
             }
             this.$http.Order.getThisOrder(obj).then((res) => {
               const data = res.data.Order || {}
@@ -239,6 +237,9 @@ export default {
       orderDisable: true,
       sendDisabled: false,
       orderRefundStatus: false, // 退费类型
+      packagesId: '',
+      orderCtime: '',
+      orderRegtype: '',
       formGift: {
         orderId: '',
         outTradeNo: '',
@@ -264,30 +265,42 @@ export default {
         applyUserName: '',
         applyUserDeapartmentId: '',
         applyUserDeapartmentName: '',
-        promotionsMsg: ''
+        promotionsMsg: '',
       },
       rules: {
         cellPhone: [
-          { required: true, validator: validateName, trigger: 'change' }
+          { required: true, validator: validateName, trigger: 'change' },
         ],
         showMessage: [
-          { required: true, message: '请选择关联订单', trigger: 'change' }
+          { required: true, message: '请选择关联订单', trigger: 'change' },
         ],
         promotionsId: [
-          { required: true, message: '请选择活动', trigger: 'change' }
+          { required: true, message: '请选择活动', trigger: 'change' },
         ],
 
         giftsId: [{ required: true, message: '请选择赠品', trigger: 'change' }],
         receiptName: [
-          { required: true, message: '请选择关联收货人姓名', trigger: 'change' }
+          {
+            required: true,
+            message: '请选择关联收货人姓名',
+            trigger: 'change',
+          },
         ],
         receiptTel: [
-          { required: true, message: '请选择关联收货人电话', trigger: 'change' }
+          {
+            required: true,
+            message: '请选择关联收货人电话',
+            trigger: 'change',
+          },
         ],
         totalAddress: [
-          { required: true, message: '请选择关联收货人地址', trigger: 'change' }
-        ]
-      }
+          {
+            required: true,
+            message: '请选择关联收货人地址',
+            trigger: 'change',
+          },
+        ],
+      },
     }
   },
 
@@ -349,12 +362,11 @@ export default {
             } else {
               this.$message({
                 message: '该手机号未查询到订单',
-                type: 'warning'
+                type: 'warning',
               })
             }
           })
-          .catch((err) => {
-          })
+          .catch((err) => {})
       } else {
         // this.formGift = {}
         this.formGift.showMessage = ''
@@ -374,6 +386,9 @@ export default {
       this.formGift.orderId = val.id
       this.formGift.outTradeNo = val.outTradeNo
       this.formGift.stage = val.stage
+      this.packagesId = val.packagesId
+      this.orderCtime = val.ctime
+      this.orderRegtype = val.regtype
       if (val.regtype === 'FIRST_ORDER' || val.regtype === 'RENEW') {
         this.formGift.courseType = 1
       } else {
@@ -407,7 +422,7 @@ export default {
       })
       const pararm = {
         userId: val.uid,
-        orderId: val.id
+        orderId: val.id,
       }
       this.$http.Express.getRefundtypeById(pararm).then((res) => {
         if (res && res.payload.length) {
@@ -462,7 +477,7 @@ export default {
           const obj = {
             ...this.formGift,
             userId: this.userId,
-            cellPhone: this.$refs.toGetPhone.input
+            cellPhone: this.$refs.toGetPhone.input,
           }
           if (this.orderRefundStatus) {
             this.$message.error('此订单退费中/已退费，不符合赠品审评')
@@ -472,8 +487,8 @@ export default {
                 this.$router.push({
                   path: '/approval',
                   params: {
-                    activeApprove: 'second'
-                  }
+                    activeApprove: 'second',
+                  },
                 })
                 //
               }
@@ -487,7 +502,7 @@ export default {
     // 取消
     cancelButton() {
       this.$router.push({
-        path: `/approvalCenter`
+        path: `/approvalCenter`,
       })
     },
     // 后退
@@ -497,7 +512,7 @@ export default {
     // 根据手机号获取uid
     createFilter(phonenum) {
       this.$http.RefundApproval.getUid_lk({
-        mobile: phonenum
+        mobile: phonenum,
       }).catch((err) => {
         this.$message.error('跳转来的手机号获取uid失败')
       })
@@ -505,8 +520,9 @@ export default {
     // 获取所有有效活动
     getPromotionsList() {
       this.$http.Approval.getPromotionsList({
-        userId: this.userId,
-        orderId: this.formGift.orderId
+        packagesId: this.packagesId,
+        ctime: this.orderCtime,
+        regtype: this.orderRegtype,
       }).then(({ code, payload }) => {
         if (!code && payload && payload.length) {
           this.activityList = payload
@@ -525,8 +541,8 @@ export default {
           ) || [',', ''])[1].replace(/\+/g, '%20')
         ) || null
       )
-    }
-  }
+    },
+  },
 }
 </script>
 
