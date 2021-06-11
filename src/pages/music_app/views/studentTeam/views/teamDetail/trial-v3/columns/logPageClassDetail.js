@@ -122,11 +122,7 @@ export default [
 ]
 
 export const actions = ({
-  handleTag,
-  handleFollow,
   handleUserDetail,
-  handleCoupon,
-  handleOutbound
 }) => {
   return {
     action: [
