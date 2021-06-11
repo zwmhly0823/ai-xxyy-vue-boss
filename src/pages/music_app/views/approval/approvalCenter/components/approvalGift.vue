@@ -473,7 +473,7 @@ export default {
           this.sendDisabled = true
           setTimeout(() => {
             this.sendDisabled = false
-          }, 3000)
+          }, 1000)
           const obj = {
             ...this.formGift,
             userId: this.userId,
@@ -484,6 +484,7 @@ export default {
           } else {
             this.$http.Approval.applyGiftAdd(obj).then((res) => {
               if (res.code === 0) {
+                this.$message.success("申请成功")
                 this.$router.push({
                   path: '/approval',
                   params: {
