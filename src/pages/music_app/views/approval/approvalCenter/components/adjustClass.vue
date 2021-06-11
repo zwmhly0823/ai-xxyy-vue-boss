@@ -89,7 +89,7 @@
           action=""
           list-type="picture-card"
           multiple
-          :limit="9"
+          :limit="3"
           :file-list="fileListC"
           :on-exceed="onExceed"
           :http-request="uploadAll"
@@ -545,7 +545,7 @@ export default {
     // 超过个数限制
     onExceed(files, fileList) {
       this.$message.warning(
-        `当前限制选择9个文件，本次选择了 ${files.length} 个文件，共选择了 ${
+        `当前限制选择3个文件，本次选择了 ${files.length} 个文件，共选择了 ${
           files.length + fileList.length
         } 个文件`
       )
