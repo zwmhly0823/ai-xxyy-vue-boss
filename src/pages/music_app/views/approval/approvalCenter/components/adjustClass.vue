@@ -84,6 +84,23 @@
           </el-input>
         </template>
       </el-form-item>
+      <el-form-item label="附件" prop="attsUrl">
+        <el-upload
+          action=""
+          list-type="picture-card"
+          multiple
+          :limit="9"
+          :file-list="fileListC"
+          :on-exceed="onExceed"
+          :http-request="uploadAll"
+          :on-preview="onPreview"
+          :on-change="onChange"
+          :before-remove="beforeRemove"
+        >
+          <div slot="tip" class="el-upload__tip">提示信息内容告知</div>
+          <i class="el-icon-plus"></i>
+        </el-upload>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm('adjustForm')">
           提交
@@ -91,12 +108,17 @@
         <el-button @click="resetForm('adjustForm')"> 重置 </el-button>
       </el-form-item>
     </el-form>
+    <!-- 上传文件的预览弹窗 -->
+    <el-dialog :visible.sync="dialogVisible">
+      <img width="100%" :src="dialogImageUrl" alt="" />
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import _ from 'lodash'
 import SearchPhone from '@/components/MSearch/searchItems/searchPhone'
+import UploadFile from '@/utils/uploadFiles' // 上传公共方法(单文件上传)
 import {
   SUP_LEVEL_ALL,
   SUP_LEVEL_LIST_LOWER,
@@ -133,6 +155,9 @@ export default {
   data() {
     return {
       selectClass: '',
+      fileListC: [],
+      dialogImageUrl: '', // 上传文件的预览url
+      dialogVisible: false, // 上传文件的预览弹窗显隐开关
       // 调期调级调课：1/2/3
       adjustType: this.$route.query.adjustType - 0,
       // 最终显示的模版数据
@@ -177,6 +202,7 @@ export default {
         adjustReason: '', // 理由
         targetClassName: '', // 选择班级名称
         targetClassId: '', // 选择班级id
+        attsUrl: '',
       },
       // 调期报错
       adjustDateError: false,
@@ -497,6 +523,43 @@ export default {
     },
   },
   methods: {
+    singglefileListPromise() {
+      const promiseAll = this.fileListC.map((item) =>
+        new UploadFile(item.raw).init()
+      )
+      return promiseAll
+    },
+    uploadAll() {
+      // 文件上传巴拉巴拉
+      Promise.all(this.singglefileListPromise())
+        .then((res) => {
+          // 静态方法all 整体都是resolve返回时
+          // this.fileListC = res
+          this.formData.attsUrl = res.map((item) => item.fileUrl).join()
+        })
+        .catch((err) => {})
+    },
+    // 超过个数限制
+    onExceed(files, fileList) {
+      this.$message.warning(
+        `当前限制选择9个文件，本次选择了 ${files.length} 个文件，共选择了 ${
+          files.length + fileList.length
+        } 个文件`
+      )
+    },
+    // 点击预览文件
+    onPreview(file) {
+      this.dialogImageUrl = file.url
+      this.dialogVisible = true
+    },
+    // 移除列表文件之前
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`)
+    },
+    // 文件变化都捕获
+    onChange(file, fileList) {
+      this.fileListC = fileList
+    },
     // 根据班级ID获取班级详情
     async initData(params) {
       let result = await this.$http.TeamV2.getTeamApproval(params).then(
@@ -645,7 +708,7 @@ export default {
       if (data.labelText != '调整开课日期:') {
         this.newData = data.options[0].value
       }
-      if (data.labelText == '关联订单:' || data.labelText == '选择开课日期') {
+      if (data.labelText == '关联订单:' || data.labelText == '选择开课日期:') {
         this.formData.targetClassName = ''
         this.formData.targetClassId = ''
       }
