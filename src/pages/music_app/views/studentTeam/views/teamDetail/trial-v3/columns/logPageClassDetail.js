@@ -6,7 +6,7 @@
  * @LastEditors: YangJiyong
  * @LastEditTime: 2021-01-05 14:03:37
  */
-import ExtendUserInfo from '@/components/BaseUserInfo/Extend.vue'
+import ExtendUserInfo from '../components/BaseUserInfo/Extend.vue'
 import WechatInfo from '@/components/BaseUserInfo/Wechat.vue'
 // import SortByClassInfo from '../components/Sort/SortByClassInfo.vue'
 
@@ -114,9 +114,9 @@ export default [
   {
     action: true,
     name: 'action',
-    prop: 'id',
+    prop: 'userExtends',
     label: '操作',
-    width: '170',
+    width: '120',
     fixed: 'right'
   }
 ]
@@ -140,36 +140,6 @@ export const actions = ({
           }
         }
       },
-      {
-        type: 'a',
-        label: '跟进',
-        click: handleFollow,
-        attr: {
-          style: {
-            color: '#2a75ed'
-          }
-        }
-      },
-      {
-        type: 'a',
-        label: '打标签',
-        click: handleTag,
-        attr: {
-          style: {
-            color: '#2a75ed'
-          }
-        }
-      },
-      {
-        type: 'a',
-        label: '发优惠券',
-        click: handleCoupon,
-        attr: {
-          style: {
-            color: '#2a75ed'
-          }
-        }
-      }
     ]
   }
 }
