@@ -190,6 +190,9 @@ export default {
         currentClassName: [
           { required: true, message: '请选择当前班级', trigger: 'change' },
         ],
+        attsUrl: [
+          { required: true, message: '请选择上传的附件', trigger: 'change' },
+        ],
         // targetClassName: [
         //   { required: true, message: '请选择班级', trigger: 'change' },
         // ],
@@ -1214,6 +1217,7 @@ export default {
   background-color: #fff;
   margin: 10px;
   height: calc(100vh - 70px);
+  overflow-y: auto;
   .title {
     height: 50px;
     line-height: 50px;
