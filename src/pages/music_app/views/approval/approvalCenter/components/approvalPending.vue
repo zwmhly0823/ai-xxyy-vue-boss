@@ -885,10 +885,45 @@
               ></el-image>
             </el-col>
           </el-row>
+             <el-row>
+            <el-col :offset="1" :span="23">
+              <h3>审批节点</h3>
+            </el-col>
+            <el-col :offset="1" :span="22">
+              <el-table
+                :data="tableDataNode"
+                :header-cell-style="{
+                  background: 'rgba(31,116,249,.7)',
+                  color: '#fff',
+                }"
+              >
+                <el-table-column
+                  prop="approvalName"
+                  label="发起人/审核人"
+                  align="center"
+                ></el-table-column>
+                <el-table-column
+                  prop="statusStr"
+                  label="审批状态"
+                  align="center"
+                ></el-table-column>
+                <el-table-column
+                  prop="approvalRemark"
+                  label="审批意见"
+                  align="center"
+                ></el-table-column>
+                <el-table-column label="操作时间" align="center">
+                  <template slot-scope="scope">{{
+                    formatDate(scope.row.utime)
+                  }}</template>
+                </el-table-column>
+              </el-table>
+            </el-col>
+          </el-row>
         </div>
         <!-- 1-2-4退款操作按钮 -->
         <div v-if="currentType !== 'UNCREDITED'">
-          <el-row
+          <!-- <el-row
             class="BOTTOM"
             v-if="
               isStaffId &&
@@ -897,6 +932,10 @@
                 (drawerApprovalDeatail.regType === '系统课' &&
                   systemCourseIdSet.indexOf(resetParams.staffId) >= 0))
             "
+          > -->
+           <el-row
+            class="BOTTOM"
+            v-if="isStaffId"
           >
             <el-col :span="19" :offset="1">
               <a
@@ -926,7 +965,7 @@
         <div
           v-if="
             currentType === 'UNCREDITED' &&
-            roleIdList.indexOf(resetParams.staffId) >= 0
+            checkStatus
           "
         >
           <el-row class="BOTTOM">
@@ -1850,6 +1889,17 @@ export default {
             this.drawerApproval = true
           }
         })
+        this.$http.RefundApproval.getFlowDetailNodeTable(id).then(
+          ({ code, payload }) => {
+            if (!code) {
+              this.tableDataNode = payload
+              // this.tableDataNode = payload.reduce((pre, cur, index) => {
+              //   pre.push(cur[0])
+              //   return pre
+              // }, [])
+            }
+          }
+        )
       }
       // 赠品
       if (type === 'PROMOTIONS') {

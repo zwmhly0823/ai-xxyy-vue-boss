@@ -404,7 +404,7 @@ export default {
     ChannelDetailStatisticsPage(Params = `""`, page = 1) {
         return axios.post('/graphql/v1/toss', {
             query: `{
-        ChannelDetailStatisticsPage(query:${Params},page:${page},size:10000){
+        ChannelDetailStatisticsPage(query:${Params},page:${page},size:20){
           totalPages
           totalElements
           number
