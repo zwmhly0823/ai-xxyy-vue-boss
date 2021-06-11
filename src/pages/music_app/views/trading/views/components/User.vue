@@ -23,7 +23,7 @@
       </p>
       <p>
         <span @click="openUserDetail(user.id, user)">
-          {{ userPhone ? userPhone : (user && user.mobile) || '-' }}
+          {{user && user.mobile || '-' }}
         </span>
         <i
           style="margin-left: 10px"
@@ -60,7 +60,6 @@ export default {
   },
   data() {
     return {
-      userPhone: '',
       operatorId: '',
     }
   },
@@ -72,7 +71,7 @@ export default {
         teacherId: this.operatorId,
       }).then((res) => {
         if (res.code == 0) {
-          this.userPhone = res.payload.mobile
+          this.user.mobile = res.payload.mobile
         } else {
           this.$message.error('网络异常，请稍后再试！')
         }

@@ -211,7 +211,7 @@ export default {
     onChange(data) {
       const _list = [...this.dataList]
       for (const item of _list) {
-        if (item.u_id || item.id === data || item.user_num_text === data) {
+        if (item.u_id === data || item.id === data || item.user_num_text === data) {
           this.uid = item.u_id
         }
       }

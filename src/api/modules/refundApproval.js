@@ -110,7 +110,7 @@ export default {
   },
   getFlowDetailNodeTable(params) {
     return axios.get(
-      `/api/b/v1/backend/flowApprovalLinkedRelation/findLinkedListByFlowApprovalIdForBoss?flowApprovalId=${params}`
+      `/api/b/v1/backend/flowApprovalLinkedRelation/findLinkedListByFlowApprovalIdForBoss?flowApprovalId=${params}&queryFrom=BOSS`
     )
   },
 
