@@ -23,7 +23,7 @@
           v-if="user && user.mobile"
           class="el-icon-document-copy mg-r-5"
           style="margin-left:10px"
-          @click="handLeCopy(userPhone || user.mobile)"
+          @click="handLeCopy(user.mobile)"
         ></i>
         <!-- vip 会员标识 -->
         <svg class="iconfont-vip mg-r-5" v-if="is_sys_label_vip">
@@ -68,7 +68,6 @@ export default {
   },
   data() {
     return {
-      userPhone: '',
       operatorId: '',
       defaultHead:
         'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png?x-oss-process=image/resize,l_100',
@@ -94,7 +93,6 @@ export default {
   methods: {
     //获取学生号码
     getNumber(uid) {
-      this.userPhone = ''
       this.$http.User.getUserPhoneNumber({
         uid: uid,
         teacherId: this.operatorId,
