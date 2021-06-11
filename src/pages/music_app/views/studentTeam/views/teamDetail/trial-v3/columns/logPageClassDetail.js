@@ -99,12 +99,6 @@ export default [
     slot: 'follow'
   },
   {
-    prop: 'sys_label',
-    label: '标签',
-    minWidth: '120',
-    slot: 'tags'
-  },
-  {
     prop: 'user_status',
     label: '转化',
     width: '70',
