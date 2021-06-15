@@ -98,7 +98,7 @@ export default {
   methods: {
     // 模版下载
     tempDownLoad () {
-       location.href = '/assets/static/channelManagement.xlsx'
+       location.href = '@/assets/static/channelManagement.xlsx'
     },
     onChange(file,filsList) {
        this.fileList = filsList
