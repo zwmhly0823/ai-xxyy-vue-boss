@@ -11,9 +11,10 @@
     <div class="channelUpload-table">
       <div class="channelUpload-upload-box">
         <div>
-          <span>1.请输入导入表格备注</span><br />
+          <el-button type="primary" size="small" plain @click="tempDownLoad" class="el-icon-download">模版下载</el-button><br/>
+          <span class="titleName">1.请输入导入表格备注</span><br />
           <el-input
-            style="width:350px;margin-top:20px;"
+            style="width:350px"
             type="textarea"
             :autosize="{ minRows: 2, maxRows: 4 }"
             placeholder="请输入表格备注"
@@ -21,7 +22,7 @@
           >
           </el-input>
         </div>
-        <p>2.请选择需要上传的文件</p>
+        <p class="titleName">2.请选择需要上传的文件</p>
         <el-upload
           ref="upload"
           action=""
@@ -29,6 +30,7 @@
           :on-remove="handleRemove"
           :headers="headers"
           :auto-upload="false"
+          :on-change="onChange"
           :limit="1"
           :http-request="handleChange"
           :on-progress="uploadProgress"
@@ -40,6 +42,7 @@
             style="margin-left: 10px;"
             size="small"
             type="success"
+            :class="fileList.length>0?'':'btnActive'"
             @click="submitUpload"
             >上传文件</el-button
           >
@@ -93,17 +96,22 @@ export default {
   },
   created() {},
   methods: {
+    // 模版下载
+    tempDownLoad () {
+       location.href = location.origin+'/channelManagement.xlsx'
+    },
+    onChange(file,filsList) {
+       this.fileList = filsList
+    },
     handleCurrentChange() {},
     // 上传进度
     uploadProgress(event, file, fileList) {
-      console.log(
-        event,
-        file,
-        fileList,
-        'event, file, fileList--------------------'
-      )
     },
     submitUpload(file, filelist) {
+      if(this.fileList.length==0) {
+        this.$message.error("请上传文件")
+        return false
+      }
       this.$refs.upload.submit()
     },
     handleChange(params) {
@@ -123,7 +131,7 @@ export default {
       this.$http.DownloadExcel.exportChannel(formData)
         .then((res) => {
           if (res.status === 420) {
-            console.log('无权限执行')
+            
           } else {
             const blob = new Blob([res])
             const fileName = '上传反馈表.xls'
@@ -181,5 +189,12 @@ export default {
       }
     }
   }
+}
+.titleName {
+  line-height: 40px;
+}
+.btnActive {
+  background-color:#cccc;
+  border: none;
 }
 </style>
