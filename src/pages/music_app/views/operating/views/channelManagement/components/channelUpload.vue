@@ -98,7 +98,7 @@ export default {
   methods: {
     // 模版下载
     tempDownLoad () {
-       location.href = '/static/channelManagement.xlsx'
+       location.href = '/assets/static/channelManagement.xlsx'
     },
     onChange(file,filsList) {
        this.fileList = filsList
@@ -197,4 +197,5 @@ export default {
   background-color:#cccc;
   border: none;
 }
+
 </style>
