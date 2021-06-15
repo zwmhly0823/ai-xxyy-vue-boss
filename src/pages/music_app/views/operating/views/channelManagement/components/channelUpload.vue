@@ -197,5 +197,7 @@ export default {
   background-color:#cccc;
   border: none;
 }
-
+/deep/ .el-upload-list__item {
+  width: 300px;
+}
 </style>
