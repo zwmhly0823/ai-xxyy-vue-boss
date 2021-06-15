@@ -23,7 +23,7 @@
             :key="index"
             height="52px;"
           >
-            <td>
+            <!-- <td>
               <img
                 :src="`${item.head}?x-oss-process=image/resize,l_100&t=${+new Date().getTime()}`"
                 alt=""
@@ -32,7 +32,7 @@
                 crossOrigin="anonymous"
               />
               <span> {{ item.username }}</span>
-            </td>
+            </td> -->
             <td>
               <img
                 src="@/assets/images/Stars.png"
