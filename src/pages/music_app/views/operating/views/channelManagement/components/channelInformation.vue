@@ -24,9 +24,9 @@
           type="primary"
           >添加渠道</el-button
         >
-        <!-- <el-button type="primary" size="mini" @click="showImport = true">
+        <el-button type="primary" size="mini" @click="showImport = true">
           批量修改渠道等级
-        </el-button> -->
+        </el-button>
         <el-button
           class="bulkDownload"
           size="mini"

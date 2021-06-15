@@ -70,16 +70,7 @@
           <el-option label="B" :value="0">B</el-option>
         </el-select>
       </el-form-item>
-      <!-- <el-form-item label="模版" prop="experience">
-        <el-select
-          disabled
-          v-model="ruleForm.experience"
-          placeholder="请选择"
-          clearable
-        >
-        </el-select>
-      </el-form-item> -->
-      <el-form-item label="渠道备注" prop="desc">
+     <el-form-item label="渠道备注" prop="desc">
         <el-input
           placeholder="请输入备注"
           type="textarea"

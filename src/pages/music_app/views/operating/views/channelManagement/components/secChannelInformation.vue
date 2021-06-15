@@ -8,6 +8,13 @@
           @channelSearchValue="channelSearchValue"
           @channelLevelValue="channelLevelValue"
         ></channel-search>
+        <el-button
+          class="add-btn"
+          @click="onAddChannel"
+          size="mini"
+          type="primary"
+          >添加渠道</el-button
+        >
       </div>
     </div>
     <div class="channelAdd-table">
@@ -21,7 +28,7 @@
           <template slot-scope="scope">
             <el-Popover popper-class="batch-btn" trigger="hover">
               <div size="mini" type="text" @click="batchBtn(scope.row)">
-                <span style="cursor:pointer">编辑</span>
+                <span style="cursor: pointer">编辑</span>
               </div>
               <div
                 @mouseenter="handleEdit(scope.$index, scope.row)"
@@ -77,6 +84,7 @@
       <modify-cahnnel
         v-if="modifyDrawer"
         :modifyRow="modifyRow"
+        :channelType="channelType"
         @modifyChannelShowBtn="modifyChannelShowBtn"
         @modifyChannelShow="modifyChannelShow"
       />
@@ -92,13 +100,13 @@ export default {
   props: {
     tabIndex: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
   components: {
     channelSearch,
     MPagination,
-    modifyCahnnel
+    modifyCahnnel,
   },
   filters: {
     channelLevelFilter(val) {
@@ -107,7 +115,7 @@ export default {
         return levelNames[val]
       }
       return '-'
-    }
+    },
   },
   data() {
     return {
@@ -118,7 +126,8 @@ export default {
       tableData: [], // 列表数据
       channelSearchIds: [], // 筛选条件选择的渠道id集合
       channelLevels: [], // 筛选条件选择的渠道等级集合
-      modifyRow: '' // 传递给修改抽屉数据
+      modifyRow: '', // 传递给修改抽屉数据
+      channelType:null,
     }
   },
   watch: {
@@ -129,7 +138,7 @@ export default {
         this.currentPage = 1
         this.getSecChannelList()
       }
-    }
+    },
   },
   methods: {
     // 获取二级渠道列表
@@ -145,7 +154,6 @@ export default {
         defaultQuery.channel_level = Array.from(new Set(this.channelLevels))
       }
       const queryParamsJsonStr = JSON.stringify(JSON.stringify(defaultQuery))
-      console.log(queryParamsJsonStr, '3')
 
       this.$http.Operating.ChannelClassPage(
         queryParamsJsonStr,
@@ -183,8 +191,13 @@ export default {
     handleEdit(index, row) {
       // 鼠标移入三个点上面触发的事件
     },
+    onAddChannel() {
+      this.channelType = "add"
+      this.modifyDrawer = true
+    },
     // 点击编辑
     batchBtn(row) {
+      this.channelType ="edit"
       this.modifyDrawer = true
       this.modifyRow = row
     },
@@ -203,8 +216,8 @@ export default {
     // 单元格回调样式
     cellStyle({ row, column, rowIndex, columnIndex }) {
       return 'max-height:50px;'
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>
@@ -228,6 +241,10 @@ export default {
     margin-top: 10px;
     margin-bottom: 20px;
     background: #fff;
+  }
+  .add-btn {
+    margin-left: 20px;
+    width: 100px;
   }
   .drawer-detail {
     margin: 50px 10px 10px 10px;
