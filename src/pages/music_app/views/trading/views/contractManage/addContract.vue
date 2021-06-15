@@ -160,7 +160,7 @@
             size="small"
             type="success"
             @click="submitUpload"
-            :disabled="uploading"
+            :disabled="uploading||fileList.length<=0"
             >上传到服务器</el-button
           >
           <div slot="tip" class="el-upload__tip">请上传合同pdf、word附件</div>
@@ -624,7 +624,6 @@ export default {
             }
           })
         } else {
-          console.log('error submit!!')
           return false
         }
       })
