@@ -1,10 +1,10 @@
 <template>
   <div class="app">
     <div class="classhead">
-      <img src="@/assets/images/FinishClassHead.png" alt="" />
+      <img @load="loaded()" src="@/assets/images/FinishClassHead.png" alt="" />
     </div>
-    <div class="classconent">
-      <img @load="loaded(index)" src="@/assets/images/Finishclasslist.png" class="img" alt="" />
+    <div v-if="false" class="classconent">
+      <img @load="loaded()" src="@/assets/images/Finishclasslist.png" class="img" alt="" />
       <div class="content">
         <table>
           <tr class="title">
