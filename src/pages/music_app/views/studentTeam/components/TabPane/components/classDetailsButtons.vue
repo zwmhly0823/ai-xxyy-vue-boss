@@ -132,7 +132,7 @@ export default {
     finishLessonList() {
       // 显示弹框
       this.dialogFormVisible = true
-      this.finishLessonData.teamId = this.teamDetail.id
+      this.finishLessonData.teamId =this.teamDetail && this.teamDetail.id
       const currentLesson = this.teamDetail.current_lesson.substring(0, 6)
       this.finishLessonData.studentLesson = currentLesson.substring(0, 4)
       this.finishLessonData.weekNum = currentLesson.substring(4, 6)
