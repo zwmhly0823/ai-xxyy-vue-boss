@@ -240,6 +240,7 @@ export default {
         } else if (type == 2) {
           this.groupStatus = true
         }
+        delete this.searchQuery.id
         this.$delete(this.searchQuery, key)
       }
       this.$emit('search', this.searchQuery)

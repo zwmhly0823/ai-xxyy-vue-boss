@@ -41,10 +41,10 @@
         <el-option
           v-for="item in dataList"
           :key="item.id"
-          :label="
-            `${item[name[searchType] === 'id' ? 'mobile' : name[searchType]]}`
-          "
-          :value="`${item[name[searchType]]}`"
+          :label="`${
+            item[name[searchType] === 'id' ? 'mobile' : name[searchType]]
+          }`"
+          :value="`${needUid ? item.u_id || item.id : item[name[searchType]]}`"
         ></el-option>
       </el-select>
       <i class="el-icon-search"></i>
@@ -58,51 +58,55 @@ import axios from '@/api/axiosConfig'
 import { injectSubject } from '@/utils/index'
 export default {
   props: {
+    needUid: {
+      type: String,
+      default: 'id',
+    },
     customStyle: {
       type: Object,
-      default: null
+      default: null,
     },
     name: {
       type: Array,
-      default: () => ['mobile', 'user_num_text']
+      default: () => ['mobile', 'user_num_text'],
     },
     // 1-系统课，0-体验课 2-全部
     type: {
       type: String,
-      default: '0'
+      default: '0',
     },
     placeholder: {
       type: Array,
-      default: () => ['输入学员手机号', '输入学员ID']
+      default: () => ['输入学员手机号', '输入学员ID'],
     },
     // 默认搜索u_user表。特殊情况传入对应graphql表, 如体验课学员列表：‘StudentTrialStatisticsList’
     tablename: {
       type: String,
-      default: 'UserListEx'
+      default: 'UserListEx',
     },
     // 运营管理--小熊币发送页面,只有用户ID搜索 1
     defaultType: {
       type: String,
-      default: '0'
+      default: '0',
     },
     // 运营管理--小熊币发送页面,隐藏掉下拉选择
     isHidden: {
       type: Boolean,
-      default: true
+      default: true,
     },
     // 是否增加扩展配置，抛出id使用
     extension: {
       type: Boolean,
-      default: false
+      default: false,
     },
     userStatusKey: {
       type: String,
-      default: 'user_status'
+      default: 'user_status',
     },
     userNumKey: {
       type: String,
-      default: 'user_num_text'
-    }
+      default: 'user_num_text',
+    },
   },
   data() {
     return {
@@ -112,15 +116,15 @@ export default {
       searchTypeList: [
         {
           value: 0,
-          label: '学员手机号'
+          label: '学员手机号',
         },
         {
           value: 1,
-          label: '学员ID'
-        }
+          label: '学员ID',
+        },
       ],
       dataList: [],
-      uid: ''
+      uid: '',
     }
   },
   computed: {
@@ -128,11 +132,11 @@ export default {
       return this.placeholder[this.searchType]
     },
     nameKey() {
-      return this.name[this.searchType]
+      return this.needUid || this.name[this.searchType]
     },
     handleDebounce() {
       return debounce(this.getData, 500)
-    }
+    },
   },
   created() {
     // this.getData()
@@ -151,7 +155,7 @@ export default {
       // 系统课
       if (this.type === '1') {
         range = {
-          [`${this.userStatusKey}`]: { gte: 2 }
+          [`${this.userStatusKey}`]: { gte: 2 },
         }
       }
       // 体验课
@@ -168,13 +172,13 @@ export default {
       //   const query = {}
       if (this.searchType === 0) {
         Object.assign(query, {
-          'mobile.like': { 'mobile.keyword': `*${val}*` }
+          'mobile.like': { 'mobile.keyword': `*${val}*` },
         })
       } else {
         Object.assign(query, {
           [`${this.userNumKey}.like`]: {
-            [`${this.userNumKey}.keyword`]: `*${val}*`
-          }
+            [`${this.userNumKey}.keyword`]: `*${val}*`,
+          },
         })
       }
       const q = JSON.stringify(query)
@@ -193,7 +197,7 @@ export default {
                     mobile
                     ${exParams}
                   }
-                }`
+                }`,
         })
         .then((res) => {
           this.loading = false
@@ -207,15 +211,15 @@ export default {
     onChange(data) {
       const _list = [...this.dataList]
       for (const item of _list) {
-        if (item.mobile === data || item.user_num_text === data) {
+        if (item.u_id === data || item.id === data || item.user_num_text === data) {
           this.uid = item.u_id
         }
       }
       !this.extension
         ? this.$emit('result', data ? { [this.nameKey]: data } : '')
         : this.$emit('result', data ? { uid: this.uid } : '')
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>

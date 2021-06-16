@@ -70,16 +70,7 @@
           <el-option label="B" :value="0">B</el-option>
         </el-select>
       </el-form-item>
-      <!-- <el-form-item label="模版" prop="experience">
-        <el-select
-          disabled
-          v-model="ruleForm.experience"
-          placeholder="请选择"
-          clearable
-        >
-        </el-select>
-      </el-form-item> -->
-      <el-form-item label="渠道备注" prop="desc">
+     <el-form-item label="渠道备注" prop="desc">
         <el-input
           placeholder="请输入备注"
           type="textarea"
@@ -361,7 +352,6 @@ export default {
       })
     },
     onChannelOne(data) {
-      console.log(this.ruleForm.channelOne, 'this.ruleForm.channelOne', data)
       if (data) {
         this.channelTwoDisabled = false
       } else {
@@ -422,7 +412,6 @@ export default {
           }
           Object.assign(this.props, obj)
           this.$http.Operating.updateChannel(this.props).then((res) => {
-            console.log(res)
             if (res.code === 0) {
               this.$message.success('渠道修改成功')
               this.$refs[formName].resetFields()

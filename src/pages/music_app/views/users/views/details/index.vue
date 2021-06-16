@@ -34,16 +34,16 @@
             <span>最近活跃：</span>
             <span>
               {{
-              (stuInfor_add.lastBehaviorLog &&
-              stuInfor_add.lastBehaviorLog.device_model) ||
-              '--'
+                (stuInfor_add.lastBehaviorLog &&
+                  stuInfor_add.lastBehaviorLog.device_model) ||
+                '--'
               }}
             </span>
-            <span style="margin-left:5px;">
+            <span style="margin-left: 5px">
               {{
-              (stuInfor_add.lastBehaviorLog &&
-              stuInfor_add.lastBehaviorLog.action_time) ||
-              '--'
+                (stuInfor_add.lastBehaviorLog &&
+                  stuInfor_add.lastBehaviorLog.action_time) ||
+                '--'
               }}
             </span>
           </div>
@@ -82,8 +82,13 @@
           <div class="user-base-info upset_24col">
             <div>
               <span>{{ stuInfor_add.username || '--' }}</span>
-              <span style="margin: 0 5px;">·</span>
+              <span style="margin: 0 5px">·</span>
               <span>{{ stuInfor_add.mobile || '--' }}</span>
+              <i
+                class="el-icon-view mg-l-5"
+                style="margin-left: 10px; color: #2a75ed"
+                @click="getNumber(stuInfor_add.u_id)"
+              ></i>
             </div>
             <div>ID：{{ stuInfor_add.user_num || '--' }}</div>
             <div>
@@ -104,7 +109,7 @@
             <div
               v-if="
                 stuInfor_add.weixinUser &&
-                  stuInfor_add.weixinUser.follow === '1'
+                stuInfor_add.weixinUser.follow === '1'
               "
               class="d-flex"
             >
@@ -117,15 +122,13 @@
               <svg class="lk-icon" aria-hidden="true">
                 <use xlink:href="#icongongzhonghao" />
               </svg>
-              <span style="margin-left: 3px;">未关注公众号</span>
+              <span style="margin-left: 3px">未关注公众号</span>
             </div>
           </div>
           <!-- 只有系统课显示 -->
           <div class="course-info upset_24col">
             <el-tag type="danger" class="tag-setting" size="small">
-              {{
-              (stuInfor && stuInfor.statusCH) || '--'
-              }}
+              {{ (stuInfor && stuInfor.statusCH) || '--' }}
             </el-tag>
             <!-- <el-tag type="danger" class="tag-setting" size="small">{{
               (firstTeam.orderInfo && firstTeam.orderInfo.packages_name) || '--'
@@ -143,7 +146,8 @@
               type="primary"
               @click="$refs.couponPopover.issueCoupons = true"
               v-if="isTossSys"
-            >发优惠券</el-button>
+              >发优惠券</el-button
+            >
             <template v-if="changeSubject === 0">
               <el-button
                 size="mini"
@@ -151,7 +155,8 @@
                 @click="queryJump(item)"
                 v-for="(item, index) of operatBtn"
                 :key="index"
-              >{{ item }}</el-button>
+                >{{ item }}</el-button
+              >
             </template>
           </div>
           <!-- <div class="authoraziton-btn" v-if="changeSubject === 0">
@@ -188,12 +193,21 @@
             />
           </el-tab-pane>
           <el-tab-pane label="上课记录" name="learningRecord">
-            <studyRecord :pUserId="studentId" :stuInforAdd="stuInfor_add" :stuInfor="stuInfor" :tab="tabData" />
+            <studyRecord
+              :pUserId="studentId"
+              :stuInforAdd="stuInfor_add"
+              :stuInfor="stuInfor"
+              :tab="tabData"
+            />
           </el-tab-pane>
           <el-tab-pane label="作品集" name="collectionOf">
             <portfolio :pUserId="studentId" />
           </el-tab-pane>
-          <el-tab-pane label="学习周报" name="studyWeekly" v-if="changeSubject === 0">
+          <el-tab-pane
+            label="学习周报"
+            name="studyWeekly"
+            v-if="changeSubject === 0"
+          >
             <studyWeekly :pUserId="studentId" />
           </el-tab-pane>
           <el-tab-pane label="订单记录" name="orderRecord">
@@ -203,21 +217,29 @@
             <logistics :pUserId="studentId" />
           </el-tab-pane>
           <el-tab-pane label="账户资产" name="userAsset">
-            <capital :pUserId="studentId" :tab="tabData" :stuInforAdd="stuInfor_add" />
+            <capital
+              :pUserId="studentId"
+              :tab="tabData"
+              :stuInforAdd="stuInfor_add"
+            />
           </el-tab-pane>
           <el-tab-pane label="转介绍" name="changeRecommend">
             <changeRecommend :pUserId="studentId" />
           </el-tab-pane>
           <el-tab-pane label="审批记录" name="approvalRecord">
-            <approval-record :stuInfor_add="stuInfor_add.mobile" />
+            <approval-record :stuInfor_add="realPhone" />
           </el-tab-pane>
-          <el-tab-pane label="行为轨迹" name="behaviorLocus" v-if="changeSubject === 0">
+          <el-tab-pane
+            label="行为轨迹"
+            name="behaviorLocus"
+            v-if="changeSubject === 0"
+          >
             <behaviorLocus :pUserId="studentId" />
           </el-tab-pane>
           <el-tab-pane label="用户触达" name="notifyRecord">
             <ivr :pUserId="studentId" />
           </el-tab-pane>
-            <el-tab-pane label="直播活动" name="broadcast">
+          <el-tab-pane label="直播活动" name="broadcast">
             <broadcast />
           </el-tab-pane>
         </el-tabs>
@@ -248,7 +270,7 @@ import {
   GetAgeByBrithday,
   formatData,
   calcBrowerClienHeight,
-  isToss
+  isToss,
 } from '@/utils/index'
 
 import CouponPopover from '@/pages/music_app/views/studentTeam/components/TabPane/components/couponPopover'
@@ -287,11 +309,11 @@ export default {
         address: [{}],
         jluserInfo: {},
         teams: [],
-        bought_subject: [] // 学习科目
+        bought_subject: [], // 学习科目
       },
       // 学员基本信息(分类补充)
       stuInfor_add: {
-        sender: { username: '' }
+        sender: { username: '' },
       },
       // 学员标签(非艾克的全部4项)
       babels_lk: [],
@@ -309,12 +331,12 @@ export default {
         3: '暂停',
         4: '停止',
         5: '已退款',
-        6: '已结束'
+        6: '已结束',
       },
       trialStatusVal: {
         0: '待开课',
         1: '上课中',
-        2: '已结课'
+        2: '已结课',
       },
       sysTeamFirst: {},
       autoHeight: 'auto',
@@ -328,31 +350,31 @@ export default {
         // 小熊币
         {
           label: '共获取',
-          value: 0
+          value: 0,
         },
         {
           label: '已消耗',
-          value: 0
+          value: 0,
         },
         {
           label: '剩余',
-          value: 0
-        }
+          value: 0,
+        },
       ],
       diamondNumList: [
         // 砖石
         {
           label: '共获取',
-          value: 0
+          value: 0,
         },
         {
           label: '已消耗',
-          value: 0
+          value: 0,
         },
         {
           label: '剩余',
-          value: 0
-        }
+          value: 0,
+        },
       ],
       expressstatus: {
         '-1': '无信息',
@@ -365,8 +387,11 @@ export default {
         6: '待确认发货',
         7: '无效',
         8: '疑难',
-        9: '暂停'
-      }
+        9: '暂停',
+      },
+      userPhone: '',
+      operatorId: '',
+      realPhone: '',
     }
   },
   computed: {
@@ -402,7 +427,7 @@ export default {
         }
         return item
       })
-    }
+    },
   },
   async created() {
     this.$root.$on('jumpPartRecommend', (r) => {
@@ -410,24 +435,32 @@ export default {
         this.tabData = 'changeRecommend'
       }
     })
-    if(this.$route.params.isShort) {
-      this.$http.User.getUserByUserNum(this.$route.params.id)
-      .then(res => {
-        this.studentId = res.payload.id;
-        this.init();
+    if (this.$route.params.isShort) {
+      this.$http.User.getUserByUserNum(this.$route.params.id).then((res) => {
+        this.studentId = res.payload.id
+        this.init()
       })
+    } else {
+      this.studentId = this.$route.params.id
+      this.init()
     }
-    else {
-      this.studentId = this.$route.params.id;
-      this.init();
-    }
-
-
+    this.operatorId = JSON.parse(localStorage.getItem('staff')).id
   },
-  mounted() {},
   methods: {
+    //获取学生号码
+    getNumber(uid) {
+      this.$http.User.getUserPhoneNumber({
+        uid: uid,
+        teacherId: this.operatorId,
+      }).then((res) => {
+        if (res.code == 0) {
+          this.stuInfor_add.mobile = res.payload.mobile
+        } else {
+          this.$message.error('网络异常，请稍后再试！')
+        }
+      })
+    },
     async init() {
-
       this.teamType()
       this.getUserAllTeam()
 
@@ -463,14 +496,13 @@ export default {
 
         this.trialSysTeamList = [
           ...this.sysTemSortTeamList(sysList),
-          ...trialList
+          ...trialList,
         ]
 
         const [firstTeam = {}] = this.trialSysTeamList
         // 头部课程信息取第一个
         this.firstTeam = firstTeam
       } catch (err) {
-        console.error(err)
       } finally {
         this.sectionLoading = false
       }
@@ -499,7 +531,7 @@ export default {
     // 体验课
     async trialList(id, subject) {
       const {
-        data: { StudentTrialV2StatisticsList }
+        data: { StudentTrialV2StatisticsList },
       } = await this.$http.User.StudentTrialList({ id, subject })
       this.packageTrialTeamList(StudentTrialV2StatisticsList)
       StudentTrialV2StatisticsList.map((item) => {
@@ -520,11 +552,11 @@ export default {
     // 系统课
     async systemList(studentid, subject) {
       const {
-        data: { StudentSystemStatisticsList = [] }
+        data: { StudentSystemStatisticsList = [] },
       } = await this.$http.User.StudentSystemStatisticsList({
         studentid,
         subject,
-        course_state: [0, 1, 2, 6]
+        course_state: [0, 1, 2, 6],
       })
       StudentSystemStatisticsList.map((item) => {
         item.class_start = item.class_start ? formatData(item.class_start) : ''
@@ -544,7 +576,7 @@ export default {
           teacherInfo = {},
           expressstatus = -1,
           course_state: teamstate,
-          managementInfo
+          managementInfo,
           // teacherInfo: trialTeacher = {}
         } = team
         team.last_join_time = formatDateByType(+team.last_join_time, '-', 'MS')
@@ -569,7 +601,7 @@ export default {
         if (managementInfo) {
           const {
             course_day: courseDay = 0,
-            end_course_day: endCourseDay = 0
+            end_course_day: endCourseDay = 0,
           } = managementInfo
 
           managementInfo.course_day = formatDateByType(+courseDay, '/', 'Y')
@@ -598,7 +630,7 @@ export default {
           currentunit = '',
           end_course_day: endCourseDay = '',
           course_day: courseDay = '',
-          remaining_week: remainingWeek
+          remaining_week: remainingWeek,
         } = team
 
         if (remainingWeek) {
@@ -630,7 +662,7 @@ export default {
         }
         team.courseTime = {
           course_day: formatDateByType(+courseDay, '/', 'Y'),
-          end_course_day: formatDateByType(+endCourseDay, '/', 'Y')
+          end_course_day: formatDateByType(+endCourseDay, '/', 'Y'),
         }
 
         team.isSystemTeam = 1
@@ -657,18 +689,16 @@ export default {
         2: 99,
         1: 98,
         5: 97,
-        6: 96
+        6: 96,
       }
       return obj[courseState]
     },
     // 获取艾克之外的标签
     async getlabelWithoutAike() {
-      console.log('studentId', this.studentId)
       const { code, payload } = await this.$http.User.listLabelsForUser(
         this.studentId
       ).catch((err) => {
         this.$message.error('标签获取失败')
-        console.error(err)
       })
       if (!code && payload && payload.length) {
         this.babels_lk = payload
@@ -690,7 +720,7 @@ export default {
             }
           })
         }
-        console.log('getUserInfo', res);
+
         this.stuInfor = User
         // ②-2给各个组件传基础数据
         this.$root.$emit('study', User.teams, User.zero_teamid_write_trials) // 学习记录+0元体验课
@@ -701,7 +731,7 @@ export default {
     UserExtends() {
       this.$http.User.getUser_add({
         u_id: this.studentId,
-        subject: this.changeSubject
+        subject: this.changeSubject,
       }).then((res = {}) => {
         // ①学员基本资料_分类补充_赋值
         const { data: { UserExtends = {} } = {} } = res
@@ -710,11 +740,24 @@ export default {
           user_num: userNum,
           lastBehaviorLog,
           accountUserCollect = [],
-          accountUserStoneCollect = []
+          accountUserStoneCollect = [],
           // lesson_sl: LS
         } = UserExtends
         // UserExtends.lesson_sl = LS.map((l) => courseLevelReplace(l))
         this.stuInfor_add = UserExtends ? this.modifyData(UserExtends) : {}
+        // 取用户的真实手机号
+        if (this.stuInfor_add.u_id) {
+          this.$http.User.getUserPhoneNumber({
+            uid: this.stuInfor_add.u_id,
+            teacherId: this.operatorId,
+          }).then((res) => {
+            if (res.code == 0) {
+              this.realPhone = res.payload.mobile
+            } else {
+              this.$message.error('网络异常，请稍后再试！')
+            }
+          })
+        }
         // 用户资产
         // this.bearCoin = accountUserCollect
         // 小熊币
@@ -757,20 +800,19 @@ export default {
         补发货: `/music_app/#/repair?cellphone=${cellphone}`,
         调班: `/music_app/#/approvalCenter/adjust?adjustType=3&cellphone=${cellphone}`,
         调级: `/music_app/#/approvalCenter/adjust?adjustType=2&cellphone=${cellphone}`,
-        调期: `/music_app/#/approvalCenter/adjust?adjustType=1&cellphone=${cellphone}`
+        调期: `/music_app/#/approvalCenter/adjust?adjustType=1&cellphone=${cellphone}`,
       }
       // location.href = obj[commandlk]
       window.open(obj[commandlk])
     },
 
     hasEditAddress(res = false) {
-      console.log('hasEditAddress', res)
       if (res) {
         this.getUserInfo()
         this.UserExtends()
       }
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>

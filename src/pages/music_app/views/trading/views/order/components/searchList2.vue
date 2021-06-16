@@ -211,7 +211,7 @@ import { downloadHandle } from '@/utils/download'
 import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
 import { isToss } from '@/utils/index'
-
+import entranceMixins from './mixins/exportLog'
 export default {
   props: {
     // 订单支付状态 3-已完成
@@ -235,7 +235,7 @@ export default {
     TrialClasstype,
     SearchLessonType,
   },
-
+  mixins: [entranceMixins],
   data() {
     return {
       stageDisabled: true, //排期不可选状态
@@ -320,7 +320,6 @@ export default {
     },
     // 难度
     supCallBack(res) {
-      console.log(res, 'res')
       this.setSeachParmas(res, ['sup'], 'terms')
     },
     // 选择订单下单时间
@@ -444,7 +443,6 @@ export default {
     },
     // 体验课难度
     supCallBackTrial(res) {
-      console.log(res, 'res')
       this.setSeachParmas(res, ['sup'], 'terms')
     },
     getTrialTeamName(res) {
@@ -597,8 +595,6 @@ export default {
     },
     // 导出
     exportOrderHandle() {
-      console.log(this.searchParams)
-      console.log(this.$parent.$children[1].finalParams)
       const chooseExport = this.chooseExport
       if (this.searchParams.length === 0) {
         this.$message.error('请选择筛选条件')
@@ -634,17 +630,19 @@ export default {
             invoice_type_text: '开票类型',
             invoice_code: '发票号码',
             class_start_text: '开课时间',
+            // contract_body: '合同主体',
+            // settle_price: '实际结算课单价',
           },
           fileName: `体验课订单导出-${fileTitleTime}`, // 文件名称
           query: JSON.stringify(query),
         }
-
+        this.operatorObj.query = JSON.stringify(query)
         this.$http.DownloadExcel.exportOrder(params)
           .then((res) => {
-            console.log(res)
             downloadHandle(res, `体验课订单导出-${fileTitle}`, () => {
               loading.close()
               this.$message.success('导出成功')
+              this.initOperateExportLog(this.operatorObj)
             })
           })
           .catch(() => loading.close())
@@ -681,7 +679,6 @@ export default {
 
         this.$http.DownloadExcel.exportOrder(params)
           .then((res) => {
-            console.log(res)
             downloadHandle(res, `体验课订单薪资核算表-${fileTitle}`, () => {
               loading.close()
               this.showChooseDialog = false

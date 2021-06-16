@@ -238,7 +238,6 @@ export default {
     },
     // 获取选中的
     onChange(data, obj) {
-      console.log(data, obj)
       this.$emit('result', data ? { [this.nameKey]: data } : '')
     }
   }

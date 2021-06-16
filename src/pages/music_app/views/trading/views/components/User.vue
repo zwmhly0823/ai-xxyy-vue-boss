@@ -14,19 +14,22 @@
       <p @click="openUserDetail(user.id, user)">
         {{ user.username || '-' }}
         {{
-        user.birthday
-        ? user.birthday !== '0'
-        ? getAgeByBrithday(user.birthday)
-        : ''
-        : ''
+          user.birthday
+            ? user.birthday !== '0'
+              ? getAgeByBrithday(user.birthday)
+              : ''
+            : ''
         }}
       </p>
       <p>
         <span @click="openUserDetail(user.id, user)">
-          {{
-          user.mobile || '-'
-          }}
+          {{user && user.mobile || '-' }}
         </span>
+        <i
+          style="margin-left: 10px"
+          class="el-icon-view mg-l-5"
+          @click="getNumber(user.id)"
+        ></i>
       </p>
     </div>
   </section>
@@ -35,24 +38,45 @@
 import { GetAgeByBrithday, openBrowserTab } from '@/utils/index'
 export default {
   props: {
-    courseType:{
-      type:String,
-      default:''
+    courseType: {
+      type: String,
+      default: '',
     },
     user: {
       type: Object,
-      default: () => ({})
+      default: () => ({}),
     },
     singleData: {
       type: Object,
-      default: () => ({})
+      default: () => ({}),
     },
     flag: {
       type: Boolean,
-      default: false
+      default: false,
+    },
+  },
+  created() {
+    this.operatorId = JSON.parse(localStorage.getItem('staff')).id
+  },
+  data() {
+    return {
+      operatorId: '',
     }
   },
   methods: {
+    //获取学生号码
+    getNumber(uid) {
+      this.$http.User.getUserPhoneNumber({
+        uid: uid,
+        teacherId: this.operatorId,
+      }).then((res) => {
+        if (res.code == 0) {
+          this.user.mobile = res.payload.mobile
+        } else {
+          this.$message.error('网络异常，请稍后再试！')
+        }
+      })
+    },
     getAgeByBrithday(birthday) {
       return '- ' + GetAgeByBrithday(birthday)
     },
@@ -61,9 +85,8 @@ export default {
       if (this.flag) {
         return false
       }
-      row && console.log(row)
-      let str = this.courseType == 'system'?'details':'teamTrialDetail'
-      console.log(uid)
+      let str = this.courseType == 'system' ? 'details' : 'teamTrialDetail'
+
       if (Object.keys(this.singleData).length) {
         uid &&
           openBrowserTab(
@@ -72,8 +95,8 @@ export default {
       } else {
         uid && openBrowserTab(`/music_app/#/details/${uid}`)
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

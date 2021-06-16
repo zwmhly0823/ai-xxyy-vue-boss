@@ -26,7 +26,11 @@
             <!-- 标题气泡内容 -->
             <div size="mini" type="text" @click="batchBtn">批量发放优惠券</div>
             <!-- 标题点击...图片 -->
-            <div @click="headerPoint(scope.$index, scope)" v-show="moreTitle" slot="reference">
+            <div
+              @click="headerPoint(scope.$index, scope)"
+              v-show="moreTitle"
+              slot="reference"
+            >
               <img src="../../../../../../assets/images/point.png" />
             </div>
           </el-Popover>
@@ -39,14 +43,21 @@
               <span v-show="moreTitle === false">发放优惠券</span>
             </div>
             <!-- 点击...图片 -->
-            <div @mouseenter="handleEdit(scope.$index, scope.row)" slot="reference">
+            <div
+              @mouseenter="handleEdit(scope.$index, scope.row)"
+              slot="reference"
+            >
               <img src="../../../../../../assets/images/point.png" />
             </div>
           </el-Popover>
         </template>
       </el-table-column>
       <!-- 弹窗 -->
-      <coupon-popover ref="couponPopover" :couponData="couponData" :selectUserId="selectUserId" />
+      <coupon-popover
+        ref="couponPopover"
+        :couponData="couponData"
+        :selectUserId="selectUserId"
+      />
       <el-table-column label="基本信息" class="information" width="300px">
         <template slot-scope="scope">
           <img
@@ -58,16 +69,17 @@
             <div>
               <div class="phone primary-text">
                 <span @click="openUserDetail(scope.row)">
-                  {{
-                  scope.row.mobile
-                  }}
+                  {{ scope.row.mobile }}
                 </span>
+                <i
+                  class="el-icon-view mg-l-5"
+                  style="margin-left: 10px"
+                  @click="getNumber(scope.row.id)"
+                ></i>
               </div>
               <div @click="openUserDetail(scope.row)" class="age primary-text">
                 {{ scope.row.sex }} · {{ scope.row.birthday }}
-                <span
-                  v-show="scope.row.base_painting_text"
-                >·</span>
+                <span v-show="scope.row.base_painting_text">·</span>
                 {{ scope.row.base_painting_text }}
               </div>
             </div>
@@ -146,14 +158,14 @@ export default {
   components: {
     MPagination,
     CouponPopover,
-    MSearch
+    MSearch,
   },
   props: {
     // 班级传参
     classObj: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   data() {
     return {
@@ -180,20 +192,23 @@ export default {
       // 请求接口参数
       queryData: '',
       searchUid: '',
-      defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png'
+      defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png',
+      operatorId: '',
+      userPhone: '',
     }
   },
   computed: {
     ...mapGetters(['team']),
     searchUser() {
       return this.team.userByPhone
-    }
+    },
   },
   created() {
     // 优惠卷列表接口
     this.studentsList()
     this.getstatusList()
     this.couponList()
+    this.operatorId = JSON.parse(localStorage.getItem('staff')).id
   },
   watch: {
     searchUser(val) {
@@ -207,7 +222,7 @@ export default {
         })
         this.studentsList()
       }
-    }
+    },
     // classId(value) {
     //   if (!value) return
     //   this.scrollTop()
@@ -223,6 +238,24 @@ export default {
     // }
   },
   methods: {
+    //获取学生号码
+    getNumber(uid) {
+      this.$http.User.getUserPhoneNumber({
+        uid: uid,
+        teacherId: this.operatorId,
+      }).then((res) => {
+        if (res.code == 0) {
+          this.userPhone = res.payload.mobile
+          this.tableData.forEach((item, index) => {
+            if (item.id == uid) {
+              this.tableData[index].mobile = this.userPhone
+            }
+          })
+        } else {
+          this.$message.error('网络异常，请稍后再试！')
+        }
+      })
+    },
     // 搜索
     handleSearch(res) {
       if (res.length === 0) {
@@ -296,7 +329,7 @@ export default {
               }
             }
           }
-        }`
+        }`,
         })
         .then((res) => {
           if (!res.data.teamUserListPage) return
@@ -378,7 +411,7 @@ export default {
             nameZh
             sort
           }
-        }`
+        }`,
         })
         .then((res) => {
           this.statusList = res.data.userFollowStateList
@@ -438,8 +471,8 @@ export default {
     // 打开用户详情
     openUserDetail(row) {
       row.id && openBrowserTab(`/music_app/#/details/${row.id}`)
-    }
-  }
+    },
+  },
 }
 </script>
 <style scoped lang="scss">

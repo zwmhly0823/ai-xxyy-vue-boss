@@ -51,9 +51,6 @@ export default {
       defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png',
     }
   },
-  mounted() {
-    console.log(this.order,"this.order");
-  },
   computed: {
     // 头像
     head() {

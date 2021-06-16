@@ -557,7 +557,7 @@ export default {
         weixinNo: '',
         oldWeixinNo: weixinNo,
         teacherId,
-        courseType,
+        courseType: Sup_scheduleSubmit[courseType],
         period,
         category: ''
       }
@@ -579,8 +579,8 @@ export default {
     },
     /** 保存更改的老师微信号 */
     saveEditTeacherWeChat(params) {
-      const { saveTrialVolumeTeacherWeChat: updateWX } = this.$http.Operating
-      updateWX(params).then((res) => {
+      const { saveTrialVolumeTeacherWeChat } = this.$http.Operating
+      saveTrialVolumeTeacherWeChat(params).then((res) => {
         const {
           payload: { wechatId = '', wechatNo = '' }
         } = res
@@ -618,8 +618,9 @@ export default {
         // levels: level.join(), // 销售等级
         teacherWechatIds, // 微信号搜索
         courseVersion: version, // 随材版本
-        courseType: courseType || this.$route.params.courseType // 课程类型
+        courseType: Sup_scheduleSubmit[this.$route.params.courseType] // 课程类型
       })
+
       this.getVolumeList()
     },
     // 包装列表接口返回的数据

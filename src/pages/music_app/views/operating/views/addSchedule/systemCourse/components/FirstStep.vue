@@ -54,7 +54,11 @@
                   "
                 ></el-date-picker>
               </el-form-item>
-              <span class="time-space" v-if="courseType == '0' || courseType == '2'">至</span>
+              <span
+                class="time-space"
+                v-if="courseType == '0' || courseType == '2'"
+                >至</span
+              >
               <el-form-item
                 label
                 prop="attendClassTimeEnd"
@@ -64,7 +68,6 @@
                   size="small"
                   v-model="formInfo.attendClassTimeEnd"
                   type="date"
-                  disabled
                   placeholder="结课时期"
                   :picker-options="pickerBeginDateAfter"
                   value-format="timestamp"
@@ -259,7 +262,7 @@
 </template>
 <script>
 import { Loading } from 'element-ui'
-import { Sup_scheduleIndex,Sup_scheduleSubmit } from '@/utils/supList'
+import { Sup_scheduleIndex, Sup_scheduleSubmit } from '@/utils/supList'
 export default {
   props: ['stepStatus'],
   data() {
@@ -371,16 +374,19 @@ export default {
     let { period = '', courseType = 0 } = this.$route.params
     this.period = period
     this.courseType = courseType
-   // 双周体验课  5,6,0,1
-    // 系统课  3,6
-    this.courseType == 0 || this.courseType == 2
+    // 双周体验课  5,6,0,1
+    // 系统课  2,6
+    this.courseType !== '2'
       ? (this.passWeek = [5, 6, 0, 1])
       : (this.passWeek = [2, 6])
 
     if (+period) {
       // 编辑页面 TODO:
       try {
-        const _data = await this.getScheduleFirstStep({ period, courseType:Sup_scheduleSubmit[courseType] })
+        const _data = await this.getScheduleFirstStep({
+          period,
+          courseType: Sup_scheduleSubmit[courseType],
+        })
         const {
           courseDay = '',
           endCourseDay = '',
@@ -409,20 +415,21 @@ export default {
         // this.startClassChange()
         this.sellCycleTimeChange(sellCycleTime)
         // this.attendClassTimeChange(this.formInfo.attendClassTime)
-      } catch (err) {
-      }
+      } catch (err) {}
     }
   },
   methods: {
     // 开课时期
     startClassChange(courseDay) {
       this.formInfo.attendClassTimeStart = courseDay || ''
-      if (this.courseType == '0') {
-        this.endClassChange(courseDay + 13 * 24 * 3600 * 1000)
+      if(!courseDay){
+        this.endClassChange()
+        return
       }
-
-       if (this.courseType == '2') {
-        this.endClassChange(courseDay + 6 * 24 * 3600 * 1000)
+      if (this.courseType == '2') {
+        this.endClassChange(courseDay + 365 * 24 * 3600 * 1000)
+      }else{
+        this.endClassChange(courseDay + 13 * 24 * 3600 * 1000)
       }
     },
     // 节课时期

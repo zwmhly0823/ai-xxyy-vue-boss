@@ -55,6 +55,12 @@
           autocomplete="off"
         ></el-input>
       </el-form-item>
+      <el-form-item label="实名" :label-width="formLabelWidth">
+        <el-radio-group v-model="form.realNameStatus">
+          <el-radio :label="1">已实名</el-radio>
+          <el-radio :label="0">未实名</el-radio>
+        </el-radio-group>
+      </el-form-item>
       <el-form-item label="启用状态" required :label-width="formLabelWidth">
         <el-radio-group v-model="form.status">
           <el-radio :label="0">启用</el-radio>
@@ -97,6 +103,7 @@ export default {
       formLabelWidth: '80px',
       params: {},
       form: {
+        realNameStatus: '', //实名状态：0 未实名；1 已实名
         weixinNo: '',
         remark: '',
         status: 0
@@ -112,19 +119,21 @@ export default {
       this.dkey = Date.now()
       this.tkey = Date.now() + 1
       if (data) {
-        const { weixinNo, departmentId, remark, teacherId, status, id } = data
-        Object.assign(this.form, { weixinNo, remark, status })
+        const { weixinNo, departmentId, remark, teacherId, status, id, realNameStatus} = data
+        Object.assign(this.form, { weixinNo, remark, status, realNameStatus })
         Object.assign(this.params, {
           teacherId: teacherId !== '0' ? teacherId : '',
           departmentId
         })
         this.id = id
+        this.title = '编辑水军微信'
       } else {
-        this.form = { weixinNo: '', remark: '', status: 0 }
+        this.form = { weixinNo: '', remark: '', status: 0, realNameStatus: '' }
         this.params = {}
         this.id = ''
+        this.title = '新增水军微信'
       }
-      console.log(this.params)
+      
     }
   },
   methods: {
@@ -167,7 +176,7 @@ export default {
       this.loading = true
       this.$http.Teacher.saveWaterArmy(params)
         .then((res) => {
-          console.log(res, 'save')
+          
           if (res.code !== 0) {
             return
           }

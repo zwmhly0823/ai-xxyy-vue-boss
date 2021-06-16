@@ -426,7 +426,7 @@ export default {
   },
   computed: {
     resetSearch() {
-      console.log(this.nowDate, 'this.nowDate')
+      
       return this.nowDate
     }
   },
@@ -459,7 +459,7 @@ export default {
       if (this.monthAccomplish === '' || this.monthAccomplish === undefined) {
         this.$delete(this.searchQuery, 'month_complete_course_count')
       }
-      console.log(this.searchQuery)
+      
       this.$emit('search', this.searchQuery)
     },
     /**
@@ -467,7 +467,7 @@ export default {
      */
     getSearchData(key, res) {
       const search = res && res[0]
-      console.log(search, '=========================', key)
+      
       if (search) {
         if (key === 'currentsuper') {
           const r = search[key].map((item) => `s${item}`)
@@ -526,7 +526,7 @@ export default {
             ...this.searchQuery,
             ...search
           }
-          console.log(this.searchQuery, 'this.searchQuery')
+          
         }
         // 查询时间处理格式
         else {
@@ -540,6 +540,7 @@ export default {
         }
       } else {
         // delete this.searchQuery[key]
+        delete this.searchQuery.id
         this.$delete(this.searchQuery, key)
         if (key === 'dateTime') {
           this.$delete(this.searchQuery, 'startTime')
@@ -555,8 +556,8 @@ export default {
         this.$delete(this.searchQuery, key)
       }
       this.$delete(this.searchQuery, 'sys_label')
-      console.log(search, 'getSearchData')
-      console.log(this.searchQuery, 'this.searchQuery')
+      
+      
       this.$emit('search', this.searchQuery)
     },
     // getLabelName(labelname) {
@@ -578,7 +579,7 @@ export default {
       this.monthAccomplish = ''
       this.searchQuery = {}
       this.toggleawayText = '更多筛选'
-      console.log(this.searchQuery, 'searchQuery')
+      
       this.$emit('search', {})
     },
     // 搜索框收缩

@@ -127,7 +127,7 @@ export default {
      */
     getSearchData(key, res) {
       const search = res && res[0]
-      console.log(key, search)
+      
 
       if (search) {
         // 系统课转化
@@ -167,6 +167,7 @@ export default {
           ...search
         }
       } else {
+        delete this.searchQuery.id
         this.$delete(this.searchQuery, key)
         if (key === 'last_department_ids' || key === 'last_teacher_ids') {
           this.$delete(this.searchQuery, `${key}.like`)

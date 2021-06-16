@@ -9,6 +9,7 @@
  -->
 <template>
   <div class="container">
+    <phone-search v-if="tabIndex != 2" @result="getSearch" />
     <have-riview-search
       v-if="tabIndex == 2"
       @result="getSearch"
@@ -23,12 +24,7 @@
           <div class="task-image-container" v-if="scope.row.task_image">
             <div
               class="task-image"
-              @click="
-                handleViewLarge(
-                  imgUrl +
-                    scope.row.task_video
-                )
-              "
+              @click="handleViewLarge(imgUrl + scope.row.task_video)"
             >
               <img
                 :src="`${imgUrl}${scope.row.task_image}?x-oss-process=image/resize,l_100`"
@@ -79,7 +75,7 @@
       <el-table-column label="点评内容" align="center" width="180">
         <template slot-scope="scope">
           <p v-if="!scope.row.sound_comment">-</p>
-          
+
           <div v-else class="audio-container">
             <audio
               :src="imgUrl + scope.row.sound_comment"
@@ -98,9 +94,20 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="用户信息" align="center" width="180">
+      <el-table-column label="用户信息" align="center" width="300">
         <template slot-scope="scope">
-          <div>{{ scope.row.userExtends.mobile }}</div>
+          <div>
+            <span style="color: #2a75ed;">
+              {{ scope.row.userExtends.mobile }}
+            </span>
+            <span>
+              <i
+                style="margin-left: 10px;color: #2a75ed;"
+                class="el-icon-view mg-l-5"
+                @click="getNumber(scope.row.student_id)"
+              ></i>
+            </span>
+          </div>
           <div>{{ scope.row.userExtends.wechat_nikename }}</div>
         </template>
       </el-table-column>
@@ -277,6 +284,7 @@ export default {
     MPagination: () => import('@/components/MPagination/index.vue'),
     HaveRiviewSearch: () =>
       import('../../../components/search/haveRiviewSearch.vue'),
+    phoneSearch: () => import('../../../components/search/phoneSearch.vue'),
   },
   data() {
     return {
@@ -297,12 +305,31 @@ export default {
       loading: true,
       searchParams: {},
       currentVideo: '',
+      operatorId: '',
     }
   },
   mounted() {
     this.initList()
+    this.operatorId = JSON.parse(localStorage.getItem('staff')).id
   },
   methods: {
+    //获取学生号码
+    getNumber(uid) {
+      this.$http.User.getUserPhoneNumber({
+        uid: uid,
+        teacherId: this.operatorId,
+      }).then((res) => {
+        if (res.code == 0) {
+          this.list.forEach((item, index) => {
+            if (item.student_id == uid) {
+              this.list[index].userExtends.mobile = res.payload.mobile
+            }
+          })
+        } else {
+          this.$message.error('网络异常，请稍后再试！')
+        }
+      })
+    },
     async initList(params = this.searchParams, number = this.query.pageNum) {
       // 增加 已点评 状态
 
@@ -344,7 +371,6 @@ export default {
         //   this.loading = false
         // }
       } catch (error) {
-        console.log(error)
         this.loading = false
       }
     },
@@ -380,8 +406,8 @@ export default {
      */
     getSearch(res) {
       this.searchParams = res || {}
-      if(res.rank_status ==1) {
-         Object.assign(this.searchParams,{rank_status:{gt:0}})
+      if (res.rank_status == 1) {
+        Object.assign(this.searchParams, { rank_status: { gt: 0 } })
       }
       this.query.pageNum = 1
       this.initList()
