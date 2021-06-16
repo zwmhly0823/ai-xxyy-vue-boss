@@ -239,12 +239,6 @@ export default {
         week: lesson + week,
         sort: this.finishLessonData.finishClassSort
       }
-      if (this.limit.isSpecial9dot9) {
-        queryParams.type = 2
-      }
-      if (this.teamDetail.category === 19) {
-        queryParams.team_category = 19
-      }
       queryParams = JSON.stringify(queryParams)
       this.$http.Team.finishClassList(queryParams).then((res) => {
         if (res.error) {
