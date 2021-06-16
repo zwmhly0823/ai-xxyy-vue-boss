@@ -1,10 +1,10 @@
 <template>
   <div class="app">
     <div class="classhead">
-      <img @load="loaded()" src="@/assets/images/FinishClassHead.png" alt="" />
+      <img src="@/assets/images/FinishClassHead.png" alt="" />
     </div>
-    <div v-if="false" class="classconent">
-      <img @load="loaded()" src="@/assets/images/Finishclasslist.png" class="img" alt="" />
+    <div class="classconent">
+      <img src="@/assets/images/Finishclasslist.png" class="img" alt="" />
       <div class="content">
         <table>
           <tr class="title">
@@ -23,7 +23,7 @@
             :key="index"
             height="52px;"
           >
-            <!-- <td>
+            <td>
               <img
                 :src="`${
                   item.head
@@ -34,7 +34,7 @@
                 crossOrigin="anonymous"
               />
               <span> {{ item.username }}</span>
-            </td> -->
+            </td>
             <td>
               <img
                 src="@/assets/images/Stars.png"
