@@ -23,10 +23,10 @@
             :key="index"
             height="52px;"
           >
-            <td>
+            <!-- <td>
               <img
                 :src="`${
-                  imgUrl + '/' + item.head
+                  item.head
                 }?x-oss-process=image/resize,l_100&t=${+new Date().getTime()}`"
                 alt=""
                 @load="loaded(index)"
@@ -34,7 +34,7 @@
                 crossOrigin="anonymous"
               />
               <span> {{ item.username }}</span>
-            </td>
+            </td> -->
             <td>
               <img
                 src="@/assets/images/Stars.png"
@@ -138,8 +138,6 @@
 </template>
 
 <script>
-import contants from '@/utils/contants'
-const { OSS_IMG_BASE_URL } = contants
 export default {
   props: {
     listData: {
@@ -158,7 +156,6 @@ export default {
 
   data() {
     return {
-      imgUrl: OSS_IMG_BASE_URL,
       isLoaded: false,
       num: 0,
     }
@@ -166,13 +163,6 @@ export default {
 
   computed: {
     listinfo() {
-      if (this.listData && this.listData.length > 0) {
-        this.listData.forEach((item, i) => {
-          if (this.listData[i].head) {
-            this.listData[i].head = this.listData[i].head.split('com/')[1]
-          }
-        })
-      }
       return this.listData || []
     },
     listTitle() {
