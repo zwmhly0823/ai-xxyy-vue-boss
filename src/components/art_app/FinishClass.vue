@@ -4,7 +4,7 @@
       <img src="@/assets/images/FinishClassHead.png" alt="" />
     </div>
     <div class="classconent">
-      <img src="@/assets/images/Finishclasslist.png" class="img" alt="" />
+      <img @load="loaded(index)" src="@/assets/images/Finishclasslist.png" class="img" alt="" />
       <div class="content">
         <table>
           <tr class="title">
