@@ -25,10 +25,12 @@
           >
             <td>
               <img
-                :src="`${item.head}?x-oss-process=image/resize,l_100&t=${+new Date().getTime()}`"
+                :src="`${
+                  imgUrl + '/' + item.head
+                }?x-oss-process=image/resize,l_100&t=${+new Date().getTime()}`"
                 alt=""
                 @load="loaded(index)"
-                style="vertical-align:middle;width:51px;height:51px;"
+                style="vertical-align: middle; width: 51px; height: 51px"
                 crossOrigin="anonymous"
               />
               <span> {{ item.username }}</span>
@@ -136,30 +138,41 @@
 </template>
 
 <script>
+import contants from '@/utils/contants'
+const { OSS_IMG_BASE_URL } = contants
 export default {
   props: {
     listData: {
       type: Array,
-      default: null
+      default: null,
     },
     weekNum: {
       type: String,
-      default: ''
+      default: '',
     },
     finish: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
 
   data() {
     return {
+      imgUrl: OSS_IMG_BASE_URL,
       isLoaded: false,
-      num: 0
+      num: 0,
     }
   },
+
   computed: {
     listinfo() {
+      if (this.listData && this.listData.length > 0) {
+        this.listData.forEach((item, i) => {
+          if (this.listData[i].head) {
+            this.listData[i].head = this.listData[i].head.split('com/')[1]
+          }
+        })
+      }
       return this.listData || []
     },
     listTitle() {
@@ -169,7 +182,7 @@ export default {
     WDLIST() {
       if (!this.listData.length) return []
       return this.listData[0].completeArr || []
-    }
+    },
   },
 
   methods: {
@@ -183,8 +196,8 @@ export default {
         this.isLoaded = true
         this.$emit('isLoad', this.isLoaded)
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
