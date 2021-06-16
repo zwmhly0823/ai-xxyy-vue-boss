@@ -41,17 +41,13 @@
     </el-dialog>
     <!-- 生成完课榜图片-->
     <div v-for="(item, index) in finishLessonData.childListData" :key="index + 1" class="finishBox">
-      <slot>
         <!-- 需要转换的html -->
         <finishclass @isLoad="canvasStart" :listData="item" :weekNum="finishLessonData.weekNum"></finishclass>
-      </slot>
     </div>
     <!-- 生成作品展图片 -->
     <div class="exhibitionBox" v-for="(item, index) in ExhibitionData.childListData" :key="index">
-      <slot>
         <!-- 需要转换的html -->
         <exhibition @isload="CanvasStart" :listData="item"></exhibition>
-      </slot>
     </div>
   </div>
 </template>

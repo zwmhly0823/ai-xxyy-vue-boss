@@ -33,10 +33,26 @@
       <el-table-column label="收货人信息" width="250">
         <template slot-scope="scope">
           <div>
-            {{ `${scope.row.receipt_name}-${scope.row.receipt_tel}` }}<br />
-            {{
-              `${scope.row.province}-${scope.row.city}-${scope.row.area}-${scope.row.address_detail}`
-            }}
+            <p style="display: flex">
+              <span> {{ `${scope.row.receipt_name}` }}<br /> </span>
+              <span style="color: #2a75ed">
+                {{ scope.row.receipt_tel }}
+              </span>
+              <span>
+                <i
+                  v-if="scope.row.receipt_tel"
+                  style="margin-left: 10px; color: #2a75ed"
+                  class="el-icon-view mg-l-5 trail"
+                  @click="getNumber(scope.row.id)"
+                ></i>
+              </span>
+            </p>
+
+            <p>
+              {{
+                `${scope.row.province}-${scope.row.city}-${scope.row.area}-${scope.row.address_detail}`
+              }}
+            </p>
           </div>
           <div>
             <el-button
@@ -146,13 +162,15 @@ import logisticsForm from '@/pages/music_app/views/studentTeam/components/TabPan
 export default {
   name: 'logistics',
   props: {
-    Tabledata: {},
+    Tabledata:[],
   },
   components: {
     modifyAddress,
     logisticsForm,
   },
-  mounted() {},
+  mounted() {
+     this.operatorId = JSON.parse(localStorage.getItem('staff')).id
+  },
   data() {
     return {
       address_id: '',
@@ -170,9 +188,27 @@ export default {
         7: '兑换物流',
         8: '兑换物流',
       },
+      operatorId: '',
     }
   },
   methods: {
+    //获取学生号码
+    getNumber(uid, type) {
+      this.$http.User.getExpressrPhoneNumber({
+        uid: uid,
+        teacherId: this.operatorId,
+      }).then((res) => {
+        if (res.code == 0) {
+          this.Tabledata.forEach((item, index) => {
+            if (item.id == uid) {
+              this.Tabledata[index].receipt_tel = res.payload.mobile
+            }
+          })
+        } else {
+          this.$message.error('网络异常，请稍后再试！')
+        }
+      })
+    },
     // 鼠标进入显示操作栏
     handleMouseEnter(row) {
       this.current = row
