@@ -281,7 +281,7 @@ import SearchStage from '@/components/MSearch/searchItems/searchStage.vue'
 export default {
   data() {
     var expvalidator = (rule, value, callback) => {
-      console.log(rule, value, '----------')
+      
       if (
         value.length > 0 ||
         this.activityFrom.systemTerms.length > 0 ||
@@ -293,7 +293,7 @@ export default {
       }
     }
     var sysvalidator = (rule, value, callback) => {
-      console.log(rule, value, '----------')
+      
       if (
         value.length > 0 ||
         this.activityFrom.trialTerms.length > 0 ||
@@ -305,7 +305,7 @@ export default {
       }
     }
     var payvalidator = (rule, value, callback) => {
-      console.log(rule, value, '----------')
+      
       if (
         value.length > 0 ||
         this.activityFrom.trialTerms.length > 0 ||
@@ -317,7 +317,7 @@ export default {
       }
     }
     var giftOptionvalidator = (rule, value, callback) => {
-      console.log(rule, value, '----------')
+      
       if (this.tableData.length > 0) {
         callback() // 自定义校验-以获取到保存到商品信息
       } else {
@@ -359,6 +359,14 @@ export default {
         {
           value: '4',
           label: '续费半年',
+        },
+         {
+          value: '5',
+          label: '首单半年无乐器',
+        },
+        {
+          value: '6',
+          label: '首单一年无乐器',
         },
         // {
         //   value: '1',
@@ -437,21 +445,21 @@ export default {
   },
   watch: {
     // trialTerms(val, old) {
-    //   console.log('trialTerms=====', val, old)
+    //   
     // },
     // isTrial(val, old) {
     //   if (!val) {
-    //     console.log('11111')
+    //     
     //     this.activityFrom.trialTerms = []
     //   }
-    //   console.log(val, old)
+    //   
     // },
     // isSystem(val, old) {
     //   if (!val) {
-    //     console.log('11111')
+    //     
     //     this.activityFrom.systemTerms = []
     //   }
-    //   console.log(val, old)
+    //   
     // },
     promotionsRange(val, old) {
       if (val !== '2') {
@@ -460,7 +468,7 @@ export default {
         this.activityFrom.trialTerms = []
         this.activityFrom.systemTerms = []
       }
-      console.log(val, old, 'val-old-payOrderDate')
+      
     },
   },
   created() {
@@ -472,7 +480,7 @@ export default {
           item.label = item.name
         })
         this.productList = res.payload
-        console.log(res, '=------=')
+        
       }
     })
     // 新增与编辑逻辑
@@ -504,9 +512,9 @@ export default {
         this.activityFrom.desc = res.payload.desc
         this.activityFrom.businessType = res.payload.orderTypes.split(',')
         this.tableData = res.payload.gifts
-        console.log(res, this.activityFrom, '====')
+        
       })
-      console.log(this.promotionsId)
+      
     }
     this.calcTableHeight()
   },
@@ -515,14 +523,14 @@ export default {
   methods: {
     // 获取活动范围 体验课系统课拍戏
     getSchedul(key, res, type) {
-      console.log(res, 'ressssssss')
+      
       if (type === 0) {
         this.activityFrom.trialTerms = res[0].term0 || []
-        console.log(this.activityFrom.trialTerms, '-=-=')
+        
       } else {
         this.activityFrom.systemTerms = res[0].term1 || []
       }
-      console.log(key, res[0], type, '11212121212121')
+      
     },
     // 获取详情内容
     async getPromotionsById(promotionsId) {
@@ -532,12 +540,12 @@ export default {
         })
         return tmpInfo
       } catch (err) {
-        console.log(err)
+        
       }
     },
     // 组合商品
     combinationPro(data) {
-      console.log(data, 'data====')
+      
       const obj = {
         giftsName: '',
         giftsType: '',
@@ -565,11 +573,11 @@ export default {
           }
         }
       }
-      console.log(obj, '====obj====')
-      // console.log(obj.giftsName, 'giftsName')
-      // console.log(obj.giftsType, 'giftsType')
-      // console.log(obj.giftsPrice, 'giftsPrice')
-      // console.log(obj.expressCount, 'giftsPrice')
+      
+      // 
+      // 
+      // 
+      // 
 
       obj.giftsName = obj.giftsName.substring(1)
       obj.giftsType = obj.giftsType.substring(1)
@@ -583,7 +591,7 @@ export default {
       } else if (obj.giftsType.includes('VIRTUAL_GOODS')) {
         obj.giftsType = '虚拟'
       }
-      console.log(obj, 'obj')
+      
       this.$message.success('组合商品成功')
       this.tableData.push(obj)
     },
@@ -593,7 +601,7 @@ export default {
         const Info = await this.$http.Approval.getProductByTypes({})
         return Info
       } catch (err) {
-        console.log(err)
+        
       }
     },
     // 选择商品
@@ -650,18 +658,18 @@ export default {
           this.saveAndUpdatePromotions(obj).then((res) => {
             if (res.code === 0) {
               this.$message.success('保存成功')
-              console.log(res)
+              
               this.$router.push({
                 path: '/activityManagement/',
               })
             }
-            console.log(res)
+            
           })
-          console.log(obj)
-          console.log('valid====', valid)
-          console.log(this.activityFrom)
+          
+          
+          
         } else {
-          console.log('error submit!!')
+          
           return false
         }
       })
@@ -676,12 +684,12 @@ export default {
         const tmpInfo = await this.$http.Operating.saveAndUpdatePromotions(data)
         return tmpInfo
       } catch (err) {
-        console.log(err)
+        
       }
     },
     /** 表格删除某一行确认按钮 */
     confirmDelRow(row, _index) {
-      console.log('删除了', row, _index)
+      
       this.tableData.forEach((item, index) => {
         if (index === _index) {
           this.tableData.splice(index, 1)
