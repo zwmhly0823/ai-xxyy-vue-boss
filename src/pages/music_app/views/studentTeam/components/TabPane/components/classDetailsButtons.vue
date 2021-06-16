@@ -226,7 +226,7 @@ export default {
       // 执行 截图操作并保存
     },
     // 请求完课榜 - 接口数据
-   getStuRankingList(teamId, lesson, week, desc) {
+    getStuRankingList(teamId, lesson, week, desc) {
       if (!teamId || !lesson || !week) {
         return
       }
@@ -234,20 +234,10 @@ export default {
         lock: true,
         text: '图片正在生成中'
       })
-      let queryParams = {
-        team_id: teamId,
-        week: lesson + week,
-        sort: this.finishLessonData.finishClassSort
-      }
-      queryParams = JSON.stringify(queryParams)
+      const queryParams = `{"team_id" : ${teamId}, "week" : "${lesson +
+        week}", "sort" : "${this.finishLessonData.finishClassSort}"}`
       this.$http.Team.finishClassList(queryParams).then((res) => {
         if (res.error) {
-          this.$loading().close()
-          return
-        }
-        if (!res?.data?.getStuComRankingList?.length) {
-          this.$message.error('暂无数据')
-          this.$loading().close()
           return
         }
         // 生成完课榜（多页）
