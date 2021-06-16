@@ -281,7 +281,6 @@ import SearchStage from '@/components/MSearch/searchItems/searchStage.vue'
 export default {
   data() {
     var expvalidator = (rule, value, callback) => {
-      
       if (
         value.length > 0 ||
         this.activityFrom.systemTerms.length > 0 ||
@@ -293,7 +292,6 @@ export default {
       }
     }
     var sysvalidator = (rule, value, callback) => {
-      
       if (
         value.length > 0 ||
         this.activityFrom.trialTerms.length > 0 ||
@@ -305,7 +303,6 @@ export default {
       }
     }
     var payvalidator = (rule, value, callback) => {
-      
       if (
         value.length > 0 ||
         this.activityFrom.trialTerms.length > 0 ||
@@ -317,7 +314,6 @@ export default {
       }
     }
     var giftOptionvalidator = (rule, value, callback) => {
-      
       if (this.tableData.length > 0) {
         callback() // 自定义校验-以获取到保存到商品信息
       } else {
@@ -360,7 +356,7 @@ export default {
           value: '4',
           label: '续费半年',
         },
-         {
+        {
           value: '5',
           label: '首单半年无乐器',
         },
@@ -445,21 +441,21 @@ export default {
   },
   watch: {
     // trialTerms(val, old) {
-    //   
+    //
     // },
     // isTrial(val, old) {
     //   if (!val) {
-    //     
+    //
     //     this.activityFrom.trialTerms = []
     //   }
-    //   
+    //
     // },
     // isSystem(val, old) {
     //   if (!val) {
-    //     
+    //
     //     this.activityFrom.systemTerms = []
     //   }
-    //   
+    //
     // },
     promotionsRange(val, old) {
       if (val !== '2') {
@@ -468,7 +464,6 @@ export default {
         this.activityFrom.trialTerms = []
         this.activityFrom.systemTerms = []
       }
-      
     },
   },
   created() {
@@ -480,7 +475,6 @@ export default {
           item.label = item.name
         })
         this.productList = res.payload
-        
       }
     })
     // 新增与编辑逻辑
@@ -512,9 +506,7 @@ export default {
         this.activityFrom.desc = res.payload.desc
         this.activityFrom.businessType = res.payload.orderTypes.split(',')
         this.tableData = res.payload.gifts
-        
       })
-      
     }
     this.calcTableHeight()
   },
@@ -523,14 +515,11 @@ export default {
   methods: {
     // 获取活动范围 体验课系统课拍戏
     getSchedul(key, res, type) {
-      
       if (type === 0) {
         this.activityFrom.trialTerms = res[0].term0 || []
-        
       } else {
         this.activityFrom.systemTerms = res[0].term1 || []
       }
-      
     },
     // 获取详情内容
     async getPromotionsById(promotionsId) {
@@ -539,13 +528,10 @@ export default {
           promotionsId,
         })
         return tmpInfo
-      } catch (err) {
-        
-      }
+      } catch (err) {}
     },
     // 组合商品
     combinationPro(data) {
-      
       const obj = {
         giftsName: '',
         giftsType: '',
@@ -573,11 +559,11 @@ export default {
           }
         }
       }
-      
-      // 
-      // 
-      // 
-      // 
+
+      //
+      //
+      //
+      //
 
       obj.giftsName = obj.giftsName.substring(1)
       obj.giftsType = obj.giftsType.substring(1)
@@ -591,7 +577,7 @@ export default {
       } else if (obj.giftsType.includes('VIRTUAL_GOODS')) {
         obj.giftsType = '虚拟'
       }
-      
+
       this.$message.success('组合商品成功')
       this.tableData.push(obj)
     },
@@ -600,9 +586,7 @@ export default {
       try {
         const Info = await this.$http.Approval.getProductByTypes({})
         return Info
-      } catch (err) {
-        
-      }
+      } catch (err) {}
     },
     // 选择商品
     chooseProduct(activityFrom) {
@@ -658,18 +642,13 @@ export default {
           this.saveAndUpdatePromotions(obj).then((res) => {
             if (res.code === 0) {
               this.$message.success('保存成功')
-              
+
               this.$router.push({
                 path: '/activityManagement/',
               })
             }
-            
           })
-          
-          
-          
         } else {
-          
           return false
         }
       })
@@ -683,13 +662,10 @@ export default {
       try {
         const tmpInfo = await this.$http.Operating.saveAndUpdatePromotions(data)
         return tmpInfo
-      } catch (err) {
-        
-      }
+      } catch (err) {}
     },
     /** 表格删除某一行确认按钮 */
     confirmDelRow(row, _index) {
-      
       this.tableData.forEach((item, index) => {
         if (index === _index) {
           this.tableData.splice(index, 1)
@@ -700,8 +676,8 @@ export default {
     calcTableHeight() {
       this.$nextTick(() => {
         // Element.getBoundingClientRect() 方法返回元素的大小及其相对于视口的位置。
-        const tableTopHeight = this.$refs.tableContainer.getBoundingClientRect()
-          .y
+        const tableTopHeight =
+          this.$refs.tableContainer.getBoundingClientRect().y
         //  document.body.clientHeight 返回body元素内容的高度
         const tableHeight = document.body.clientHeight - tableTopHeight - 120
         this.tableHeight = tableHeight + ''
