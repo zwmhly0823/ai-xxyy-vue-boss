@@ -31,7 +31,6 @@
                 alt=""
                 @load="loaded(index)"
                 style="vertical-align: middle; width: 51px; height: 51px"
-                crossOrigin="anonymous"
               />
               <span> {{ item.username }}</span>
             </td>
