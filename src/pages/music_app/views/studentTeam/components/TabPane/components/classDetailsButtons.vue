@@ -201,7 +201,7 @@ export default {
         return
       }
       // 获取第几周的数据
-      await this.getStuRankingList(
+        this.getStuRankingList(
         this.finishLessonData.teamId,
         this.finishLessonData.studentLesson,
         this.finishLessonData.weekNum
