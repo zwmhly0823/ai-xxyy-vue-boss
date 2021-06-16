@@ -248,5 +248,26 @@ export default {
                     })
             })
         }
-    }
+    },
+    /**
+     * @description 渠道订单导入
+     */
+     channelOrderTemplate() {
+      if (judgeToken()) {
+          return new Promise((resolve, reject) => {
+              axios({
+                      method: 'get',
+                      url: `/api/b/v1/download/channelOrderTemplate`,
+                      responseType: 'blob',
+                      headers: getHeaders(),
+                  })
+                  .then((res) => {
+                      resolve(res)
+                  })
+                  .catch((err) => {
+                      reject(err)
+                })
+          })
+      }
+  }
 }
