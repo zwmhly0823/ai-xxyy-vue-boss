@@ -315,15 +315,15 @@ export default {
             subject: 'MUSIC_APP',
             createUser: this.ruleForm.createUser,
             contractId:
-              this.ruleForm.export !== '0'
+              this.ruleForm.export !== 0
                 ? 0
                 : this.tableData.map((item) => item.contract.id)[0],
             contractName:
-              this.ruleForm.export !== '0'
+              this.ruleForm.export !== 0
                 ? null
                 : this.tableData.map((item) => item.contract.contractName)[0],
             contractBody:
-              this.ruleForm.export !== '0'
+              this.ruleForm.export !== 0
                 ? null
                 : this.tableData.map((item) => item.contract.contractBody)[0]
           }

@@ -126,7 +126,6 @@ export default {
     },
   },
   created() {
-    console.log(this.params_pending, 'params_pending')
     this.initPromotions()
   },
   data() {
@@ -139,9 +138,10 @@ export default {
       this.$emit('close-gift')
     },
     async initPromotions() {
-      let result = await this.$http.Backend.checkpriviles({ type: 'PROMOTIONS' })
-      if(result.status =='OK')
-      this.isPromotions = result.payload
+      let result = await this.$http.Backend.checkpriviles({
+        type: 'PROMOTIONS',
+      })
+      if (result.status == 'OK') this.isPromotions = result.payload
     },
     // 同意
     ensureReplenish() {
@@ -160,8 +160,6 @@ export default {
             staffId: this.staffId,
             staffName: this.staffName,
           }
-          console.log(params)
-          console.log(this.params_pending, 'params_pending')
           this.$http.Backend.isAggrePass(params)
             .then((res) => {
               if (res && res.payload) {
@@ -178,7 +176,6 @@ export default {
             })
         })
         .catch((err) => {
-          console.log(err)
         })
     },
     // 拒绝
