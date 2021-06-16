@@ -711,7 +711,7 @@ export default {
       if (data.labelText != '调整开课日期:') {
         this.newData = data.options[0].value
       }
-      if (data.labelText == '关联订单:' || data.labelText == '选择开课日期:') {
+      if (data.labelText == '关联订单:' || data.labelText == '调整开课日期:') {
         this.formData.targetClassName = ''
         this.formData.targetClassId = ''
       }

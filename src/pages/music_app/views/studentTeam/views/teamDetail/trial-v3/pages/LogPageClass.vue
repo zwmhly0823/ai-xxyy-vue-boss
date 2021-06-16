@@ -183,7 +183,7 @@ export default {
     },
     toDetail(id) {
       // console.log(id)
-      openBrowserTab(`/student-team/#/lessonDetail/${id}/${this.teamId}`)
+      openBrowserTab(`/music_app/#/lessonDetail/${id}/${this.teamId}`)
     }
   }
 }

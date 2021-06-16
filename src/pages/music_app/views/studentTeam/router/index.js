@@ -74,5 +74,17 @@
     component: () =>
       import(/* webpackChunkName: "student" */ '../views/teamDetail/index.vue')
   },
+  {
+    path: '/lessonDetail/:lessonId/:teamId',
+    name: 'lessonDetail',
+    meta: {
+      title: '课程详情'
+    },
+    hidden: true,
+    component: () =>
+      import(
+        /* webpackChunkName: "lessonDetail" */ '../views/teamDetail/trial-v3/pages/LogPageClassDetail.vue'
+      )
+  }
  ]
  export default routes;
