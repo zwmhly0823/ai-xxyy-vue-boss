@@ -25,17 +25,17 @@
           <div>
             <p style="display: flex">
               <span> {{ `${scope.row.receipt_name}` }}<br /> </span>
-              <span style="color: #2a75ed">
+              <span>
                 {{ scope.row.receipt_tel }}
               </span>
-              <span>
+              <!-- <span>
                 <i
                   v-if="scope.row.receipt_tel"
                   style="margin-left: 10px; color: #2a75ed"
                   class="el-icon-view mg-l-5 trail"
                   @click="getNumber(scope.row.id)"
                 ></i>
-              </span>
+              </span> -->
             </p>
 
             <p>
@@ -61,7 +61,7 @@
           <span v-else>-</span>
         </template>
       </el-table-column>
-      <el-table-column label="物流信息11111" prop="express_company" width="200">
+      <el-table-column label="物流信息" prop="express_company" width="200">
         <template slot-scope="scope">
           物流公司：{{
             scope.row.express_company ? scope.row.express_company : '-'

@@ -84,7 +84,7 @@
           </el-input>
         </template>
       </el-form-item>
-      <el-form-item label="附件" prop="attsUrl">
+      <el-form-item label="附件" prop="attsUrl" v-if="false">
         <el-upload
           action=""
           list-type="picture-card"
@@ -205,7 +205,7 @@ export default {
         adjustReason: '', // 理由
         targetClassName: '', // 选择班级名称
         targetClassId: '', // 选择班级id
-        attsUrl: '',
+        // attsUrl: '',
       },
       // 调期报错
       adjustDateError: false,
