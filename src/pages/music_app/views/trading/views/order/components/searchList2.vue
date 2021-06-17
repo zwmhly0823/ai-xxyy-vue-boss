@@ -630,8 +630,8 @@ export default {
             invoice_type_text: '开票类型',
             invoice_code: '发票号码',
             class_start_text: '开课时间',
-            // contract_body: '合同主体',
-            // settle_price: '实际结算课单价',
+            contract_body: '合同主体',
+            settle_price: '实际结算课单价',
           },
           fileName: `体验课订单导出-${fileTitleTime}`, // 文件名称
           query: JSON.stringify(query),

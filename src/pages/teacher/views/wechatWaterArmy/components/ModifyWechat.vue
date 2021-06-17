@@ -133,7 +133,7 @@ export default {
         this.id = ''
         this.title = '新增水军微信'
       }
-      console.log(this.params)
+      
     }
   },
   methods: {
@@ -176,7 +176,7 @@ export default {
       this.loading = true
       this.$http.Teacher.saveWaterArmy(params)
         .then((res) => {
-          console.log(res, 'save')
+          
           if (res.code !== 0) {
             return
           }

@@ -41,17 +41,13 @@
     </el-dialog>
     <!-- 生成完课榜图片-->
     <div v-for="(item, index) in finishLessonData.childListData" :key="index + 1" class="finishBox">
-      <slot>
         <!-- 需要转换的html -->
         <finishclass @isLoad="canvasStart" :listData="item" :weekNum="finishLessonData.weekNum"></finishclass>
-      </slot>
     </div>
     <!-- 生成作品展图片 -->
     <div class="exhibitionBox" v-for="(item, index) in ExhibitionData.childListData" :key="index">
-      <slot>
         <!-- 需要转换的html -->
         <exhibition @isload="CanvasStart" :listData="item"></exhibition>
-      </slot>
     </div>
   </div>
 </template>
@@ -132,7 +128,7 @@ export default {
     finishLessonList() {
       // 显示弹框
       this.dialogFormVisible = true
-      this.finishLessonData.teamId = this.teamDetail.id
+      this.finishLessonData.teamId =this.teamDetail && this.teamDetail.id
       const currentLesson = this.teamDetail.current_lesson.substring(0, 6)
       this.finishLessonData.studentLesson = currentLesson.substring(0, 4)
       this.finishLessonData.weekNum = currentLesson.substring(4, 6)
@@ -201,7 +197,7 @@ export default {
         return
       }
       // 获取第几周的数据
-      await this.getStuRankingList(
+        this.getStuRankingList(
         this.finishLessonData.teamId,
         this.finishLessonData.studentLesson,
         this.finishLessonData.weekNum

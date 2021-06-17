@@ -25,10 +25,12 @@
           >
             <td>
               <img
-                :src="`${item.head}?x-oss-process=image/resize,l_100&t=${+new Date().getTime()}`"
+                :src="`${
+                  item.head
+                }?x-oss-process=image/resize,l_100&t=${+new Date().getTime()}`"
                 alt=""
                 @load="loaded(index)"
-                style="vertical-align:middle;width:51px;height:51px;"
+                style="vertical-align: middle; width: 51px; height: 51px"
                 crossOrigin="anonymous"
               />
               <span> {{ item.username }}</span>
@@ -140,24 +142,25 @@ export default {
   props: {
     listData: {
       type: Array,
-      default: null
+      default: null,
     },
     weekNum: {
       type: String,
-      default: ''
+      default: '',
     },
     finish: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
 
   data() {
     return {
       isLoaded: false,
-      num: 0
+      num: 0,
     }
   },
+
   computed: {
     listinfo() {
       return this.listData || []
@@ -169,7 +172,7 @@ export default {
     WDLIST() {
       if (!this.listData.length) return []
       return this.listData[0].completeArr || []
-    }
+    },
   },
 
   methods: {
@@ -183,8 +186,8 @@ export default {
         this.isLoaded = true
         this.$emit('isLoad', this.isLoaded)
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
