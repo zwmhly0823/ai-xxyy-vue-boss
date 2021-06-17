@@ -35,17 +35,17 @@
           <div>
             <p style="display: flex">
               <span> {{ `${scope.row.receipt_name}` }}<br /> </span>
-              <span>
+              <span style="color: #2a75ed">
                 {{ scope.row.receipt_tel }}
               </span>
-              <!-- <span>
+              <span>
                 <i
                   v-if="scope.row.receipt_tel"
                   style="margin-left: 10px; color: #2a75ed"
                   class="el-icon-view mg-l-5 trail"
                   @click="getNumber(scope.row.id)"
                 ></i>
-              </span> -->
+              </span>
             </p>
 
             <p>

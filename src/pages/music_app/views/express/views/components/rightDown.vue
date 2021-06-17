@@ -236,13 +236,13 @@
             <div class="take">
               <div>
                 <span>{{ scope.row.receipt_name }}</span>
-                <span>{{ scope.row.receipt_tel }}</span>
-                <!-- <i
+                <span style="color: #2a75ed">{{ scope.row.receipt_tel }}</span>
+                <i
                   v-if="scope.row.receipt_tel"
                   style="margin-left: 10px; color: #2a75ed"
                   class="el-icon-view mg-l-5 trail"
                   @click="getExpressrPhoneNumber(scope.row.id)"
-                ></i> -->
+                ></i>
               </div>
               <div class="gray-text">
                 <span>{{ scope.row.province }}</span>
