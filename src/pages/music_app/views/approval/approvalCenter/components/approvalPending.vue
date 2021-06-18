@@ -2042,6 +2042,10 @@ export default {
                   label: '状态',
                   value: '待审批',
                 },
+                {
+                  label: '附件',
+                  value: payData.attsUrl
+                }
               ])
           }
           this.adjustDrawerData.loading = false
