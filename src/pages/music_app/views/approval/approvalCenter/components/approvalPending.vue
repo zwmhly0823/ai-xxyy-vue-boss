@@ -2044,7 +2044,8 @@ export default {
                 },
                 {
                   label: '附件',
-                  value: payData.attsUrl
+                  value: payData.attsUrl,
+                  type:"img"
                 }
               ])
           }
