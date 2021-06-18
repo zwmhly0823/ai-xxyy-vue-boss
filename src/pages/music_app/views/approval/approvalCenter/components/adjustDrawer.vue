@@ -73,9 +73,6 @@
             </div>
           </div>
         </template>
-        <template v-else>
-          <span>{{ dItem.value }}</span>
-        </template>
         <template v-if="dItem.type === 'img'">
           <template
             v-if="
@@ -102,6 +99,9 @@
             </el-image>
             <span v-else>未上传</span>
           </template>
+        </template>
+         <template v-else>
+          <span>{{ dItem.value }}</span>
         </template>
       </el-form-item>
     </el-form>
