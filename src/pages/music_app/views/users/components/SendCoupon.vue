@@ -11,13 +11,13 @@
     <div>
       <el-dialog
         class="students-popup-dialog"
-        title="发放优惠卷"
+        title="发放优惠券"
         :visible.sync="issueCoupons"
         width="30%"
         :append-to-body="true"
       >
         <el-form label-width="100px">
-          <el-form-item label="选择优惠卷:">
+          <el-form-item label="选择优惠券:">
             <el-select
               v-model="value"
               :placeholder="
