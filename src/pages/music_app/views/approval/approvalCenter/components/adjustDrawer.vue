@@ -24,34 +24,7 @@
         :label="dItem.label"
         :label-width="adjustDrawerData.width"
       >
-        <template v-if="dItem.type === 'img'">
-          <template
-            v-if="
-              dItem.value.indexOf('mp4') > -1 ||
-              dItem.value.indexOf('mov') > -1 ||
-              dItem.value.indexOf('flv') > -1 ||
-              dItem.value.indexOf('rmvb') > -1
-            "
-          >
-            <video
-              style="width: 220px; height: 120px"
-              :src="dItem.value"
-              controls
-            ></video>
-          </template>
-          <template v-else>
-            <el-image
-              v-if="dItem.value"
-              style="width: 220px; height: 120px"
-              :src="dItem.value"
-              fit="contain"
-              :preview-src-list="[dItem.value]"
-            >
-            </el-image>
-            <span v-else>未上传</span>
-          </template>
-        </template>
-        <template v-else-if="dItem.label === '用户电话'">
+        <template v-if="dItem.label === '用户电话'">
           <el-link
             v-if="!is3d"
             type="primary"
@@ -100,7 +73,34 @@
             </div>
           </div>
         </template>
-        <template v-else>
+        <template v-if="dItem.type === 'img'">
+          <template
+            v-if="
+              dItem.value.indexOf('mp4') > -1 ||
+              dItem.value.indexOf('mov') > -1 ||
+              dItem.value.indexOf('flv') > -1 ||
+              dItem.value.indexOf('rmvb') > -1
+            "
+          >
+            <video
+              style="width: 220px; height: 120px"
+              :src="dItem.value"
+              controls
+            ></video>
+          </template>
+          <template v-else>
+            <el-image
+              v-if="dItem.value"
+              style="width: 220px; height: 120px"
+              :src="dItem.value"
+              fit="contain"
+              :preview-src-list="[dItem.value]"
+            >
+            </el-image>
+            <span v-else>未上传</span>
+          </template>
+        </template>
+         <template v-else>
           <span>{{ dItem.value }}</span>
         </template>
       </el-form-item>

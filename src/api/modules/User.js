@@ -1882,4 +1882,11 @@ export default {
 
     )
   },
+   // 获取学生手机号
+  getExpressrPhoneNumber(params) {
+    const { uid, teacherId } = params
+    return axios.get(
+      `/api/ex/v1/expressAccessRecords/queryReceiptTel?subject=MUSIC_APP&expressId=${uid}&operatorId=${teacherId}`
+    )
+  },
 }

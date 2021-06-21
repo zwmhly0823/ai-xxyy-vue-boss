@@ -146,6 +146,7 @@
           :http-request="upload"
           :on-change="handleChange"
           :file-list="fileList"
+          :on-remove="handleRemove"
           :auto-upload="false"
         >
           <el-button
@@ -158,9 +159,9 @@
           <el-button
             style="margin-left: 10px"
             size="small"
-            type="success"
+            :type="fileList.length>0?'success':'info'"
             @click="submitUpload"
-            :disabled="uploading"
+            :disabled="uploading||fileList.length<=0"
             >上传到服务器</el-button
           >
           <div slot="tip" class="el-upload__tip">请上传合同pdf、word附件</div>
@@ -522,6 +523,9 @@ export default {
   methods: {
     handleChange(file, fileList) {
       this.fileList = fileList.slice(-1)
+    },
+    handleRemove(file,fileList) {
+      this.fileList = fileList
     },
     submitUpload(file, filelist) {
       this.$refs.upload.submit()

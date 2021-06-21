@@ -648,12 +648,12 @@ export default {
     },
     // 详情
     handleUserDetail(uid) {
-      if (!uid) {
+      if (!uid.u_id) {
         this.$message.error('缺少用户信息')
         return
       }
       // 新标签打开详情页
-      openBrowserTab(`/music_app/#/details/${uid}`)
+      openBrowserTab(`/music_app/#/details/${uid.u_id}`)
     },
     // 发优惠券
     handleCoupon(uid, data) {

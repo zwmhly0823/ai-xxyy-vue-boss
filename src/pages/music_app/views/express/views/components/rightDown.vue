@@ -85,9 +85,9 @@
               </el-button>
               <i
                 v-if="scope.row.user && scope.row.user.mobile"
-                style="margin-left: 10px;color: #2a75ed;"
+                style="margin-left: 10px; color: #2a75ed"
                 class="el-icon-view mg-l-5 trail"
-                @click="getNumber(scope.row.user.id)"
+                @click="getNumber(scope.row.user.id, 1)"
               ></i>
             </div>
             <div class="gray-text">{{ scope.row.ctime }}</div>
@@ -236,7 +236,13 @@
             <div class="take">
               <div>
                 <span>{{ scope.row.receipt_name }}</span>
-                <span>{{ scope.row.receipt_tel }}</span>
+                <span style="color: #2a75ed">{{ scope.row.receipt_tel }}</span>
+                <i
+                  v-if="scope.row.receipt_tel"
+                  style="margin-left: 10px; color: #2a75ed"
+                  class="el-icon-view mg-l-5 trail"
+                  @click="getExpressrPhoneNumber(scope.row.id)"
+                ></i>
               </div>
               <div class="gray-text">
                 <span>{{ scope.row.province }}</span>
@@ -798,7 +804,7 @@ export default {
   },
   methods: {
     //获取学生号码
-    getNumber(uid) {
+    getNumber(uid, type) {
       this.$http.User.getUserPhoneNumber({
         uid: uid,
         teacherId: this.operatorId,
@@ -806,7 +812,27 @@ export default {
         if (res.code == 0) {
           this.tableData.forEach((item, index) => {
             if (item.user && item.user.id == uid) {
-              this.tableData[index].user.mobile = res.payload.mobile
+              if (type == 1) {
+                this.tableData[index].user.mobile = res.payload.mobile
+              } else {
+                this.tableData[index].receipt_tel = res.payload.mobile
+              }
+            }
+          })
+        } else {
+          this.$message.error('网络异常，请稍后再试！')
+        }
+      })
+    },
+    getExpressrPhoneNumber(uid) {
+      this.$http.User.getExpressrPhoneNumber({
+        uid: uid,
+        teacherId: this.operatorId,
+      }).then((res) => {
+        if (res.code == 0) {
+          this.tableData.forEach((item, index) => {
+            if (item.id == uid) {
+              this.tableData[index].receipt_tel = res.payload.mobile
             }
           })
         } else {

@@ -14,8 +14,8 @@ export default {
     return axios.post('/api/o/v1/orderSub/query/orderSubListByParentOrderId', item)
   },
   // 获取支付渠道(assert→IMPORT终止)
-  getPaymentPay (query = '') {
-
+  getPaymentPay(query = '') {
+    
     return axios.post('/graphql/v1/toss', {
       query: `
         {
@@ -31,14 +31,14 @@ export default {
       `
     })
   },
-  getBackStatus (query) {
-
+  getBackStatus(query) {
+    
     return axios.get('/api/o/v1/order/getOrderRefundStatus', query)
   },
 
   // 通过uid查询订单list
-  getOrdersByUid (uid) {
-
+  getOrdersByUid(uid) {
+    
     return axios.get(
       `/api/o/v1/order/getOrderByRegtypesAndStatus?userId=${uid}&status=COMPLETED&regtypes=DEFAULT,EXPERIENCE,FIRST_ORDER,RENEW,TICKET500,MAKEUP,RENEW_MAKEUP`
     )
@@ -58,22 +58,22 @@ export default {
   //     `
   //   })
   // },
-  getPeriod (query) {
-
+  getPeriod(query) {
+    
     return axios.get(
       '/api/b/v1/backend/refund/system/findSystemReduceWeek',
       query
     )
   },
   // 获取单价
-  getEveryPrice (params) {
-
+  getEveryPrice(params) {
+    
     return axios.post(`/api/o/v1/order/getOrderPrice?orderId=${params}`)
   },
 
   // 获取剩余金额
-  getResidueFee ({ orderId }) {
-
+  getResidueFee({ orderId }) {
+    
     return axios.get(`/api/o/v1/order/getOrderRemainingAmount?orderId=${orderId}`)
     // return new Promise((resolve, reject) => {
     //   resolve({ code: 0, data: { bala: 54188 } })
@@ -84,16 +84,16 @@ export default {
     return axios.post('/api/o/v1/orderSub/getSubOrderRemainingAmount', data)
   },
   // 优惠券订单检测
-  checkCouponOrderStatus ({ orderId }) {
-
+  checkCouponOrderStatus({ orderId }) {
+    
     return axios.get(`/api/o/v1/order/checkCouponOrderStatus?orderId=${orderId}`)
     // return new Promise((resolve, reject) => {
     //   resolve({ code: 0, data: { bala: 54188 } })
     // })
   },
   // 获取优惠券list
-  getCoupon (params) {
-
+  getCoupon(params) {
+    
     return axios.get('/api/s/v1/coupon/package/getCoupon', params)
     // return axios.get('/api/s/v1/coupon/getUserCouponByPackageId', params)
   },
@@ -124,8 +124,8 @@ export default {
   // },
   // 获取第三方渠道来源
   // channelOuterName
-  getChannel (payChannel) {
-
+  getChannel(payChannel) {
+    
     return axios.get(`/api/c/v1/channel/getChannelById?id=${payChannel}`)
   },
   // 为了学员详情跳转来的审核页面，自动填入手机号-获取uid
