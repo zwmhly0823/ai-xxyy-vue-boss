@@ -28,7 +28,7 @@
             <span class="img-overflow"
               ><img
                 class="topframe"
-                :src="`${img.task_image}?x-oss-process=image/resize,l_100&t=${+new Date().getTime()}`"
+                :src="`${imgUrl}${img.task_image}?x-oss-process=image/resize,l_100&t=${+new Date().getTime()}`"
                 alt=""
                 @load="loaded(index)"
                 crossOrigin="anonymous"
@@ -47,6 +47,8 @@
 </template>
 
 <script>
+import contants from '@/utils/contants'
+const { OSS_IMG_BASE_URL } = contants
 export default {
   props: {
     listData: {
@@ -60,6 +62,7 @@ export default {
   },
   data() {
     return {
+      imgUrl: OSS_IMG_BASE_URL,
       isLoaded: false,
       num: 0
     }
