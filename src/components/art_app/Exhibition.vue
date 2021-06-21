@@ -10,10 +10,11 @@
           <div class="userinfo">
             <span class="userhead">
               <img
-                :src="`${item.head}?x-oss-process=image/resize,l_100`"
+                :src="`${item.head}?x-oss-process=image/resize,l_100&t=${+new Date().getTime()}`"
                 @load="loaded(index)"
                 class="head"
                 alt=""
+                crossOrigin="anonymous"
               />
             </span>
             <span class="username">{{ item.username }}</span>
@@ -27,9 +28,10 @@
             <span class="img-overflow"
               ><img
                 class="topframe"
-                :src="`${img.task_image}?x-oss-process=image/resize,l_100`"
+                :src="`${img.task_image}?x-oss-process=image/resize,l_100&t=${+new Date().getTime()}`"
                 alt=""
                 @load="loaded(index)"
+                crossOrigin="anonymous"
             /></span>
             <!-- <img class="frame" src="../../../../../../assets/images/frame.png" alt=""
           /> -->
