@@ -225,15 +225,16 @@ export default {
             buytime
             order_total_amount
             packages_name
-
+   
             sup
 
             stage
-
+            availablePromotions{
+              id
+            }
             regtype
-
+            promotions_status
             amount
-
             status
 
             order_status
@@ -948,5 +949,73 @@ export default {
   // 查询硬件
   getHardwareProductList (query) {
     return axios.get(`/api/p/v1/product/getHardwareProductList?subject=MUSIC_APP&courseDifficulty=${query.courseDifficulty}&productType=${query.productType}&courseType=${query.courseType}&courseLevel=${query.courseLevel}&proVersion=${query.proVersion}`)
-  }
+  },
+  // 根据订单id查询
+  getThisOrder (query) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        Order(query: ${JSON.stringify(injectSubject(query))}) {
+            id
+            uid
+            ctime
+            packages_name
+            sup
+            stage
+            regtype
+            amount
+            status
+            order_status
+            bear_integral
+            gem_integral
+            product_name
+            out_trade_no
+            user{
+              id
+              username
+              nickname
+              mobile
+              mobile_province
+              mobile_city
+              birthday
+            }
+            channel {
+              channel_outer_name
+            }
+            team {
+              id
+              team_name
+            }
+            last_teacher_id
+            teacher{
+              realname
+              area_name
+              department_name
+              group_name
+            }
+            salesman{
+              realname
+              area_name
+              department_name
+              group_name
+            }
+            express{
+              express_total
+              last_express_status
+            }
+            trial_course{
+              team_category
+            }
+            first_order_send_id
+            first_send_user{
+              id
+              username
+              nickname
+              mobile
+            }
+            trial_pay_channel
+            trial_pay_channel_text
+          }
+      }`
+    })
+  },
 }

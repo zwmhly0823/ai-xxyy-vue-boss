@@ -1,8 +1,8 @@
 <template>
   <div class="students-popup">
     <div>
-      <el-dialog title="发放优惠卷" :visible.sync="issueCoupons" width="30%" :append-to-body="true">
-        <span class="label">选择优惠卷:</span>
+      <el-dialog title="发放优惠券" :visible.sync="issueCoupons" width="30%" :append-to-body="true">
+        <span class="label">选择优惠券:</span>
         <el-select
           v-model="value"
           popper-class="select-sty"
@@ -164,20 +164,20 @@ export default {
   mounted() {},
   watch: {
     couponsDateTime(val) {
-      console.log(val)
+      
     },
     couponList: {
       deep: true,
       immediate: true,
       handler: function(val) {
-        console.log(val)
+        
         this.couponDropdown = val.filter((item) => {
           return this.trialCouponIds.includes(item.id)
         })
       }
     },
     selectUserId(val) {
-      console.log(val, '用户idprops传参')
+      
     }
   },
   methods: {
@@ -227,7 +227,7 @@ export default {
     },
     // 优惠券发放确认弹窗
     couponconfBtn(id) {
-      console.log(id, '90890890')
+      
 
       this.couponConf = false
       this.couponSuccessful = true

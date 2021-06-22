@@ -173,32 +173,44 @@ export default {
   async mounted() {},
   created() {
     // 订单管理 -- 赠品操作
+    let mobile = ''
+    const staff = JSON.parse(localStorage.getItem('staff') || '{}')
     this.paramOrderId = this.getUrlKey('id')
-    const mobile = this.getUrlKey('mobile') || ''
-    if (mobile) {
-      this.$http.RefundApproval.getUid_lk({ mobile }).then((res) => {
-        const uid = res.data.blurrySearch[0].id
-        if (uid) {
-          this.getSearchPhone({ uid })
+    if (this.paramOrderId) {
+      this.$http.User.getUserPhoneNumber({
+        uid: this.getUrlKey('uid'),
+        teacherId: staff.id,
+      }).then((res) => {
+        if (res.code == 0) {
+          mobile = res.payload.mobile
+          if (mobile) {
+            this.$http.RefundApproval.getUid_lk({ mobile }).then((res) => {
+              const uid = res.data.blurrySearch[0].id
+              if (uid) {
+                this.getSearchPhone({ uid })
+              }
+            })
+          }
+          this.$nextTick(() => {
+            this.$refs.toGetPhone.input = mobile
+          })
+          if (this.paramOrderId) {
+            const obj = {
+              id: this.paramOrderId,
+            }
+            this.$http.Order.getThisOrder(obj).then((res) => {
+              const data = res.data.Order || {}
+              this.formGift.outTradeNo = data.out_trade_no
+            })
+          }
+          setTimeout(() => {
+            this.orderDisable = true
+          }, 2000)
+        } else {
+          this.$message.error('网络异常，请稍后再试！')
         }
       })
     }
-    this.$nextTick(() => {
-      this.$refs.toGetPhone.input = mobile
-    })
-    if (this.paramOrderId) {
-      const obj = {
-        id: this.paramOrderId,
-      }
-      this.$http.Order.getThisOrder(obj).then((res) => {
-        const data = res.data.Order || {}
-        this.formGift.outTradeNo = data.out_trade_no
-      })
-    }
-    setTimeout(() => {
-      this.orderDisable = true
-    }, 2000)
-    const staff = JSON.parse(localStorage.getItem('staff') || '{}')
     this.formGift.applyUserId = staff.id
     this.formGift.applyUserName = staff.realName
     this.formGift.applyUserDeapartmentId = staff.departmentId
@@ -225,6 +237,9 @@ export default {
       orderDisable: true,
       sendDisabled: false,
       orderRefundStatus: false, // 退费类型
+      packagesId: '',
+      orderCtime: '',
+      orderRegtype: '',
       formGift: {
         orderId: '',
         outTradeNo: '',
@@ -351,8 +366,7 @@ export default {
               })
             }
           })
-          .catch((err) => {
-          })
+          .catch((err) => {})
       } else {
         // this.formGift = {}
         this.formGift.showMessage = ''
@@ -372,6 +386,9 @@ export default {
       this.formGift.orderId = val.id
       this.formGift.outTradeNo = val.outTradeNo
       this.formGift.stage = val.stage
+      this.packagesId = val.packagesId
+      this.orderCtime = val.ctime
+      this.orderRegtype = val.regtype
       if (val.regtype === 'FIRST_ORDER' || val.regtype === 'RENEW') {
         this.formGift.courseType = 1
       } else {
@@ -439,10 +456,10 @@ export default {
         this.formGift.receiptTel = val.receiptTel
         this.formGift.receiptAddressProvince = val.province
         this.formGift.receiptAddressCity = val.city
-        this.formGift.receiptAddressStreet = ''
+        this.formGift.receiptAddressStreet = val.street
         this.formGift.receiptAddressArea = val.area
         this.formGift.receiptAddressDetail = val.addressDetail
-        this.formGift.totalAddress = `${val.province}${val.city}${val.area}${val.addressDetail}`
+        this.formGift.totalAddress = `${val.province}${val.city}${val.area}${val.street}${val.addressDetail}`
       }
     },
     // 关闭地址
@@ -456,7 +473,7 @@ export default {
           this.sendDisabled = true
           setTimeout(() => {
             this.sendDisabled = false
-          }, 3000)
+          }, 1000)
           const obj = {
             ...this.formGift,
             userId: this.userId,
@@ -467,6 +484,7 @@ export default {
           } else {
             this.$http.Approval.applyGiftAdd(obj).then((res) => {
               if (res.code === 0) {
+                this.$message.success("申请成功")
                 this.$router.push({
                   path: '/approval',
                   params: {
@@ -503,8 +521,9 @@ export default {
     // 获取所有有效活动
     getPromotionsList() {
       this.$http.Approval.getPromotionsList({
-        userId: this.userId,
-        orderId: this.formGift.orderId,
+        packagesId: this.packagesId,
+        ctime: this.orderCtime,
+        regtype: this.orderRegtype,
       }).then(({ code, payload }) => {
         if (!code && payload && payload.length) {
           this.activityList = payload

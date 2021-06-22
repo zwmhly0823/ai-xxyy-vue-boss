@@ -18,7 +18,13 @@
       <el-input v-model="ruleForm.receiptName"></el-input>
     </el-form-item>
     <el-form-item label="收货人电话" prop="receiptTel" required>
-      <el-input v-model="ruleForm.receiptTel"></el-input>
+      <el-input
+        type="number"
+        maxlength="11"
+        min="1"
+        oninput="if(value.length>11)value=value.slice(0,11)"
+        v-model="ruleForm.receiptTel"
+      ></el-input>
     </el-form-item>
     <!-- <span class="areaLists-css">收货人地址</span> -->
     <el-form-item label="收货人地址" prop="area">
@@ -30,6 +36,7 @@
         size="medium"
         filterable
         @change="handleChange"
+        @active-item-change="handleItemChange"
       >
       </el-cascader>
     </el-form-item>
@@ -47,14 +54,14 @@
     <el-form-item>
       <el-button
         size="small"
-        style="width: 100px;"
+        style="width: 100px"
         type="primary"
         @click="submitForm('ruleForm')"
         >保存</el-button
       >
       <el-button
         size="small"
-        style="width: 100px;"
+        style="width: 100px"
         @click="resetForm('ruleForm')"
         >取消</el-button
       >
@@ -62,7 +69,6 @@
   </el-form>
 </template>
 <script>
-import areaLists from '@/utils/area.json'
 export default {
   name: 'logisticsForm',
   props: ['userId'],
@@ -79,49 +85,111 @@ export default {
       }
     }
     return {
-      areaLists2: areaLists,
+      areaLists2: [],
       chooseAddress: [],
+      levelFourList: [],
       province: null,
       city: null,
       area: null,
+      street: null,
       areaCode: null,
       ruleForm: {
         receiptName: '',
         receiptTel: '',
-        addressDetail: ''
+        addressDetail: '',
       },
       rules: {
         receiptName: [
-          { required: true, message: '请输入收货人姓名', trigger: 'blur' }
+          { required: true, message: '请输入收货人姓名', trigger: 'blur' },
         ],
         receiptTel: [
           {
             maxlength: 11,
             validator: validatePass,
-            trigger: 'blur'
-          }
+            trigger: 'blur',
+          },
         ],
         area: [{ required: true, message: '请选择具体市区', trigger: 'blur' }],
         addressDetail: [
-          { required: true, message: '请填写详细地址', trigger: 'blur' }
-        ]
+          { required: true, message: '请填写详细地址', trigger: 'blur' },
+        ],
       },
-      operatorId: ''
+      operatorId: '',
     }
   },
+  created() {
+    this.getAreaLists()
+  },
   methods: {
+    // 获取地址选项-2
+    handleItemChange(data) {
+      const addressList = this.areaLists2
+      addressList.forEach((res) => {
+        if (data[0] === res.id) {
+          res.children.forEach((ele) => {
+            if (data[1] === +ele.cityCode + 999) {
+              ele.children.forEach((val) => {
+                if (data[2] === val.countyCode) {
+                  this.$http.Express.getCenterAddressTownList(data[2]).then(
+                    (data) => {
+                      const _data = data.payload
+                      _data.forEach((codeVal) => {
+                        const add = {
+                          label: codeVal.townName,
+                          value: codeVal.townCode,
+                        }
+                        val.children.push(add)
+                      })
+                      this.levelFourList = _data
+                    }
+                  )
+                }
+              })
+            }
+          })
+        }
+      })
+    },
+    // 获取地址选项
+    async getAreaLists() {
+      this.$http.Express.getCenterAddressList().then((res) => {
+        const _data = res.payload.data
+        _data.forEach((ele) => {
+          ele.label = ele.provinceName
+          ele.value = ele.id
+          ele.children = ele.citys
+          ele.children.forEach((val) => {
+            val.label = val.cityName
+            val.value = +val.cityCode + 999
+            val.children = val.countys
+            val.children.forEach((_value) => {
+              _value.label = _value.countyName
+              _value.value = _value.countyCode
+              _value.children = [{ label: '暂不选择', value: '' }]
+            })
+          })
+        })
+        this.areaLists2 = _data
+      })
+    },
     // 级联城市级联
     handleChange(data) {
-      // this.areaLists = areaLists
-      const provinces = areaLists.filter((item) => +item.value === +data[0])
+      const provinces = this.areaLists2.filter(
+        (item) => +item.value === +data[0]
+      )
       const citys = provinces[0].children.filter(
         (item) => +item.value === +data[1]
       )
       const areas = citys[0].children.filter((item) => +item.value === +data[2])
+      const streets = this.levelFourList.filter(
+        (item) => +item.townCode === +data[3]
+      )
+
       this.province = provinces[0].label
       this.city = citys[0].label
       this.area = areas[0].label
       this.areaCode = data[2]
+      this.street = data[3] ? streets[0].townName : ''
     },
     submitForm(formName) {
       const params = {
@@ -131,8 +199,9 @@ export default {
         province: this.province,
         city: this.city,
         area: this.area,
+        street: this.street,
         addressDetail: this.ruleForm.addressDetail,
-        areaCode: this.areaCode
+        areaCode: this.areaCode,
       }
 
       this.$refs[formName].validate((valid) => {
@@ -141,7 +210,7 @@ export default {
           setTimeout(() => {
             this.$message({
               message: '地址修改成功',
-              type: 'success'
+              type: 'success',
             })
           }, 1000)
         } else {
@@ -157,8 +226,8 @@ export default {
       this.city = []
       this.area = []
       this.areaCode = []
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>

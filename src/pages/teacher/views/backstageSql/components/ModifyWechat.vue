@@ -165,7 +165,7 @@ export default {
       if (this.current) {
         this.form = this.current
         this.form.type = String(this.form.type)
-        ;(this.title = '编辑数据');
+        this.title = '编辑数据'
       }
     },
   },

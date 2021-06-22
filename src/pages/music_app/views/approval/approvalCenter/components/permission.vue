@@ -42,10 +42,10 @@
             <i class="el-icon-s-claim color-3"></i>
             <span class="item-text">调班申请</span>
           </div>
-          <!-- <div class="adjust-item" @click="goApprovalGift" v-if="showGift">
+          <div class="adjust-item" @click="goApprovalGift">
             <i class="el-icon-present color-1"></i>
             <span class="item-text">赠品申请</span>
-          </div> -->
+          </div>
         </div>
       </div>
     </div>

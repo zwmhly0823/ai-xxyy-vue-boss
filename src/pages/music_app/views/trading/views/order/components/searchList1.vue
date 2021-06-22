@@ -265,7 +265,43 @@
               style="padding-left: 5px"
             ></i></el-tooltip
         ></el-radio>
+        <el-radio label="3"
+          ><span>续费开课订单导出</span
+          ><el-tooltip
+            class="item"
+            effect="dark"
+            content="财务人员确认续费订单专用"
+            placement="top"
+            ><i
+              class="el-icon-question"
+              style="padding-left: 5px"
+            ></i></el-tooltip
+        ></el-radio>
       </el-radio-group>
+      <section v-show="chooseExport === '3'">
+        <h4>订单时间区间筛选</h4>
+        <el-form>
+          <el-form-item label="时间查询:">
+            <div style="display: flex; align-items: center">
+              <el-select size="mini" v-model="timeType" placeholder="请选择">
+                <el-option label="订单支付时间" value="0"></el-option>
+                <el-option label="订单开课时间" value="1"></el-option>
+              </el-select>
+              <el-date-picker
+                value-format="timestamp"
+                type="daterange"
+                unlink-panels
+                size="mini"
+                v-model="timeValue"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+              >
+              </el-date-picker>
+            </div>
+          </el-form-item>
+        </el-form>
+      </section>
       <span slot="footer" class="dialog-footer">
         <el-button @click="showChooseDialog = false">取 消</el-button>
         <el-button type="primary" @click="exportOrderHandle">确 定</el-button>
@@ -325,6 +361,8 @@ export default {
   mixins: [entranceMixins],
   data() {
     return {
+      timeType: '', // 三类导出_类型
+      timeValue: [], // 三类导出_时间
       associated_order_id: '全部',
       options1: [
         {
@@ -383,6 +421,14 @@ export default {
         {
           id: '3',
           text: '续费',
+        },
+        {
+          id: '12',
+          text: '新签补差',
+        },
+        {
+          id: '11',
+          text: '续费补差',
         },
       ],
       expChangeList: [
@@ -740,7 +786,7 @@ export default {
         //   temp[0].terms.trial_pay_channel.length <= 0
         // ) {
         //   temp.map((item) => {
-        //     console.log(item)
+        //
         //     delete item.terms.trial_pay_channel
         //   })
 
@@ -796,8 +842,10 @@ export default {
     },
     // 导出
     exportOrderHandle() {
-      const chooseExport = this.chooseExport
-      if (this.searchParams.length === 0) {
+      if (
+        (this.chooseExport === '1' || this.chooseExport === '2') &&
+        this.searchParams.length === 0
+      ) {
         this.$message.error('请选择筛选条件')
         return
       }
@@ -814,7 +862,7 @@ export default {
         text: '正在导出，请耐心等待……',
         spinner: 'el-icon-loading',
       })
-      if (chooseExport === '1') {
+      if (this.chooseExport === '1') {
         const params = {
           apiName: 'OrderOptStatistics',
           header: {
@@ -854,6 +902,26 @@ export default {
             })
           })
           .catch(() => loading.close())
+      } else if (this.chooseExport === '3') {
+        if (this.timeType && this.timeValue.length !== 0) {
+          const params = {
+            timeType: this.timeType,
+            timeValue: { gte: this.timeValue[0], lte: this.timeValue[1] },
+          }
+          this.$http.DownloadExcel.renewOrder(params)
+            .then((res) => {
+              downloadHandle(res, `续费开课订单-${fileTitle}`, () => {
+                this.showChooseDialog = false
+                this.$message.success('导出成功')
+              })
+            })
+            .finally(() => {
+              loading.close()
+            })
+        } else {
+          loading.close()
+          this.$message.warning('请确认选择时间类型与节点')
+        }
       } else {
         const query = this.$parent.$children[1].finalParams
         const queryF = Object.assign({}, query, {
