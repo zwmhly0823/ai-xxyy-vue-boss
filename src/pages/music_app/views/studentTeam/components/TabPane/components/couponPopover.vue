@@ -146,7 +146,7 @@ export default {
       // 系统课老师可发放优惠券ID
       systemCouponIds: ['11', '20'],
       // 体验课老师可发放优惠券ID
-      trialCouponIds: ['6','7','11', '20']
+      trialCouponIds: ['6', '7', '14', '11', '20']
     }
   },
   computed: {
@@ -164,20 +164,20 @@ export default {
   mounted() {},
   watch: {
     couponsDateTime(val) {
-      
+
     },
     couponList: {
       deep: true,
       immediate: true,
       handler: function(val) {
-        
+
         this.couponDropdown = val.filter((item) => {
           return this.trialCouponIds.includes(item.id)
         })
       }
     },
     selectUserId(val) {
-      
+
     }
   },
   methods: {
@@ -227,7 +227,7 @@ export default {
     },
     // 优惠券发放确认弹窗
     couponconfBtn(id) {
-      
+
 
       this.couponConf = false
       this.couponSuccessful = true
