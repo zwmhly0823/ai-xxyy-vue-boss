@@ -346,21 +346,19 @@ export default {
       ;
       if (val) {
         this.channelSearch(val)
-      }else {
-        this.channelSearch("*")
       }
     },
   },
   methods: {
     channelSearch(val) {
       this.$http.Operating.ChannelDetailStatisticsListEx(val).then((res) => {
-        let obj = {}
-        if (res.data) {
+         if (res.data) {
           this.channelList = []
           res.data.ChannelDetailStatisticsListEx.forEach((item, index) => {
+            let obj = {}
             obj.id = item.id
             obj.text = item.channel_inner_name
-            if (obj) {
+            if (obj.id) {
               this.channelList.push(obj)
             }
           })
@@ -496,6 +494,7 @@ export default {
     },
     onChange(val) {
       if(!val) {
+        this.channelList = []
         this.getChannelList()
       }
     }
