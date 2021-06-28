@@ -67,7 +67,7 @@
           </el-radio> -->
         </el-form-item>
         <el-form-item label="兑换商品套餐" prop="packageId">
-          <el-input v-model="form.packageId" style="display: none;" />
+          <el-input v-model="form.packageId" style="display: none" />
           <!-- 没选择时 -->
           <div
             class="package-btn"
@@ -87,7 +87,12 @@
               >
                 课时：{{ packageProduct.course_week }}周
               </p>
-              <el-form-item label="绑定课程级别" prop="levelId" label-width="84" class="level-select">
+              <el-form-item
+                label="绑定课程级别"
+                prop="levelId"
+                label-width="84"
+                class="level-select"
+              >
                 <el-select v-model="form.courseLevel">
                   <el-option
                     v-for="item in levelList"
@@ -104,10 +109,17 @@
           </div>
         </el-form-item>
         <el-form-item label="渠道" prop="channelId">
-          <el-select v-model="form.channelId" placeholder="请选择渠道">
+          <el-select
+            v-model="form.channelId"
+            filterable
+            clearable
+            :filter-method="filterMethod"
+            @change="onChange"
+            placeholder="请选择渠道"
+          >
             <el-option
               v-for="item in channelList"
-              :key="item.id"
+              :key="item.id+Math.random()"
               :label="item.text"
               :value="item.id"
             ></el-option>
@@ -135,7 +147,7 @@
             <el-radio :label="0">否</el-radio>
           </el-radio-group>
         </el-form-item>
-          <el-form-item label="是否立即放课" prop="isSendCourse">
+        <el-form-item label="是否立即放课" prop="isSendCourse">
           <el-radio-group v-model="form.isSendCourse">
             <el-radio :label="1">是</el-radio>
             <el-radio :label="0">否</el-radio>
@@ -168,18 +180,18 @@ import { deepClone } from '@/utils/index'
 import PackagesList from '../../components/redeemCode/PackagesList'
 export default {
   components: {
-    PackagesList
+    PackagesList,
   },
   props: {
     show: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   computed: {
     dateProp() {
       return this.radioDate === '1' ? 'date' : 'expire'
-    }
+    },
   },
   data() {
     // 数量校验规则
@@ -215,46 +227,50 @@ export default {
       rules: {
         title: [
           { required: true, message: '请输入兑换码标题', trigger: 'blur' },
-          { min: 1, max: 40, message: '最多可输入40字', trigger: 'blur' }
+          { min: 1, max: 40, message: '最多可输入40字', trigger: 'blur' },
         ],
         num: [
           { required: true, message: '请输入兑换码数量', trigger: 'blur' },
           { type: 'number', message: '仅限输入数字，最大上限为100000' },
-          { validator: checkNum, trigger: 'blur' }
+          { validator: checkNum, trigger: 'blur' },
         ],
         date: [
           {
             required: true,
             message: '请设置兑换码有效期',
-            trigger: 'blur'
+            trigger: 'blur',
           },
-          { validator: checkDate, trigger: ['blur', 'change'] }
+          { validator: checkDate, trigger: ['blur', 'change'] },
         ],
         expire: [
           {
             required: true,
             message: '请设置兑换码有效期',
-            trigger: 'blur'
+            trigger: 'blur',
           },
-          { validator: expireDay, trigger: ['blur', 'change'] }
+          { validator: expireDay, trigger: ['blur', 'change'] },
         ],
         packageId: [
           {
             required: true,
             message: '请选择商品套餐',
-            trigger: ['blur', 'change']
-          }
+            trigger: ['blur', 'change'],
+          },
         ],
         channelId: [
-          { required: true, message: '请选择渠道', trigger: ['blur', 'change'] }
+          {
+            required: true,
+            message: '请选择渠道',
+            trigger: ['blur', 'change'],
+          },
         ],
         customerSignId: [
           {
             required: true,
             message: '请选择标签',
-            trigger: ['blur', 'change']
-          }
-        ]
+            trigger: ['blur', 'change'],
+          },
+        ],
       },
       form: {
         title: '',
@@ -270,30 +286,30 @@ export default {
         isCardNo: 1,
         sendExpress: 1,
         courseLevel: 'N',
-        isSendCourse:0,
+        isSendCourse: 0,
       },
       levelList: [
         {
-            id: 'N',
-            text: '不绑定'
-          },
-          {
-            id: 'S1',
-            text: 'M1'
-          },
-          {
-            id: 'S2',
-            text: 'M2'
-          },
-          {
-            id: 'S3',
-            text: 'M3'
-          },
-          {
-            id: 'S4',
-            text: 'M4'
-          },
-        ],
+          id: 'N',
+          text: '不绑定',
+        },
+        {
+          id: 'S1',
+          text: 'M1',
+        },
+        {
+          id: 'S2',
+          text: 'M2',
+        },
+        {
+          id: 'S3',
+          text: 'M3',
+        },
+        {
+          id: 'S4',
+          text: 'M4',
+        },
+      ],
       formLabelWidth: '120px',
       // 设置禁用时间，小于当前日期不可用
       pickerOptions: {
@@ -303,13 +319,14 @@ export default {
           const today = now.getTime()
           if (new Date(date).getTime() < today) return true
           return false
-        }
+        },
       },
       packageProduct: {}, // 选中的商品套餐
       // TODO:指定的渠道, 先写死 ！！！  写字渠道待添加
       channelList: [],
       labelList: [{ id: '0', name: '无' }],
-      loading: false
+      loading: false,
+      words: null,
     }
   },
   created() {
@@ -324,9 +341,35 @@ export default {
       if (val === '2') {
         this.form.date = ''
       }
-    }
+    },
+    words(val) {
+      ;
+      if (val) {
+        this.channelSearch(val)
+      }else {
+        this.channelSearch("*")
+      }
+    },
   },
   methods: {
+    channelSearch(val) {
+      this.$http.Operating.ChannelDetailStatisticsListEx(val).then((res) => {
+        let obj = {}
+        if (res.data) {
+          this.channelList = []
+          res.data.ChannelDetailStatisticsListEx.forEach((item, index) => {
+            obj.id = item.id
+            obj.text = item.channel_inner_name
+            if (obj) {
+              this.channelList.push(obj)
+            }
+          })
+        }
+      })
+    },
+    filterMethod(words) {
+      this.words = words
+    },
     /**
      * 创建
      */
@@ -338,7 +381,7 @@ export default {
           const { date } = obj
           Object.assign(obj, {
             startDate: date[0],
-            endDate: date[1]
+            endDate: date[1],
           })
           delete obj.date
 
@@ -361,7 +404,7 @@ export default {
           Object.assign(obj, {
             packageName,
             channelName,
-            customerSignName
+            customerSignName,
           })
 
           // 提交
@@ -373,7 +416,7 @@ export default {
 
                 this.$confirm('码库创建成功！', '确认', {
                   confirmButtonText: '继续创建',
-                  cancelButtonText: '返回列表'
+                  cancelButtonText: '返回列表',
                 })
                   .then(() => {
                     this.$emit('confirm', true)
@@ -432,25 +475,29 @@ export default {
     getChannelList() {
       const subject = { subject: this.$store.getters.subjects.subjectCode }
       // const obj = { ...subject, "channel_inner_name.keyword": "兑换码"} channel_class_id\":82
-      const obj = { ...subject}
+      const obj = { ...subject }
       let query = JSON.stringify(JSON.stringify(obj))
       if (query) {
-        this.$http.Operating.ChannelDetailStatisticsPage(
-          query
-        ).then(({ data }) => {
-          if (data) {
-            data.ChannelDetailStatisticsPage.content.forEach(item => {
-              let obj = {}
-              obj.id = item.id
-              obj.text = item.channel_inner_name
-              if (obj) {
-                this.channelList.push(obj)
-              }
-            })
+        this.$http.Operating.ChannelDetailStatisticsPage(query).then(
+          ({ data }) => {
+            if (data) {
+              data.ChannelDetailStatisticsPage.content.forEach((item) => {
+                let obj = {}
+                obj.id = item.id
+                obj.text = item.channel_inner_name
+                if (obj) {
+                  this.channelList.push(obj)
+                }
+              })
+            }
           }
-        })
+        )
       }
-      
+    },
+    onChange(val) {
+      if(!val) {
+        this.getChannelList()
+      }
     }
   },
 }
@@ -510,7 +557,7 @@ export default {
         height: 25px;
         width: 100px;
       }
-    } 
+    }
   }
 }
 </style>
